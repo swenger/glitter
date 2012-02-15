@@ -1,0 +1,16 @@
+HEADER:=/usr/local/include/GL3/gl3.h # http://www.opengl.org/registry/api/gl3.h
+LIBRARY:=/usr/lib/nvidia-current/libGL.so
+DEFINITIONS:=-DGL3_PROTOTYPES -I/usr/include/GL
+TARGET:=gl.py
+
+DOCDIR:=/local/wenger/code/man4
+# svn co --username anonymous --password anonymous https://cvs.khronos.org/svn/repos/ogl/trunk/ecosystem/public/sdk/docs/man4/
+
+include common.mk
+
+$(TARGET): $(RAW)
+	cat header.txt $^ > $@
+	cat bugfix_gl.py >> $@
+	$(PYTHON) adderrcheck.py >> $@
+	$(PYTHON) adddoc.py $(DOCDIR) >> $@
+

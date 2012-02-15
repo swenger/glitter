@@ -1,0 +1,10 @@
+HEADER:=/usr/include/GL/glu.h
+LIBRARY:=/usr/lib/libGLU.so
+DEFINITIONS:=-DGL3_PROTOTYPES -I/usr/include/GL
+TARGET:=glu.py
+
+include common.mk
+
+$(TARGET): $(RAW)
+	cat $^ > $@
+
