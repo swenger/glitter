@@ -3,6 +3,7 @@ rawgl:
 	maybe unify glUniform*, glVertexAttrib* and the like based on parameter type
 
 glitter:
+    RAII!
 	high-level object representation of OpenGL state (context, buffer objects, texture units...)
 	complete functionality without user access to raw OpenGL API
 	clean stack operations (with statements for binding and unbinding, enabling and disabling etc.)
