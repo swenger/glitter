@@ -151,8 +151,6 @@ class Texture(object):
         gl.glBindTexture(self.target, self.stack.pop())
 
 
-window = GlutWindow()
-
 def test_texture(shape, dtype):
     data = (255 * numpy.random.random(shape)).astype(dtype) # TODO make this work for float, signed and unsigned integer dtypes
     texture = Texture(data)
@@ -164,12 +162,27 @@ def test_texture(shape, dtype):
     tdata = texture.data
     assert (tdata == data).all(), "data is broken"
 
-for shape in ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3)):
-    for dtype in (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32):
-        try:
-            test_texture(shape, dtype)
-        except Exception, e:
-            print "%9s %18s: FAIL (%s)" % (dtype.__name__, shape, str(e) or type(e).__name__)
-        else:
-            print "%9s %18s: PASS" % (dtype.__name__, shape)
+if __name__ == "__main__":
+    window = GlutWindow()
+
+    shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
+    dtypes = (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)
+
+    column_headers = ["%20s" % "shape"] + [dtype.__name__ for dtype in dtypes]
+    column_formats = ["%%%ds" % max(len(column_header), 7) for column_header in column_headers]
+
+    for column_header, column_format in zip(column_headers, column_formats):
+        print column_format % column_header,
+    print
+
+    for shape in shapes:
+        print column_formats[0] % str(shape),
+        for dtype, column_format in zip(dtypes, column_formats[1:]):
+            try:
+                test_texture(shape, dtype)
+            except Exception, e:
+                print column_format % "FAIL",
+            else:
+                print column_format % "PASS",
+        print
 
