@@ -1,35 +1,35 @@
-import gllib
+from rawgl import gl
 
 BINDINGS = {
-        gllib.GL_ARRAY_BUFFER: gllib.GL_ARRAY_BUFFER_BINDING,
-        gllib.GL_ATOMIC_COUNTER_BUFFER: gllib.GL_ATOMIC_COUNTER_BUFFER_BINDING,
-        gllib.GL_COPY_READ_BUFFER: gllib.GL_COPY_READ_BUFFER_BINDING,
-        gllib.GL_COPY_WRITE_BUFFER: gllib.GL_COPY_WRITE_BUFFER_BINDING,
-        gllib.GL_DRAW_INDIRECT_BUFFER: gllib.GL_DRAW_INDIRECT_BUFFER_BINDING,
-        gllib.GL_ELEMENT_ARRAY_BUFFER: gllib.GL_ELEMENT_ARRAY_BUFFER_BINDING,
-        gllib.GL_PIXEL_PACK_BUFFER: gllib.GL_PIXEL_PACK_BUFFER_BINDING,
-        gllib.GL_PIXEL_UNPACK_BUFFER: gllib.GL_PIXEL_UNPACK_BUFFER_BINDING,
-        gllib.GL_TEXTURE_BUFFER: None, # ???
-        gllib.GL_TRANSFORM_FEEDBACK_BUFFER: gllib.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
-        gllib.GL_UNIFORM_BUFFER: gllib.GL_UNIFORM_BUFFER_BINDING,
+        gl.GL_ARRAY_BUFFER: gl.GL_ARRAY_BUFFER_BINDING,
+        gl.GL_ATOMIC_COUNTER_BUFFER: gl.GL_ATOMIC_COUNTER_BUFFER_BINDING,
+        gl.GL_COPY_READ_BUFFER: gl.GL_COPY_READ_BUFFER_BINDING,
+        gl.GL_COPY_WRITE_BUFFER: gl.GL_COPY_WRITE_BUFFER_BINDING,
+        gl.GL_DRAW_INDIRECT_BUFFER: gl.GL_DRAW_INDIRECT_BUFFER_BINDING,
+        gl.GL_ELEMENT_ARRAY_BUFFER: gl.GL_ELEMENT_ARRAY_BUFFER_BINDING,
+        gl.GL_PIXEL_PACK_BUFFER: gl.GL_PIXEL_PACK_BUFFER_BINDING,
+        gl.GL_PIXEL_UNPACK_BUFFER: gl.GL_PIXEL_UNPACK_BUFFER_BINDING,
+        gl.GL_TEXTURE_BUFFER: None, # ???
+        gl.GL_TRANSFORM_FEEDBACK_BUFFER: gl.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
+        gl.GL_UNIFORM_BUFFER: gl.GL_UNIFORM_BUFFER_BINDING,
         }
 
 class Buffer(object):
     def __init__(self, id=None):
         if id is None:
-            id = gllib.glGenBuffers()
-        if not gllib.glIsBuffer(id):
+            id = gl.glGenBuffers()
+        if not gl.glIsBuffer(id):
             raise ValueError("not a buffer")
         self.id = id
     
     def __del__(self):
         try:
-            gllib.glDeleteBuffers(self.id)
+            gl.glDeleteBuffers(self.id)
         except:
             pass
 
     def bind(self, target):
-        old_binding = gllib.glGet(BINDINGS[target])
-        gllib.glBindBuffers(target, self.id)
+        old_binding = gl.glGet(BINDINGS[target])
+        gl.glBindBuffers(target, self.id)
         return old_binding
 

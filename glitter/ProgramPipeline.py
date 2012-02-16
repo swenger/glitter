@@ -1,21 +1,21 @@
-import gllib
+from rawgl import gl
 
 class ProgramPipeline(object):
     def __init__(self, id=None):
         if id is None:
-            id = gllib.glGenProgramPipelines()
-        if not gllib.IsProgramPipeline(id):
+            id = gl.glGenProgramPipelines()
+        if not gl.IsProgramPipeline(id):
             raise ValueError("not a program pipeline")
         self.id = id
 
     def __del__(self):
         try:
-            gllib.glDeleteProgramPipelines(self.id)
+            gl.glDeleteProgramPipelines(self.id)
         except:
             pass
 
     def bind(self):
-        old_binding = gllib.glGet(gllib.GL_PROGRAM_PIPELINE_BINDING)
-        gllib.glBindProgramPipeline(self.id)
+        old_binding = gl.glGet(gl.GL_PROGRAM_PIPELINE_BINDING)
+        gl.glBindProgramPipeline(self.id)
         return old_binding
 

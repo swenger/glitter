@@ -1,31 +1,31 @@
-import gllib
+from rawgl import gl
 
 from util import InstanceDescriptorMixin, Binding
 
 BINDINGS = {
-        gllib.GL_FRAMEBUFFER: gllib.GL_FRAMEBUFFER_BINDING,
-        gllib.GL_DRAW_FRAMEBUFFER: gllib.GL_DRAW_FRAMEBUFFER_BINDING,
-        gllib.GL_READ_FRAMEBUFFER: gllib.GL_READ_FRAMEBUFFER_BINDING,
+        gl.GL_FRAMEBUFFER: gl.GL_FRAMEBUFFER_BINDING,
+        gl.GL_DRAW_FRAMEBUFFER: gl.GL_DRAW_FRAMEBUFFER_BINDING,
+        gl.GL_READ_FRAMEBUFFER: gl.GL_READ_FRAMEBUFFER_BINDING,
         }
 
 class Framebuffer(InstanceDescriptorMixin):
     def __init__(self, id=None):
         if id is None:
-            id = gllib.glGenFramebuffers()
-        if not gllib.IsFramebuffer(id):
+            id = gl.glGenFramebuffers()
+        if not gl.IsFramebuffer(id):
             raise ValueError("not a framebuffer")
         self.id = id
 
-        for i in range(gllib.glGet(gllib.GL_MAX_COLOR_ATTACHMENTS)):
-            setattr(self, "color_attachment%d" % i, Attachment(gllib.GL_COLOR_ATTACHMENT0 + i))
+        for i in range(gl.glGet(gl.GL_MAX_COLOR_ATTACHMENTS)):
+            setattr(self, "color_attachment%d" % i, Attachment(gl.GL_COLOR_ATTACHMENT0 + i))
 
     def __del__(self):
         try:
-            gllib.glDeleteFramebuffers(self.id)
+            gl.glDeleteFramebuffers(self.id)
         except:
             pass
 
-    def __call__(self, target=gllib.GL_FRAMEBUFFER):
+    def __call__(self, target=gl.GL_FRAMEBUFFER):
         return FramebufferBinding(target, self.id)
 
 class Attachment(object):
@@ -38,7 +38,7 @@ class Attachment(object):
 
     def __set__(self, instance, value):
         with instance():
-            pass # TODO call gllib.glFramebufferTexture
+            pass # TODO call gl.glFramebufferTexture
 
 class FramebufferBinding(Binding):
     def __init__(self, target, id=0):
@@ -46,8 +46,8 @@ class FramebufferBinding(Binding):
         self.id = id
 
     def get(self):
-        return gllib.glGet(BINDINGS[self.target])
+        return gl.glGet(BINDINGS[self.target])
 
     def set(self, id):
-        gllib.glBindFramebuffer(self.target, id)
+        gl.glBindFramebuffer(self.target, id)
 
