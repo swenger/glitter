@@ -2,12 +2,11 @@ import numpy
 from glitter import GlutWindow
 
 import gl
-from errors import GLError
+from errors import GLError, resolve_constant as _
 
 # TODO convert constants to readable format
 # TODO check integer textures
 # TODO check memory layout
-
 
 def numpy_to_gl_target(shape):
     return [gl.GL_TEXTURE_1D, gl.GL_TEXTURE_2D, gl.GL_TEXTURE_3D][len(shape) - 2]
@@ -56,8 +55,11 @@ def numpy_to_gl_iformat(colors, dtype):
 def gl_iformat_to_numpy(gl_iformat):
     raise NotImplementedError # TODO
 
-def numpy_to_gl_format(colors):
-    return [gl.GL_RED, gl.GL_RG, gl.GL_RGB, gl.GL_RGBA][colors - 1]
+def numpy_to_gl_format(colors, dtype):
+    if dtype == numpy.float32:
+        return [gl.GL_RED, gl.GL_RG, gl.GL_RGB, gl.GL_RGBA][colors - 1]
+    else:
+        return [gl.GL_RED_INTEGER, gl.GL_RG_INTEGER, gl.GL_RGB_INTEGER, gl.GL_RGBA_INTEGER][colors - 1]
 
 def numpy_to_gl_type(dtype):
     return {
@@ -95,7 +97,7 @@ class Texture(object):
         self.target = target or numpy_to_gl_target(shape)
 
         gl_iformat = numpy_to_gl_iformat(shape[-1], dtype)
-        gl_format = numpy_to_gl_format(shape[-1])
+        gl_format = numpy_to_gl_format(shape[-1], dtype)
         gl_type = numpy_to_gl_type(dtype)
         data = numpy.ctypeslib.as_ctypes(data) if data is not None else gl.POINTER(gl.GLvoid)()
         with self:
@@ -137,7 +139,7 @@ class Texture(object):
 
     @property
     def gl_format(self):
-        return numpy_to_gl_format(self.shape[-1])
+        return numpy_to_gl_format(self.shape[-1], self.dtype)
 
     @property
     def gl_type(self):
@@ -180,18 +182,24 @@ class Texture(object):
 window = GlutWindow()
 
 def test_texture(shape, dtype):
+    warnings = []
     data = numpy.random.random(shape).astype(dtype)
     texture = Texture(data)
     assert texture.shape == data.shape
     assert texture.gl_iformat == numpy_to_gl_iformat(data.shape[-1], data.dtype)
-    assert texture.gl_format == numpy_to_gl_format(data.shape[-1])
-    assert texture.gl_type == numpy_to_gl_type(data.dtype)
-    assert texture.dtype == data.dtype
+    assert texture.gl_format == numpy_to_gl_format(data.shape[-1], data.dtype)
+    if texture.gl_type != numpy_to_gl_type(data.dtype):
+        warnings.append("gl_type %s changed to %s" % (_(numpy_to_gl_type(data.dtype)), _(texture.gl_type)))
+    if texture.dtype != data.dtype:
+        warnings.append("dtype %s changed to %s" % (data.dtype, texture.dtype.__name__))
     assert (texture.data == data).all()
+    return warnings
 
-for dtype in (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32):
+for dtype in reversed((numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)):
     try:
-        test_texture((4, 4, 4, 4), dtype)
-    except GLError, e:
-        print e
+        warnings = test_texture((4, 4, 4, 4), dtype)
+    except (GLError, AssertionError), e:
+        print "FAIL for %s: %s" % (dtype.__name__, e)
+    else:
+        print "PASS for %s (%s)" % (dtype.__name__, ", ".join(warnings) if warnings else "no warnings")
 
