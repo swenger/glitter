@@ -7,6 +7,6 @@ setup(
   author_email = "wenger@cg.cs.tu-bs.de",
   description = "GL InTuiTive Extensions Repository",
   license = "MIT",
-  packages = ["glitter", "rawgl"],
+  packages = ["glitter", "rawgl"], # TODO run make and only include gl.py, glu.py and glut.py from rawgl
 )
 
