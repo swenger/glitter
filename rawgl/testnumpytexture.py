@@ -2,10 +2,6 @@ import numpy
 from glitter import GlutWindow
 
 import gl
-from errors import GLError, resolve_constant as _
-
-# TODO unify numpy to gl conversion
-# TODO check memory layout
 
 texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((numpy.uint8,   1), gl.GL_R8UI,     (gl.GL_UNSIGNED_BYTE,  gl.GL_RED_INTEGER )),
@@ -48,22 +44,23 @@ gl_iformat_to_gl_type = dict((fmt[1],    fmt[2][0]) for fmt in texture_formats)
 
 texture_targets = [ # target, binding, dimensions including color
         (gl.GL_TEXTURE_1D,                   gl.GL_TEXTURE_BINDING_1D,                   2),
-        (gl.GL_TEXTURE_1D_ARRAY,             gl.GL_TEXTURE_BINDING_1D_ARRAY,             3),
         (gl.GL_TEXTURE_2D,                   gl.GL_TEXTURE_BINDING_2D,                   3),
-        (gl.GL_TEXTURE_2D_ARRAY,             gl.GL_TEXTURE_BINDING_2D_ARRAY,             4),
-        (gl.GL_TEXTURE_2D_MULTISAMPLE,       gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE,       3), # TODO check dimensions
-        (gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY, gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, 4), # TODO check dimensions
-        (gl.GL_TEXTURE_3D,                   gl.GL_TEXTURE_BINDING_3D,                   4),
-        (gl.GL_TEXTURE_BUFFER,               gl.GL_TEXTURE_BINDING_BUFFER,               3), # TODO check dimensions
-        (gl.GL_TEXTURE_CUBE_MAP,             gl.GL_TEXTURE_BINDING_CUBE_MAP,             3), # TODO check dimensions
+        (gl.GL_TEXTURE_1D_ARRAY,             gl.GL_TEXTURE_BINDING_1D_ARRAY,             3),
+        (gl.GL_TEXTURE_2D_MULTISAMPLE,       gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE,       3),
+        (gl.GL_TEXTURE_BUFFER,               gl.GL_TEXTURE_BINDING_BUFFER,               3),
+        (gl.GL_TEXTURE_CUBE_MAP,             gl.GL_TEXTURE_BINDING_CUBE_MAP,             3),
         (gl.GL_TEXTURE_RECTANGLE,            gl.GL_TEXTURE_BINDING_RECTANGLE,            3),
+        (gl.GL_TEXTURE_3D,                   gl.GL_TEXTURE_BINDING_3D,                   4),
+        (gl.GL_TEXTURE_2D_ARRAY,             gl.GL_TEXTURE_BINDING_2D_ARRAY,             4),
+        (gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY, gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, 4),
 ]
 
-numpy_to_gl_target = {2: gl.GL_TEXTURE_1D, 3: gl.GL_TEXTURE_2D, 4: gl.GL_TEXTURE_3D}
+numpy_to_gl_target = dict(reversed([(tgt[2], tgt[0]) for tgt in texture_targets]))
 texture_target_to_binding = dict((tgt[0], tgt[1]) for tgt in texture_targets)
 texture_target_to_dimensions = dict((tgt[0], tgt[2]) for tgt in texture_targets)
 
 class Texture(object):
+    # TODO check memory layout
     # TODO depth texture, pixel unpack buffer, glPixelStore, __getitem__/__setitem__ for subimages
 
     def __init__(self, data=None, shape=None, dtype=None, target=None):
@@ -159,8 +156,9 @@ def test_texture(shape, dtype):
 for dtype in reversed((numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)):
     try:
         test_texture((4, 4, 4, 4), dtype)
-    except (GLError, AssertionError), e:
+    except Exception, e:
         print "% 9s: FAIL" % dtype.__name__
+        print e
     else:
         print "% 9s: PASS" % dtype.__name__
 
