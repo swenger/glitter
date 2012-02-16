@@ -2,6 +2,7 @@ import numpy
 from glitter import GlutWindow
 
 import gl
+from errors import resolve_constant as _
 
 texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((numpy.uint8,   1), gl.GL_R8UI,     (gl.GL_UNSIGNED_BYTE,  gl.GL_RED_INTEGER )),
@@ -80,6 +81,7 @@ class Texture(object):
         gl_format = numpy_to_gl_format[dtype, shape[-1]]
         gl_type = numpy_to_gl_type[dtype]
         data = data.ctypes if data is not None else gl.POINTER(gl.GLvoid)()
+        gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
             gl.glTexImage3D(self.target, 0, gl_iformat, shape[0], shape[1], shape[2], 0, gl_format, gl_type, data)
 
@@ -134,7 +136,7 @@ class Texture(object):
 
     @data.setter
     def data(self, data):
-        data = data.ctypes if data is not None else gl.POINTER(gl.GLvoid)() # TODO ascontiguousarray?
+        data = numpy.ascontiguousarray(data.ctypes) if data is not None else gl.POINTER(gl.GLvoid)()
         gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
             gl.glTexImage3D(self.target, 0, self.gl_iformat, self.shape[0], self.shape[1], self.shape[2], 0, self.gl_format, self.gl_type, data)
@@ -152,21 +154,22 @@ class Texture(object):
 window = GlutWindow()
 
 def test_texture(shape, dtype):
-    data = numpy.random.random(shape).astype(dtype)
+    data = (255 * numpy.random.random(shape)).astype(dtype) # TODO make this work for float, signed and unsigned integer dtypes
     texture = Texture(data)
     assert texture.shape == data.shape, "shape is broken"
     assert texture.gl_iformat == numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "gl_iformat is broken"
     assert texture.gl_format == numpy_to_gl_format[data.dtype.type, data.shape[-1]], "gl_format is broken"
     assert texture.gl_type == numpy_to_gl_type[data.dtype.type], "gl_type is broken"
     assert texture.dtype == data.dtype, "dtype is broken"
-    assert (texture.data == data).all(), "data is broken"
+    tdata = texture.data
+    assert (tdata == data).all(), "data is broken"
 
-for shape in ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3)):
-    for dtype in reversed((numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)):
+for shape in ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3)):
+    for dtype in (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32):
         try:
             test_texture(shape, dtype)
         except Exception, e:
-            print "%9s %18s: FAIL (%s: %s)" % (dtype.__name__, shape, type(e).__name__, e)
+            print "%9s %18s: FAIL (%s)" % (dtype.__name__, shape, str(e) or type(e).__name__)
         else:
             print "%9s %18s: PASS" % (dtype.__name__, shape)
 
