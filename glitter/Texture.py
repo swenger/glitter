@@ -1,62 +1,61 @@
 import numpy
 
-from rawgl import gl
+from rawgl import gl as _gl
 
-texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
-        ((numpy.uint8,   1), gl.GL_R8UI,     (gl.GL_UNSIGNED_BYTE,  gl.GL_RED_INTEGER )),
-        ((numpy.int8,    1), gl.GL_R8I,      (gl.GL_BYTE,           gl.GL_RED_INTEGER )),
-        ((numpy.uint16,  1), gl.GL_R16UI,    (gl.GL_UNSIGNED_SHORT, gl.GL_RED_INTEGER )),
-        ((numpy.int16,   1), gl.GL_R16I,     (gl.GL_SHORT,          gl.GL_RED_INTEGER )),
-        ((numpy.uint32,  1), gl.GL_R32UI,    (gl.GL_UNSIGNED_INT,   gl.GL_RED_INTEGER )),
-        ((numpy.int32,   1), gl.GL_R32I,     (gl.GL_INT,            gl.GL_RED_INTEGER )),
-        ((numpy.float32, 1), gl.GL_R32F,     (gl.GL_FLOAT,          gl.GL_RED         )),
-        ((numpy.uint8,   2), gl.GL_RG8UI,    (gl.GL_UNSIGNED_BYTE,  gl.GL_RG_INTEGER  )),
-        ((numpy.int8,    2), gl.GL_RG8I,     (gl.GL_BYTE,           gl.GL_RG_INTEGER  )),
-        ((numpy.uint16,  2), gl.GL_RG16UI,   (gl.GL_UNSIGNED_SHORT, gl.GL_RG_INTEGER  )),
-        ((numpy.int16,   2), gl.GL_RG16I,    (gl.GL_SHORT,          gl.GL_RG_INTEGER  )),
-        ((numpy.uint32,  2), gl.GL_RG32UI,   (gl.GL_UNSIGNED_INT,   gl.GL_RG_INTEGER  )),
-        ((numpy.int32,   2), gl.GL_RG32I,    (gl.GL_INT,            gl.GL_RG_INTEGER  )),
-        ((numpy.float32, 2), gl.GL_RG32F,    (gl.GL_FLOAT,          gl.GL_RG          )),
-        ((numpy.uint8,   3), gl.GL_RGB8UI,   (gl.GL_UNSIGNED_BYTE,  gl.GL_RGB_INTEGER )),
-        ((numpy.int8,    3), gl.GL_RGB8I,    (gl.GL_BYTE,           gl.GL_RGB_INTEGER )),
-        ((numpy.uint16,  3), gl.GL_RGB16UI,  (gl.GL_UNSIGNED_SHORT, gl.GL_RGB_INTEGER )),
-        ((numpy.int16,   3), gl.GL_RGB16I,   (gl.GL_SHORT,          gl.GL_RGB_INTEGER )),
-        ((numpy.uint32,  3), gl.GL_RGB32UI,  (gl.GL_UNSIGNED_INT,   gl.GL_RGB_INTEGER )),
-        ((numpy.int32,   3), gl.GL_RGB32I,   (gl.GL_INT,            gl.GL_RGB_INTEGER )),
-        ((numpy.float32, 3), gl.GL_RGB32F,   (gl.GL_FLOAT,          gl.GL_RGB         )),
-        ((numpy.uint8,   4), gl.GL_RGBA8UI,  (gl.GL_UNSIGNED_BYTE,  gl.GL_RGBA_INTEGER)),
-        ((numpy.int8,    4), gl.GL_RGBA8I,   (gl.GL_BYTE,           gl.GL_RGBA_INTEGER)),
-        ((numpy.uint16,  4), gl.GL_RGBA16UI, (gl.GL_UNSIGNED_SHORT, gl.GL_RGBA_INTEGER)),
-        ((numpy.int16,   4), gl.GL_RGBA16I,  (gl.GL_SHORT,          gl.GL_RGBA_INTEGER)),
-        ((numpy.uint32,  4), gl.GL_RGBA32UI, (gl.GL_UNSIGNED_INT,   gl.GL_RGBA_INTEGER)),
-        ((numpy.int32,   4), gl.GL_RGBA32I,  (gl.GL_INT,            gl.GL_RGBA_INTEGER)),
-        ((numpy.float32, 4), gl.GL_RGBA32F,  (gl.GL_FLOAT,          gl.GL_RGBA        )),
+_texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
+        ((numpy.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
+        ((numpy.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
+        ((numpy.uint16,  1), _gl.GL_R16UI,    (_gl.GL_UNSIGNED_SHORT, _gl.GL_RED_INTEGER )),
+        ((numpy.int16,   1), _gl.GL_R16I,     (_gl.GL_SHORT,          _gl.GL_RED_INTEGER )),
+        ((numpy.uint32,  1), _gl.GL_R32UI,    (_gl.GL_UNSIGNED_INT,   _gl.GL_RED_INTEGER )),
+        ((numpy.int32,   1), _gl.GL_R32I,     (_gl.GL_INT,            _gl.GL_RED_INTEGER )),
+        ((numpy.float32, 1), _gl.GL_R32F,     (_gl.GL_FLOAT,          _gl.GL_RED         )),
+        ((numpy.uint8,   2), _gl.GL_RG8UI,    (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RG_INTEGER  )),
+        ((numpy.int8,    2), _gl.GL_RG8I,     (_gl.GL_BYTE,           _gl.GL_RG_INTEGER  )),
+        ((numpy.uint16,  2), _gl.GL_RG16UI,   (_gl.GL_UNSIGNED_SHORT, _gl.GL_RG_INTEGER  )),
+        ((numpy.int16,   2), _gl.GL_RG16I,    (_gl.GL_SHORT,          _gl.GL_RG_INTEGER  )),
+        ((numpy.uint32,  2), _gl.GL_RG32UI,   (_gl.GL_UNSIGNED_INT,   _gl.GL_RG_INTEGER  )),
+        ((numpy.int32,   2), _gl.GL_RG32I,    (_gl.GL_INT,            _gl.GL_RG_INTEGER  )),
+        ((numpy.float32, 2), _gl.GL_RG32F,    (_gl.GL_FLOAT,          _gl.GL_RG          )),
+        ((numpy.uint8,   3), _gl.GL_RGB8UI,   (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGB_INTEGER )),
+        ((numpy.int8,    3), _gl.GL_RGB8I,    (_gl.GL_BYTE,           _gl.GL_RGB_INTEGER )),
+        ((numpy.uint16,  3), _gl.GL_RGB16UI,  (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGB_INTEGER )),
+        ((numpy.int16,   3), _gl.GL_RGB16I,   (_gl.GL_SHORT,          _gl.GL_RGB_INTEGER )),
+        ((numpy.uint32,  3), _gl.GL_RGB32UI,  (_gl.GL_UNSIGNED_INT,   _gl.GL_RGB_INTEGER )),
+        ((numpy.int32,   3), _gl.GL_RGB32I,   (_gl.GL_INT,            _gl.GL_RGB_INTEGER )),
+        ((numpy.float32, 3), _gl.GL_RGB32F,   (_gl.GL_FLOAT,          _gl.GL_RGB         )),
+        ((numpy.uint8,   4), _gl.GL_RGBA8UI,  (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGBA_INTEGER)),
+        ((numpy.int8,    4), _gl.GL_RGBA8I,   (_gl.GL_BYTE,           _gl.GL_RGBA_INTEGER)),
+        ((numpy.uint16,  4), _gl.GL_RGBA16UI, (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGBA_INTEGER)),
+        ((numpy.int16,   4), _gl.GL_RGBA16I,  (_gl.GL_SHORT,          _gl.GL_RGBA_INTEGER)),
+        ((numpy.uint32,  4), _gl.GL_RGBA32UI, (_gl.GL_UNSIGNED_INT,   _gl.GL_RGBA_INTEGER)),
+        ((numpy.int32,   4), _gl.GL_RGBA32I,  (_gl.GL_INT,            _gl.GL_RGBA_INTEGER)),
+        ((numpy.float32, 4), _gl.GL_RGBA32F,  (_gl.GL_FLOAT,          _gl.GL_RGBA        )),
 ] # TODO internal formats GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL
+_numpy_to_gl_iformat =   dict((x[0],    x[1]   ) for x in _texture_formats)
+_gl_iformat_to_numpy =   dict((x[1],    x[0]   ) for x in _texture_formats)
+_numpy_to_gl_format =    dict((x[0],    x[2][1]) for x in _texture_formats)
+_gl_format_to_numpy =    dict((x[2][1], x[0]   ) for x in _texture_formats)
+_numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in _texture_formats)
+_gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in _texture_formats)
+_gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in _texture_formats)
 
-numpy_to_gl_iformat =   dict((fmt[0],    fmt[1]   ) for fmt in texture_formats)
-gl_iformat_to_numpy =   dict((fmt[1],    fmt[0]   ) for fmt in texture_formats)
-numpy_to_gl_format =    dict((fmt[0],    fmt[2][1]) for fmt in texture_formats)
-gl_format_to_numpy =    dict((fmt[2][1], fmt[0]   ) for fmt in texture_formats)
-numpy_to_gl_type =      dict((fmt[0][0], fmt[2][0]) for fmt in texture_formats)
-gl_type_to_numpy =      dict((fmt[2][0], fmt[0][0]) for fmt in texture_formats)
-gl_iformat_to_gl_type = dict((fmt[1],    fmt[2][0]) for fmt in texture_formats)
-
-texture_targets = [ # target, binding, dimensions including color
-        (gl.GL_TEXTURE_1D,                   gl.GL_TEXTURE_BINDING_1D,                   2),
-        (gl.GL_TEXTURE_2D,                   gl.GL_TEXTURE_BINDING_2D,                   3),
-        (gl.GL_TEXTURE_1D_ARRAY,             gl.GL_TEXTURE_BINDING_1D_ARRAY,             3),
-        (gl.GL_TEXTURE_2D_MULTISAMPLE,       gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE,       3),
-        (gl.GL_TEXTURE_BUFFER,               gl.GL_TEXTURE_BINDING_BUFFER,               3),
-        (gl.GL_TEXTURE_CUBE_MAP,             gl.GL_TEXTURE_BINDING_CUBE_MAP,             3),
-        (gl.GL_TEXTURE_RECTANGLE,            gl.GL_TEXTURE_BINDING_RECTANGLE,            3),
-        (gl.GL_TEXTURE_3D,                   gl.GL_TEXTURE_BINDING_3D,                   4),
-        (gl.GL_TEXTURE_2D_ARRAY,             gl.GL_TEXTURE_BINDING_2D_ARRAY,             4),
-        (gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY, gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, 4),
+_texture_targets = [ # target, binding, dimensions including color, (name, dimension)
+        (_gl.GL_TEXTURE_1D,                   _gl.GL_TEXTURE_BINDING_1D,                   ("texture",           2)),
+        (_gl.GL_TEXTURE_2D,                   _gl.GL_TEXTURE_BINDING_2D,                   ("texture",           3)),
+        (_gl.GL_TEXTURE_1D_ARRAY,             _gl.GL_TEXTURE_BINDING_1D_ARRAY,             ("array",             3)),
+        (_gl.GL_TEXTURE_2D_MULTISAMPLE,       _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE,       ("multisample",       3)),
+        (_gl.GL_TEXTURE_BUFFER,               _gl.GL_TEXTURE_BINDING_BUFFER,               ("buffer",            3)),
+        (_gl.GL_TEXTURE_CUBE_MAP,             _gl.GL_TEXTURE_BINDING_CUBE_MAP,             ("cubemap",           3)),
+        (_gl.GL_TEXTURE_RECTANGLE,            _gl.GL_TEXTURE_BINDING_RECTANGLE,            ("rectangle",         3)),
+        (_gl.GL_TEXTURE_3D,                   _gl.GL_TEXTURE_BINDING_3D,                   ("texture",           4)),
+        (_gl.GL_TEXTURE_2D_ARRAY,             _gl.GL_TEXTURE_BINDING_2D_ARRAY,             ("array",             4)),
+        (_gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY, _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, ("multisample_array", 4)),
 ]
-
-numpy_to_gl_target = dict(reversed([(tgt[2], tgt[0]) for tgt in texture_targets]))
-texture_target_to_binding = dict((tgt[0], tgt[1]) for tgt in texture_targets)
-texture_target_to_dimensions = dict((tgt[0], tgt[2]) for tgt in texture_targets)
+_numpy_to_gl_target = dict(reversed([(x[2], x[0]   ) for x in _texture_targets]))
+_texture_target_to_binding =    dict((x[0], x[1]   ) for x in _texture_targets)
+_texture_target_to_dimensions = dict((x[0], x[2][1]) for x in _texture_targets)
+_name_to_target =               dict((x[2], x[0]   ) for x in _texture_targets)
 
 class Texture(object):
     # TODO check memory layout: "The first element corresponds to the lower left corner of the texture image. Subsequent elements progress left-to-right through the remaining texels in the lowest row of the texture image, and then in successively higher rows of the texture image. The final element corresponds to the upper right corner of the texture image."
@@ -65,97 +64,101 @@ class Texture(object):
     # TODO glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT); glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
     # TODO mipmaps (level != 0) with glGenerateMipmap
 
-    def __init__(self, data=None, shape=None, dtype=None, target=None):
+    def __init__(self, data=None, shape=None, dtype=None, target="texture"):
         dtype = dtype or data.dtype.type
         shape = shape or data.shape
 
-        id = gl.GLuint()
-        gl.glGenTextures(1, gl.pointer(id))
-        self.id = id.value
-        self.stack = []
-        self.target = target or numpy_to_gl_target[len(shape)]
+        _id = _gl.GLuint()
+        _gl.glGenTextures(1, _gl.pointer(_id))
+        self._id = _id.value
+        self._stack = []
+        self._target = _name_to_target[target, shape[-1]] or _numpy_to_gl_target[len(shape)]
 
-        gl_iformat = numpy_to_gl_iformat[dtype, shape[-1]]
-        gl_format = numpy_to_gl_format[dtype, shape[-1]]
-        gl_type = numpy_to_gl_type[dtype]
-        data = data.ctypes if data is not None else gl.POINTER(gl.GLvoid)()
-        gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
+        _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
+        _format = _numpy_to_gl_format[dtype, shape[-1]]
+        _type = _numpy_to_gl_type[dtype]
+        _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
+        _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
-            gl.glTexImage3D(self.target, 0, gl_iformat, shape[0], shape[1], shape[2], 0, gl_format, gl_type, data)
+            _gl.glTexImage3D(self._target, 0, _iformat, shape[0], shape[1], shape[2], 0, _format, _type, _data)
 
     def __del__(self):
         try:
-            gl.glDeleteTextures(1, gl.pointer(gl.GLuint(self.id)))
+            _gl.glDeleteTextures(1, _gl.pointer(_gl.GLuint(self._id)))
+            self._id = 0
         except AttributeError:
-            pass # "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
+            pass # avoid "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
 
     @property
     def shape(self):
         with self:
-            width = gl.GLint()
-            gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_WIDTH, gl.pointer(width))
-            height = gl.GLint()
-            gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_HEIGHT, gl.pointer(height))
-            depth = gl.GLint()
-            gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_DEPTH, gl.pointer(depth))
-            colors = gl_iformat_to_numpy[self.gl_iformat][1]        
-        return (width.value, height.value, depth.value, colors)
+            _width = _gl.GLint()
+            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
+            _height = _gl.GLint()
+            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_HEIGHT, _gl.pointer(_height))
+            _depth = _gl.GLint()
+            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_DEPTH, _gl.pointer(_depth))
+            colors = _gl_iformat_to_numpy[self._iformat][1]        
+        return (_width.value, _height.value, _depth.value, colors)
 
     @property
-    def gl_iformat(self):
-        gl_iformat = gl.GLint()
+    def _iformat(self):
+        _iformat = _gl.GLint()
         with self:
-            gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_INTERNAL_FORMAT, gl.pointer(gl_iformat))
-        return gl_iformat.value
+            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_INTERNAL_FORMAT, _gl.pointer(_iformat))
+        return _iformat.value
 
     @property
-    def gl_format(self):
-        return numpy_to_gl_format[self.dtype, self.shape[-1]]
+    def _format(self):
+        return _numpy_to_gl_format[self.dtype, self.shape[-1]]
 
     @property
-    def gl_type(self):
-        return gl_iformat_to_gl_type[self.gl_iformat]
+    def _type(self):
+        return _gl_iformat_to_gl_type[self._iformat]
 
     @property
     def dtype(self):
-        return gl_iformat_to_numpy[self.gl_iformat][0]
+        return _gl_iformat_to_numpy[self._iformat][0]
 
     @property
     def ndim(self):
-        return texture_target_to_dimensions[self.target]
+        return _texture_target_to_dimensions[self._target]
 
     @property
     def data(self):
-        data = numpy.empty(self.shape, dtype=self.dtype)
-        gl.glPixelStorei(gl.GL_PACK_ALIGNMENT, 1)
+        _data = numpy.empty(self.shape, dtype=self.dtype)
+        _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
         with self:
-            gl.glGetTexImage(self.target, 0, self.gl_format, self.gl_type, data.ctypes)
-        return data
+            _gl.glGetTexImage(self._target, 0, self._format, self._type, _data.ctypes)
+        return _data
 
     @data.setter
     def data(self, data):
-        data = numpy.ascontiguousarray(data.ctypes) if data is not None else gl.POINTER(gl.GLvoid)()
-        gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
+        _data = numpy.ascontiguousarray(data.ctypes) if data is not None else _gl.POINTER(_gl.GLvoid)()
+        _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
-            gl.glTexImage3D(self.target, 0, self.gl_iformat, self.shape[2], self.shape[1], self.shape[0], 0, self.gl_format, self.gl_type, data)
+            _gl.glTexImage3D(self._target, 0, self._iformat, self.shape[2], self.shape[1], self.shape[0], 0, self._format, self._type, _data)
+
+    def bind(self):
+        old_binding = _gl.GLint()
+        _gl.glGetIntegerv(_texture_target_to_binding[self._target], _gl.pointer(old_binding))
+        _gl.glBindTexture(self._target, self._id)
+        return old_binding.value
 
     def __enter__(self):
-        old_binding = gl.GLint()
-        gl.glGetIntegerv(texture_target_to_binding[self.target], gl.pointer(old_binding))
-        self.stack.append(old_binding.value)
-        gl.glBindTexture(self.target, self.id)
+        self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
-        gl.glBindTexture(self.target, self.stack.pop())
+        _gl.glBindTexture(self._target, self._stack.pop())
 
 
 def test_texture(shape, dtype):
     data = (255 * numpy.random.random(shape)).astype(dtype) # TODO make this work for float, signed and unsigned integer dtypes
     texture = Texture(data)
     assert texture.shape == data.shape, "shape is broken"
-    assert texture.gl_iformat == numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "gl_iformat is broken"
-    assert texture.gl_format == numpy_to_gl_format[data.dtype.type, data.shape[-1]], "gl_format is broken"
-    assert texture.gl_type == numpy_to_gl_type[data.dtype.type], "gl_type is broken"
+    assert texture._iformat == _numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
+    assert texture._format == _numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"
+    assert texture._type == _numpy_to_gl_type[data.dtype.type], "_type is broken"
     assert texture.dtype == data.dtype, "dtype is broken"
     tdata = texture.data
     assert (tdata == data).all(), "data is broken"
