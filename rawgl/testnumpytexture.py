@@ -139,7 +139,7 @@ class Texture(object):
         data = numpy.ascontiguousarray(data.ctypes) if data is not None else gl.POINTER(gl.GLvoid)()
         gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
-            gl.glTexImage3D(self.target, 0, self.gl_iformat, self.shape[0], self.shape[1], self.shape[2], 0, self.gl_format, self.gl_type, data)
+            gl.glTexImage3D(self.target, 0, self.gl_iformat, self.shape[2], self.shape[1], self.shape[0], 0, self.gl_format, self.gl_type, data)
 
     def __enter__(self):
         old_binding = gl.GLint()
