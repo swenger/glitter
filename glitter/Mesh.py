@@ -1,6 +1,6 @@
 from glitter import ArrayBuffer, ElementArrayBuffer
 
-class Mesh(object):
+class Mesh(object): # TODO
     def __init__(self, vertices, indices):
         self.vertices = vertices
         self.indices = indices

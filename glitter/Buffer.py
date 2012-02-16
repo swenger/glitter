@@ -31,7 +31,7 @@ _buffer_usage = [ # (access_frequency, access_type), usage
 _buffer_params_to_usage = dict((x[0], x[1]) for x in _buffer_usage)
 _buffer_usage_to_params = dict((x[1], x[0]) for x in _buffer_usage)
 
-class Buffer(object):
+class Buffer(object): # TODO
     def __init__(self, data=None, access_frequency="static", access_type="draw"): # TODO allow copy-less initialization from another buffer
         self._stack = []
 
