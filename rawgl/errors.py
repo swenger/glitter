@@ -10,6 +10,9 @@ class GLError(Exception):
     def __str__(self):
         return "OpenGL error #%d (%s) in %s(%s)" % (self.error, errname(self.error), self.func.__name__, ", ".join(map(repr, self.arguments)))
 
+    def __repr__(self):
+        return str(self)
+
 def errcheck(result, func, arguments):
     error = gl.glGetError()
     if error != gl.GL_NO_ERROR:
@@ -19,7 +22,7 @@ def errname(error):
     try:
         import glu
         return gl.string_at(glu.gluErrorString(error))
-    except ImportError:
+    except (ImportError, AttributeError):
         candidates = [key for key, value in gl.__dict__.items() if key.startswith("GL_") and value == error]
         return "/".join(candidates)
 
