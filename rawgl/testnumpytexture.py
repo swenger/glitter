@@ -32,7 +32,7 @@ texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal f
         ((numpy.uint32,  4), gl.GL_RGBA32UI, (gl.GL_UNSIGNED_INT,   gl.GL_RGBA_INTEGER)),
         ((numpy.int32,   4), gl.GL_RGBA32I,  (gl.GL_INT,            gl.GL_RGBA_INTEGER)),
         ((numpy.float32, 4), gl.GL_RGBA32F,  (gl.GL_FLOAT,          gl.GL_RGBA        )),
-]
+] # TODO internal formats GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL
 
 numpy_to_gl_iformat =   dict((fmt[0],    fmt[1]   ) for fmt in texture_formats)
 gl_iformat_to_numpy =   dict((fmt[1],    fmt[0]   ) for fmt in texture_formats)
@@ -60,8 +60,10 @@ texture_target_to_binding = dict((tgt[0], tgt[1]) for tgt in texture_targets)
 texture_target_to_dimensions = dict((tgt[0], tgt[2]) for tgt in texture_targets)
 
 class Texture(object):
-    # TODO check memory layout
-    # TODO depth texture, pixel unpack buffer, glPixelStore, __getitem__/__setitem__ for subimages
+    # TODO check memory layout: "The first element corresponds to the lower left corner of the texture image. Subsequent elements progress left-to-right through the remaining texels in the lowest row of the texture image, and then in successively higher rows of the texture image. The final element corresponds to the upper right corner of the texture image."
+    # TODO depth texture, pixel unpack buffer, glPixelStore
+    # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
+    # TODO mipmaps (level != 0)
 
     def __init__(self, data=None, shape=None, dtype=None, target=None):
         dtype = dtype or data.dtype.type
@@ -81,7 +83,10 @@ class Texture(object):
             gl.glTexImage3D(self.target, 0, gl_iformat, shape[0], shape[1], shape[2], 0, gl_format, gl_type, data)
 
     def __del__(self):
-        gl.glDeleteTextures(1, gl.pointer(gl.GLuint(self.id)))
+        try:
+            gl.glDeleteTextures(1, gl.pointer(gl.GLuint(self.id)))
+        except AttributeError:
+            pass # "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
 
     @property
     def shape(self):
@@ -127,7 +132,7 @@ class Texture(object):
 
     @data.setter
     def data(self, data):
-        data = numpy.ctypeslib.as_ctypes(data) if data is not None else gl.POINTER(gl.GLvoid)()
+        data = numpy.ctypeslib.as_ctypes(data) if data is not None else gl.POINTER(gl.GLvoid)() # TODO ascontiguousarray?
         with self:
             gl.glTexImage3D(self.target, 0, self.gl_iformat, self.shape[0], self.shape[1], self.shape[2], 0, self.gl_format, self.gl_type, data)
 

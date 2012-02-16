@@ -8,5 +8,7 @@ glitter:
 	clean stack operations (with statements for binding and unbinding, enabling and disabling etc.)
 	context generation and switching
 	transparent CUDA and OpenCL interoperability
-	refcount increase for glVertexAttribPointer and the like
+	think about lifetime of objects passed to the GL
+    glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
+    slicing to bind buffer ranges, set vertex attribute pointers (offset + stride), write texture sub images etc.
 
