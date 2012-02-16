@@ -42,23 +42,6 @@ _numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in _texture_formats)
 _gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in _texture_formats)
 _gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in _texture_formats)
 
-_texture_targets = [ # target, binding, dimensions including color, (name, dimension)
-        (_gl.GL_TEXTURE_1D,                   _gl.GL_TEXTURE_BINDING_1D,                   ("texture",           2)),
-        (_gl.GL_TEXTURE_2D,                   _gl.GL_TEXTURE_BINDING_2D,                   ("texture",           3)),
-        (_gl.GL_TEXTURE_1D_ARRAY,             _gl.GL_TEXTURE_BINDING_1D_ARRAY,             ("array",             3)),
-        (_gl.GL_TEXTURE_2D_MULTISAMPLE,       _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE,       ("multisample",       3)),
-        (_gl.GL_TEXTURE_BUFFER,               _gl.GL_TEXTURE_BINDING_BUFFER,               ("buffer",            3)),
-        (_gl.GL_TEXTURE_CUBE_MAP,             _gl.GL_TEXTURE_BINDING_CUBE_MAP,             ("cubemap",           3)),
-        (_gl.GL_TEXTURE_RECTANGLE,            _gl.GL_TEXTURE_BINDING_RECTANGLE,            ("rectangle",         3)),
-        (_gl.GL_TEXTURE_3D,                   _gl.GL_TEXTURE_BINDING_3D,                   ("texture",           4)),
-        (_gl.GL_TEXTURE_2D_ARRAY,             _gl.GL_TEXTURE_BINDING_2D_ARRAY,             ("array",             4)),
-        (_gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY, _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, ("multisample_array", 4)),
-]
-_numpy_to_gl_target = dict(reversed([(x[2][0], x[0]   ) for x in _texture_targets]))
-_texture_target_to_binding =    dict((x[0],    x[1]   ) for x in _texture_targets)
-_texture_target_to_dimensions = dict((x[0],    x[2][1]) for x in _texture_targets)
-_name_to_target =               dict((x[2],    x[0]   ) for x in _texture_targets)
-
 class Texture(GLObject):
     # TODO check memory layout: "The first element corresponds to the lower left corner of the texture image. Subsequent elements progress left-to-right through the remaining texels in the lowest row of the texture image, and then in successively higher rows of the texture image. The final element corresponds to the upper right corner of the texture image."
     # TODO depth texture, pixel unpack buffer, glPixelStore
@@ -70,14 +53,19 @@ class Texture(GLObject):
     _delete_id = _gl.glDeleteTextures
     _bind = _gl.glBindTexture
 
-    def __init__(self, data=None, shape=None, dtype=None, target="texture"):
+    _ndim = NotImplemented
+    _set = NotImplemented
+
+    def __init__(self, data=None, shape=None, dtype=None):
+        if not (hasattr(self, "_ndim") and hasattr(self, "_set")):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+        
         super(Texture, self).__init__()
 
         dtype = dtype or data.dtype.type
         shape = shape or data.shape
-
-        self._target = _name_to_target[target, len(shape)] or _numpy_to_gl_target[len(shape)]
-        self._binding = _texture_target_to_binding[self._target]
+        if len(shape) != self._ndim:
+            raise TypeError("shape must be %d-dimensional" % self._ndim)
 
         _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
         _format = _numpy_to_gl_format[dtype, shape[-1]]
@@ -100,19 +88,25 @@ class Texture(GLObject):
         _data = numpy.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
-            _gl.glTexImage3D(self._target, 0, _iformat, shape[2], shape[1], shape[0], 0, _format, _type, _data)
+            args = [self._target, 0, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
+            self._set(*args)
 
     @property
     def shape(self):
         with self:
+            colors = _gl_iformat_to_numpy[self._iformat][1]        
             _width = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
+            if self._ndim == 2:
+                return (_width.value, colors)
             _height = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_HEIGHT, _gl.pointer(_height))
+            if self._ndim == 3:
+                return (_height.value, _width.value, colors)
             _depth = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_DEPTH, _gl.pointer(_depth))
-            colors = _gl_iformat_to_numpy[self._iformat][1]        
-        return (_depth.value, _height.value, _width.value, colors)
+            if self._ndim == 4:
+                return (_depth.value, _height.value, _width.value, colors)
 
     @property
     def _iformat(self):
@@ -133,14 +127,70 @@ class Texture(GLObject):
     def dtype(self):
         return _gl_iformat_to_numpy[self._iformat][0]
 
-    @property
-    def ndim(self):
-        return _texture_target_to_dimensions[self._target]
+class Texture1D(Texture):
+    _target = _gl.GL_TEXTURE_1D
+    _binding = _gl.GL_TEXTURE_BINDING_1D
+    _ndim = 2
+    _set = _gl.glTexImage1D
+
+class Texture2D(Texture):
+    _target = _gl.GL_TEXTURE_2D
+    _binding = _gl.GL_TEXTURE_BINDING_2D
+    _ndim = 3
+    _set = _gl.glTexImage2D
+
+class Texture1DArray(Texture):
+    _target = _gl.GL_TEXTURE_1D_ARRAY
+    _binding = _gl.GL_TEXTURE_BINDING_1D_ARRAY
+    _ndim = 3
+    _set = _gl.glTexImage2D
+
+class TextureRectangle(Texture):
+    _target = _gl.GL_TEXTURE_RECTANGLE
+    _binding = _gl.GL_TEXTURE_BINDING_RECTANGLE
+    _ndim = 3
+    _set = _gl.glTexImage2D
+
+class TextureBuffer(Texture):
+    _target = _gl.GL_TEXTURE_BUFFER
+    _binding = _gl.GL_TEXTURE_BINDING_BUFFER
+    _ndim = 3
+    _set = _gl.glTexImage2D
+
+class TextureCubeMap(Texture):
+    _target = _gl.GL_TEXTURE_CUBE_MAP
+    _binding = _gl.GL_TEXTURE_BINDING_CUBE_MAP
+    _ndim = 3
+    _set = _gl.glTexImage2D
+
+class Texture2DMultisample(Texture):
+    _target = _gl.GL_TEXTURE_2D_MULTISAMPLE
+    _binding = _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE
+    _ndim = 3
+    _set = _gl.glTexImage2D
+
+class Texture3D(Texture):
+    _target = _gl.GL_TEXTURE_3D
+    _binding = _gl.GL_TEXTURE_BINDING_3D
+    _ndim = 4
+    _set = _gl.glTexImage3D
+
+class Texture2DArray(Texture):
+    _target = _gl.GL_TEXTURE_2D_ARRAY
+    _binding = _gl.GL_TEXTURE_BINDING_2D_ARRAY
+    _ndim = 4
+    _set = _gl.glTexImage3D
+
+class Texture2DMultisampleArray(Texture):
+    _target = _gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY
+    _binding = _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY
+    _ndim = 4
+    _set = _gl.glTexImage3D
 
 
 def test_texture(shape, dtype):
     data = (255 * numpy.random.random(shape)).astype(dtype) # TODO make this work for float, signed and unsigned integer dtypes
-    texture = Texture(data)
+    texture = Texture3D(data)
     assert texture.shape == data.shape, "shape is broken"
     assert texture._iformat == _numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
     assert texture._format == _numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"

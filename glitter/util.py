@@ -31,6 +31,9 @@ class Binding(object):
 
 class GLObject(object):
     def __init__(self):
+        if not (hasattr(self, "_target") and hasattr(self, "_binding")):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+        
         _id = _gl.GLuint()
         self._generate_id(1, _gl.pointer(_id))
         self._id = _id.value
