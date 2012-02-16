@@ -4,8 +4,6 @@ from glitter import GlutWindow
 import gl
 from errors import GLError, resolve_constant as _
 
-# TODO convert constants to readable format
-# TODO check integer textures
 # TODO check memory layout
 
 def numpy_to_gl_target(shape):
@@ -49,11 +47,43 @@ def numpy_to_gl_iformat(colors, dtype):
             numpy.uint32: "32UI",
             numpy.int32: "32I",
             numpy.float32: "32F",
-            }[dtype.type]
+            }[dtype.type if isinstance(dtype, numpy.dtype) else dtype]
     return getattr(gl, "GL_%s%s" % (channel_code, type_code)) # GL_R8UI, ...
 
 def gl_iformat_to_numpy(gl_iformat):
-    raise NotImplementedError # TODO
+    return {
+            gl.GL_R8UI: (numpy.uint8, 1),
+            gl.GL_R8I: (numpy.int8, 1),
+            gl.GL_R16UI: (numpy.uint16, 1),
+            gl.GL_R16I: (numpy.int16, 1),
+            gl.GL_R32UI: (numpy.uint32, 1),
+            gl.GL_R32I: (numpy.int32, 1),
+            gl.GL_R32F: (numpy.float32, 1),
+
+            gl.GL_RG8UI: (numpy.uint8, 2),
+            gl.GL_RG8I: (numpy.int8, 2),
+            gl.GL_RG16UI: (numpy.uint16, 2),
+            gl.GL_RG16I: (numpy.int16, 2),
+            gl.GL_RG32UI: (numpy.uint32, 2),
+            gl.GL_RG32I: (numpy.int32, 2),
+            gl.GL_RG32F: (numpy.float32, 2),
+
+            gl.GL_RGB8UI: (numpy.uint8, 3),
+            gl.GL_RGB8I: (numpy.int8, 3),
+            gl.GL_RGB16UI: (numpy.uint16, 3),
+            gl.GL_RGB16I: (numpy.int16, 3),
+            gl.GL_RGB32UI: (numpy.uint32, 3),
+            gl.GL_RGB32I: (numpy.int32, 3),
+            gl.GL_RGB32F: (numpy.float32, 3),
+
+            gl.GL_RGBA8UI: (numpy.uint8, 4),
+            gl.GL_RGBA8I: (numpy.int8, 4),
+            gl.GL_RGBA16UI: (numpy.uint16, 4),
+            gl.GL_RGBA16I: (numpy.int16, 4),
+            gl.GL_RGBA32UI: (numpy.uint32, 4),
+            gl.GL_RGBA32I: (numpy.int32, 4),
+            gl.GL_RGBA32F: (numpy.float32, 4),
+            }[gl_iformat]
 
 def numpy_to_gl_format(colors, dtype):
     if dtype == numpy.float32:
@@ -70,7 +100,7 @@ def numpy_to_gl_type(dtype):
             numpy.uint32: gl.GL_UNSIGNED_INT,
             numpy.int32: gl.GL_INT,
             numpy.float32: gl.GL_FLOAT,
-            }[dtype.type]
+            }[dtype.type if isinstance(dtype, numpy.dtype) else dtype]
 
 def gl_type_to_numpy(gl_type):
     return {
@@ -116,7 +146,8 @@ class Texture(object):
             depth = gl.GLint()
             gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_DEPTH, gl.pointer(depth))
 
-            red_gl_type = gl.GLint()
+            colors = gl_iformat_to_numpy(self.gl_iformat)[1] # TODO or:
+            """red_gl_type = gl.GLint()
             gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_RED_TYPE, gl.pointer(red_gl_type))
             green_gl_type = gl.GLint()
             gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_GREEN_TYPE, gl.pointer(green_gl_type))
@@ -126,7 +157,7 @@ class Texture(object):
             gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_ALPHA_TYPE, gl.pointer(alpha_gl_type))
             depth_gl_type = gl.GLint()
             gl.glGetTexLevelParameteriv(self.target, 0, gl.GL_TEXTURE_DEPTH_TYPE, gl.pointer(depth_gl_type))
-            colors = sum(x.value != gl.GL_NONE for x in (red_gl_type, green_gl_type, blue_gl_type, alpha_gl_type, depth_gl_type))
+            colors = sum(x.value != gl.GL_NONE for x in (red_gl_type, green_gl_type, blue_gl_type, alpha_gl_type, depth_gl_type))"""
         
         return (width.value, height.value, depth.value, colors)
 
@@ -143,14 +174,15 @@ class Texture(object):
 
     @property
     def gl_type(self):
-        gl_type = gl.GLint()
+        return numpy_to_gl_type(gl_iformat_to_numpy(self.gl_iformat)[0]) # TODO or:
+        """gl_type = gl.GLint()
         with self:
             gl.glGetTexLevelParameteriv(gl.GL_TEXTURE_3D, 0, gl.GL_TEXTURE_RED_TYPE, gl.pointer(gl_type))
-        return gl_type.value
+        return gl_type.value"""
 
     @property
     def dtype(self):
-        return gl_type_to_numpy(self.gl_type) # TODO should be iformat for better accuracy
+        return gl_iformat_to_numpy(self.gl_iformat)[0] # TODO or return gl_type_to_numpy(self.gl_type)
 
     @property
     def ndim(self):
