@@ -2,6 +2,8 @@ import numpy
 
 from rawgl import gl as _gl
 
+from util import GLObject
+
 _buffer_targets = [ # target, binding
         (_gl.GL_ARRAY_BUFFER,              _gl.GL_ARRAY_BUFFER_BINDING             ),
         (_gl.GL_ATOMIC_COUNTER_BUFFER,     _gl.GL_ATOMIC_COUNTER_BUFFER_BINDING    ),
@@ -34,22 +36,17 @@ _buffer_usage_to_params = dict((x[1], x[0]) for x in _buffer_usage)
 # TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
 # TODO buffers likely contain meaningful array data; remember the dtypes and shape
 
-class Buffer(object):
-    def __init__(self, data=None, access_frequency="static", access_type="draw"):
-        self._stack = []
+class Buffer(GLObject):
+    _generate_id = _gl.glGenBuffers
+    _delete_id = _gl.glDeleteBuffers
+    _bind = _gl.glBindBuffer
 
-        _id = _gl.GLuint()
-        _gl.glGenBuffers(1, _gl.pointer(_id))
-        self._id = _id.value
+    def __init__(self, data=None, access_frequency="static", access_type="draw"):
+        super(Buffer, self).__init__()
+
+        self._binding = _buffer_target_to_binding[self._target]
 
         self._setdata(data, _buffer_params_to_usage[access_frequency, access_type])
-
-    def __del__(self):
-        try:
-            _gl.glDeleteBuffers(1, _gl.pointer(_gl.GLuint(self._id)))
-            self._id = 0
-        except AttributeError:
-            pass # avoid "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
 
     @property
     def data(self): # TODO slicing with glGetBufferSubData
@@ -99,19 +96,7 @@ class Buffer(object):
     def access_type(self):
         return _buffer_usage_to_params[self._usage][1]
 
-    def bind(self):
-        _old_binding = _gl.GLint()
-        _gl.glGetIntegerv(_buffer_target_to_binding[self._target], _gl.pointer(_old_binding))
-        _gl.glBindBuffer(self._target, self._id)
-        return _old_binding.value
-
     # TODO bind_as_... and ..._binding()
-
-    def __enter__(self):
-        self._stack.append(self.bind())
-
-    def __exit__(self, type, value, traceback):
-        _gl.glBindBuffer(self._target, self._stack.pop())
 
 class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER
