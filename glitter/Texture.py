@@ -52,10 +52,10 @@ _texture_targets = [ # target, binding, dimensions including color, (name, dimen
         (_gl.GL_TEXTURE_2D_ARRAY,             _gl.GL_TEXTURE_BINDING_2D_ARRAY,             ("array",             4)),
         (_gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY, _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, ("multisample_array", 4)),
 ]
-_numpy_to_gl_target = dict(reversed([(x[2], x[0]   ) for x in _texture_targets]))
-_texture_target_to_binding =    dict((x[0], x[1]   ) for x in _texture_targets)
-_texture_target_to_dimensions = dict((x[0], x[2][1]) for x in _texture_targets)
-_name_to_target =               dict((x[2], x[0]   ) for x in _texture_targets)
+_numpy_to_gl_target = dict(reversed([(x[2][0], x[0]   ) for x in _texture_targets]))
+_texture_target_to_binding =    dict((x[0],    x[1]   ) for x in _texture_targets)
+_texture_target_to_dimensions = dict((x[0],    x[2][1]) for x in _texture_targets)
+_name_to_target =               dict((x[2],    x[0]   ) for x in _texture_targets)
 
 class Texture(object):
     # TODO check memory layout: "The first element corresponds to the lower left corner of the texture image. Subsequent elements progress left-to-right through the remaining texels in the lowest row of the texture image, and then in successively higher rows of the texture image. The final element corresponds to the upper right corner of the texture image."
@@ -72,7 +72,7 @@ class Texture(object):
         _gl.glGenTextures(1, _gl.pointer(_id))
         self._id = _id.value
         self._stack = []
-        self._target = _name_to_target[target, shape[-1]] or _numpy_to_gl_target[len(shape)]
+        self._target = _name_to_target[target, len(shape)] or _numpy_to_gl_target[len(shape)]
 
         _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
         _format = _numpy_to_gl_format[dtype, shape[-1]]
