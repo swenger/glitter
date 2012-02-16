@@ -2,6 +2,8 @@ import numpy
 
 from rawgl import gl as _gl
 
+from util import GLObject
+
 _texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((numpy.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((numpy.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
@@ -57,34 +59,30 @@ _texture_target_to_binding =    dict((x[0],    x[1]   ) for x in _texture_target
 _texture_target_to_dimensions = dict((x[0],    x[2][1]) for x in _texture_targets)
 _name_to_target =               dict((x[2],    x[0]   ) for x in _texture_targets)
 
-class Texture(object):
+class Texture(GLObject):
     # TODO check memory layout: "The first element corresponds to the lower left corner of the texture image. Subsequent elements progress left-to-right through the remaining texels in the lowest row of the texture image, and then in successively higher rows of the texture image. The final element corresponds to the upper right corner of the texture image."
     # TODO depth texture, pixel unpack buffer, glPixelStore
     # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
     # TODO glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT); glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
     # TODO mipmaps (level != 0) with glGenerateMipmap
 
+    _generate_id = _gl.glGenTextures
+    _delete_id = _gl.glDeleteTextures
+    _bind = _gl.glBindTexture
+
     def __init__(self, data=None, shape=None, dtype=None, target="texture"):
+        super(Texture, self).__init__()
+
         dtype = dtype or data.dtype.type
         shape = shape or data.shape
 
-        _id = _gl.GLuint()
-        _gl.glGenTextures(1, _gl.pointer(_id))
-        self._id = _id.value
-        self._stack = []
         self._target = _name_to_target[target, len(shape)] or _numpy_to_gl_target[len(shape)]
+        self._binding = _texture_target_to_binding[self._target]
 
         _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
         _format = _numpy_to_gl_format[dtype, shape[-1]]
         _type = _numpy_to_gl_type[dtype]
         self._setdata(data, _iformat, shape, _format, _type)
-
-    def __del__(self):
-        try:
-            _gl.glDeleteTextures(1, _gl.pointer(_gl.GLuint(self._id)))
-            self._id = 0
-        except AttributeError:
-            pass # avoid "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
 
     @property
     def data(self):
@@ -138,18 +136,6 @@ class Texture(object):
     @property
     def ndim(self):
         return _texture_target_to_dimensions[self._target]
-
-    def bind(self):
-        old_binding = _gl.GLint()
-        _gl.glGetIntegerv(_texture_target_to_binding[self._target], _gl.pointer(old_binding))
-        _gl.glBindTexture(self._target, self._id)
-        return old_binding.value
-
-    def __enter__(self):
-        self._stack.append(self.bind())
-
-    def __exit__(self, type, value, traceback):
-        _gl.glBindTexture(self._target, self._stack.pop())
 
 
 def test_texture(shape, dtype):
