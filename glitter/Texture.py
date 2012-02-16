@@ -77,10 +77,7 @@ class Texture(object):
         _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
         _format = _numpy_to_gl_format[dtype, shape[-1]]
         _type = _numpy_to_gl_type[dtype]
-        _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
-        _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
-        with self:
-            _gl.glTexImage3D(self._target, 0, _iformat, shape[0], shape[1], shape[2], 0, _format, _type, _data)
+        self._setdata(data, _iformat, shape, _format, _type)
 
     def __del__(self):
         try:
@@ -88,6 +85,24 @@ class Texture(object):
             self._id = 0
         except AttributeError:
             pass # avoid "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
+
+    @property
+    def data(self):
+        _data = numpy.empty(self.shape, dtype=self.dtype)
+        _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
+        with self:
+            _gl.glGetTexImage(self._target, 0, self._format, self._type, _data.ctypes)
+        return _data
+
+    @data.setter
+    def data(self, data):
+        self._setdata(data, self._iformat, self.shape, self._format, self._type)
+
+    def _setdata(self, data, _iformat, shape, _format, _type):
+        _data = numpy.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
+        _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
+        with self:
+            _gl.glTexImage3D(self._target, 0, _iformat, shape[2], shape[1], shape[0], 0, _format, _type, _data)
 
     @property
     def shape(self):
@@ -99,7 +114,7 @@ class Texture(object):
             _depth = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_DEPTH, _gl.pointer(_depth))
             colors = _gl_iformat_to_numpy[self._iformat][1]        
-        return (_width.value, _height.value, _depth.value, colors)
+        return (_depth.value, _height.value, _width.value, colors)
 
     @property
     def _iformat(self):
@@ -123,21 +138,6 @@ class Texture(object):
     @property
     def ndim(self):
         return _texture_target_to_dimensions[self._target]
-
-    @property
-    def data(self):
-        _data = numpy.empty(self.shape, dtype=self.dtype)
-        _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
-        with self:
-            _gl.glGetTexImage(self._target, 0, self._format, self._type, _data.ctypes)
-        return _data
-
-    @data.setter
-    def data(self, data):
-        _data = numpy.ascontiguousarray(data.ctypes) if data is not None else _gl.POINTER(_gl.GLvoid)()
-        _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
-        with self:
-            _gl.glTexImage3D(self._target, 0, self._iformat, self.shape[2], self.shape[1], self.shape[0], 0, self._format, self._type, _data)
 
     def bind(self):
         old_binding = _gl.GLint()
@@ -164,6 +164,7 @@ def test_texture(shape, dtype):
     assert (tdata == data).all(), "data is broken"
 
 if __name__ == "__main__":
+    import traceback
     from glitter import GlutWindow
     window = GlutWindow()
 
@@ -184,6 +185,7 @@ if __name__ == "__main__":
                 test_texture(shape, dtype)
             except Exception, e:
                 print column_format % "FAIL",
+                traceback.print_exc()
             else:
                 print column_format % "PASS",
         print

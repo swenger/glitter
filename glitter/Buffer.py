@@ -31,21 +31,18 @@ _buffer_usage = [ # (access_frequency, access_type), usage
 _buffer_params_to_usage = dict((x[0], x[1]) for x in _buffer_usage)
 _buffer_usage_to_params = dict((x[1], x[0]) for x in _buffer_usage)
 
-class Buffer(object): # TODO
-    def __init__(self, data=None, access_frequency="static", access_type="draw"): # TODO allow copy-less initialization from another buffer
+# TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
+# TODO buffers likely contain meaningful array data; remember the dtypes and shape
+
+class Buffer(object):
+    def __init__(self, data=None, access_frequency="static", access_type="draw"):
         self._stack = []
 
         _id = _gl.GLuint()
         _gl.glGenBuffers(1, _gl.pointer(_id))
         self._id = _id.value
 
-        _target = self._target
-        if _target not in (_gl.GL_ARRAY_BUFFER, _gl.GL_ELEMENT_ARRAY_BUFFER, _gl.GL_PIXEL_PACK_BUFFER, _gl.GL_PIXEL_UNPACK_BUFFER):
-            _target = _gl.GL_ARRAY_BUFFER
-        _nbytes = data.nbytes if data is not None else 0
-        _data = numpy.ascontiguousarray(data.ctypes) if data is not None else _gl.POINTER(_gl.GLvoid)()
-        with self:
-            _gl.glBufferData(_target, _nbytes, _data, _buffer_params_to_usage[access_frequency, access_type])
+        self._setdata(data, _buffer_params_to_usage[access_frequency, access_type])
 
     def __del__(self):
         try:
@@ -55,22 +52,44 @@ class Buffer(object): # TODO
             pass # avoid "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
 
     @property
-    def data(self):
+    def data(self): # TODO slicing with glGetBufferSubData
         pass # TODO
 
     @data.setter
-    def data(self, data):
+    def data(self, data): # TODO slicing with glBufferSubData
+        self._setdata(data, self._usage)
+
+    def _setdata(self, data, _usage):
         _target = self._target
         if _target not in (_gl.GL_ARRAY_BUFFER, _gl.GL_ELEMENT_ARRAY_BUFFER, _gl.GL_PIXEL_PACK_BUFFER, _gl.GL_PIXEL_UNPACK_BUFFER):
             _target = _gl.GL_ARRAY_BUFFER
         _nbytes = data.nbytes if data is not None else 0
         _data = numpy.ascontiguousarray(data.ctypes) if data is not None else _gl.POINTER(_gl.GLvoid)()
         with self:
-            _gl.glBufferData(_target, _nbytes, _data, self._usage)
+            _gl.glBufferData(_target, _nbytes, _data, _usage)
+
+        self._shape = data.shape
+        self._dtype = data.dtype
+
+    @property
+    def shape(self):
+        return self._shape
+
+    @property
+    def dtype(self):
+        return self._dtype
+
+    @property
+    def _size(self):
+        _size = _gl.GLint()
+        _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_SIZE, _gl.pointer(_size))
+        return _size.value
 
     @property
     def _usage(self):
-        pass # TODO
+        _usage = _gl.GLint()
+        _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_USAGE, _gl.pointer(_usage))
+        return _usage.value
 
     @property
     def access_frequency(self):
@@ -95,67 +114,45 @@ class Buffer(object): # TODO
         _gl.glBindBuffer(self._target, self._stack.pop())
 
 class ArrayBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_ARRAY_BUFFER
-        super(ArrayBuffer, self).__init__()
+    _target = _gl.GL_ARRAY_BUFFER
     # TODO glVertexAttribPointer
 
 class AtomicCounterBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_ATOMIC_COUNTER_BUFFER
-        super(AtomicCounterBuffer, self).__init__()
+    _target = _gl.GL_ATOMIC_COUNTER_BUFFER
     # TODO glBindBufferBase, glBindBufferRange
 
 class CopyReadBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_COPY_READ_BUFFER
-        super(CopyReadBuffer, self).__init__()
+    _target = _gl.GL_COPY_READ_BUFFER
     # TODO glCopyBufferSubData
 
 class CopyWriteBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_COPY_WRITE_BUFFER
-        super(CopyWriteBuffer, self).__init__()
+    _target = _gl.GL_COPY_WRITE_BUFFER
     # TODO glCopyBufferSubData
 
 class DrawIndirectBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_DRAW_INDIRECT_BUFFER
-        super(DrawIndirectBuffer, self).__init__()
+    _target = _gl.GL_DRAW_INDIRECT_BUFFER
     # TODO glDrawArraysIndirect, glDrawElementsIndirect
 
 class ElementArrayBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_ELEMENT_ARRAY_BUFFER
-        super(ElementArrayBuffer, self).__init__()
+    _target = _gl.GL_ELEMENT_ARRAY_BUFFER
     # TODO glDrawElements, glDrawElementsInstanced, glDrawElementsBaseVertex, glDrawRangeElements, glDrawRangeElementsBaseVertex, glMultiDrawElements, glMultiDrawElementsBaseVertex
 
 class PixelPackBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_PIXEL_PACK_BUFFER
-        super(PixelPackBuffer, self).__init__()
+    _target = _gl.GL_PIXEL_PACK_BUFFER
     # TODO glGetCompressedTexImage, glGetTexImage, glReadPixels
 
 class PixelUnpackBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_PIXEL_UNPACK_BUFFER
-        super(PixelUnpackBuffer, self).__init__()
+    _target = _gl.GL_PIXEL_UNPACK_BUFFER
     # TODO glCompressedTexImage1D, glCompressedTexImage2D, glCompressedTexImage3D, glCompressedTexSubImage1D, glCompressedTexSubImage2D, glCompressedTexSubImage3D, glTexImage1D, glTexImage2D, glTexImage3D, glTexSubImage1D, glTexSubImage2D, glTexSubImage3D
 
 class TextureBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_TEXTURE_BUFFER
-        super(TextureBuffer, self).__init__()
+    _target = _gl.GL_TEXTURE_BUFFER
 
 class TransformFeedbackBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_TRANSFORM_FEEDBACK_BUFFER
-        super(TransformFeedbackBuffer, self).__init()
+    _target = _gl.GL_TRANSFORM_FEEDBACK_BUFFER
     # TODO glBindBufferBase, glBindBufferRange
 
 class UniformBuffer(Buffer):
-    def __init__(self):
-        self._target = _gl.GL_UNIFORM_BUFFER
-        super(UniformBuffer, self).__init__()
+    _target = _gl.GL_UNIFORM_BUFFER
     # TODO glBindBufferBase, glBindBufferRange
 
