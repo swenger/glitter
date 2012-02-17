@@ -1,156 +1,143 @@
-from OpenGL import GL, GLUT
-from math import sqrt, exp
-import sys
+from rawgl import glut as _glut
 
-# TODO rewrite using rawgl
-# TODO cleanup
-# TODO Texture, Shader etc. are attached to a context; make sure they use this context (in __enter__ / __exit__ / __del__)
 class GlutWindow(object):
-    def __init__(self,
-            title="",
-            width=512,
-            height=512,
-            argv=[],
-            mode=GLUT.GLUT_DOUBLE|GLUT.GLUT_RGB,
-            idle=lambda: None,
-            display=lambda: None,
-            reshape=lambda width, height: None,
-            mouse=lambda button, state, x, y: None,
-            motion=lambda x, y: None,
-            keyboard=lambda key, x, y: None,
-            hide=False):
+    def __init__(self, title="", width=512, height=512, argv=[], mode=_glut.GLUT_DOUBLE|_glut.GLUT_RGB, hide=False):
+        self._called = False
         self._stack = []
 
-        self._window_width = width
-        self._window_height = height
-        self._idle_hook = idle
-        self._display_hook = display
-        self._reshape_hook = reshape
-        self._mouse_hook = mouse
-        self._motion_hook = motion
-        self._keyboard_hook = keyboard
+        self._idle_func = None
+        self._display_func = None
+        self._reshape_func = None
+        self._mouse_func = None
+        self._motion_func = None
+        self._keyboard_func = None
+        self._title = title
 
-        # initialize OpenGL
-        GLUT.glutInit(argv)
-        # TODO GLUT.freeglut.glutInitContextVersion(4, 0)
-        # TODO GLUT.freeglut.glutInitContextFlags(GLUT.freeglut.GLUT_FORWARD_COMPATIBLE)
-        # TODO GLUT.freeglut.glutInitContextProfile(GLUT.freeglut.GLUT_CORE_PROFILE)
-        GLUT.glutInitDisplayMode(mode)
-        GLUT.glutInitWindowPosition(0, 0)
-        GLUT.glutInitWindowSize(self._window_width, self._window_height)
-        self._id = GLUT.glutCreateWindow(title)
+        argc = _glut.c_int(len(argv))
+        argv_c = (_glut.c_char_p * argc.value)()
+        for i, a in enumerate(argv):
+            argv_c[i] = a
+        _glut.glutInit(_glut.pointer(argc), argv_c)
+        # TODO modify argv
+
+        _glut.glutInitContextVersion(4, 0)
+        _glut.glutInitContextFlags(_glut.GLUT_FORWARD_COMPATIBLE)
+        _glut.glutInitContextProfile(_glut.GLUT_CORE_PROFILE)
+        _glut.glutInitDisplayMode(mode) # TODO boolean flags
+        _glut.glutInitWindowPosition(0, 0)
+        _glut.glutInitWindowSize(width, height)
+        self._id = _glut.glutCreateWindow(self._title)
+
         if hide:
-            GLUT.glutHideWindow()
-        GLUT.glutIdleFunc(self._idle)
-        GLUT.glutDisplayFunc(self._display)
-        GLUT.glutReshapeFunc(self._reshape)
-        GLUT.glutMouseFunc(self._mouse)
-        GLUT.glutMotionFunc(self._motion)
-        GLUT.glutKeyboardFunc(self._keyboard)
-        GLUT.freeglut.glutSetOption(GLUT.freeglut.GLUT_ACTION_ON_WINDOW_CLOSE, GLUT.freeglut.GLUT_ACTION_GLUTMAINLOOP_RETURNS)
-        
-        # create initial modelview matrix
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        self._modelview_matrix = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-    
+            _glut.glutHideWindow()
+        _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_GLUTMAINLOOP_RETURNS)
+
     def __del__(self):
         try:
-            GLUT.glutDestroyWindow(self._id)
-        except TypeError:
-            pass
+            if not self._called:
+                _glut.glutDestroyWindow(self._id)
+            self._id = 0
         except AttributeError:
-            pass
+            pass # avoid error when GLUT module has already been unloaded
+
+    def bind(self):
+        old_binding = _glut.glutGetWindow()
+        self._bind(self._id)
+        return old_binding
 
     def __enter__(self):
-        self._stack.append(GLUT.glutGetWindow())
-        GLUT.glutSetWindow(self._id)
+        self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
-        GLUT.glutSetWindow(self._stack.pop())
+        self._bind(self._target, self._stack.pop())
 
-    def _idle(self):
-        self._idle_hook()
-        GLUT.glutPostRedisplay()
-
-    def _display(self):
-        # set up viewport
-        GL.glViewport(0, 0, self._window_width, self._window_height)
-
-        # set up projection
-        GL.glMatrixMode(GL.GL_PROJECTION)
-        GL.glLoadIdentity()
-        GL.glOrtho(-1, 1, -1, 1, -1, 1)
-
-        # set up camera
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        GL.glMultMatrixf(self._modelview_matrix)
-
-        # clear
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-        
-        # execute drawing
-        self._display_hook()
-
-        # display
-        GLUT.glutSwapBuffers()
-
-    def _reshape(self, width, height):
-        self._window_width = width
-        self._window_height = height
-        self._reshape_hook(width, height)
-
-    def _mouse(self, button, state, x, y):
-        self._old_button = button
-        self._old_state = state
-        self._old_x = x
-        self._old_y = y
-        self._mouse_hook(button, state, x, y)
-
-    def _motion(self, x, y):
-        dx = x - self._old_x
-        dy = y - self._old_y
-
-        if self._old_button == GLUT.GLUT_LEFT_BUTTON:
-            GL.glMatrixMode(GL.GL_MODELVIEW)
-            GL.glLoadIdentity()
-            GL.glRotatef(sqrt(dx ** 2 + dy ** 2), dy, dx, 0.0)
-            GL.glMultMatrixf(self._modelview_matrix)
-            self._modelview_matrix = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-            GLUT.glutPostRedisplay()
-        elif self._old_button == GLUT.GLUT_RIGHT_BUTTON:
-            GL.glMatrixMode(GL.GL_MODELVIEW)
-            GL.glLoadIdentity()
-            GL.glScalef(exp(-0.01 * dy), exp(-0.01 * dy), exp(-0.01 * dy))
-            GL.glMultMatrixf(self._modelview_matrix)
-            self._modelview_matrix = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-            GLUT.glutPostRedisplay()
-
-        self._old_x = x
-        self._old_y = y
-
-        self._motion_hook(x, y)
-
-    def _keyboard(self, key, x, y):
-        if key == "r":
-            GL.glMatrixMode(GL.GL_MODELVIEW)
-            GL.glLoadIdentity()
-            self._modelview_matrix = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-            GLUT.glutPostRedisplay()
-        elif key == chr(27):
-            sys.exit(0)
-        else:
-            self._keyboard_hook(key, x, y)
-
-    @property
-    def id(self):
-        return self._id
+    def _bind(self, _id):
+        _glut.glutSetWindow(_id)
 
     def __call__(self, loop=True):
-        GLUT.glutSetWindow(self._id)
+        if self._called:
+            raise RuntimeError("glutMainLoop() has already been called")
+        self.bind()
         if loop:
-            GLUT.glutMainLoop()
+            self._called = True
+            _glut.glutMainLoop()
         else:
-            GLUT.glutMainLoopEvent()
+            _glut.glutMainLoopEvent()
+
+
+    @property
+    def idle_func(self):
+        return self._idle_func
+
+    @idle_func.setter
+    def idle_func(self, idle_func):
+        self._idle_func = idle_func
+        self._idle_func_c = _glut.glutIdleFunc.argtypes[0](idle_func) if idle_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        with self:
+            _glut.glutIdleFunc(self._idle_func_c)
+
+    @property
+    def display_func(self):
+        return self._display_func
+
+    @display_func.setter
+    def display_func(self, display_func):
+        self._display_func = display_func
+        self._display_func_c = _glut.glutIdleFunc.argtypes[0](display_func) if display_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        with self:
+            _glut.glutDisplayFunc(self._display_func_c)
+
+    @property
+    def reshape_func(self):
+        return self._reshape_func
+
+    @reshape_func.setter
+    def reshape_func(self, reshape_func):
+        self._reshape_func = reshape_func
+        self._reshape_func_c = _glut.glutIdleFunc.argtypes[0](reshape_func) if reshape_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        with self:
+            _glut.glutReshapeFunc(self._reshape_func_c)
+
+    @property
+    def mouse_func(self):
+        return self._mouse_func
+
+    @mouse_func.setter
+    def mouse_func(self, mouse_func):
+        self._mouse_func = mouse_func
+        self._mouse_func_c = _glut.glutIdleFunc.argtypes[0](mouse_func) if mouse_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        with self:
+            _glut.glutMouseFunc(self._mouse_func_c)
+
+    @property
+    def motion_func(self):
+        return self._motion_func
+
+    @motion_func.setter
+    def motion_func(self, motion_func):
+        self._motion_func = motion_func
+        self._motion_func_c = _glut.glutIdleFunc.argtypes[0](motion_func) if motion_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        with self:
+            _glut.glutMotionFunc(self._motion_func_c)
+
+    @property
+    def keyboard_func(self):
+        return self._keyboard_func
+
+    @keyboard_func.setter
+    def keyboard_func(self, keyboard_func):
+        self._keyboard_func = keyboard_func
+        self._keyboard_func_c = _glut.glutIdleFunc.argtypes[0](keyboard_func) if keyboard_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        with self:
+            _glut.glutKeyboardFunc(self._keyboard_func_c)
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, title):
+        self._title = title
+        with self:
+            _glut.glutSetWindowTitle(title)
 
