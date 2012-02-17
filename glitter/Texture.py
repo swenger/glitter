@@ -2,7 +2,7 @@ import numpy
 
 from rawgl import gl as _gl
 
-from util import GLObject, is_float, is_signed, Enum
+from util import GLObject, Enum, is_float, is_signed
 
 # TODO check memory layout: do shaders use the same coordinates as numpy?
 # TODO support depth textures
@@ -56,15 +56,6 @@ class Texture(GLObject):
     _ndim = NotImplemented
     _set = NotImplemented
 
-    min_filters = Enum(
-            NEAREST=_gl.GL_NEAREST,
-            LINEAR=_gl.GL_LINEAR,
-            NEAREST_MIPMAP_NEAREST=_gl.GL_NEAREST_MIPMAP_NEAREST,
-            LINEAR_MIPMAP_NEAREST=_gl.GL_LINEAR_MIPMAP_NEAREST,
-            NEAREST_MIPMAP_LINEAR=_gl.GL_NEAREST_MIPMAP_LINEAR,
-            LINEAR_MIPMAP_LINEAR=_gl.GL_LINEAR_MIPMAP_LINEAR,
-    )
-
     compare_funcs = Enum(
             LEQUAL=_gl.GL_LEQUAL,
             GEQUAL=_gl.GL_GEQUAL,
@@ -79,6 +70,15 @@ class Texture(GLObject):
     compare_modes = Enum(
             COMPARE_REF_TO_TEXTURE=_gl.GL_COMPARE_REF_TO_TEXTURE,
             NONE=_gl.GL_NONE,
+    )
+
+    min_filters = Enum(
+            NEAREST=_gl.GL_NEAREST,
+            LINEAR=_gl.GL_LINEAR,
+            NEAREST_MIPMAP_NEAREST=_gl.GL_NEAREST_MIPMAP_NEAREST,
+            LINEAR_MIPMAP_NEAREST=_gl.GL_LINEAR_MIPMAP_NEAREST,
+            NEAREST_MIPMAP_LINEAR=_gl.GL_NEAREST_MIPMAP_LINEAR,
+            LINEAR_MIPMAP_LINEAR=_gl.GL_LINEAR_MIPMAP_LINEAR,
     )
 
     mag_filters = Enum(

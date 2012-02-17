@@ -39,7 +39,7 @@ class GLObject(object):
     _bind = NotImplemented
 
     def __init__(self):
-        if any(x is NotImplemented for x in (self._generate_id, self._delete_id, self._target, self._binding, self._bind)):
+        if any(x is NotImplemented for x in (self._generate_id, self._delete_id, self._binding, self._bind)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
 
         _id = _gl.GLuint()
@@ -57,17 +57,24 @@ class GLObject(object):
     def bind(self):
         old_binding = _gl.GLint()
         _gl.glGetIntegerv(self._binding, _gl.pointer(old_binding))
-        self._bind(self._target, self._id)
+        if self._target is NotImplemented:
+            self._bind(self._id)
+        else:
+            self._bind(self._target, self._id)
         return old_binding.value
 
     def __enter__(self):
         self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
-        self._bind(self._target, self._stack.pop())
+        if self._target is NotImplemented:
+            self._bind(self._stack.pop())
+        else:
+            self._bind(self._target, self._stack.pop())
 
 class EnumConstant(object):
-    def __init__(self, name, value):
+    def __init__(self, enum, name, value):
+        self._enum = enum
         self._name = name
         self._value = value
 
@@ -81,7 +88,7 @@ class Enum(object):
     def __init__(self, **kwargs):
         self._reverse_dict = {}
         for key, value in kwargs.items():
-            setattr(self, key, EnumConstant(key, value))
+            setattr(self, key, EnumConstant(self, key, value))
             self._reverse_dict[value] = getattr(self, key)
 
     def __getitem__(self, value):
