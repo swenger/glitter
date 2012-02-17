@@ -1,3 +1,5 @@
+import numpy
+
 from rawgl import gl as _gl
 
 class InstanceDescriptorMixin(object):
@@ -63,4 +65,24 @@ class GLObject(object):
 
     def __exit__(self, type, value, traceback):
         self._bind(self._target, self._stack.pop())
+
+is_float = {
+        numpy.uint8: False,
+        numpy.int8: False,
+        numpy.uint16: False,
+        numpy.int16: False,
+        numpy.uint32: False,
+        numpy.int32: False,
+        numpy.float32: True,
+}
+
+is_signed = {
+        numpy.uint8: False,
+        numpy.int8: True,
+        numpy.uint16: False,
+        numpy.int16: True,
+        numpy.uint32: False,
+        numpy.int32: True,
+        numpy.float32: True,
+}
 
