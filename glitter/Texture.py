@@ -189,123 +189,253 @@ class Texture(GLObject):
     @property
     def base_level(self):
         _base_level = _gl.GLint()
-        _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BASE_LEVEL, _gl.pointer(_base_level))
+        with self:
+            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BASE_LEVEL, _gl.pointer(_base_level))
         return _base_level.value
+
+    @base_level.setter
+    def base_level(self, base_level):
+        with self:
+            _gl.glTexParameterIiv(self._target, _gl.GL_TEXTURE_BASE_LEVEL, _gl.pointer(_gl.GLint(base_level)))
 
     @property
     def border_color(self):
         if is_float[self.dtype]:
             _border_color = (_gl.GLfloat * 4)()
-            _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
+            with self:
+                _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         elif is_signed[self.dtype]:
             _border_color = (_gl.GLint * 4)()
-            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
+            with self:
+                _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         else:
             _border_color = (_gl.GLuint * 4)()
-            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
+            with self:
+                _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         return [_border_color[i] for i in range(4)]
+
+    @border_color.setter
+    def border_color(self, border_color):
+        if is_float[self.dtype]:
+            _border_color = (_gl.GLfloat * 4)()
+            for i, v in zip(range(4), border_color):
+                _border_color[i] = v
+            with self:
+                _gl.glTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
+        elif is_signed[self.dtype]:
+            _border_color = (_gl.GLint * 4)()
+            for i, v in zip(range(4), border_color):
+                _border_color[i] = v
+            with self:
+                _gl.glTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
+        else:
+            _border_color = (_gl.GLuint * 4)()
+            for i, v in zip(range(4), border_color):
+                _border_color[i] = v
+            with self:
+                _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
 
     @property
     def compare_func(self):
         _compare_func = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_compare_func))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_compare_func))
         return self.texture_compare_funcs[_compare_func.value]
+
+    @compare_func.setter
+    def compare_func(self, compare_func):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_gl.GLenum(compare_func._value)))
 
     @property
     def compare_mode(self):
         _compare_mode = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
         return self.texture_compare_modes[_compare_mode.value]
+
+    @compare_mode.setter
+    def compare_mode(self, compare_mode):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_gl.GLenum(compare_mode._value)))
     
     @property
-    def immutable_format(self): # getter only
+    def immutable_format(self): # Textures become immutable if their storage is specified with glTexStorage1D, glTexStorage2D or glTexStorage3D
         _immutable_format = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_immutable_format))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_immutable_format))
         return bool(_immutable_format.value)
 
     @property
-    def lod_bias(self): # TODO setter only?
+    def lod_bias(self):
         _lod_bias = _gl.GLfloat()
-        _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_LOD_BIAS, _gl.pointer(_lod_bias))
+        with self:
+            _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_LOD_BIAS, _gl.pointer(_lod_bias))
         return _lod_bias.value
+
+    @lod_bias.setter
+    def lod_bias(self, lod_bias):
+        with self:
+            _gl.glTexParameterfv(self._target, _gl.GL_TEXTURE_LOD_BIAS, _gl.pointer(_gl.GLfloat(lod_bias)))
 
     @property
     def min_filter(self):
         _min_filter = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_min_filter))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_min_filter))
         return self.min_filters[_min_filter.value]
+
+    @min_filter.setter
+    def min_filter(self, min_filter):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_gl.GLenum(min_filter._value)))
 
     @property
     def mag_filter(self):
         _mag_filter = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_mag_filter))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_mag_filter))
         return self.texture_mag_filters[_mag_filter.value]
+
+    @mag_filter.setter
+    def mag_filter(self, mag_filter):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_gl.GLenum(mag_filter._value)))
 
     @property
     def min_lod(self):
         _min_lod = _gl.GLint()
-        _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_MIN_LOD, _gl.pointer(_min_lod))
+        with self:
+            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_MIN_LOD, _gl.pointer(_min_lod))
         return _min_lod.value
+
+    @min_lod.setter
+    def min_lod(self, min_lod):
+        with self:
+            _gl.glTexParameterIiv(self._target, _gl.GL_TEXTURE_MIN_LOD, _gl.pointer(_gl.GLint(min_lod)))
 
     @property
     def max_lod(self):
         _max_lod = _gl.GLint()
-        _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_MAX_LOD, _gl.pointer(_max_lod))
+        with self:
+            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_MAX_LOD, _gl.pointer(_max_lod))
         return _max_lod.value
+
+    @max_lod.setter
+    def max_lod(self, max_lod):
+        with self:
+            _gl.glTexParameterIiv(self._target, _gl.GL_TEXTURE_MAX_LOD, _gl.pointer(_gl.GLint(max_lod)))
 
     @property
     def max_level(self):
         _max_level = _gl.GLint()
-        _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_MAX_LEVEL, _gl.pointer(_max_level))
+        with self:
+            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_MAX_LEVEL, _gl.pointer(_max_level))
         return _max_level.value
+
+    @max_level.setter
+    def max_level(self, max_level):
+        with self:
+            _gl.glTexParameterIiv(self._target, _gl.GL_TEXTURE_MAX_LEVEL, _gl.pointer(_gl.GLint(max_level)))
 
     @property
     def swizzle_r(self):
         _swizzle_r = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_R, _gl.pointer(_swizzle_r))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_R, _gl.pointer(_swizzle_r))
         return self.texture_swizzles[_swizzle_r.value]
+
+    @swizzle_r.setter
+    def swizzle_r(self, swizzle_r):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_R, _gl.pointer(_gl.GLenum(swizzle_r._value)))
 
     @property
     def swizzle_g(self):
         _swizzle_g = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_G, _gl.pointer(_swizzle_g))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_G, _gl.pointer(_swizzle_g))
         return self.texture_swizzles[_swizzle_g.value]
+
+    @swizzle_g.setter
+    def swizzle_g(self, swizzle_g):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_G, _gl.pointer(_gl.GLenum(swizzle_g._value)))
 
     @property
     def swizzle_b(self):
         _swizzle_b = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_B, _gl.pointer(_swizzle_b))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_B, _gl.pointer(_swizzle_b))
         return self.texture_swizzles[_swizzle_b.value]
+
+    @swizzle_b.setter
+    def swizzle_b(self, swizzle_b):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_B, _gl.pointer(_gl.GLenum(swizzle_b._value)))
 
     @property
     def swizzle_a(self):
         _swizzle_a = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_A, _gl.pointer(_swizzle_a))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_A, _gl.pointer(_swizzle_a))
         return self.texture_swizzles[_swizzle_a.value]
+
+    @swizzle_a.setter
+    def swizzle_a(self, swizzle_a):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_A, _gl.pointer(_gl.GLenum(swizzle_a._value)))
 
     @property
     def swizzle_rgba(self):
         _swizzle_rgba = (_gl.GLenum * 4)()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)
         return [self.texture_swizzles[_swizzle_rgba[i]] for i in range(4)]
+
+    @swizzle_rgba.setter
+    def swizzle_rgba(self, swizzle_rgba):
+        _swizzle_rgba = (_gl.GLenum * 4)()
+        for i, v in zip(range(4), swizzle_rgba):
+            _swizzle_rgba[i] = v._value
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)
 
     @property
     def wrap_s(self):
         _wrap_s = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_wrap_s))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_wrap_s))
         return self.texture_wrapmodes[_wrap_s.value]
+
+    @wrap_s.setter
+    def wrap_s(self, wrap_s):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_gl.GLenum(wrap_s._value)))
 
     @property
     def wrap_t(self):
         _wrap_t = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_wrap_t))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_wrap_t))
         return self.texture_wrapmodes[_wrap_t.value]
+
+    @wrap_t.setter
+    def wrap_t(self, wrap_t):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_gl.GLenum(wrap_t._value)))
 
     @property
     def wrap_r(self):
         _wrap_r = _gl.GLenum()
-        _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_wrap_r))
+        with self:
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_wrap_r))
         return self.texture_wrapmodes[_wrap_r.value]
+
+    @wrap_r.setter
+    def wrap_r(self, wrap_r):
+        with self:
+            _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_gl.GLenum(wrap_r._value)))
 
 class Texture1D(Texture):
     _target = _gl.GL_TEXTURE_1D
@@ -381,7 +511,7 @@ def check_texture(shape, dtype, vrange):
     assert texture._format == _numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"
     assert texture._type == _numpy_to_gl_type[data.dtype.type], "_type is broken"
 
-def test_generator():
+def test_texture_generator():
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
     dtypes = (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)
     vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
@@ -389,4 +519,20 @@ def test_generator():
     for shape in shapes:
         for dtype, vrange in zip(dtypes, vranges):
             yield check_texture, shape, dtype, vrange
+
+def check_property(texture, name):
+    value = getattr(texture, name)
+    setattr(texture, name, value)
+    assert getattr(texture, name) == value, "property %s is broken" % name
+
+def test_property_generator():
+    texture = Texture3D(numpy.random.random((1, 1, 1, 4)).astype(numpy.float32))
+    properties = [x for x in dir(texture) if not x.startswith("_") and type(getattr(Texture, x)) == property]
+
+    for p in properties:
+        if p in ("data", "shape", "dtype"):
+            continue
+        if getattr(Texture, p).fset is None:
+            continue
+        yield check_property, texture, p
 
