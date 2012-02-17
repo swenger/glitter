@@ -38,14 +38,12 @@ class GLObject(object):
     def __init__(self):
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-
         if len(self._generate_id.argtypes) == 1:
             self._id = self._generate_id
         else:
             _id = _gl.GLuint()
             self._generate_id(1, _gl.pointer(_id))
             self._id = _id.value
-        self._stack = []
 
     def __del__(self):
         try:
@@ -61,6 +59,12 @@ class BindableObject(GLObject):
     _target = NotImplemented
     _binding = NotImplemented
     _bind = NotImplemented
+
+    def __init__(self):
+        super(BindableObject, self).__init__()
+        if any(x is NotImplemented for x in (self._bind, self._binding)):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+        self._stack = []
     
     def bind(self):
         old_binding = _gl.GLint()
@@ -85,17 +89,28 @@ class BeginEndObject(GLObject):
     _begin = NotImplemented
     _end = NotImplemented
 
-    def __enter__(self):
+    def __init__(self):
+        super(BeginEndObject, self).__init__()
+        if any(x is NotImplemented for x in (self._begin, self._end)):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+
+    def begin(self):
         if self._target is NotImplemented:
             self._begin(self._id)
         else:
             self._begin(self._target, self._id)
 
-    def __exit__(self, type, value, traceback):
+    def end(self):
         if self._target is NotImplemented:
             self._end()
         else:
             self._end(self._target)
+
+    def __enter__(self):
+        self.begin()
+
+    def __exit__(self, type, value, traceback):
+        self.end()
 
 class EnumConstant(object):
     def __init__(self, enum, name, value):
