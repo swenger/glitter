@@ -1,6 +1,7 @@
 from rawgl import gl as _gl
 
 from util import BindableObject, ShaderLinkError, ShaderValidateError
+from Shader import Shader
 
 class ShaderProgram(BindableObject):
     _generate_id = _gl.glCreateProgram
@@ -12,6 +13,20 @@ class ShaderProgram(BindableObject):
         super(ShaderProgram, self).__init__()
 
     # TODO glAttachShader, glDetachShader, glGetAttachedShaders via proxy object
+
+    def attach(self, shader):
+        _gl.glAttachShader(self._id, shader._id)
+
+    def detach(self, shader):
+        _gl.glDetachShader(self._id, shader._id)
+
+    @property
+    def attached_shaders(self):
+        _attached_shaders = _gl.GLint()
+        _gl.glGetProgramiv(self._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
+        _shaders = (_gl.GLuint * _attached_shaders.value)()
+        _gl.glGetAttachedShaders(self._id, _attached_shaders, _gl.POINTER(_gl.GLsizei)(), _shaders)
+        return [Shader._db[_shaders[i]] for i in range(_attached_shaders.value)]
 
     def link(self):
         _gl.glLinkProgram(self._id)
@@ -42,4 +57,7 @@ class ShaderProgram(BindableObject):
         return _info_log.value
 
     # TODO attributes and uniforms
+
+class AttachedShadersProxy(object):
+    pass # TODO
 

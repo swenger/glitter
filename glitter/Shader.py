@@ -1,3 +1,4 @@
+from weakref import WeakValueDictionary
 from rawgl import gl as _gl
 
 from util import GLObject, ShaderCompileError
@@ -5,11 +6,13 @@ from util import GLObject, ShaderCompileError
 class Shader(GLObject):
     _generate_id = _gl.glCreateShader
     _delete_id = _gl.glDeleteShader
+    _db = WeakValueDictionary()
 
     def __init__(self):
         if any(x is NotImplemented for x in (self._type,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Shader, self).__init__()
+        self._db[self._id] = self
 
     def compile(self):
         _gl.glCompileShader(self._id)
