@@ -2,7 +2,7 @@ import numpy
 
 from rawgl import gl as _gl
 
-from util import GLObject
+from util import GLObject, Enum
 
 # TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
 # TODO buffers likely contain meaningful array data; remember the dtypes and shape
@@ -23,31 +23,29 @@ _buffer_targets = [ # target, binding
 ]
 _buffer_target_to_binding = dict((x[0], x[1]) for x in _buffer_targets)
 
-_buffer_usage = [ # (access_frequency, access_type), usage
-        (("stream",  "draw"), _gl.GL_STREAM_DRAW),
-        (("stream",  "read"), _gl.GL_STREAM_READ),
-        (("stream",  "copy"), _gl.GL_STREAM_COPY),
-        (("static",  "draw"), _gl.GL_STATIC_DRAW),
-        (("static",  "read"), _gl.GL_STATIC_READ),
-        (("static",  "copy"), _gl.GL_STATIC_COPY),
-        (("dynamic", "draw"), _gl.GL_DYNAMIC_DRAW),
-        (("dynamic", "read"), _gl.GL_DYNAMIC_READ),
-        (("dynamic", "copy"), _gl.GL_DYNAMIC_COPY),
-]
-_buffer_params_to_usage = dict((x[0], x[1]) for x in _buffer_usage)
-_buffer_usage_to_params = dict((x[1], x[0]) for x in _buffer_usage)
-
 class Buffer(GLObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _bind = _gl.glBindBuffer
 
-    def __init__(self, data=None, shape=None, dtype=None, access_frequency="static", access_type="draw"):
+    usages = Enum(
+            STREAM_DRAW=_gl.GL_STREAM_DRAW,
+            STREAM_READ=_gl.GL_STREAM_READ,
+            STREAM_COPY=_gl.GL_STREAM_COPY,
+            STATIC_DRAW=_gl.GL_STATIC_DRAW,
+            STATIC_READ=_gl.GL_STATIC_READ,
+            STATIC_COPY=_gl.GL_STATIC_COPY,
+            DYNAMIC_DRAW=_gl.GL_DYNAMIC_DRAW,
+            DYNAMIC_READ=_gl.GL_DYNAMIC_READ,
+            DYNAMIC_COPY=_gl.GL_DYNAMIC_COPY,
+    )
+
+    def __init__(self, data=None, shape=None, dtype=None, usage=usages.STATIC_DRAW):
         self._binding = _buffer_target_to_binding[self._target]
         super(Buffer, self).__init__()
-        self.setdata(data=data, shape=shape, dtype=dtype, access_frequency=access_frequency, access_type=access_type)
+        self.setdata(data=data, shape=shape, dtype=dtype, usage=usage)
 
-    def setdata(self, data=None, shape=None, dtype=None, access_frequency="static", access_type="draw"):
+    def setdata(self, data=None, shape=None, dtype=None, usage=None):
         if data is None:
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
@@ -59,16 +57,13 @@ class Buffer(GLObject):
             self._shape = data.shape
             self._dtype = data.dtype.type
 
-        if access_frequency is None:
-            access_frequency = self.access_frequency
-        if access_type is None:
-            access_type = self.access_type
-        _usage = _buffer_params_to_usage[access_frequency, access_type]
+        if usage is None:
+            usage = self.usage
 
         _nbytes = numpy.prod(self._shape) * self._dtype().nbytes
         _data = numpy.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         with self:
-            _gl.glBufferData(self._target, _nbytes, _data, _usage)
+            _gl.glBufferData(self._target, _nbytes, _data, usage._value)
 
     def getdata(self):
         _data = numpy.empty(self.shape, dtype=self.dtype)
@@ -93,14 +88,6 @@ class Buffer(GLObject):
         return self._dtype
 
     @property
-    def access_frequency(self):
-        return _buffer_usage_to_params[self._usage][0]
-
-    @property
-    def access_type(self):
-        return _buffer_usage_to_params[self._usage][1]
-
-    @property
     def _size(self):
         _size = _gl.GLint()
         with self:
@@ -108,11 +95,11 @@ class Buffer(GLObject):
         return _size.value
 
     @property
-    def _usage(self):
+    def usage(self):
         _usage = _gl.GLint()
         with self:
             _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_USAGE, _gl.pointer(_usage))
-        return _usage.value
+        return self.usages[_usage.value]
 
 class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER
