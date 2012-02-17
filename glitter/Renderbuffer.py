@@ -1,5 +1,11 @@
 from rawgl import gl as _gl
 
-class Renderbuffer(object): # TODO
-    pass
+from util import GLObject
+
+# TODO
+
+class Renderbuffer(GLObject):
+    _generate_id = _gl.glGenRenderbuffers
+    _delete_id = _gl.glDeleteRenderbuffers
+    # TODO glFramebufferRenderbuffer instead of _bind; returns GLsync
 
