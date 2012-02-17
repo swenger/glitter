@@ -9,24 +9,28 @@ class ShaderProgram(BindableObject):
     _bind = _gl.glUseProgram
     _binding = _gl.GL_CURRENT_PROGRAM
 
-    def __init__(self):
+    def __init__(self, *shaders):
         super(ShaderProgram, self).__init__()
+        for shader in shaders:
+            self._attach(shader)
 
-    # TODO glAttachShader, glDetachShader, glGetAttachedShaders via proxy object
-
-    def attach(self, shader):
+    def _attach(self, shader):
         _gl.glAttachShader(self._id, shader._id)
 
-    def detach(self, shader):
+    def _detach(self, shader):
         _gl.glDetachShader(self._id, shader._id)
 
     @property
-    def attached_shaders(self):
+    def _attached_shaders(self):
         _attached_shaders = _gl.GLint()
         _gl.glGetProgramiv(self._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
         _shaders = (_gl.GLuint * _attached_shaders.value)()
         _gl.glGetAttachedShaders(self._id, _attached_shaders, _gl.POINTER(_gl.GLsizei)(), _shaders)
         return [Shader._db[_shaders[i]] for i in range(_attached_shaders.value)]
+
+    @property
+    def shaders(self):
+        return AttachedShadersProxy(self)
 
     def link(self):
         _gl.glLinkProgram(self._id)
@@ -59,5 +63,27 @@ class ShaderProgram(BindableObject):
     # TODO attributes and uniforms
 
 class AttachedShadersProxy(object):
-    pass # TODO
+    def __init__(self, program):
+        self._program = program
+
+    def append(self, shader):
+        self._program._attach(shader)
+
+    def extend(self, shaders):
+        for shader in shaders:
+            self.append(shader)
+
+    def remove(self, shader):
+        self._program._detach(shader)
+
+    def __iadd__(self, shaders):
+        self.extend(shaders)
+
+    def __getitem__(self, key):
+        return self._program._attached_shaders[key]
+
+    def __len__(self):
+        _attached_shaders = _gl.GLint()
+        _gl.glGetProgramiv(self._program._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
+        return _attached_shaders.value
 
