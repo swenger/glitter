@@ -102,14 +102,12 @@ class Texture(BindableObject):
     )
 
     def __init__(self, data=None, shape=None, dtype=None):
-        super(Texture, self).__init__()
-
         if any(x is NotImplemented for x in (self._ndim, self._set)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        
-        self.setdata(data, shape, dtype)
+        super(Texture, self).__init__()
+        self.set_data(data, shape, dtype)
 
-    def setdata(self, data=None, shape=None, dtype=None, level=0):
+    def set_data(self, data=None, shape=None, dtype=None, level=0):
         if data is None:
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
@@ -134,7 +132,7 @@ class Texture(BindableObject):
             self.min_filter = self.min_filters.NEAREST
             self.mag_filter = self.mag_filters.NEAREST
 
-    def getdata(self, level=0):
+    def get_data(self, level=0):
         _data = _np.empty(self.shape, dtype=self.dtype)
         _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
         with self:
@@ -143,11 +141,11 @@ class Texture(BindableObject):
 
     @property
     def data(self):
-        return self.getdata()
+        return self.get_data()
 
     @data.setter
     def data(self, data):
-        self.setdata(data)
+        self.set_data(data)
 
     @property
     def shape(self):

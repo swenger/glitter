@@ -42,9 +42,9 @@ class Buffer(BindableObject):
     def __init__(self, data=None, shape=None, dtype=None, usage=usages.STATIC_DRAW):
         self._binding = _buffer_target_to_binding[self._target]
         super(Buffer, self).__init__()
-        self.setdata(data=data, shape=shape, dtype=dtype, usage=usage)
+        self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
 
-    def setdata(self, data=None, shape=None, dtype=None, usage=None):
+    def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is None:
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
@@ -64,7 +64,7 @@ class Buffer(BindableObject):
         with self:
             _gl.glBufferData(self._target, _nbytes, _data, usage._value)
 
-    def getdata(self):
+    def get_data(self):
         _data = _np.empty(self.shape, dtype=self.dtype)
         with self:
             _gl.glGetBufferSubData(self._target, 0, _data.nbytes, _data.ctypes)
@@ -72,11 +72,11 @@ class Buffer(BindableObject):
 
     @property
     def data(self):
-        return self.getdata()
+        return self.get_data()
 
     @data.setter
     def data(self, data):
-        self.setdata(data)
+        self.set_data(data)
 
     @property
     def shape(self):

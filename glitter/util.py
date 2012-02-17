@@ -33,12 +33,15 @@ class Binding(object): # TODO
 class GLObject(object):
     _generate_id = NotImplemented
     _delete_id = NotImplemented
+    _type = NotImplemented
 
     def __init__(self):
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        if len(self._generate_id.argtypes) == 1:
-            self._id = self._generate_id
+        if len(self._generate_id.argtypes) == 0:
+            self._id = self._generate_id()
+        elif len(self._generate_id.argtypes) == 1:
+            self._id = self._generate_id(self._type)
         else:
             _id = _gl.GLuint()
             self._generate_id(1, _gl.pointer(_id))

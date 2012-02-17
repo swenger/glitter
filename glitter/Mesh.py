@@ -1,6 +1,6 @@
-from glitter import ArrayBuffer, ElementArrayBuffer
+from Buffer import ArrayBuffer, ElementArrayBuffer
 
-class Mesh(object): # TODO
+class Mesh(object): # TODO this belongs into a utility library
     def __init__(self, vertices, indices):
         self.vertices = vertices
         self.indices = indices
@@ -23,5 +23,5 @@ class Mesh(object): # TODO
 
     def render(self):
         with self._vertex_buffer:
-            self._index_buffer.draw_triangles()
+            self._index_buffer.draw()
 

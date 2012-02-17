@@ -51,7 +51,7 @@ class Sampler(BindableObject):
         self._target = unit # TODO check for 0 <= unit < GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS
         super(Sampler, self).__init__()
 
-    # TODO getters and setters for unit, binding to several units
+    # TODO getters and setters for unit (mind the stack!), binding to several units
 
     @property
     def compare_func(self):

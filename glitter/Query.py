@@ -10,9 +10,9 @@ class Query(BeginEndObject):
     _target = NotImplemented
 
     def __init__(self):
-        super(Query, self).__init__()
         if any(x is NotImplemented for x in (self._target,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
+        super(Query, self).__init__()
         if self._counter_bits == 0:
             raise RuntimeError("%s not supported" % self.__class__.__name__)
 
