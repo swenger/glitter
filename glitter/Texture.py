@@ -4,6 +4,8 @@ from rawgl import gl as _gl
 
 from util import GLObject
 
+# TODO nosetests
+
 _texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((numpy.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((numpy.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
@@ -188,8 +190,9 @@ class Texture2DMultisampleArray(Texture):
     _set = _gl.glTexImage3D
 
 
-def test_texture(shape, dtype):
-    data = (255 * numpy.random.random(shape)).astype(dtype) # TODO make this work for float, signed and unsigned integer dtypes
+def check_texture(shape, dtype, vrange):
+    minval, maxval = vrange
+    data = ((maxval - minval) * numpy.random.random(shape) + minval).astype(dtype)
     texture = Texture3D(data)
     assert texture.shape == data.shape, "shape is broken"
     assert texture._iformat == _numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
@@ -199,30 +202,12 @@ def test_texture(shape, dtype):
     tdata = texture.data
     assert (tdata == data).all(), "data is broken"
 
-if __name__ == "__main__":
-    import traceback
-    from glitter import GlutWindow
-    window = GlutWindow()
-
+def test_generator():
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
     dtypes = (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)
-
-    column_headers = ["%20s" % "shape"] + [dtype.__name__ for dtype in dtypes]
-    column_formats = ["%%%ds" % max(len(column_header), 7) for column_header in column_headers]
-
-    for column_header, column_format in zip(column_headers, column_formats):
-        print column_format % column_header,
-    print
+    vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
 
     for shape in shapes:
-        print column_formats[0] % str(shape),
-        for dtype, column_format in zip(dtypes, column_formats[1:]):
-            try:
-                test_texture(shape, dtype)
-            except Exception, e:
-                print column_format % "FAIL",
-                traceback.print_exc()
-            else:
-                print column_format % "PASS",
-        print
+        for dtype, vrange in zip(dtypes, vranges):
+            yield check_texture, shape, dtype, vrange
 
