@@ -33,5 +33,5 @@ class Framebuffer(BindableObject):
         with self:
             _gl.glFramebufferTexture(self._target, _attachment, _texture, level)
 
-    # TODO get and set attachments using a proxy and __getitem__/__setitem__; needs a texture database
+    # TODO get and set attachments using a proxy and __getitem__/__setitem__ and Texture._db
 
