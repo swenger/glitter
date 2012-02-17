@@ -65,7 +65,7 @@ class Texture(GLObject):
             LINEAR_MIPMAP_LINEAR=_gl.GL_LINEAR_MIPMAP_LINEAR,
     )
 
-    texture_compare_funcs = Enum(
+    compare_funcs = Enum(
             LEQUAL=_gl.GL_LEQUAL,
             GEQUAL=_gl.GL_GEQUAL,
             LESS=_gl.GL_LESS,
@@ -76,17 +76,17 @@ class Texture(GLObject):
             NEVER=_gl.GL_NEVER,
     )
 
-    texture_compare_modes = Enum(
+    compare_modes = Enum(
             COMPARE_REF_TO_TEXTURE=_gl.GL_COMPARE_REF_TO_TEXTURE,
             NONE=_gl.GL_NONE,
     )
 
-    texture_mag_filters = Enum(
+    mag_filters = Enum(
             NEAREST=_gl.GL_NEAREST,
             LINEAR=_gl.GL_LINEAR,
     )
 
-    texture_swizzles = Enum(
+    swizzles = Enum(
             RED=_gl.GL_RED,
             GREEN=_gl.GL_GREEN,
             BLUE=_gl.GL_BLUE,
@@ -95,7 +95,7 @@ class Texture(GLObject):
             ONE=_gl.GL_ONE,
     )
 
-    texture_wrapmodes = Enum(
+    wrapmodes = Enum(
             CLAMP_TO_EDGE=_gl.GL_CLAMP_TO_EDGE,
             CLAMP_TO_BORDER=_gl.GL_CLAMP_TO_BORDER,
             MIRRORED_REPEAT=_gl.GL_MIRRORED_REPEAT,
@@ -132,7 +132,8 @@ class Texture(GLObject):
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
         if not is_float[self.dtype]:
-            pass # TODO self.min_filter = self.min_filters.NEAREST; self.mag_filter = self.mag_filters.NEAREST
+            self.min_filter = self.min_filters.NEAREST
+            self.mag_filter = self.mag_filters.NEAREST
 
     def getdata(self, level=0):
         _data = numpy.empty(self.shape, dtype=self.dtype)
@@ -240,7 +241,7 @@ class Texture(GLObject):
         _compare_func = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_compare_func))
-        return self.texture_compare_funcs[_compare_func.value]
+        return self.compare_funcs[_compare_func.value]
 
     @compare_func.setter
     def compare_func(self, compare_func):
@@ -252,7 +253,7 @@ class Texture(GLObject):
         _compare_mode = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
-        return self.texture_compare_modes[_compare_mode.value]
+        return self.compare_modes[_compare_mode.value]
 
     @compare_mode.setter
     def compare_mode(self, compare_mode):
@@ -295,7 +296,7 @@ class Texture(GLObject):
         _mag_filter = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_mag_filter))
-        return self.texture_mag_filters[_mag_filter.value]
+        return self.mag_filters[_mag_filter.value]
 
     @mag_filter.setter
     def mag_filter(self, mag_filter):
@@ -343,7 +344,7 @@ class Texture(GLObject):
         _swizzle_r = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_R, _gl.pointer(_swizzle_r))
-        return self.texture_swizzles[_swizzle_r.value]
+        return self.swizzles[_swizzle_r.value]
 
     @swizzle_r.setter
     def swizzle_r(self, swizzle_r):
@@ -355,7 +356,7 @@ class Texture(GLObject):
         _swizzle_g = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_G, _gl.pointer(_swizzle_g))
-        return self.texture_swizzles[_swizzle_g.value]
+        return self.swizzles[_swizzle_g.value]
 
     @swizzle_g.setter
     def swizzle_g(self, swizzle_g):
@@ -367,7 +368,7 @@ class Texture(GLObject):
         _swizzle_b = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_B, _gl.pointer(_swizzle_b))
-        return self.texture_swizzles[_swizzle_b.value]
+        return self.swizzles[_swizzle_b.value]
 
     @swizzle_b.setter
     def swizzle_b(self, swizzle_b):
@@ -379,7 +380,7 @@ class Texture(GLObject):
         _swizzle_a = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_A, _gl.pointer(_swizzle_a))
-        return self.texture_swizzles[_swizzle_a.value]
+        return self.swizzles[_swizzle_a.value]
 
     @swizzle_a.setter
     def swizzle_a(self, swizzle_a):
@@ -391,7 +392,7 @@ class Texture(GLObject):
         _swizzle_rgba = (_gl.GLenum * 4)()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)
-        return [self.texture_swizzles[_swizzle_rgba[i]] for i in range(4)]
+        return [self.swizzles[_swizzle_rgba[i]] for i in range(4)]
 
     @swizzle_rgba.setter
     def swizzle_rgba(self, swizzle_rgba):
@@ -406,7 +407,7 @@ class Texture(GLObject):
         _wrap_s = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_wrap_s))
-        return self.texture_wrapmodes[_wrap_s.value]
+        return self.wrapmodes[_wrap_s.value]
 
     @wrap_s.setter
     def wrap_s(self, wrap_s):
@@ -418,7 +419,7 @@ class Texture(GLObject):
         _wrap_t = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_wrap_t))
-        return self.texture_wrapmodes[_wrap_t.value]
+        return self.wrapmodes[_wrap_t.value]
 
     @wrap_t.setter
     def wrap_t(self, wrap_t):
@@ -430,7 +431,7 @@ class Texture(GLObject):
         _wrap_r = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_wrap_r))
-        return self.texture_wrapmodes[_wrap_r.value]
+        return self.wrapmodes[_wrap_r.value]
 
     @wrap_r.setter
     def wrap_r(self, wrap_r):
