@@ -153,3 +153,13 @@ is_signed = {
         _np.float32: True,
 }
 
+gl_type = {
+        _np.uint8: _gl.GL_UNSIGNED_BYTE,
+        _np.int8: _gl.GL_BYTE,
+        _np.uint16: _gl.GL_UNSIGNED_SHORT,
+        _np.int16: _gl.GL_SHORT,
+        _np.uint32: _gl.GL_UNSIGNED_INT,
+        _np.int32: _gl.GL_INT,
+        _np.float32: _gl.GL_FLOAT,
+}
+
