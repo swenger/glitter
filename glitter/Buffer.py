@@ -11,8 +11,8 @@ from util import GLObject, Enum
 _buffer_targets = [ # target, binding
         (_gl.GL_ARRAY_BUFFER,              _gl.GL_ARRAY_BUFFER_BINDING             ),
         (_gl.GL_ATOMIC_COUNTER_BUFFER,     _gl.GL_ATOMIC_COUNTER_BUFFER_BINDING    ),
-        #(_gl.GL_COPY_READ_BUFFER,          _gl.GL_COPY_READ_BUFFER_BINDING         ),
-        #(_gl.GL_COPY_WRITE_BUFFER,         _gl.GL_COPY_WRITE_BUFFER_BINDING        ),
+        (_gl.GL_COPY_READ_BUFFER,          None                                    ), # XXX why is there no GL_COPY_READ_BUFFER_BINDING?
+        (_gl.GL_COPY_WRITE_BUFFER,         None                                    ), # XXX why is there no GL_COPY_WRITE_BUFFER_BINING?
         (_gl.GL_DRAW_INDIRECT_BUFFER,      _gl.GL_DRAW_INDIRECT_BUFFER_BINDING     ),
         (_gl.GL_ELEMENT_ARRAY_BUFFER,      _gl.GL_ELEMENT_ARRAY_BUFFER_BINDING     ),
         (_gl.GL_PIXEL_PACK_BUFFER,         _gl.GL_PIXEL_PACK_BUFFER_BINDING        ),
