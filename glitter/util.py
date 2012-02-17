@@ -1,5 +1,4 @@
-import numpy
-
+import numpy as _np
 from rawgl import gl as _gl
 
 class InstanceDescriptorMixin(object):
@@ -135,22 +134,22 @@ class Enum(object):
         return self._reverse_dict[value]
 
 is_float = {
-        numpy.uint8: False,
-        numpy.int8: False,
-        numpy.uint16: False,
-        numpy.int16: False,
-        numpy.uint32: False,
-        numpy.int32: False,
-        numpy.float32: True,
+        _np.uint8: False,
+        _np.int8: False,
+        _np.uint16: False,
+        _np.int16: False,
+        _np.uint32: False,
+        _np.int32: False,
+        _np.float32: True,
 }
 
 is_signed = {
-        numpy.uint8: False,
-        numpy.int8: True,
-        numpy.uint16: False,
-        numpy.int16: True,
-        numpy.uint32: False,
-        numpy.int32: True,
-        numpy.float32: True,
+        _np.uint8: False,
+        _np.int8: True,
+        _np.uint16: False,
+        _np.int16: True,
+        _np.uint32: False,
+        _np.int32: True,
+        _np.float32: True,
 }
 

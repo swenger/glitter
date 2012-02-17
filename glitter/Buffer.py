@@ -1,5 +1,4 @@
-import numpy
-
+import numpy as _np
 from rawgl import gl as _gl
 
 from util import BindableObject, Enum
@@ -60,13 +59,13 @@ class Buffer(BindableObject):
         if usage is None:
             usage = self.usage
 
-        _nbytes = numpy.prod(self._shape) * self._dtype().nbytes
-        _data = numpy.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
+        _nbytes = _np.prod(self._shape) * self._dtype().nbytes
+        _data = _np.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         with self:
             _gl.glBufferData(self._target, _nbytes, _data, usage._value)
 
     def getdata(self):
-        _data = numpy.empty(self.shape, dtype=self.dtype)
+        _data = _np.empty(self.shape, dtype=self.dtype)
         with self:
             _gl.glGetBufferSubData(self._target, 0, _data.nbytes, _data.ctypes)
         return _data
@@ -149,7 +148,7 @@ class UniformBuffer(Buffer):
 
 def check_buffer(shape, dtype, vrange):
     minval, maxval = vrange
-    data = ((maxval - minval) * numpy.random.random(shape) + minval).astype(dtype)
+    data = ((maxval - minval) * _np.random.random(shape) + minval).astype(dtype)
     buf = ArrayBuffer(data)
     assert (buf.data == data).all(), "data is broken"
     assert buf.shape == data.shape, "shape is broken"
@@ -158,7 +157,7 @@ def check_buffer(shape, dtype, vrange):
 
 def test_generator():
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
-    dtypes = (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)
+    dtypes = (_np.uint8, _np.int8, _np.uint16, _np.int16, _np.uint32, _np.int32, _np.float32)
     vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
 
     for shape in shapes:
