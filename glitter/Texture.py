@@ -4,9 +4,8 @@ from rawgl import gl as _gl
 
 from util import GLObject, is_float, is_signed, Enum
 
-# TODO constants instead of strings
-# TODO check memory layout
-# TODO depth texture, pixel unpack buffer
+# TODO check memory layout: do shaders use the same coordinates as numpy?
+# TODO support depth textures
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
 # TODO mipmaps (level != 0) with glGenerateMipmap
 
@@ -39,7 +38,8 @@ _texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal 
         ((numpy.uint32,  4), _gl.GL_RGBA32UI, (_gl.GL_UNSIGNED_INT,   _gl.GL_RGBA_INTEGER)),
         ((numpy.int32,   4), _gl.GL_RGBA32I,  (_gl.GL_INT,            _gl.GL_RGBA_INTEGER)),
         ((numpy.float32, 4), _gl.GL_RGBA32F,  (_gl.GL_FLOAT,          _gl.GL_RGBA        )),
-] # TODO internal formats GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL
+        # TODO add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL
+]
 _numpy_to_gl_iformat =   dict((x[0],    x[1]   ) for x in _texture_formats)
 _gl_iformat_to_numpy =   dict((x[1],    x[0]   ) for x in _texture_formats)
 _numpy_to_gl_format =    dict((x[0],    x[2][1]) for x in _texture_formats)
@@ -186,7 +186,6 @@ class Texture(GLObject):
     def _type(self):
         return _gl_iformat_to_gl_type[self._iformat]
 
-    # TODO setters
     @property
     def base_level(self):
         _base_level = _gl.GLint()
