@@ -141,3 +141,8 @@ class UniformBuffer(Buffer):
     _target = _gl.GL_UNIFORM_BUFFER
     # TODO glBindBufferBase, glBindBufferRange
 
+
+# nosetests
+
+# TODO tests as in Texture
+

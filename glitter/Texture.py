@@ -4,8 +4,6 @@ from rawgl import gl as _gl
 
 from util import GLObject
 
-# TODO nosetests
-
 _texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((numpy.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((numpy.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
@@ -189,6 +187,8 @@ class Texture2DMultisampleArray(Texture):
     _ndim = 4
     _set = _gl.glTexImage3D
 
+
+# nosetests
 
 def check_texture(shape, dtype, vrange):
     minval, maxval = vrange

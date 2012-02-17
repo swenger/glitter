@@ -15,7 +15,7 @@ class InstanceDescriptorMixin(object):
         except AttributeError:
             return super(InstanceDescriptorMixin, self).__setattr__(name, value)
 
-class Binding(object):
+class Binding(object): # TODO
     def get(self):
         raise NotImplementedError
 
@@ -31,13 +31,11 @@ class Binding(object):
 
 class GLObject(object):
     def __init__(self):
-        if not (hasattr(self, "_target") and hasattr(self, "_binding")):
+        if self._bind is NotImplemented:
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        
         _id = _gl.GLuint()
         self._generate_id(1, _gl.pointer(_id))
         self._id = _id.value
-
         self._stack = []
 
     def __del__(self):
@@ -45,7 +43,7 @@ class GLObject(object):
             self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
             self._id = 0
         except AttributeError:
-            pass # avoid "'NoneType' object has no attribute 'glDeleteTextures'" when GL module has already been unloaded
+            pass # avoid error when GL module has already been unloaded
 
     def bind(self):
         old_binding = _gl.GLint()
