@@ -1,4 +1,3 @@
-from weakref import WeakValueDictionary
 import numpy as _np
 from rawgl import gl as _gl
 
@@ -52,7 +51,6 @@ class Texture(BindableObject):
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
     _bind = _gl.glBindTexture
-    _db = WeakValueDictionary() # TODO recreate Texture object on the fly
 
     _ndim = NotImplemented
     _set = NotImplemented
@@ -107,7 +105,6 @@ class Texture(BindableObject):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Texture, self).__init__()
-        self._db[self._id] = self
         self.set_data(data, shape, dtype)
 
     def set_data(self, data=None, shape=None, dtype=None, level=0):

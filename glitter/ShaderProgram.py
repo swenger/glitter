@@ -28,7 +28,7 @@ class ShaderProgram(BindableObject):
         _gl.glGetProgramiv(self._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
         _shaders = (_gl.GLuint * _attached_shaders.value)()
         _gl.glGetAttachedShaders(self._id, _attached_shaders, _gl.POINTER(_gl.GLsizei)(), _shaders)
-        return [Shader._db[_shaders[i]] for i in range(_attached_shaders.value)]
+        return [Shader._retrieve(_shaders[i]) for i in range(_attached_shaders.value)]
 
     @property
     def shaders(self):

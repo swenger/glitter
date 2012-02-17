@@ -1,3 +1,4 @@
+from weakref import WeakValueDict
 import numpy as _np
 from rawgl import gl as _gl
 
@@ -53,6 +54,7 @@ class GLObject(object):
     _generate_id = NotImplemented
     _delete_id = NotImplemented
     _type = NotImplemented
+    _db = WeakValueDict()
 
     def __init__(self):
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
@@ -65,6 +67,11 @@ class GLObject(object):
             _id = _gl.GLuint()
             self._generate_id(1, _gl.pointer(_id))
             self._id = _id.value
+        self._db[self._generate_id, self._id] = self
+
+    @classmethod
+    def _retrieve(cls, _id):
+        return cls._db.get((cls._generate_id, _id), None)
 
     def __del__(self):
         try:
