@@ -1,10 +1,10 @@
 from rawgl import gl as _gl
 
-from util import GLObject, Enum
+from util import BindableObject, Enum
 
 # TODO one sampler can be bound to different units; how should this be represented? SamplerBinding()?
 
-class Sampler(GLObject):
+class Sampler(BindableObject):
     _generate_id = _gl.glGenSamplers
     _delete_id = _gl.glDeleteSamplers
     _bind = _gl.glBindSampler

@@ -1,10 +1,10 @@
 from rawgl import gl as _gl
 
-from util import GLObject
+from util import BindableObject
 
 # TODO
 
-class ProgramPipeline(GLObject):
+class ProgramPipeline(BindableObject):
     _generate_id = _gl.glGenProgramPipelines
     _delete_id = _gl.glDeleteProgramPipelines
     _bind = _gl.glBindProgramPipeline

@@ -2,7 +2,7 @@ import numpy
 
 from rawgl import gl as _gl
 
-from util import GLObject, Enum, is_float, is_signed
+from util import BindableObject, Enum, is_float, is_signed
 
 # TODO check memory layout: do shaders use the same coordinates as numpy?
 # TODO support depth textures
@@ -48,7 +48,7 @@ _numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in _texture_formats)
 _gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in _texture_formats)
 _gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in _texture_formats)
 
-class Texture(GLObject):
+class Texture(BindableObject):
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
     _bind = _gl.glBindTexture

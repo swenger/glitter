@@ -2,7 +2,7 @@ import numpy
 
 from rawgl import gl as _gl
 
-from util import GLObject, Enum
+from util import BindableObject, Enum
 
 # TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
 # TODO buffers likely contain meaningful array data; remember the dtypes and shape
@@ -23,7 +23,7 @@ _buffer_targets = [ # target, binding
 ]
 _buffer_target_to_binding = dict((x[0], x[1]) for x in _buffer_targets)
 
-class Buffer(GLObject):
+class Buffer(BindableObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _bind = _gl.glBindBuffer

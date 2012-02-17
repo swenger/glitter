@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from util import GLObject
+from util import BindableObject
 
 # TODO binding to different targets
 # TODO color and depth attachments
@@ -12,7 +12,7 @@ _framebuffer_targets = [
 ]
 _framebuffer_target_to_binding = dict((x[0], x[1]) for x in _framebuffer_targets)
 
-class Framebuffer(GLObject):
+class Framebuffer(BindableObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
     _bind = _gl.glBindFramebuffer

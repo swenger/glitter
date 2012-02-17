@@ -1,10 +1,10 @@
 from rawgl import gl as _gl
 
-from util import GLObject
+from util import BindableObject
 
 # TODO
 
-class TransformFeedback(GLObject):
+class TransformFeedback(BindableObject):
     _generate_id = _gl.glGenTransformFeedbacks
     _delete_id = _gl.glDeleteTransformFeedbacks
     _bind = _gl.glBindTransformFeedback
