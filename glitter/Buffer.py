@@ -4,11 +4,15 @@ from rawgl import gl as _gl
 
 from util import GLObject
 
+# TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
+# TODO buffers likely contain meaningful array data; remember the dtypes and shape
+# TODO slicing with glGetBufferSubData
+
 _buffer_targets = [ # target, binding
         (_gl.GL_ARRAY_BUFFER,              _gl.GL_ARRAY_BUFFER_BINDING             ),
         (_gl.GL_ATOMIC_COUNTER_BUFFER,     _gl.GL_ATOMIC_COUNTER_BUFFER_BINDING    ),
-        (_gl.GL_COPY_READ_BUFFER,          _gl.GL_COPY_READ_BUFFER_BINDING         ),
-        (_gl.GL_COPY_WRITE_BUFFER,         _gl.GL_COPY_WRITE_BUFFER_BINDING        ),
+        #(_gl.GL_COPY_READ_BUFFER,          _gl.GL_COPY_READ_BUFFER_BINDING         ),
+        #(_gl.GL_COPY_WRITE_BUFFER,         _gl.GL_COPY_WRITE_BUFFER_BINDING        ),
         (_gl.GL_DRAW_INDIRECT_BUFFER,      _gl.GL_DRAW_INDIRECT_BUFFER_BINDING     ),
         (_gl.GL_ELEMENT_ARRAY_BUFFER,      _gl.GL_ELEMENT_ARRAY_BUFFER_BINDING     ),
         (_gl.GL_PIXEL_PACK_BUFFER,         _gl.GL_PIXEL_PACK_BUFFER_BINDING        ),
@@ -33,40 +37,52 @@ _buffer_usage = [ # (access_frequency, access_type), usage
 _buffer_params_to_usage = dict((x[0], x[1]) for x in _buffer_usage)
 _buffer_usage_to_params = dict((x[1], x[0]) for x in _buffer_usage)
 
-# TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
-# TODO buffers likely contain meaningful array data; remember the dtypes and shape
-
 class Buffer(GLObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _bind = _gl.glBindBuffer
 
-    def __init__(self, data=None, access_frequency="static", access_type="draw"):
-        super(Buffer, self).__init__()
-
+    def __init__(self, data=None, shape=None, dtype=None, access_frequency="static", access_type="draw"):
         self._binding = _buffer_target_to_binding[self._target]
+        super(Buffer, self).__init__()
+        self.setdata(data=data, shape=shape, dtype=dtype, access_frequency=access_frequency, access_type=access_type)
 
-        self._setdata(data, _buffer_params_to_usage[access_frequency, access_type])
+    def setdata(self, data=None, shape=None, dtype=None, access_frequency="static", access_type="draw"):
+        if data is None:
+            if shape is None or dtype is None:
+                raise ValueError("must specify either data or both shape and dtype")
+            self._shape = shape
+            self._dtype = dtype
+        else:
+            if shape is not None or dtype is not None:
+                raise ValueError("cannot specify both data and either shape and dtype")
+            self._shape = data.shape
+            self._dtype = data.dtype.type
+
+        if access_frequency is None:
+            access_frequency = self.access_frequency
+        if access_type is None:
+            access_type = self.access_type
+        _usage = _buffer_params_to_usage[access_frequency, access_type]
+
+        _nbytes = numpy.prod(self._shape) * self._dtype().nbytes
+        _data = numpy.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
+        with self:
+            _gl.glBufferData(self._target, _nbytes, _data, _usage)
+
+    def getdata(self):
+        _data = numpy.empty(self.shape, dtype=self.dtype)
+        with self:
+            _gl.glGetBufferSubData(self._target, 0, _data.nbytes, _data.ctypes)
+        return _data
 
     @property
-    def data(self): # TODO slicing with glGetBufferSubData
-        pass # TODO
+    def data(self):
+        return self.getdata()
 
     @data.setter
-    def data(self, data): # TODO slicing with glBufferSubData
-        self._setdata(data, self._usage)
-
-    def _setdata(self, data, _usage):
-        _target = self._target
-        if _target not in (_gl.GL_ARRAY_BUFFER, _gl.GL_ELEMENT_ARRAY_BUFFER, _gl.GL_PIXEL_PACK_BUFFER, _gl.GL_PIXEL_UNPACK_BUFFER):
-            _target = _gl.GL_ARRAY_BUFFER
-        _nbytes = data.nbytes if data is not None else 0
-        _data = numpy.ascontiguousarray(data.ctypes) if data is not None else _gl.POINTER(_gl.GLvoid)()
-        with self:
-            _gl.glBufferData(_target, _nbytes, _data, _usage)
-
-        self._shape = data.shape
-        self._dtype = data.dtype
+    def data(self, data):
+        self.setdata(data)
 
     @property
     def shape(self):
@@ -77,18 +93,6 @@ class Buffer(GLObject):
         return self._dtype
 
     @property
-    def _size(self):
-        _size = _gl.GLint()
-        _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_SIZE, _gl.pointer(_size))
-        return _size.value
-
-    @property
-    def _usage(self):
-        _usage = _gl.GLint()
-        _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_USAGE, _gl.pointer(_usage))
-        return _usage.value
-
-    @property
     def access_frequency(self):
         return _buffer_usage_to_params[self._usage][0]
 
@@ -96,7 +100,19 @@ class Buffer(GLObject):
     def access_type(self):
         return _buffer_usage_to_params[self._usage][1]
 
-    # TODO bind_as_... and ..._binding()
+    @property
+    def _size(self):
+        _size = _gl.GLint()
+        with self:
+            _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_SIZE, _gl.pointer(_size))
+        return _size.value
+
+    @property
+    def _usage(self):
+        _usage = _gl.GLint()
+        with self:
+            _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_USAGE, _gl.pointer(_usage))
+        return _usage.value
 
 class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER
@@ -144,5 +160,21 @@ class UniformBuffer(Buffer):
 
 # nosetests
 
-# TODO tests as in Texture
+def check_buffer(shape, dtype, vrange):
+    minval, maxval = vrange
+    data = ((maxval - minval) * numpy.random.random(shape) + minval).astype(dtype)
+    buf = ArrayBuffer(data)
+    assert (buf.data == data).all(), "data is broken"
+    assert buf.shape == data.shape, "shape is broken"
+    assert buf.dtype == data.dtype, "dtype is broken"
+    assert buf._size == data.nbytes, "_size is broken"
+
+def test_generator():
+    shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
+    dtypes = (numpy.uint8, numpy.int8, numpy.uint16, numpy.int16, numpy.uint32, numpy.int32, numpy.float32)
+    vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
+
+    for shape in shapes:
+        for dtype, vrange in zip(dtypes, vranges):
+            yield check_buffer, shape, dtype, vrange
 

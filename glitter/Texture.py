@@ -119,6 +119,10 @@ class Texture(GLObject):
                 return (_depth.value, _height.value, _width.value, colors)
 
     @property
+    def dtype(self):
+        return _gl_iformat_to_numpy[self._iformat][0]
+
+    @property
     def _iformat(self):
         _iformat = _gl.GLint()
         with self:
@@ -132,10 +136,6 @@ class Texture(GLObject):
     @property
     def _type(self):
         return _gl_iformat_to_gl_type[self._iformat]
-
-    @property
-    def dtype(self):
-        return _gl_iformat_to_numpy[self._iformat][0]
 
 class Texture1D(Texture):
     _target = _gl.GL_TEXTURE_1D
@@ -204,13 +204,12 @@ def check_texture(shape, dtype, vrange):
     minval, maxval = vrange
     data = ((maxval - minval) * numpy.random.random(shape) + minval).astype(dtype)
     texture = Texture3D(data)
+    assert (texture.data == data).all(), "data is broken"
     assert texture.shape == data.shape, "shape is broken"
+    assert texture.dtype == data.dtype, "dtype is broken"
     assert texture._iformat == _numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
     assert texture._format == _numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"
     assert texture._type == _numpy_to_gl_type[data.dtype.type], "_type is broken"
-    assert texture.dtype == data.dtype, "dtype is broken"
-    tdata = texture.data
-    assert (tdata == data).all(), "data is broken"
 
 def test_generator():
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))

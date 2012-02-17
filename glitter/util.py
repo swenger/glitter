@@ -30,9 +30,16 @@ class Binding(object): # TODO
         self.set(self.old_id)
 
 class GLObject(object):
+    _generate_id = NotImplemented
+    _delete_id = NotImplemented
+    _target = NotImplemented
+    _binding = NotImplemented
+    _bind = NotImplemented
+
     def __init__(self):
-        if self._bind is NotImplemented:
+        if any(x is NotImplemented for x in (self._generate_id, self._delete_id, self._target, self._binding, self._bind)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
+
         _id = _gl.GLuint()
         self._generate_id(1, _gl.pointer(_id))
         self._id = _id.value
@@ -56,10 +63,4 @@ class GLObject(object):
 
     def __exit__(self, type, value, traceback):
         self._bind(self._target, self._stack.pop())
-
-    _generate_id = NotImplemented
-    _delete_id = NotImplemented
-    _target = NotImplemented
-    _binding = NotImplemented
-    _bind = NotImplemented
 
