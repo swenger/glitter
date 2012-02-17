@@ -52,7 +52,7 @@ class Texture(BindableObject):
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
     _bind = _gl.glBindTexture
-    _db = WeakValueDictionary()
+    _db = WeakValueDictionary() # TODO recreate Texture object on the fly
 
     _ndim = NotImplemented
     _set = NotImplemented

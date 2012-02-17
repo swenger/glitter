@@ -9,10 +9,12 @@ class ShaderProgram(BindableObject):
     _bind = _gl.glUseProgram
     _binding = _gl.GL_CURRENT_PROGRAM
 
-    def __init__(self, *shaders):
+    def __init__(self, shaders=[], link=False):
         super(ShaderProgram, self).__init__()
         for shader in shaders:
             self._attach(shader)
+        if link:
+            self.link()
 
     def _attach(self, shader):
         _gl.glAttachShader(self._id, shader._id)

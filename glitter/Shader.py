@@ -6,7 +6,7 @@ from util import GLObject, ShaderCompileError
 class Shader(GLObject):
     _generate_id = _gl.glCreateShader
     _delete_id = _gl.glDeleteShader
-    _db = WeakValueDictionary()
+    _db = WeakValueDictionary() # TODO recreate Shader object on the fly
 
     def __init__(self):
         if any(x is NotImplemented for x in (self._type,)):
