@@ -66,6 +66,27 @@ class GLObject(object):
     def __exit__(self, type, value, traceback):
         self._bind(self._target, self._stack.pop())
 
+class EnumConstant(object):
+    def __init__(self, name, value):
+        self._name = name
+        self._value = value
+
+    def __str__(self):
+        return self._name
+
+    def __repr__(self):
+        return self._name
+
+class Enum(object):
+    def __init__(self, **kwargs):
+        self._reverse_dict = {}
+        for key, value in kwargs.items():
+            setattr(self, key, EnumConstant(key, value))
+            self._reverse_dict[value] = getattr(self, key)
+
+    def __getitem__(self, value):
+        return self._reverse_dict[value]
+
 is_float = {
         numpy.uint8: False,
         numpy.int8: False,

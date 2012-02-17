@@ -2,9 +2,9 @@ import numpy
 
 from rawgl import gl as _gl
 
-from util import GLObject, is_float, is_signed
+from util import GLObject, is_float, is_signed, Enum
 
-# TODO for integer textures, set min_filter and mag_filter to "nearest"
+# TODO constants instead of strings
 # TODO check memory layout
 # TODO depth texture, pixel unpack buffer
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
@@ -48,64 +48,6 @@ _numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in _texture_formats)
 _gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in _texture_formats)
 _gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in _texture_formats)
 
-_texture_compare_funcs = [
-        ("lequal", _gl.GL_LEQUAL),
-        ("gequal", _gl.GL_GEQUAL),
-        ("less", _gl.GL_LESS),
-        ("greater", _gl.GL_GREATER),
-        ("equal", _gl.GL_EQUAL),
-        ("notequal", _gl.GL_NOTEQUAL),
-        ("always", _gl.GL_ALWAYS),
-        ("never", _gl.GL_NEVER),
-]
-_string_to_texture_compare_func = dict((x[0], x[1]) for x in _texture_compare_funcs)
-_texture_compare_func_to_string = dict((x[1], x[0]) for x in _texture_compare_funcs)
-
-_texture_compare_modes = [
-        ("compare_ref_to_texture", _gl.GL_COMPARE_REF_TO_TEXTURE),
-        ("none", _gl.GL_NONE),
-]
-_string_to_texture_compare_mode = dict((x[0], x[1]) for x in _texture_compare_modes)
-_texture_compare_mode_to_string = dict((x[1], x[0]) for x in _texture_compare_modes)
-
-_texture_min_filters = [
-        ("nearest", _gl.GL_NEAREST),
-        ("linear", _gl.GL_LINEAR),
-        ("nearest_mipmap_nearest", _gl.GL_NEAREST_MIPMAP_NEAREST),
-        ("linear_mipmap_nearest", _gl.GL_LINEAR_MIPMAP_NEAREST),
-        ("nearest_mipmap_linear", _gl.GL_NEAREST_MIPMAP_LINEAR),
-        ("linear_mipmap_linear", _gl.GL_LINEAR_MIPMAP_LINEAR),
-]
-_string_to_texture_min_filter = dict((x[0], x[1]) for x in _texture_min_filters)
-_texture_min_filter_to_string = dict((x[1], x[0]) for x in _texture_min_filters)
-
-_texture_mag_filters = [
-        ("nearest", _gl.GL_NEAREST),
-        ("linear", _gl.GL_LINEAR),
-]
-_string_to_texture_mag_filter = dict((x[0], x[1]) for x in _texture_mag_filters)
-_texture_mag_filter_to_string = dict((x[1], x[0]) for x in _texture_mag_filters)
-
-_texture_swizzles = [
-        ("red", _gl.GL_RED),
-        ("green", _gl.GL_GREEN),
-        ("blue", _gl.GL_BLUE),
-        ("alpha", _gl.GL_ALPHA),
-        ("zero", _gl.GL_ZERO),
-        ("one", _gl.GL_ONE),
-]
-_string_to_texture_swizzles = dict((x[0], x[1]) for x in _texture_swizzles)
-_texture_swizzle_to_string = dict((x[1], x[0]) for x in _texture_swizzles)
-
-_texture_wrapmodes = [
-        ("clamp_to_edge", _gl.GL_CLAMP_TO_EDGE),
-        ("clamp_to_border", _gl.GL_CLAMP_TO_BORDER),
-        ("mirrored_repeat", _gl.GL_MIRRORED_REPEAT),
-        ("repeat", _gl.GL_REPEAT),
-]
-_string_to_texture_wrapmode = dict((x[0], x[1]) for x in _texture_wrapmodes)
-_texture_wrapmode_to_string = dict((x[1], x[0]) for x in _texture_wrapmodes)
-
 class Texture(GLObject):
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
@@ -113,6 +55,52 @@ class Texture(GLObject):
 
     _ndim = NotImplemented
     _set = NotImplemented
+
+    min_filters = Enum(
+            NEAREST=_gl.GL_NEAREST,
+            LINEAR=_gl.GL_LINEAR,
+            NEAREST_MIPMAP_NEAREST=_gl.GL_NEAREST_MIPMAP_NEAREST,
+            LINEAR_MIPMAP_NEAREST=_gl.GL_LINEAR_MIPMAP_NEAREST,
+            NEAREST_MIPMAP_LINEAR=_gl.GL_NEAREST_MIPMAP_LINEAR,
+            LINEAR_MIPMAP_LINEAR=_gl.GL_LINEAR_MIPMAP_LINEAR,
+    )
+
+    texture_compare_funcs = Enum(
+            LEQUAL=_gl.GL_LEQUAL,
+            GEQUAL=_gl.GL_GEQUAL,
+            LESS=_gl.GL_LESS,
+            GREATER=_gl.GL_GREATER,
+            EQUAL=_gl.GL_EQUAL,
+            NOTEQUAL=_gl.GL_NOTEQUAL,
+            ALWAYS=_gl.GL_ALWAYS,
+            NEVER=_gl.GL_NEVER,
+    )
+
+    texture_compare_modes = Enum(
+            COMPARE_REF_TO_TEXTURE=_gl.GL_COMPARE_REF_TO_TEXTURE,
+            NONE=_gl.GL_NONE,
+    )
+
+    texture_mag_filters = Enum(
+            NEAREST=_gl.GL_NEAREST,
+            LINEAR=_gl.GL_LINEAR,
+    )
+
+    texture_swizzles = Enum(
+            RED=_gl.GL_RED,
+            GREEN=_gl.GL_GREEN,
+            BLUE=_gl.GL_BLUE,
+            ALPHA=_gl.GL_ALPHA,
+            ZERO=_gl.GL_ZERO,
+            ONE=_gl.GL_ONE,
+    )
+
+    texture_wrapmodes = Enum(
+            CLAMP_TO_EDGE=_gl.GL_CLAMP_TO_EDGE,
+            CLAMP_TO_BORDER=_gl.GL_CLAMP_TO_BORDER,
+            MIRRORED_REPEAT=_gl.GL_MIRRORED_REPEAT,
+            REPEAT=_gl.GL_REPEAT,
+    )
 
     def __init__(self, data=None, shape=None, dtype=None):
         super(Texture, self).__init__()
@@ -143,6 +131,8 @@ class Texture(GLObject):
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
+        if not is_float[self.dtype]:
+            pass # TODO self.min_filter = self.min_filters.NEAREST; self.mag_filter = self.mag_filters.NEAREST
 
     def getdata(self, level=0):
         _data = numpy.empty(self.shape, dtype=self.dtype)
@@ -205,27 +195,27 @@ class Texture(GLObject):
     @property
     def border_color(self):
         if is_float[self.dtype]:
-            _border_color = numpy.empty(4, dtype=numpy.float32)
-            _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color.ctypes)
+            _border_color = (_gl.GLfloat * 4)()
+            _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         elif is_signed[self.dtype]:
-            _border_color = numpy.empty(4, dtype=numpy.int32)
-            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color.ctypes)
+            _border_color = (_gl.GLint * 4)()
+            _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         else:
-            _border_color = numpy.empty(4, dtype=numpy.uint32)
-            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color.ctypes)
-        return _border_color
+            _border_color = (_gl.GLuint * 4)()
+            _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
+        return [_border_color[i] for i in range(4)]
 
     @property
     def compare_func(self):
         _compare_func = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_compare_func))
-        return _texture_compare_func_to_string[_compare_func.value]
+        return self.texture_compare_funcs[_compare_func.value]
 
     @property
     def compare_mode(self):
         _compare_mode = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
-        return _texture_compare_mode_to_string[_compare_mode.value]
+        return self.texture_compare_modes[_compare_mode.value]
     
     @property
     def immutable_format(self): # getter only
@@ -243,13 +233,13 @@ class Texture(GLObject):
     def min_filter(self):
         _min_filter = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_min_filter))
-        return _texture_min_filter_to_string[_min_filter.value]
+        return self.min_filters[_min_filter.value]
 
     @property
     def mag_filter(self):
         _mag_filter = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_mag_filter))
-        return _texture_mag_filter_to_string[_mag_filter.value]
+        return self.texture_mag_filters[_mag_filter.value]
 
     @property
     def min_lod(self):
@@ -273,49 +263,49 @@ class Texture(GLObject):
     def swizzle_r(self):
         _swizzle_r = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_R, _gl.pointer(_swizzle_r))
-        return _texture_swizzle_to_string[_swizzle_r.value]
+        return self.texture_swizzles[_swizzle_r.value]
 
     @property
     def swizzle_g(self):
         _swizzle_g = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_G, _gl.pointer(_swizzle_g))
-        return _texture_swizzle_to_string[_swizzle_g.value]
+        return self.texture_swizzles[_swizzle_g.value]
 
     @property
     def swizzle_b(self):
         _swizzle_b = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_B, _gl.pointer(_swizzle_b))
-        return _texture_swizzle_to_string[_swizzle_b.value]
+        return self.texture_swizzles[_swizzle_b.value]
 
     @property
     def swizzle_a(self):
         _swizzle_a = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_A, _gl.pointer(_swizzle_a))
-        return _texture_swizzle_to_string[_swizzle_a.value]
+        return self.texture_swizzles[_swizzle_a.value]
 
     @property
     def swizzle_rgba(self):
         _swizzle_rgba = (_gl.GLenum * 4)()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)
-        return [_texture_swizzle_to_string[_swizzle_rgba[i]] for i in range(4)]
+        return [self.texture_swizzles[_swizzle_rgba[i]] for i in range(4)]
 
     @property
     def wrap_s(self):
         _wrap_s = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_wrap_s))
-        return _texture_wrapmode_to_string[_wrap_s.value]
+        return self.texture_wrapmodes[_wrap_s.value]
 
     @property
     def wrap_t(self):
         _wrap_t = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_wrap_t))
-        return _texture_wrapmode_to_string[_wrap_t.value]
+        return self.texture_wrapmodes[_wrap_t.value]
 
     @property
     def wrap_r(self):
         _wrap_r = _gl.GLenum()
         _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_wrap_r))
-        return _texture_wrapmode_to_string[_wrap_r.value]
+        return self.texture_wrapmodes[_wrap_r.value]
 
 class Texture1D(Texture):
     _target = _gl.GL_TEXTURE_1D
