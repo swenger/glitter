@@ -4,6 +4,12 @@ from rawgl import gl as _gl
 
 from util import GLObject
 
+# TODO check memory layout
+# TODO depth texture, pixel unpack buffer
+# TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
+# TODO glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT); glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+# TODO mipmaps (level != 0) with glGenerateMipmap
+
 _texture_formats = [ # (numpy dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((numpy.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((numpy.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
@@ -43,12 +49,6 @@ _gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in _texture_formats)
 _gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in _texture_formats)
 
 class Texture(GLObject):
-    # TODO check memory layout: "The first element corresponds to the lower left corner of the texture image. Subsequent elements progress left-to-right through the remaining texels in the lowest row of the texture image, and then in successively higher rows of the texture image. The final element corresponds to the upper right corner of the texture image."
-    # TODO depth texture, pixel unpack buffer, glPixelStore
-    # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
-    # TODO glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT); glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-    # TODO mipmaps (level != 0) with glGenerateMipmap
-
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
     _bind = _gl.glBindTexture
@@ -57,39 +57,49 @@ class Texture(GLObject):
     _set = NotImplemented
 
     def __init__(self, data=None, shape=None, dtype=None):
-        if not (hasattr(self, "_ndim") and hasattr(self, "_set")):
-            raise TypeError("%s is abstract" % self.__class__.__name__)
-        
         super(Texture, self).__init__()
 
-        dtype = dtype or data.dtype.type
-        shape = shape or data.shape
+        if any(x is NotImplemented for x in (self._ndim, self._set)):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+        
+        self.setdata(data, shape, dtype)
+
+    def setdata(self, data=None, shape=None, dtype=None, level=0):
+        if data is None:
+            if shape is None or dtype is None:
+                raise ValueError("must specify either data or both shape and dtype")
+        else:
+            if shape is not None or dtype is not None:
+                raise ValueError("cannot specify both data and either shape and dtype")
+            shape = data.shape
+            dtype = data.dtype.type
+
         if len(shape) != self._ndim:
             raise TypeError("shape must be %d-dimensional" % self._ndim)
 
         _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
         _format = _numpy_to_gl_format[dtype, shape[-1]]
         _type = _numpy_to_gl_type[dtype]
-        self._setdata(data, _iformat, shape, _format, _type)
-
-    @property
-    def data(self):
-        _data = numpy.empty(self.shape, dtype=self.dtype)
-        _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
-        with self:
-            _gl.glGetTexImage(self._target, 0, self._format, self._type, _data.ctypes)
-        return _data
-
-    @data.setter
-    def data(self, data):
-        self._setdata(data, self._iformat, self.shape, self._format, self._type)
-
-    def _setdata(self, data, _iformat, shape, _format, _type):
         _data = numpy.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
-            args = [self._target, 0, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
+            args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
+
+    def getdata(self, level=0):
+        _data = numpy.empty(self.shape, dtype=self.dtype)
+        _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
+        with self:
+            _gl.glGetTexImage(self._target, level, self._format, self._type, _data.ctypes)
+        return _data
+
+    @property
+    def data(self):
+        return self.getdata()
+
+    @data.setter
+    def data(self, data):
+        self.setdata(data)
 
     @property
     def shape(self):
