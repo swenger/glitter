@@ -1,6 +1,25 @@
 import numpy as _np
 from rawgl import gl as _gl
 
+class GlitterError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
+
+class ShaderError(GlitterError):
+    pass
+
+class ShaderCompileError(ShaderError):
+    pass
+
+class ShaderLinkError(ShaderError):
+    pass
+
+class ShaderValidateError(ShaderError):
+    pass
+
 class InstanceDescriptorMixin(object):
     def __getattribute__(self, name):
         attr = super(InstanceDescriptorMixin, self).__getattribute__(name)
