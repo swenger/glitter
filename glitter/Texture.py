@@ -112,8 +112,9 @@ class Texture(BindableObject):
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
         else:
-            if shape is not None or dtype is not None:
-                raise ValueError("cannot specify both data and either shape and dtype")
+            data = _np.asarray(data, dtype)
+            if shape is not None:
+                data = data.reshape(shape)
             shape = data.shape
             dtype = data.dtype.type
 

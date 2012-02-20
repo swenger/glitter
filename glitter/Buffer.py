@@ -51,8 +51,9 @@ class Buffer(BindableObject):
             self._shape = shape
             self._dtype = dtype
         else:
-            if shape is not None or dtype is not None:
-                raise ValueError("cannot specify both data and either shape and dtype")
+            data = _np.asarray(data, dtype)
+            if shape is not None:
+                data = data.reshape(shape)
             self._shape = data.shape
             self._dtype = data.dtype.type
 
