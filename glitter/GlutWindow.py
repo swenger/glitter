@@ -1,5 +1,7 @@
 from rawgl import glut as _glut
 
+# TODO manage viewport, swap_buffers() / post_redisplay()
+
 class GlutWindow(object):
     def __init__(self, title="", width=512, height=512, argv=[], mode=_glut.GLUT_DOUBLE|_glut.GLUT_RGB, hide=False):
         self._called = False
@@ -23,14 +25,13 @@ class GlutWindow(object):
         _glut.glutInitContextVersion(4, 0)
         _glut.glutInitContextFlags(_glut.GLUT_FORWARD_COMPATIBLE)
         _glut.glutInitContextProfile(_glut.GLUT_CORE_PROFILE)
+        _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_GLUTMAINLOOP_RETURNS)
         _glut.glutInitDisplayMode(mode) # TODO boolean flags
-        _glut.glutInitWindowPosition(0, 0)
         _glut.glutInitWindowSize(width, height)
         self._id = _glut.glutCreateWindow(self._title)
 
         if hide:
             _glut.glutHideWindow()
-        _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_GLUTMAINLOOP_RETURNS)
 
     def __del__(self):
         try:
@@ -49,7 +50,7 @@ class GlutWindow(object):
         self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
-        self._bind(self._target, self._stack.pop())
+        self._bind(self._stack.pop())
 
     def _bind(self, _id):
         _glut.glutSetWindow(_id)
@@ -72,7 +73,8 @@ class GlutWindow(object):
     @idle_func.setter
     def idle_func(self, idle_func):
         self._idle_func = idle_func
-        self._idle_func_c = _glut.glutIdleFunc.argtypes[0](idle_func) if idle_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        ftype = _glut.glutIdleFunc.argtypes[0]
+        self._idle_func_c = ftype(idle_func) if idle_func is not None else ftype()
         with self:
             _glut.glutIdleFunc(self._idle_func_c)
 
@@ -83,7 +85,8 @@ class GlutWindow(object):
     @display_func.setter
     def display_func(self, display_func):
         self._display_func = display_func
-        self._display_func_c = _glut.glutIdleFunc.argtypes[0](display_func) if display_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        ftype = _glut.glutDisplayFunc.argtypes[0]
+        self._display_func_c = ftype(display_func) if display_func is not None else ftype()
         with self:
             _glut.glutDisplayFunc(self._display_func_c)
 
@@ -94,7 +97,8 @@ class GlutWindow(object):
     @reshape_func.setter
     def reshape_func(self, reshape_func):
         self._reshape_func = reshape_func
-        self._reshape_func_c = _glut.glutIdleFunc.argtypes[0](reshape_func) if reshape_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        ftype = _glut.glutReshapeFunc.argtypes[0]
+        self._reshape_func_c = ftype(reshape_func) if reshape_func is not None else ftype()
         with self:
             _glut.glutReshapeFunc(self._reshape_func_c)
 
@@ -105,7 +109,8 @@ class GlutWindow(object):
     @mouse_func.setter
     def mouse_func(self, mouse_func):
         self._mouse_func = mouse_func
-        self._mouse_func_c = _glut.glutIdleFunc.argtypes[0](mouse_func) if mouse_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        ftype = _glut.glutMouseFunc.argtypes[0]
+        self._mouse_func_c = ftype(mouse_func) if mouse_func is not None else ftype()
         with self:
             _glut.glutMouseFunc(self._mouse_func_c)
 
@@ -116,7 +121,8 @@ class GlutWindow(object):
     @motion_func.setter
     def motion_func(self, motion_func):
         self._motion_func = motion_func
-        self._motion_func_c = _glut.glutIdleFunc.argtypes[0](motion_func) if motion_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        ftype = _glut.glutMotionFunc.argtypes[0]
+        self._motion_func_c = ftype(motion_func) if motion_func is not None else ftype()
         with self:
             _glut.glutMotionFunc(self._motion_func_c)
 
@@ -127,7 +133,8 @@ class GlutWindow(object):
     @keyboard_func.setter
     def keyboard_func(self, keyboard_func):
         self._keyboard_func = keyboard_func
-        self._keyboard_func_c = _glut.glutIdleFunc.argtypes[0](keyboard_func) if keyboard_func is not None else _glut.glutIdleFunc.argtypes[0]()
+        ftype = _glut.glutKeyboardFunc.argtypes[0]
+        self._keyboard_func_c = ftype(keyboard_func) if keyboard_func is not None else ftype()
         with self:
             _glut.glutKeyboardFunc(self._keyboard_func_c)
 

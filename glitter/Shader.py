@@ -6,10 +6,16 @@ class Shader(GLObject):
     _generate_id = _gl.glCreateShader
     _delete_id = _gl.glDeleteShader
 
-    def __init__(self):
+    def __init__(self, source=None, compile=None):
         if any(x is NotImplemented for x in (self._type,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Shader, self).__init__()
+        if source:
+            self.source = source
+        if compile is None:
+            compile = bool(source)
+        if compile:
+            self.compile()
 
     def compile(self):
         _gl.glCompileShader(self._id)
