@@ -23,6 +23,21 @@ _buffer_targets = [ # target, binding
 _buffer_target_to_binding = dict((x[0], x[1]) for x in _buffer_targets)
 
 class Buffer(BindableObject):
+    drawmodes = Enum(
+            POINTS=_gl.GL_POINTS,
+            LINE_STRIP=_gl.GL_LINE_STRIP,
+            LINE_LOOP=_gl.GL_LINE_LOOP,
+            LINES=_gl.GL_LINES,
+            LINE_STRIP_ADJACENCY=_gl.GL_LINE_STRIP_ADJACENCY,
+            LINES_ADJACENCY=_gl.GL_LINES_ADJACENCY,
+            TRIANGLE_STRIP=_gl.GL_TRIANGLE_STRIP,
+            TRIANGLE_FAN=_gl.GL_TRIANGLE_FAN,
+            TRIANGLES=_gl.GL_TRIANGLES,
+            TRIANGLE_STRIP_ADJACENCY=_gl.GL_TRIANGLE_STRIP_ADJACENCY,
+            TRIANGLES_ADJACENCY=_gl.GL_TRIANGLES_ADJACENCY,
+            PATCHES=_gl.GL_PATCHES,
+    )
+
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _bind = _gl.glBindBuffer
@@ -104,21 +119,6 @@ class Buffer(BindableObject):
 class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER
 
-    drawmodes = Enum(
-            POINTS=_gl.GL_POINTS,
-            LINE_STRIP=_gl.GL_LINE_STRIP,
-            LINE_LOOP=_gl.GL_LINE_LOOP,
-            LINES=_gl.GL_LINES,
-            LINE_STRIP_ADJACENCY=_gl.GL_LINE_STRIP_ADJACENCY,
-            LINES_ADJACENCY=_gl.GL_LINES_ADJACENCY,
-            TRIANGLE_STRIP=_gl.GL_TRIANGLE_STRIP,
-            TRIANGLE_FAN=_gl.GL_TRIANGLE_FAN,
-            TRIANGLES=_gl.GL_TRIANGLES,
-            TRIANGLE_STRIP_ADJACENCY=_gl.GL_TRIANGLE_STRIP_ADJACENCY,
-            TRIANGLES_ADJACENCY=_gl.GL_TRIANGLES_ADJACENCY,
-            PATCHES=_gl.GL_PATCHES,
-    )
-
     def use(self, index, num_components=None, byte_stride=0, byte_offset=0):
         if num_components is None:
             if len(self.shape) == 1:
@@ -136,11 +136,15 @@ class ArrayBuffer(Buffer):
 
         _gl.glEnableVertexAttribArray(index) # TODO this should have __enter__/__exit__ semantics
 
-    def draw(self, mode=drawmodes.TRIANGLES, count=None, first=0):
+    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, first=0, instances=None):
         if count is None:
             count = self.shape[0]
-        with self:
-            _gl.glDrawArrays(mode._value, first, count)
+        if instances is None:
+            with self:
+                _gl.glDrawArrays(mode._value, first, count)
+        else:
+            with self:
+                _gl.glDrawArraysInstances(mode._value, first, count, instances)
 
     # TODO slicing to allow for glVertexAttribPointer with size, stride, and pointer
 
@@ -148,22 +152,7 @@ class ElementArrayBuffer(Buffer):
     _target = _gl.GL_ELEMENT_ARRAY_BUFFER
     # TODO check for dtype of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT in data setter
 
-    drawmodes = Enum(
-            POINTS=_gl.GL_POINTS,
-            LINE_STRIP=_gl.GL_LINE_STRIP,
-            LINE_LOOP=_gl.GL_LINE_LOOP,
-            LINES=_gl.GL_LINES,
-            LINE_STRIP_ADJACENCY=_gl.GL_LINE_STRIP_ADJACENCY,
-            LINES_ADJACENCY=_gl.GL_LINES_ADJACENCY,
-            TRIANGLE_STRIP=_gl.GL_TRIANGLE_STRIP,
-            TRIANGLE_FAN=_gl.GL_TRIANGLE_FAN,
-            TRIANGLES=_gl.GL_TRIANGLES,
-            TRIANGLE_STRIP_ADJACENCY=_gl.GL_TRIANGLE_STRIP_ADJACENCY,
-            TRIANGLES_ADJACENCY=_gl.GL_TRIANGLES_ADJACENCY,
-            PATCHES=_gl.GL_PATCHES,
-    )
-
-    def draw(self, mode=drawmodes.TRIANGLES, count=None, byte_offset=0, instances=None):
+    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, byte_offset=0, instances=None): # TODO byte_offset should be element count
         if count is None:
             count = _np.prod(self.shape)
         if instances is None:

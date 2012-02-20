@@ -1,7 +1,7 @@
 import numpy
 from rawgl import gl, glut
 
-from Buffer import ArrayBuffer
+from Buffer import ArrayBuffer, ElementArrayBuffer
 from GlutWindow import GlutWindow
 from Shader import FragmentShader, VertexShader
 from ShaderProgram import ShaderProgram
@@ -12,9 +12,8 @@ def reshape(w, h):
 
 def display():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-    with vao:
-        with shader:
-            vbo.draw()
+    with shader:
+        vao.draw()
     glut.glutSwapBuffers()
     glut.glutPostRedisplay()
 
@@ -46,15 +45,10 @@ window = GlutWindow(mode=glut.GLUT_DOUBLE|glut.GLUT_DEPTH|glut.GLUT_RGBA)
 window.reshape_func = reshape
 window.display_func = display
 
-vao = VertexArray()
-vbo = ArrayBuffer(((-0.8, -0.8, 0.0, 1.0), (0.0, 0.8, 0.0, 1.0), (0.8, -0.8, 0.0, 1.0)), dtype=numpy.float32)
-cbo = ArrayBuffer(((1.0, 0.0, 0.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 0.0, 1.0, 1.0)), dtype=numpy.float32)
-
-with vao:
-    with vbo:
-        vbo.use(0)
-    with cbo:
-        cbo.use(1)
+vao = VertexArray() # TODO vao = VertexArray([(-0.8, ...)]) should work
+vao[0] = ArrayBuffer(((-0.8, -0.8, 0.0, 1.0), (0.0, 0.8, 0.0, 1.0), (0.8, -0.8, 0.0, 1.0)), dtype=numpy.float32)
+vao[1] = ArrayBuffer(((1.0, 0.0, 0.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 0.0, 1.0, 1.0)), dtype=numpy.float32)
+# TODO ibo = ElementArrayBuffer()
 
 vertex_shader = VertexShader(vertex_shader_code)
 fragment_shader = FragmentShader(fragment_shader_code)

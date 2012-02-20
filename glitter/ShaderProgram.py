@@ -9,8 +9,9 @@ class ShaderProgram(BindableObject):
     _bind = _gl.glUseProgram
     _binding = _gl.GL_CURRENT_PROGRAM
 
-    def __init__(self, shaders=[], link=None):
+    def __init__(self, shaders=[], link=None): # TODO accept convenience parameters vertex_shaders, geometry_shaders, fragment_shaders and cast into respective type; accept non-iterables
         super(ShaderProgram, self).__init__()
+        self._shaders = []
         for shader in shaders:
             self._attach(shader)
         if link is None:
@@ -20,9 +21,11 @@ class ShaderProgram(BindableObject):
 
     def _attach(self, shader):
         _gl.glAttachShader(self._id, shader._id)
+        self._shaders.append(shader)
 
     def _detach(self, shader):
         _gl.glDetachShader(self._id, shader._id)
+        self._shaders.remove(shader)
 
     @property
     def _attached_shaders(self):
@@ -84,10 +87,12 @@ class AttachedShadersProxy(object):
         self.extend(shaders)
 
     def __getitem__(self, key):
-        return self._program._attached_shaders[key]
+        #return self._program._attached_shaders[key]
+        return self._program._shaders[key]
 
     def __len__(self):
-        _attached_shaders = _gl.GLint()
-        _gl.glGetProgramiv(self._program._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
-        return _attached_shaders.value
+        #_attached_shaders = _gl.GLint()
+        #_gl.glGetProgramiv(self._program._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
+        #return _attached_shaders.value
+        return len(self._program._shaders)
 
