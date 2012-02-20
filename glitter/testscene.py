@@ -7,9 +7,6 @@ from Shader import FragmentShader, VertexShader
 from ShaderProgram import ShaderProgram
 from VertexArray import VertexArray
 
-def reshape(w, h):
-    gl.glViewport(0, 0, w, h)
-
 def display():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
     with shader:
@@ -42,7 +39,6 @@ void main() {
 """
 
 window = GlutWindow(mode=glut.GLUT_DOUBLE|glut.GLUT_DEPTH|glut.GLUT_RGBA)
-window.reshape_func = reshape
 window.display_func = display
 
 vao = VertexArray() # TODO vao = VertexArray([(-0.8, ...)]) should work

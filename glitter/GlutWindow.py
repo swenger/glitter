@@ -1,6 +1,7 @@
 from rawgl import glut as _glut
 
-# TODO manage viewport, swap_buffers() / post_redisplay()
+# TODO swap_buffers() / post_redisplay()
+# TODO menus etc.
 
 class GlutWindow(object):
     def __init__(self, title="", width=512, height=512, argv=[], mode=_glut.GLUT_DOUBLE|_glut.GLUT_RGB, hide=False):
@@ -13,6 +14,7 @@ class GlutWindow(object):
         self._mouse_func = None
         self._motion_func = None
         self._keyboard_func = None
+
         self._title = title
 
         argc = _glut.c_int(len(argv))
@@ -65,6 +67,17 @@ class GlutWindow(object):
         else:
             _glut.glutMainLoopEvent()
 
+
+    @property
+    def shape(self):
+        with self:
+            return _glut.glutGet(_glut.GLUT_WINDOW_WIDTH), _glut.glutGet(_glut.GLUT_WINDOW_HEIGHT)
+
+    @shape.setter
+    def shape(self, shape):
+        width, height = shape
+        with self:
+            _glut.glutReshapeWindow(width, height)
 
     @property
     def idle_func(self):
