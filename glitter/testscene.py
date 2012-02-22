@@ -56,9 +56,8 @@ def display():
     with shader:
         vao.draw()
     window.swap_buffers()
-    window.post_redisplay()
 
-window = GlutWindow(double=True)
+window = GlutWindow(double=True, multisample=True)
 window.display_callback = display
 
 vao = VertexArray([vertices, colors], elements=indices)
