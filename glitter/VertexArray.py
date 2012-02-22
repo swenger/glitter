@@ -51,15 +51,15 @@ class VertexArray(BindableObject):
             self._elements._bind(self._elements._target, 0)
         del self._elements
 
-    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, offset=0, instances=None, index=None):
+    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, first=0, instances=None, index=None):
         if index is None:
             if hasattr(self, "_elements"):
                 with self:
-                    self.elements.draw(mode, count, offset, instances)
+                    self.elements.draw(mode, count, first, instances)
             else:
                 with self:
-                    min(self._bound_buffers.items())[1].draw(mode, count, offset, instances)
+                    min(self._bound_buffers.items())[1].draw(mode, count, first, instances)
         else:
             with self:
-                self[index].draw(mode, count, offset, instances)
+                self[index].draw(mode, count, first, instances)
 

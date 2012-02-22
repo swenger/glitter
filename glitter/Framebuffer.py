@@ -3,8 +3,6 @@ from rawgl import gl as _gl
 import constants
 from util import BindableObject, EnumConstant
 
-# TODO binding to different targets
-
 class Framebuffer(BindableObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
@@ -26,7 +24,7 @@ class Framebuffer(BindableObject):
         with self:
             _gl.glFramebufferTexture(self._target, _attachment, _texture, level)
 
-    # TODO get and set attachments using a proxy and __getitem__/__setitem__ and Texture._db
+    # TODO get and set attachments using __getitem__/__setitem__
 
 class DrawFramebuffer(Framebuffer):
     _target = _gl.GL_DRAW_FRAMEBUFFER

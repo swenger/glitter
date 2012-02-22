@@ -3,8 +3,6 @@ from rawgl import gl as _gl
 import constants
 from util import BindableObject
 
-# TODO one sampler can be bound to different units; how should this be represented? SamplerBinding()?
-
 class Sampler(BindableObject):
     _generate_id = _gl.glGenSamplers
     _delete_id = _gl.glDeleteSamplers

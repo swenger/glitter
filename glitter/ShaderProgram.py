@@ -1,7 +1,7 @@
 from rawgl import gl as _gl
 
-from util import BindableObject, ShaderLinkError, ShaderValidateError
-from Shader import Shader, VertexShader, GeometryShader, FragmentShader
+from util import BindableObject, ShaderLinkError, ShaderValidateError, ListProxy
+from Shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 
 class ShaderProgram(BindableObject):
     _generate_id = _gl.glCreateProgram
@@ -9,55 +9,39 @@ class ShaderProgram(BindableObject):
     _bind = _gl.glUseProgram
     _binding = _gl.GL_CURRENT_PROGRAM
 
-    def __init__(self, vertex=[], geometry=[], fragment=[], link=None):
+    def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None):
         super(ShaderProgram, self).__init__()
         self._shaders = []
 
-        if not hasattr(vertex, "__iter__"):
-            vertex = [vertex]
-        for shader in vertex:
-            if not isinstance(shader, VertexShader):
-                shader = VertexShader(shader)
-            self._attach(shader)
-        
-        if not hasattr(geometry, "__iter__"):
-            geometry = [geometry]
-        for shader in geometry:
-            if not isinstance(shader, GeometryShader):
-                shader = GeometryShader(shader)
-            self._attach(shader)
-        
-        if not hasattr(fragment, "__iter__"):
-            fragment = [fragment]
-        for shader in fragment:
-            if not isinstance(shader, FragmentShader):
-                shader = FragmentShader(shader)
-            self._attach(shader)
+        shaders = list(shaders) if hasattr(shaders, "__iter__") else [shaders]
+        if not all(isinstance(x, Shader) for x in shaders):
+            raise TypeError("expected Shader instance")
+        shaders += [x if isinstance(x, VertexShader) else VertexShader(x)
+                for x in (vertex if hasattr(vertex, "__iter__") else [vertex])]
+        shaders += [x if isinstance(x, TesselationControlShader) else TesselationControlShader(x)
+                for x in (tess_control if hasattr(tess_control, "__iter__") else [tess_control])]
+        shaders += [x if isinstance(x, TesselationEvaluationShader) else TesselationEvaluationShader(x)
+                for x in (tess_evaluation if hasattr(tess_evaluation, "__iter__") else [tess_evaluation])]
+        shaders += [x if isinstance(x, GeometryShader) else GeometryShader(x)
+                for x in (geometry if hasattr(geometry, "__iter__") else [geometry])]
+        shaders += [x if isinstance(x, FragmentShader) else FragmentShader(x)
+                for x in (fragment if hasattr(fragment, "__iter__") else [fragment])]
+        self.shaders.extend(shaders)
         
         if link is None:
-            link = bool(vertex) or bool(geometry) or bool(fragment)
+            link = bool(shaders)
         if link:
             self.link()
 
     def _attach(self, shader):
         _gl.glAttachShader(self._id, shader._id)
-        self._shaders.append(shader)
 
     def _detach(self, shader):
         _gl.glDetachShader(self._id, shader._id)
-        self._shaders.remove(shader)
-
-    @property
-    def _attached_shaders(self):
-        _attached_shaders = _gl.GLint()
-        _gl.glGetProgramiv(self._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
-        _shaders = (_gl.GLuint * _attached_shaders.value)()
-        _gl.glGetAttachedShaders(self._id, _attached_shaders, _gl.POINTER(_gl.GLsizei)(), _shaders)
-        return [Shader._retrieve(_shaders[i]) for i in range(_attached_shaders.value)]
 
     @property
     def shaders(self):
-        return AttachedShadersProxy(self)
+        return ListProxy(self._shaders, self._attach, self._detach)
 
     def link(self):
         _gl.glLinkProgram(self._id)
@@ -88,31 +72,4 @@ class ShaderProgram(BindableObject):
         return _info_log.value
 
     # TODO attributes and uniforms
-
-class AttachedShadersProxy(object):
-    def __init__(self, program):
-        self._program = program
-
-    def append(self, shader):
-        self._program._attach(shader)
-
-    def extend(self, shaders):
-        for shader in shaders:
-            self.append(shader)
-
-    def remove(self, shader):
-        self._program._detach(shader)
-
-    def __iadd__(self, shaders):
-        self.extend(shaders)
-
-    def __getitem__(self, key):
-        #return self._program._attached_shaders[key]
-        return self._program._shaders[key]
-
-    def __len__(self):
-        #_attached_shaders = _gl.GLint()
-        #_gl.glGetProgramiv(self._program._id, _gl.GL_ATTACHED_SHADERS, _attached_shaders)
-        #return _attached_shaders.value
-        return len(self._program._shaders)
 

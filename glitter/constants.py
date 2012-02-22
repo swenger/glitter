@@ -175,3 +175,13 @@ gl_type = {
         _np.float32: _gl.GL_FLOAT,
 }
 
+sizeof = {
+        _np.uint8: _np.uint8().itemsize,
+        _np.int8: _np.int8().itemsize,
+        _np.uint16: _np.uint16().itemsize,
+        _np.int16: _np.int16().itemsize,
+        _np.uint32: _np.uint32().itemsize,
+        _np.int32: _np.int32().itemsize,
+        _np.float32: _np.float32().itemsize,
+}
+

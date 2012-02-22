@@ -4,7 +4,6 @@ from rawgl import gl as _gl
 import constants
 from util import BindableObject
 
-# TODO one buffer can be bound to different targets; buffers should be castable into each other, refcount!
 # TODO slicing with glGetBufferSubData
 
 class Buffer(BindableObject):
@@ -98,7 +97,7 @@ class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER
     _binding = constants.buffer_target_to_binding[_target]
 
-    def use(self, index, num_components=None, byte_stride=0, byte_offset=0):
+    def use(self, index, num_components=None, stride=0, first=0):
         if num_components is None:
             if len(self.shape) == 1:
                 num_components = 1
@@ -108,10 +107,10 @@ class ArrayBuffer(Buffer):
                 raise ValueError("must specify num_components")
         if constants.is_float[self.dtype]:
             with self:
-                _gl.glVertexAttribPointer(index, num_components, constants.gl_type[self.dtype], _gl.GL_FALSE, byte_stride, byte_offset)
+                _gl.glVertexAttribPointer(index, num_components, constants.gl_type[self.dtype], _gl.GL_FALSE, stride * constants.sizeof[self.dtype], first * constants.sizeof[self.dtype])
         else:
             with self:
-                _gl.glVertexAttribIPointer(index, num_components, constants.gl_type[self.dtype], byte_stride, byte_offset)
+                _gl.glVertexAttribIPointer(index, num_components, constants.gl_type[self.dtype], stride * constants.sizeof[self.dtype], first * constants.sizeof[self.dtype])
 
         _gl.glEnableVertexAttribArray(index) # TODO this should have __enter__/__exit__ semantics
 
@@ -135,13 +134,13 @@ class ElementArrayBuffer(Buffer):
         if dtype is not None:
             if dtype not in [_np.uint8, _np.uint16, _np.uint]:
                 raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
-        elif data is not None: # TODO cast into array
+        elif data is not None:
             data = _np.asarray(data, dtype)
             if data.dtype.type not in [_np.uint8, _np.uint16, _np.uint]:
                 raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
         super(ElementArrayBuffer, self).set_data(data, shape, dtype, usage)
 
-    def draw(self, mode=None, count=None, byte_offset=0, instances=None): # TODO byte_offset should be element count
+    def draw(self, mode=None, count=None, first=0, instances=None):
         if mode is None:
             if len(self.shape) >= 2:
                 mode = constants.dimensions_to_primitive.get(self.shape[-1], None)
@@ -151,10 +150,10 @@ class ElementArrayBuffer(Buffer):
             count = _np.prod(self.shape)
         if instances is None:
             with self:
-                _gl.glDrawElements(mode._value, count, constants.gl_type[self.dtype], byte_offset)
+                _gl.glDrawElements(mode._value, count, constants.gl_type[self.dtype], first * constants.sizeof[self.dtype])
         else:
             with self:
-                _gl.glDrawElementsInstanced(mode._value, count, constants.gl_type[self.dtype], byte_offset, instances)
+                _gl.glDrawElementsInstanced(mode._value, count, constants.gl_type[self.dtype], first * constants.sizeof[self.dtype], instances)
 
 class AtomicCounterBuffer(Buffer):
     _target = _gl.GL_ATOMIC_COUNTER_BUFFER

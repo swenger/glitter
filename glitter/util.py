@@ -163,3 +163,30 @@ class Enum(object):
     def __getitem__(self, value):
         return self._reverse_dict[value]
 
+class ListProxy(object):
+    def __init__(self, lst, insert_callback=None, delete_callback=None):
+        self._lst = lst
+        self._insert_callback = insert_callback
+        self._delete_callback = delete_callback
+
+    def append(self, x):
+        self._lst.append(x)
+        self._insert_callback(x)
+
+    def extend(self, xs):
+        for x in xs:
+            self.append(x)
+
+    def remove(self, x):
+        self._lst.remove(x)
+        self._delete_callback(x)
+
+    def __iadd__(self, xs):
+        self.extend(xs)
+
+    def __getitem__(self, key):
+        return self._lst[key]
+
+    def __len__(self):
+        return len(self._lst)
+

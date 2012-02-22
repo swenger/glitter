@@ -7,7 +7,6 @@ from util import BindableObject
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
-# TODO mipmaps (level != 0) with glGenerateMipmap
 
 class Texture(BindableObject):
     _generate_id = _gl.glGenTextures
@@ -62,6 +61,10 @@ class Texture(BindableObject):
         with self:
             _gl.glGetTexImage(self._target, level, self._format, self._type, _data.ctypes)
         return _data
+
+    def generate_mipmap(self):
+        with self:
+            _gl.glGenerateMipmap(self._target)
 
     @property
     def data(self):

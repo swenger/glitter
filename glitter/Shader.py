@@ -50,6 +50,12 @@ class Shader(GLObject):
 class VertexShader(Shader):
     _type = _gl.GL_VERTEX_SHADER
 
+class TesselationControlShader(Shader):
+    _type = _gl.GL_TESS_CONTROL_SHADER
+
+class TesselationEvaluationShader(Shader):
+    _type = _gl.GL_TESS_EVALUATION_SHADER
+
 class GeometryShader(Shader):
     _type = _gl.GL_GEOMETRY_SHADER
 
