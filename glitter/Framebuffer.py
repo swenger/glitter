@@ -25,3 +25,9 @@ class Framebuffer(BindableObject):
 
     # TODO get and set attachments using a proxy and __getitem__/__setitem__ and Texture._db
 
+class DrawFramebuffer(Framebuffer):
+    _target = _gl.GL_DRAW_FRAMEBUFFER
+
+class ReadFramebuffer(Framebuffer):
+    _target = _gl.GL_READ_FRAMEBUFFER
+

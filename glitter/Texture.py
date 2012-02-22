@@ -370,31 +370,31 @@ class Texture2D(Texture):
     _ndim = 3
     _set = _gl.glTexImage2D
 
-class Texture1DArray(Texture):
+class TextureArray1D(Texture):
     _target = _gl.GL_TEXTURE_1D_ARRAY
     _binding = _gl.GL_TEXTURE_BINDING_1D_ARRAY
     _ndim = 3
     _set = _gl.glTexImage2D
 
-class TextureRectangle(Texture):
+class RectangleTexture(Texture):
     _target = _gl.GL_TEXTURE_RECTANGLE
     _binding = _gl.GL_TEXTURE_BINDING_RECTANGLE
     _ndim = 3
     _set = _gl.glTexImage2D
 
-class TextureBuffer(Texture):
+class BufferTexture(Texture): # TODO override constructor, set_data and get_data: glTexBuffer
     _target = _gl.GL_TEXTURE_BUFFER
     _binding = _gl.GL_TEXTURE_BINDING_BUFFER
     _ndim = 3
     _set = _gl.glTexImage2D
 
-class TextureCubeMap(Texture):
+class CubeMapTexture(Texture):
     _target = _gl.GL_TEXTURE_CUBE_MAP
     _binding = _gl.GL_TEXTURE_BINDING_CUBE_MAP
     _ndim = 3
     _set = _gl.glTexImage2D
 
-class Texture2DMultisample(Texture):
+class MultisampleTexture2D(Texture):
     _target = _gl.GL_TEXTURE_2D_MULTISAMPLE
     _binding = _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE
     _ndim = 3
@@ -406,13 +406,13 @@ class Texture3D(Texture):
     _ndim = 4
     _set = _gl.glTexImage3D
 
-class Texture2DArray(Texture):
+class TextureArray2D(Texture):
     _target = _gl.GL_TEXTURE_2D_ARRAY
     _binding = _gl.GL_TEXTURE_BINDING_2D_ARRAY
     _ndim = 4
     _set = _gl.glTexImage3D
 
-class Texture2DMultisampleArray(Texture):
+class MultisampleTextureArray2D(Texture):
     _target = _gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY
     _binding = _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY
     _ndim = 4

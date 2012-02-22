@@ -36,20 +36,6 @@ class InstanceDescriptorMixin(object):
         except AttributeError:
             return super(InstanceDescriptorMixin, self).__setattr__(name, value)
 
-class Binding(object): # TODO
-    def get(self):
-        raise NotImplementedError
-
-    def set(self, id):
-        raise NotImplementedError
-    
-    def __enter__(self):
-        self.old_id = self.get()
-        self.set(self.id)
-
-    def __exit__(self, type, value, traceback):
-        self.set(self.old_id)
-
 class GLObject(object):
     _generate_id = NotImplemented
     _delete_id = NotImplemented
