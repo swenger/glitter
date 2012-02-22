@@ -1,20 +1,11 @@
 import numpy
 from rawgl import gl, glut
 
-from Buffer import ArrayBuffer, ElementArrayBuffer
 from GlutWindow import GlutWindow
-from Shader import FragmentShader, VertexShader
 from ShaderProgram import ShaderProgram
 from VertexArray import VertexArray
 
-def display():
-    gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-    with shader:
-        vao.draw()
-    glut.glutSwapBuffers()
-    glut.glutPostRedisplay()
-
-vertex_shader_code = """
+vertex_shader = """
 #version 400
 
 layout(location=0) in vec4 in_position;
@@ -27,7 +18,7 @@ void main() {
 }
 """
 
-fragment_shader_code = """
+fragment_shader = """
 #version 400
 
 in vec4 ex_color;
@@ -85,17 +76,18 @@ indices = numpy.array((
     (15, 16, 14),
     ), dtype=numpy.uint8)
 
+def display():
+    gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+    with shader:
+        vao.draw()
+    glut.glutSwapBuffers()
+    glut.glutPostRedisplay()
+
 window = GlutWindow(mode=glut.GLUT_DOUBLE|glut.GLUT_DEPTH|glut.GLUT_RGBA)
 window.display_func = display
 
-vao = VertexArray() # TODO vao = VertexArray([(-0.8, ...)]) should work
-vao[0] = ArrayBuffer(vertices[:, 0, :])
-vao[1] = ArrayBuffer(vertices[:, 1, :])
-vao.elements = ElementArrayBuffer(indices)
-
-vertex_shader = VertexShader(vertex_shader_code)
-fragment_shader = FragmentShader(fragment_shader_code)
-shader = ShaderProgram([vertex_shader, fragment_shader])
+vao = VertexArray([vertices[:, 0, :], vertices[:, 1, :]], elements=indices)
+shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
 
 window()
 

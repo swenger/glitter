@@ -1,7 +1,7 @@
 from rawgl import gl as _gl
 
 from util import BindableObject, ShaderLinkError, ShaderValidateError
-from Shader import Shader
+from Shader import Shader, VertexShader, GeometryShader, FragmentShader
 
 class ShaderProgram(BindableObject):
     _generate_id = _gl.glCreateProgram
@@ -9,13 +9,33 @@ class ShaderProgram(BindableObject):
     _bind = _gl.glUseProgram
     _binding = _gl.GL_CURRENT_PROGRAM
 
-    def __init__(self, shaders=[], link=None): # TODO accept convenience parameters vertex_shaders, geometry_shaders, fragment_shaders and cast into respective type; accept non-iterables
+    def __init__(self, vertex=[], geometry=[], fragment=[], link=None):
         super(ShaderProgram, self).__init__()
         self._shaders = []
-        for shader in shaders:
+
+        if not hasattr(vertex, "__iter__"):
+            vertex = [vertex]
+        for shader in vertex:
+            if not isinstance(shader, VertexShader):
+                shader = VertexShader(shader)
             self._attach(shader)
+        
+        if not hasattr(geometry, "__iter__"):
+            geometry = [geometry]
+        for shader in geometry:
+            if not isinstance(shader, GeometryShader):
+                shader = GeometryShader(shader)
+            self._attach(shader)
+        
+        if not hasattr(fragment, "__iter__"):
+            fragment = [fragment]
+        for shader in fragment:
+            if not isinstance(shader, FragmentShader):
+                shader = FragmentShader(shader)
+            self._attach(shader)
+        
         if link is None:
-            link = bool(shaders)
+            link = bool(vertex) or bool(geometry) or bool(fragment)
         if link:
             self.link()
 

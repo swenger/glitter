@@ -22,7 +22,7 @@ class VertexArray(BindableObject):
 
     def __setitem__(self, key, value):
         if not isinstance(value, ArrayBuffer):
-            pass # TODO cast to ArrayBuffer
+            value = ArrayBuffer(value)
         with self:
             with value:
                 value.use(key)
@@ -40,7 +40,7 @@ class VertexArray(BindableObject):
     @elements.setter
     def elements(self, elements):
         if not isinstance(elements, ElementArrayBuffer):
-            pass # TODO cast to ElementArrayBuffer
+            elements = ElementArrayBuffer(elements)
         with self:
             elements.bind()
         self._elements = elements

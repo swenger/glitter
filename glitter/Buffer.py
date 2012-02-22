@@ -4,6 +4,7 @@ from rawgl import gl as _gl
 from util import BindableObject, Enum, is_float, gl_type
 
 # TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
+# TODO buffers should be castable into each other, refcount!
 # TODO buffers likely contain meaningful array data; remember the dtypes and shape
 # TODO slicing with glGetBufferSubData
 
