@@ -2,7 +2,7 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
-from dtypes import Datatype
+from dtypes import Datatype, uint32
 from util import BindableObject
 
 # TODO slicing with glGetBufferSubData
@@ -44,7 +44,7 @@ class Buffer(BindableObject):
             self._shape = shape
             self._dtype = dtype
         else:
-            data = _np.asarray(data, dtype.as_numpy() if dtype else None)
+            data = _np.ascontiguousarray(data, dtype.as_numpy() if dtype else None)
             if shape is not None:
                 data = data.reshape(shape)
             self._shape = data.shape
@@ -133,7 +133,18 @@ class ElementArrayBuffer(Buffer):
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is not None:
-            data = _np.asarray(data, dtype.as_numpy() if dtype else None)
+            if dtype is None:
+                if isinstance(data, _np.ndarray):
+                    dtype = Datatype.from_numpy(data.dtype)
+                    if not dtype.is_integer():
+                        raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
+                    if not dtype.is_unsigned():
+                        dtype = dtype.as_unsigned()
+                    if dtype._as_gl() is None:
+                        dtype = dtype.as_nbytes(4)
+                else:
+                    dtype = uint32
+            data = _np.ascontiguousarray(data, dtype.as_numpy())
             dtype = Datatype.from_numpy(data.dtype)
         if dtype.is_signed() or not dtype.is_integer():
             raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
