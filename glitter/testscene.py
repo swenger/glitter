@@ -1,6 +1,6 @@
 from rawgl import gl
 
-from GlutWindow import GlutWindow
+from GlutWindow import GlutWindow, main_loop
 from ShaderProgram import ShaderProgram
 from VertexArray import VertexArray
 
@@ -64,5 +64,5 @@ window.display_func = display
 vao = VertexArray([vertices, colors], elements=indices)
 shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
 
-window()
+main_loop()
 

@@ -1,14 +1,27 @@
-import sys
 from rawgl import glut as _glut
 
 # TODO implement complete API as in http://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf from p. 9
 
-argc_c = _glut.c_int(len(sys.argv))
-argv_c = (_glut.c_char_p * argc_c.value)()
-for i, a in enumerate(sys.argv):
-    argv_c[i] = a
-_glut.glutInit(_glut.pointer(argc_c), argv_c)
-sys.argv = [argv_c[i] for i in range(argc_c.value)]
+def initialize(argv=None):
+    if argv is None:
+        import sys
+        argv = sys.argv
+    _argc = _glut.c_int(len(argv))
+    _argv = (_glut.c_char_p * _argc.value)()
+    for i, a in enumerate(argv):
+        _argv[i] = a
+    _glut.glutInit(_glut.pointer(_argc), _argv)
+    argv[:] = [_argv[i] for i in range(_argc.value)]
+
+def main_loop():
+    _glut.glutMainLoop()
+    initialize()
+
+def main_loop_event():
+    _glut.glutMainLoopEvent()
+
+def leave_main_loop():
+    _glut.glutLeaveMainLoop()
 
 class GlutWindow(object):
     def __init__(self, version=(4, 0), compatibility_profile=False,
@@ -32,7 +45,6 @@ class GlutWindow(object):
         If `hide` is `True`, the window will initially be hidden.
         """
 
-        self._called = False
         self._stack = []
 
         self._idle_func = None
@@ -72,45 +84,31 @@ class GlutWindow(object):
                 )
 
         _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_CONTINUE_EXECUTION)
-        _glut.glutSetOption(_glut.GLUT_RENDERING_CONTEXT, _glut.GLUT_USE_CURRENT_CONTEXT)
+
+        old_binding = _glut.glutGetWindow()
         self._id = _glut.glutCreateWindow(self._title)
+        if old_binding:
+            _glut.glutSetWindow(old_binding)
 
         if hide:
             self.hide()
         else:
             self.show()
 
-    def __del__(self):
-        try:
-            if not self._called:
-                _glut.glutDestroyWindow(self._id)
-            self._id = 0
-        except AttributeError:
-            pass # avoid error when GLUT module has already been unloaded
+    def destroy(self):
+        _glut.glutDestroyWindow(self._id)
+        self._id = 0
 
     def bind(self):
         old_binding = _glut.glutGetWindow()
-        self._bind(self._id)
+        _glut.glutSetWindow(self._id)
         return old_binding
 
     def __enter__(self):
         self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
-        self._bind(self._stack.pop())
-
-    def _bind(self, _id):
-        _glut.glutSetWindow(_id)
-
-    def __call__(self, loop=True):
-        if self._called:
-            raise RuntimeError("glutMainLoop() has already been called")
-        self.bind()
-        if loop:
-            self._called = True
-            _glut.glutMainLoop()
-        else:
-            _glut.glutMainLoopEvent()
+        _glut.glutSetWindow(self._stack.pop())
 
     def swap_buffers(self):
         with self:
@@ -225,4 +223,6 @@ class GlutWindow(object):
         self._title = title
         with self:
             _glut.glutSetWindowTitle(title)
+
+initialize()
 
