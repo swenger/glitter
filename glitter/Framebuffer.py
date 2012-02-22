@@ -14,8 +14,11 @@ class Framebuffer(BindableObject):
 
     attachment_names = constants.framebuffer_attachment_names
 
-    def __init__(self):
-        super(Framebuffer, self).__init__()
+    def __init__(self, other=None):
+        super(Framebuffer, self).__init__(other)
+
+    def _clone_into(self, other):
+        super(Framebuffer, self)._clone_into(self, other)
 
     def attach(self, attachment, texture=None, level=0):
         _texture = texture._id if texture is not None else 0

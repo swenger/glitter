@@ -8,6 +8,7 @@ Design principles:
 - All GL state changes that are independent of objects should go through a Context object.
 - Platform independence should be sought for, although Linux/GLX is the primary target.
 
+TODO use own dtypes
 TODO automatic casts into numpy arrays, cast float64 to float32
 TODO move tests to separate package
 TODO move constant tables to separate package

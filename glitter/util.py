@@ -1,5 +1,4 @@
-from weakref import WeakValueDictionary
-import numpy as _np
+from weakref import WeakSet
 from rawgl import gl as _gl
 
 class GlitterError(Exception):
@@ -40,20 +39,28 @@ class GLObject(object):
     _generate_id = NotImplemented
     _delete_id = NotImplemented
     _type = NotImplemented
-    _db = WeakValueDictionary()
+    _db = {}
 
-    def __init__(self):
+    def __init__(self, other=None):
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        if len(self._generate_id.argtypes) == 0:
-            self._id = self._generate_id()
-        elif len(self._generate_id.argtypes) == 1:
-            self._id = self._generate_id(self._type)
+        if other is None:
+            if len(self._generate_id.argtypes) == 0:
+                self._id = self._generate_id()
+            elif len(self._generate_id.argtypes) == 1:
+                self._id = self._generate_id(self._type)
+            else:
+                _id = _gl.GLuint()
+                self._generate_id(1, _gl.pointer(_id))
+                self._id = _id.value
         else:
-            _id = _gl.GLuint()
-            self._generate_id(1, _gl.pointer(_id))
-            self._id = _id.value
-        self._db[self._generate_id.__name__, self._id] = self
+            if other._generate_id != self._generate_id:
+                raise TypeError("cannot cast %s into %s" % (other.__class__.__name__, self.__class__.__name__))
+            if other._clone_into.im_func == GLObject._clone_into.im_func: # _clone_into has not been overridden
+                raise TypeError("cannot clone %s" % other.__class__.__name__)
+            self._id = other._id
+            other._clone_into(self)
+        self._db.setdefault((self._generate_id.__name__, self._id), WeakSet()).add(self)
 
     @classmethod
     def _retrieve(cls, _id):
@@ -61,21 +68,29 @@ class GLObject(object):
 
     def __del__(self):
         try:
-            if len(self._delete_id.argtypes) == 1:
-                self._delete_id(self._id)
-            else:
-                self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
-            self._id = 0
-        except AttributeError:
-            pass # avoid error when GL module has already been unloaded
+            self._db[self._generate_id.__name__, self._id].remove(self) # TODO will self have been removed from the WeakSet anyway by now?
+        except:
+            pass
+        try:
+            if not self._db[self._generate_id.__name__, self._id]: # nobody uses the _id any more, so free it
+                if len(self._delete_id.argtypes) == 1:
+                    self._delete_id(self._id)
+                else:
+                    self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
+                self._id = 0
+        except:
+            pass
+
+    def _clone_into(self, other):
+        pass
 
 class BindableObject(GLObject):
     _target = NotImplemented
     _binding = NotImplemented
     _bind = NotImplemented
 
-    def __init__(self):
-        super(BindableObject, self).__init__()
+    def __init__(self, other=None):
+        super(BindableObject, self).__init__(other)
         if any(x is NotImplemented for x in (self._bind, self._binding)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         self._stack = []
@@ -103,8 +118,8 @@ class BeginEndObject(GLObject):
     _begin = NotImplemented
     _end = NotImplemented
 
-    def __init__(self):
-        super(BeginEndObject, self).__init__()
+    def __init__(self, other=None):
+        super(BeginEndObject, self).__init__(other)
         if any(x is NotImplemented for x in (self._begin, self._end)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
 
@@ -147,34 +162,4 @@ class Enum(object):
 
     def __getitem__(self, value):
         return self._reverse_dict[value]
-
-is_float = {
-        _np.uint8: False,
-        _np.int8: False,
-        _np.uint16: False,
-        _np.int16: False,
-        _np.uint32: False,
-        _np.int32: False,
-        _np.float32: True,
-}
-
-is_signed = {
-        _np.uint8: False,
-        _np.int8: True,
-        _np.uint16: False,
-        _np.int16: True,
-        _np.uint32: False,
-        _np.int32: True,
-        _np.float32: True,
-}
-
-gl_type = {
-        _np.uint8: _gl.GL_UNSIGNED_BYTE,
-        _np.int8: _gl.GL_BYTE,
-        _np.uint16: _gl.GL_UNSIGNED_SHORT,
-        _np.int16: _gl.GL_SHORT,
-        _np.uint32: _gl.GL_UNSIGNED_INT,
-        _np.int32: _gl.GL_INT,
-        _np.float32: _gl.GL_FLOAT,
-}
 

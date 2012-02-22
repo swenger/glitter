@@ -2,7 +2,7 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
-from util import BindableObject, is_float, is_signed
+from util import BindableObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
@@ -52,7 +52,7 @@ class Texture(BindableObject):
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
-        if not is_float[self.dtype]:
+        if not constants.is_float[self.dtype]:
             self.min_filter = Texture.min_filters.NEAREST
             self.mag_filter = Texture.mag_filters.NEAREST
 
@@ -121,11 +121,11 @@ class Texture(BindableObject):
 
     @property
     def border_color(self):
-        if is_float[self.dtype]:
+        if constants.is_float[self.dtype]:
             _border_color = (_gl.GLfloat * 4)()
             with self:
                 _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
-        elif is_signed[self.dtype]:
+        elif constants.is_signed[self.dtype]:
             _border_color = (_gl.GLint * 4)()
             with self:
                 _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
@@ -137,13 +137,13 @@ class Texture(BindableObject):
 
     @border_color.setter
     def border_color(self, border_color):
-        if is_float[self.dtype]:
+        if constants.is_float[self.dtype]:
             _border_color = (_gl.GLfloat * 4)()
             for i, v in zip(range(4), border_color):
                 _border_color[i] = v
             with self:
                 _gl.glTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
-        elif is_signed[self.dtype]:
+        elif constants.is_signed[self.dtype]:
             _border_color = (_gl.GLint * 4)()
             for i, v in zip(range(4), border_color):
                 _border_color[i] = v

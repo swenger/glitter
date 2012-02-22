@@ -2,11 +2,9 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
-from util import BindableObject, is_float, gl_type
+from util import BindableObject
 
-# TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
-# TODO buffers should be castable into each other, refcount!
-# TODO buffers likely contain meaningful array data; remember the dtypes and shape
+# TODO one buffer can be bound to different targets; buffers should be castable into each other, refcount!
 # TODO slicing with glGetBufferSubData
 
 class Buffer(BindableObject):
@@ -17,10 +15,27 @@ class Buffer(BindableObject):
     drawmodes = constants.buffer_drawmodes
     usages = constants.buffer_usages
 
-    def __init__(self, data=None, shape=None, dtype=None, usage=usages.STATIC_DRAW):
-        self._binding = constants.buffer_target_to_binding[self._target]
-        super(Buffer, self).__init__()
-        self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
+    def __init__(self, data=None, shape=None, dtype=None, usage=None):
+        if any(x is NotImplemented for x in (self._target, self._binding)):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+        if isinstance(data, Buffer): # copy constructor
+            if shape is not None and _np.prod(shape) != _np.prod(data.shape):
+                raise ValueError("shapes do not match")
+            if dtype is not None:
+                raise ValueError("cannot change dtype on the fly, copy manually")
+            if usage is not None:
+                raise ValueError("cannot change usages on the fly, copy manually")
+            super(Buffer, self).__init__(data)
+        else:
+            super(Buffer, self).__init__()
+            if usage is None:
+                usage = Buffer.usages.STATIC_DRAW
+            self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
+
+    def _clone_into(self, other):
+        super(Buffer, self)._clone_into(self, other)
+        other._shape = self._shape
+        other._dtype = self._dtype
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is None:
@@ -81,6 +96,7 @@ class Buffer(BindableObject):
 
 class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
     def use(self, index, num_components=None, byte_stride=0, byte_offset=0):
         if num_components is None:
@@ -89,13 +105,13 @@ class ArrayBuffer(Buffer):
             elif len(self.shape) == 2 and 1 <= self.shape[1] <= 4:
                 num_components = self.shape[1]
             else:
-                raise ValueError("must specify num_components") # TODO check for correct shape in the data setter
-        if is_float[self.dtype]:
+                raise ValueError("must specify num_components")
+        if constants.is_float[self.dtype]:
             with self:
-                _gl.glVertexAttribPointer(index, num_components, gl_type[self.dtype], _gl.GL_FALSE, byte_stride, byte_offset)
+                _gl.glVertexAttribPointer(index, num_components, constants.gl_type[self.dtype], _gl.GL_FALSE, byte_stride, byte_offset)
         else:
             with self:
-                _gl.glVertexAttribIPointer(index, num_components, gl_type[self.dtype], byte_stride, byte_offset)
+                _gl.glVertexAttribIPointer(index, num_components, constants.gl_type[self.dtype], byte_stride, byte_offset)
 
         _gl.glEnableVertexAttribArray(index) # TODO this should have __enter__/__exit__ semantics
 
@@ -113,45 +129,68 @@ class ArrayBuffer(Buffer):
 
 class ElementArrayBuffer(Buffer):
     _target = _gl.GL_ELEMENT_ARRAY_BUFFER
-    # TODO check for dtype of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT in data setter
-    # TODO if shape[1] == 1: points, == 2: lines, == 3: triangles, ndim == 1: default
+    _binding = constants.buffer_target_to_binding[_target]
 
-    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, byte_offset=0, instances=None): # TODO byte_offset should be element count
+    def set_data(self, data=None, shape=None, dtype=None, usage=None):
+        if dtype is not None:
+            if dtype not in [_np.uint8, _np.uint16, _np.uint]:
+                raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
+        elif data is not None: # TODO cast into array
+            data = _np.asarray(data, dtype)
+            if data.dtype.type not in [_np.uint8, _np.uint16, _np.uint]:
+                raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
+        super(ElementArrayBuffer, self).set_data(data, shape, dtype, usage)
+
+    def draw(self, mode=None, count=None, byte_offset=0, instances=None): # TODO byte_offset should be element count
+        if mode is None:
+            if len(self.shape) >= 2:
+                mode = constants.dimensions_to_primitive.get(self.shape[-1], None)
+        if mode is None:
+            raise ValueError("must specify mode")
         if count is None:
             count = _np.prod(self.shape)
         if instances is None:
             with self:
-                _gl.glDrawElements(mode._value, count, gl_type[self.dtype], byte_offset)
+                _gl.glDrawElements(mode._value, count, constants.gl_type[self.dtype], byte_offset)
         else:
             with self:
-                _gl.glDrawElementsInstanced(mode._value, count, gl_type[self.dtype], byte_offset, instances)
+                _gl.glDrawElementsInstanced(mode._value, count, constants.gl_type[self.dtype], byte_offset, instances)
 
 class AtomicCounterBuffer(Buffer):
     _target = _gl.GL_ATOMIC_COUNTER_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class CopyReadBuffer(Buffer):
     _target = _gl.GL_COPY_READ_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class CopyWriteBuffer(Buffer):
     _target = _gl.GL_COPY_WRITE_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class DrawIndirectBuffer(Buffer):
     _target = _gl.GL_DRAW_INDIRECT_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class PixelPackBuffer(Buffer):
     _target = _gl.GL_PIXEL_PACK_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class PixelUnpackBuffer(Buffer):
     _target = _gl.GL_PIXEL_UNPACK_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class TextureBuffer(Buffer):
     _target = _gl.GL_TEXTURE_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class TransformFeedbackBuffer(Buffer):
     _target = _gl.GL_TRANSFORM_FEEDBACK_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 class UniformBuffer(Buffer):
     _target = _gl.GL_UNIFORM_BUFFER
+    _binding = constants.buffer_target_to_binding[_target]
 
 
 # nosetests

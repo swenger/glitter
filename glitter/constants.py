@@ -42,6 +42,8 @@ numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in texture_formats)
 gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in texture_formats)
 gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in texture_formats)
 
+dimensions_to_primitive = {1: _gl.GL_POINTS, 2: _gl.GL_LINES, 3: _gl.GL_TRIANGLES} # TODO complete table
+
 texture_compare_funcs = Enum(
         LEQUAL=_gl.GL_LEQUAL,
         GEQUAL=_gl.GL_GEQUAL,
@@ -142,4 +144,34 @@ framebuffer_targets = [
         (_gl.GL_READ_FRAMEBUFFER, None                      ), # XXX why is there no GL_READ_FRAMEBUFFER_BINDING?
 ]
 framebuffer_target_to_binding = dict((x[0], x[1]) for x in framebuffer_targets)
+
+is_float = {
+        _np.uint8: False,
+        _np.int8: False,
+        _np.uint16: False,
+        _np.int16: False,
+        _np.uint32: False,
+        _np.int32: False,
+        _np.float32: True,
+}
+
+is_signed = {
+        _np.uint8: False,
+        _np.int8: True,
+        _np.uint16: False,
+        _np.int16: True,
+        _np.uint32: False,
+        _np.int32: True,
+        _np.float32: True,
+}
+
+gl_type = {
+        _np.uint8: _gl.GL_UNSIGNED_BYTE,
+        _np.int8: _gl.GL_BYTE,
+        _np.uint16: _gl.GL_UNSIGNED_SHORT,
+        _np.int16: _gl.GL_SHORT,
+        _np.uint32: _gl.GL_UNSIGNED_INT,
+        _np.int32: _gl.GL_INT,
+        _np.float32: _gl.GL_FLOAT,
+}
 
