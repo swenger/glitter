@@ -11,4 +11,7 @@ Design principles:
 TODO automatic casts into numpy arrays, cast float64 to float32
 TODO move tests to separate package
 TODO create raw offscreen GLX context
+TODO for each bind()able object, have a context function to return the current binding only
+TODO replace relative imports by absolute imports
+TODO make rawgl replaceable
 
