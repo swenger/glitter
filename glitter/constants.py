@@ -143,3 +143,90 @@ framebuffer_targets = [
 ]
 framebuffer_target_to_binding = dict((x[0], x[1]) for x in framebuffer_targets)
 
+blend_functions = Enum(
+        ZERO=_gl.GL_ZERO,
+        ONE=_gl.GL_ONE,
+        SRC_COLOR=_gl.GL_SRC_COLOR,
+        ONE_MINUS_SRC_COLOR=_gl.GL_ONE_MINUS_SRC_COLOR,
+        DST_COLOR=_gl.GL_DST_COLOR,
+        ONE_MINUS_DST_COLOR=_gl.GL_ONE_MINUS_DST_COLOR,
+        SRC_ALPHA=_gl.GL_SRC_ALPHA,
+        ONE_MINUS_SRC_ALPHA=_gl.GL_ONE_MINUS_SRC_ALPHA,
+        DST_ALPHA=_gl.GL_DST_ALPHA,
+        ONE_MINUS_DST_ALPHA=_gl.GL_ONE_MINUS_DST_ALPHA,
+        CONSTANT_COLOR=_gl.GL_CONSTANT_COLOR,
+        ONE_MINUS_CONSTANT_COLOR=_gl.GL_ONE_MINUS_CONSTANT_COLOR,
+        CONSTANT_ALPHA=_gl.GL_CONSTANT_ALPHA,
+        ONE_MINUS_CONSTANT_ALPHA=_gl.GL_ONE_MINUS_CONSTANT_ALPHA,
+        SRC_ALPHA_SATURATE=_gl.GL_SRC_ALPHA_SATURATE,
+)
+
+blend_equations = Enum(
+        ADD=_gl.GL_FUNC_ADD,
+        SUBTRACT=_gl.GL_FUNC_SUBTRACT,
+        REVERSE_SUBTRACT=_gl.GL_FUNC_REVERSE_SUBTRACT,
+        MIN=_gl.GL_MIN,
+        MAX=_gl.GL_MAX,
+)
+
+depth_functions = Enum(
+        NEVER=_gl.GL_NEVER,
+        LESS=_gl.GL_LESS,
+        EQUAL=_gl.GL_EQUAL,
+        LEQUAL=_gl.GL_LEQUAL,
+        GREATER=_gl.GL_GREATER,
+        NOTEQUAL=_gl.GL_NOTEQUAL,
+        GEQUAL=_gl.GL_GEQUAL,
+        ALWAYS=_gl.GL_ALWAYS,
+)
+
+draw_buffers = Enum(
+        NONE=_gl.GL_NONE,
+        FRONT_LEFT=_gl.GL_FRONT_LEFT,
+        FRONT_RIGHT=_gl.GL_FRONT_RIGHT,
+        BACK_LEFT=_gl.GL_BACK_LEFT,
+        BACK_RIGHT=_gl.GL_BACK_RIGHT,
+        FRONT=_gl.GL_FRONT,
+        BACK=_gl.GL_BACK,
+        LEFT=_gl.GL_LEFT,
+        RIGHT=_gl.GL_RIGHT,
+        FRONT_AND_BACK=_gl.GL_FRONT_AND_BACK,
+)
+
+hints = Enum(
+        FASTEST=_gl.GL_FASTEST,
+        NICEST=_gl.GL_NICEST,
+        DONT_CARE=_gl.GL_DONT_CARE,
+)
+
+provoking_vertices = Enum(
+        PROVOKING_VERTEX=_gl.GL_PROVOKING_VERTEX,
+        FIRST_VERTEX_CONVENTION=_gl.GL_FIRST_VERTEX_CONVENTION,
+        LAST_VERTEX_CONVENTION=_gl.GL_LAST_VERTEX_CONVENTION,
+        UNDEFINED_VERTEX=_gl.GL_UNDEFINED_VERTEX,
+)
+
+logic_op_modes = Enum(
+        CLEAR=_gl.GL_CLEAR,
+        SET=_gl.GL_SET,
+        COPY=_gl.GL_COPY,
+        COPY_INVERTED=_gl.GL_COPY_INVERTED,
+        NOOP=_gl.GL_NOOP,
+        INVERT=_gl.GL_INVERT,
+        AND=_gl.GL_AND,
+        NAND=_gl.GL_NAND,
+        OR=_gl.GL_OR,
+        NOR=_gl.GL_NOR,
+        XOR=_gl.GL_XOR,
+        EQUIV=_gl.GL_EQUIV,
+        AND_REVERSE=_gl.GL_AND_REVERSE,
+        AND_INVERTED=_gl.GL_AND_INVERTED,
+        OR_REVERSE=_gl.GL_OR_REVERSE,
+        OR_INVERTED=_gl.GL_OR_INVERTED,
+)
+
+provoke_modes = Enum(
+        FIRST_VERTEX_CONVENTION=_gl.GL_FIRST_VERTEX_CONVENTION,
+        LAST_VERTEX_CONVENTION=_gl.GL_LAST_VERTEX_CONVENTION,
+)
+
