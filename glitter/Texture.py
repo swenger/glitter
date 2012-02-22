@@ -3,7 +3,7 @@ from rawgl import gl as _gl
 
 import constants
 from dtypes import Datatype
-from util import BindableObject
+from GLObject import BindableObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
@@ -364,61 +364,61 @@ class Texture(BindableObject):
 
 class Texture1D(Texture):
     _target = _gl.GL_TEXTURE_1D
-    _binding = _gl.GL_TEXTURE_BINDING_1D
+    _binding = "texture_binding_1d"
     _ndim = 2
     _set = _gl.glTexImage1D
 
 class Texture2D(Texture):
     _target = _gl.GL_TEXTURE_2D
-    _binding = _gl.GL_TEXTURE_BINDING_2D
+    _binding = "texture_binding_2d"
     _ndim = 3
     _set = _gl.glTexImage2D
 
 class TextureArray1D(Texture):
     _target = _gl.GL_TEXTURE_1D_ARRAY
-    _binding = _gl.GL_TEXTURE_BINDING_1D_ARRAY
+    _binding = "texture_binding_1d_array"
     _ndim = 3
     _set = _gl.glTexImage2D
 
 class RectangleTexture(Texture):
     _target = _gl.GL_TEXTURE_RECTANGLE
-    _binding = _gl.GL_TEXTURE_BINDING_RECTANGLE
+    _binding = "texture_binding_rectangle"
     _ndim = 3
     _set = _gl.glTexImage2D
 
 class BufferTexture(Texture): # TODO override constructor, set_data and get_data: glTexBuffer
     _target = _gl.GL_TEXTURE_BUFFER
-    _binding = _gl.GL_TEXTURE_BINDING_BUFFER
+    _binding = "texture_binding_buffer"
     _ndim = 3
     _set = _gl.glTexImage2D
 
 class CubeMapTexture(Texture):
     _target = _gl.GL_TEXTURE_CUBE_MAP
-    _binding = _gl.GL_TEXTURE_BINDING_CUBE_MAP
+    _binding = "texture_binding_cube_map"
     _ndim = 3
     _set = _gl.glTexImage2D
 
 class MultisampleTexture2D(Texture):
     _target = _gl.GL_TEXTURE_2D_MULTISAMPLE
-    _binding = _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE
+    _binding = "texture_binding_2d_multisample"
     _ndim = 3
     _set = _gl.glTexImage2D
 
 class Texture3D(Texture):
     _target = _gl.GL_TEXTURE_3D
-    _binding = _gl.GL_TEXTURE_BINDING_3D
+    _binding = "texture_binding_3d"
     _ndim = 4
     _set = _gl.glTexImage3D
 
 class TextureArray2D(Texture):
     _target = _gl.GL_TEXTURE_2D_ARRAY
-    _binding = _gl.GL_TEXTURE_BINDING_2D_ARRAY
+    _binding = "texture_binding_2d_array"
     _ndim = 4
     _set = _gl.glTexImage3D
 
 class MultisampleTextureArray2D(Texture):
     _target = _gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY
-    _binding = _gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY
+    _binding = "texture_binding_2d_multisample_array"
     _ndim = 4
     _set = _gl.glTexImage3D
 

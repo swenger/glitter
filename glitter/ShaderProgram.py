@@ -1,13 +1,13 @@
 from rawgl import gl as _gl
 
-from util import BindableObject, ShaderLinkError, ShaderValidateError, ListProxy
+from GLObject import BindableObject
+from util import ShaderLinkError, ShaderValidateError, ListProxy
 from Shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 
 class ShaderProgram(BindableObject):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
-    _bind = _gl.glUseProgram
-    _binding = _gl.GL_CURRENT_PROGRAM
+    _binding = "current_program"
 
     def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None):
         super(ShaderProgram, self).__init__()

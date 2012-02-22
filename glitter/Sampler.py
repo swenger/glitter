@@ -1,13 +1,12 @@
 from rawgl import gl as _gl
 
 import constants
-from util import BindableObject
+from GLObject import BindableObject
 
 class Sampler(BindableObject):
     _generate_id = _gl.glGenSamplers
     _delete_id = _gl.glDeleteSamplers
-    _bind = _gl.glBindSampler
-    _binding = _gl.GL_SAMPLER_BINDING
+    _binding = "sampler_binding"
 
     compare_funcs = constants.texture_compare_funcs
     compare_modes = constants.texture_compare_modes

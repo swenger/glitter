@@ -8,11 +8,9 @@ Design principles:
 - All GL state changes that are independent of objects should go through a Context object.
 - Platform independence should be sought for, although Linux/GLX is the primary target.
 
-TODO automatic casts into numpy arrays, cast float64 to float32
 TODO move tests to separate package
-TODO use context's getters and setters in library
+TODO use context's getters and setters in library, make sure to use "with self._context" where necessary
 TODO create raw offscreen GLX context
-TODO for each bind()able object, have a context function to return the current binding only (instead of _binding in GLObject)
 TODO replace relative imports by absolute imports
 TODO make rawgl replaceable
 

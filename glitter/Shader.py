@@ -1,6 +1,7 @@
 from rawgl import gl as _gl
 
-from util import GLObject, ShaderCompileError
+from GLObject import GLObject
+from util import ShaderCompileError
 
 class Shader(GLObject):
     _generate_id = _gl.glCreateShader

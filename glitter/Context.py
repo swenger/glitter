@@ -121,6 +121,7 @@ class Context(object): # TODO this should be bindable, but that is window system
     #active_texture = ActiveTextureProxy(_gl.glGetIntegerv, [_gl.GL_ACTIVE_TEXTURE], _gl.glActiveTexture) # TODO subtract GL_TEXTURE0
     aliased_line_width_range = Proxy(_gl.glGetFloatv, [_gl.GL_ALIASED_LINE_WIDTH_RANGE], shape=2)
     array_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_ARRAY_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_ARRAY_BUFFER]) # TODO buffer obj
+    # XXX atomic_counter_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_ATOMIC_COUNTER_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_ATOMIC_COUNTER_BUFFER]) # TODO buffer obj
     blend = EnableDisableProxy(_gl.GL_BLEND)
     blend_color = Proxy(_gl.glGetFloatv, [_gl.GL_BLEND_COLOR], _gl.glBlendColor, shape=4)
     blend_dst_alpha = BlendFuncProxy(_gl.GL_BLEND_DST_ALPHA)
@@ -144,6 +145,7 @@ class Context(object): # TODO this should be bindable, but that is window system
     dither = EnableDisableProxy(_gl.GL_DITHER)
     doublebuffer = Proxy(_gl.glGetBooleanv, [_gl.GL_DOUBLEBUFFER])
     draw_buffer = EnumProxy(draw_buffers, _gl.GL_DRAW_BUFFER, _gl.glDrawBuffer)
+    draw_indirect_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_DRAW_INDIRECT_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_DRAW_INDIRECT_BUFFER]) # TODO buffer obj
     # TODO GL_DRAW_BUFFERi
     # XXX draw_framebuffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_DRAW_FRAMEBUFFER_BINDING], _gl.glBindFramebuffer, [_gl.GL_DRAW_FRAMEBUFFER]) # TODO buffer obj
     # XXX read_framebuffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_READ_FRAMEBUFFER_BINDING], _gl.glBindFramebuffer, [_gl.GL_READ_FRAMEBUFFER]) # TODO buffer obj
@@ -274,7 +276,7 @@ class Context(object): # TODO this should be bindable, but that is window system
     texture_binding_cube_map = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_CUBE_MAP], _gl.glBindTexture, [_gl.GL_TEXTURE_CUBE_MAP]) # TODO texture obj
     texture_binding_rectangle = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_RECTANGLE], _gl.glBindTexture, [_gl.GL_TEXTURE_RECTANGLE]) # TODO texture obj
     texture_compression_hint = EnumProxy(hints, _gl.GL_TEXTURE_COMPRESSION_HINT, _gl.glHint, [_gl.GL_TEXTURE_COMPRESSION_HINT]) # TODO texture obj
-    # TODO texture_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_TEXTURE_BUFFER]) # TODO buffer obj
+    # TODO texture_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_TEXTURE_BUFFER]) # TODO use glGetTexLevelParameter with GL_TEXTURE_BUFFER_DATA_STORE_BINDING instead
     timestamp = Proxy(_gl.glGetInteger64v, [_gl.GL_TIMESTAMP])
     transform_feedback_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_TRANSFORM_FEEDBACK_BUFFER]) # TODO buffer obj TODO indexed variant
     # TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
@@ -289,11 +291,14 @@ class Context(object): # TODO this should be bindable, but that is window system
     unpack_skip_pixels = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_PIXELS])
     unpack_skip_rows = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_ROWS])
     unpack_swap_bytes = Proxy(_gl.glGetBooleanv, [_gl.GL_UNPACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_UNPACK_SWAP_BYTES])
+    vertex_array_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_VERTEX_ARRAY_BINDING], _gl.glBindVertexArray)
     vertex_program_point_size = EnableDisableProxy(_gl.GL_VERTEX_PROGRAM_POINT_SIZE)
     viewport = Proxy(_gl.glGetIntegerv, [_gl.GL_VIEWPORT], _gl.glViewport, shape=4) # TODO indexed variant
     viewport_bounds_range = Proxy(_gl.glGetIntegerv, [_gl.GL_VIEWPORT_BOUNDS_RANGE], shape=2)
     viewport_index_provoking_vertex = EnumProxy(provoking_vertices, _gl.GL_VIEWPORT_INDEX_PROVOKING_VERTEX)
     viewport_subpixel_bits = Proxy(_gl.glGetIntegerv, [_gl.GL_VIEWPORT_SUBPIXEL_BITS])
+
+default_context = Context() # TODO
 
 
 # nosetests

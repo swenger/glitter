@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from util import BindableObject
+from GLObject import BindableObject
 
 class Renderbuffer(BindableObject): # TODO
     _generate_id = _gl.glGenRenderbuffers

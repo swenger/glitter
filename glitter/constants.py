@@ -86,21 +86,6 @@ texture_wrapmodes = Enum(
         REPEAT=_gl.GL_REPEAT,
         )
 
-buffer_targets = [ # target, binding
-        (_gl.GL_ARRAY_BUFFER,              _gl.GL_ARRAY_BUFFER_BINDING             ),
-        (_gl.GL_ATOMIC_COUNTER_BUFFER,     _gl.GL_ATOMIC_COUNTER_BUFFER_BINDING    ),
-        (_gl.GL_COPY_READ_BUFFER,          None                                    ), # XXX why is there no GL_COPY_READ_BUFFER_BINDING?
-        (_gl.GL_COPY_WRITE_BUFFER,         None                                    ), # XXX why is there no GL_COPY_WRITE_BUFFER_BINING?
-        (_gl.GL_DRAW_INDIRECT_BUFFER,      _gl.GL_DRAW_INDIRECT_BUFFER_BINDING     ),
-        (_gl.GL_ELEMENT_ARRAY_BUFFER,      _gl.GL_ELEMENT_ARRAY_BUFFER_BINDING     ),
-        (_gl.GL_PIXEL_PACK_BUFFER,         _gl.GL_PIXEL_PACK_BUFFER_BINDING        ),
-        (_gl.GL_PIXEL_UNPACK_BUFFER,       _gl.GL_PIXEL_UNPACK_BUFFER_BINDING      ),
-        (_gl.GL_TEXTURE_BUFFER,            None                                    ), # TODO use glGetTexLevelParameter with GL_TEXTURE_BUFFER_DATA_STORE_BINDING
-        (_gl.GL_TRANSFORM_FEEDBACK_BUFFER, _gl.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING),
-        (_gl.GL_UNIFORM_BUFFER,            _gl.GL_UNIFORM_BUFFER_BINDING           ),
-        ]
-buffer_target_to_binding = dict((x[0], x[1]) for x in buffer_targets)
-
 buffer_drawmodes = Enum(
         POINTS=_gl.GL_POINTS,
         LINE_STRIP=_gl.GL_LINE_STRIP,
@@ -135,13 +120,6 @@ framebuffer_attachment_names = Enum(
         STENCIL=_gl.GL_STENCIL_ATTACHMENT,
         DEPTH_STENCIL=_gl.GL_DEPTH_STENCIL_ATTACHMENT,
 )
-
-framebuffer_targets = [
-        (_gl.GL_FRAMEBUFFER,      _gl.GL_FRAMEBUFFER_BINDING),
-        (_gl.GL_DRAW_FRAMEBUFFER, None                      ), # XXX why is there no GL_DRAW_FRAMEBUFFER_BINDING?
-        (_gl.GL_READ_FRAMEBUFFER, None                      ), # XXX why is there no GL_READ_FRAMEBUFFER_BINDING?
-]
-framebuffer_target_to_binding = dict((x[0], x[1]) for x in framebuffer_targets)
 
 blend_functions = Enum(
         ZERO=_gl.GL_ZERO,

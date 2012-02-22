@@ -3,20 +3,19 @@ from rawgl import gl as _gl
 
 import constants
 from dtypes import Datatype, uint32
-from util import BindableObject
+from GLObject import BindableObject
 
 # TODO slicing with glGetBufferSubData
 
 class Buffer(BindableObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
-    _bind = _gl.glBindBuffer
 
     drawmodes = constants.buffer_drawmodes
     usages = constants.buffer_usages
 
     def __init__(self, data=None, shape=None, dtype=None, usage=None):
-        if any(x is NotImplemented for x in (self._target, self._binding)):
+        if any(x is NotImplemented for x in (self._target,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         if isinstance(data, Buffer): # copy constructor
             if shape is not None and _np.prod(shape) != _np.prod(data.shape):
@@ -95,8 +94,8 @@ class Buffer(BindableObject):
         return Buffer.usages[_usage.value]
 
 class ArrayBuffer(Buffer):
+    _binding = "array_buffer_binding"
     _target = _gl.GL_ARRAY_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
     def use(self, index, num_components=None, stride=0, first=0):
         if num_components is None:
@@ -128,8 +127,8 @@ class ArrayBuffer(Buffer):
     # TODO slicing to allow for glVertexAttribPointer with size, stride, and pointer
 
 class ElementArrayBuffer(Buffer):
+    _binding = "element_array_buffer_binding"
     _target = _gl.GL_ELEMENT_ARRAY_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is not None:
@@ -166,40 +165,34 @@ class ElementArrayBuffer(Buffer):
                 _gl.glDrawElementsInstanced(mode._value, count, self.dtype._as_gl(), first * self.dtype.nbytes, instances)
 
 class AtomicCounterBuffer(Buffer):
+    _binding = "atomic_counter_buffer_binding"
     _target = _gl.GL_ATOMIC_COUNTER_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
-class CopyReadBuffer(Buffer):
-    _target = _gl.GL_COPY_READ_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
+class CopyReadBuffer(Buffer): pass # TODO
 
-class CopyWriteBuffer(Buffer):
-    _target = _gl.GL_COPY_WRITE_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
+class CopyWriteBuffer(Buffer): pass # TODO
 
 class DrawIndirectBuffer(Buffer):
+    _binding = "draw_indirect_buffer_binding"
     _target = _gl.GL_DRAW_INDIRECT_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
 class PixelPackBuffer(Buffer):
+    _binding = "pixel_pack_buffer_binding"
     _target = _gl.GL_PIXEL_PACK_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
 class PixelUnpackBuffer(Buffer):
+    _binding = "pixel_unpack_buffer_binding"
     _target = _gl.GL_PIXEL_UNPACK_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
-class TextureBuffer(Buffer):
-    _target = _gl.GL_TEXTURE_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
+class TextureBuffer(Buffer): pass # TODO
 
 class TransformFeedbackBuffer(Buffer):
+    _binding = "transform_feedback_buffer_binding"
     _target = _gl.GL_TRANSFORM_FEEDBACK_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
 class UniformBuffer(Buffer):
+    _binding = "uniform_buffer_binding"
     _target = _gl.GL_UNIFORM_BUFFER
-    _binding = constants.buffer_target_to_binding[_target]
 
 
 # nosetests

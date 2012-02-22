@@ -1,14 +1,14 @@
 from rawgl import gl as _gl
 
 import constants
-from util import BindableObject, EnumConstant
+from GLObject import BindableObject
+from util import EnumConstant
 
 class Framebuffer(BindableObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
-    _bind = _gl.glBindFramebuffer
     _target = _gl.GL_FRAMEBUFFER
-    _binding = constants.framebuffer_target_to_binding[_target]
+    _binding = "framebuffer_binding"
 
     attachment_names = constants.framebuffer_attachment_names
 
@@ -26,9 +26,7 @@ class Framebuffer(BindableObject):
 
     # TODO get and set attachments using __getitem__/__setitem__
 
-class DrawFramebuffer(Framebuffer):
-    _target = _gl.GL_DRAW_FRAMEBUFFER
+class DrawFramebuffer(Framebuffer): pass # TODO
 
-class ReadFramebuffer(Framebuffer):
-    _target = _gl.GL_READ_FRAMEBUFFER
+class ReadFramebuffer(Framebuffer): pass # TODO
 

@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from util import BeginEndObject
+from GLObject import BeginEndObject
 
 class Query(BeginEndObject):
     _generate_id = _gl.glGenQueries
