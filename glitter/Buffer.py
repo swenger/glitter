@@ -152,6 +152,7 @@ class ArrayBuffer(Buffer):
 class ElementArrayBuffer(Buffer):
     _target = _gl.GL_ELEMENT_ARRAY_BUFFER
     # TODO check for dtype of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT in data setter
+    # TODO if shape[1] == 1: points, == 2: lines, == 3: triangles, ndim == 1: default
 
     def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, byte_offset=0, instances=None): # TODO byte_offset should be element count
         if count is None:

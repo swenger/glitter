@@ -6,7 +6,7 @@ from ShaderProgram import ShaderProgram
 from VertexArray import VertexArray
 
 vertex_shader = """
-#version 400
+#version 410 core
 
 layout(location=0) in vec4 in_position;
 layout(location=1) in vec4 in_color;
@@ -19,7 +19,7 @@ void main() {
 """
 
 fragment_shader = """
-#version 400
+#version 410 core
 
 in vec4 ex_color;
 out vec4 out_color;
@@ -54,26 +54,10 @@ vertices = numpy.array((
     ), dtype=numpy.float32)
 
 indices = numpy.array((
-    # Top
-    (0, 1, 3),
-    (0, 3, 2),
-    (3, 1, 4),
-    (3, 4, 2),
-    # Bottom
-    (0, 5, 7),
-    (0, 7, 6),
-    (7, 5, 8),
-    (7, 8, 6),
-    # Left
-    (0, 9, 11),
-    (0, 11, 10),
-    (11, 9, 12),
-    (11, 12, 10),
-    # Right
-    (0, 13, 15),
-    (0, 15, 14),
-    (15, 13, 16),
-    (15, 16, 14),
+    (0, 1, 3), (0, 3, 2), (3, 1, 4), (3, 4, 2), # Top
+    (0, 5, 7), (0, 7, 6), (7, 5, 8), (7, 8, 6), # Bottom
+    (0, 9, 11), (0, 11, 10), (11, 9, 12), (11, 12, 10), # Left
+    (0, 13, 15), (0, 15, 14), (15, 13, 16), (15, 16, 14), # Right
     ), dtype=numpy.uint8)
 
 def display():
