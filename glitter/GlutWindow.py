@@ -1,7 +1,7 @@
 import sys
 from rawgl import glut as _glut
 
-# TODO http://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf from p. 9 / http://freeglut.sourceforge.net/docs/api.php
+# TODO implement complete API as in http://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf from p. 9
 
 argc_c = _glut.c_int(len(sys.argv))
 argv_c = (_glut.c_char_p * argc_c.value)()
@@ -16,6 +16,22 @@ class GlutWindow(object):
             y=-1, index=False, double=False, accum=False, alpha=False,
             depth=False, stencil=False, multisample=False, stereo=False,
             luminance=False, name="", hide=False):
+        """Create a new GLUT window.
+
+        `version` is the OpenGL version to use. It can be either an integer or a (major, minor) tuple.
+        If `compatibility_profile` is `True`, the compatibility profile will be used instead of the core profile.
+        `debug` enables OpenGL debug mode, `forward_compatible` the forward compatibility mode.
+        `width`, `height`, `x`, and `y` control the initial size and position of the window.
+        `index` enables color index mode instead of RGBA.
+        `double` enables double buffering.
+        `accum`, `alpha`, `depth`, and `stencil` enable the corresponding buffers.
+        `multisample` enables multisampling.
+        `stereo` enables stereo buffers.
+        `luminance` enables luminance rendering instead of true RGBA.
+        `name` is the name of the window and its initial title.
+        If `hide` is `True`, the window will initially be hidden.
+        """
+
         self._called = False
         self._stack = []
 
@@ -26,7 +42,7 @@ class GlutWindow(object):
         self._motion_func = None
         self._keyboard_func = None
 
-        self._title = name
+        self._name = self._title = name
 
         if hasattr(version, "__iter__"):
             _glut.glutInitContextVersion(*version)
@@ -60,7 +76,9 @@ class GlutWindow(object):
         self._id = _glut.glutCreateWindow(self._title)
 
         if hide:
-            _glut.glutHideWindow()
+            self.hide()
+        else:
+            self.show()
 
     def __del__(self):
         try:
@@ -101,6 +119,14 @@ class GlutWindow(object):
     def post_redisplay(self):
         with self:
             _glut.glutPostRedisplay()
+
+    def show(self):
+        with self:
+            _glut.glutShowWindow()
+
+    def hide(self):
+        with self:
+            _glut.glutHideWindow()
 
 
     @property
@@ -185,6 +211,10 @@ class GlutWindow(object):
         self._keyboard_func_c = ftype(keyboard_func) if keyboard_func is not None else ftype()
         with self:
             _glut.glutKeyboardFunc(self._keyboard_func_c)
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def title(self):
