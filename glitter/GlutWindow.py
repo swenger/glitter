@@ -1,8 +1,35 @@
 from rawgl import glut as _glut
 
-# TODO implement complete API as in http://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf from p. 9
-# TODO glutLeaveFullScreen, glutFullScreenToggle, string rendering, no overlays, no spaceball/button box/dials/tablet
-# TODO glutGet as in http://freeglut.sourceforge.net/docs/api.php
+from util import Enum
+
+# TODO glutCreateSubWindow and glutGet(GLUT_WINDOW_PARENT)
+# TODO Menus, Font Rendering, Geometric Object Rendering
+
+_cursors = Enum(
+    right_arrow=_glut.GLUT_CURSOR_RIGHT_ARROW,
+    left_arrow=_glut.GLUT_CURSOR_LEFT_ARROW,
+    info=_glut.GLUT_CURSOR_INFO,
+    destroy=_glut.GLUT_CURSOR_DESTROY,
+    help=_glut.GLUT_CURSOR_HELP,
+    cycle=_glut.GLUT_CURSOR_CYCLE,
+    spray=_glut.GLUT_CURSOR_SPRAY,
+    wait=_glut.GLUT_CURSOR_WAIT,
+    text=_glut.GLUT_CURSOR_TEXT,
+    crosshair=_glut.GLUT_CURSOR_CROSSHAIR,
+    up_down=_glut.GLUT_CURSOR_UP_DOWN,
+    left_right=_glut.GLUT_CURSOR_LEFT_RIGHT,
+    top_side=_glut.GLUT_CURSOR_TOP_SIDE,
+    bottom_side=_glut.GLUT_CURSOR_BOTTOM_SIDE,
+    left_side=_glut.GLUT_CURSOR_LEFT_SIDE,
+    right_side=_glut.GLUT_CURSOR_RIGHT_SIDE,
+    top_left_corner=_glut.GLUT_CURSOR_TOP_LEFT_CORNER,
+    top_right_corner=_glut.GLUT_CURSOR_TOP_RIGHT_CORNER,
+    bottom_right_corner=_glut.GLUT_CURSOR_BOTTOM_RIGHT_CORNER,
+    bottom_left_corner=_glut.GLUT_CURSOR_BOTTOM_LEFT_CORNER,
+    full_crosshair=_glut.GLUT_CURSOR_FULL_CROSSHAIR,
+    none=_glut.GLUT_CURSOR_NONE,
+    inherit=_glut.GLUT_CURSOR_INHERIT,
+)
 
 def _func_property(glut_func):
     import re
@@ -26,6 +53,7 @@ def _func_property(glut_func):
     return property(getter, setter)
 
 def initialize(argv=None):
+    """Initialize GLUT. Called automatically on import."""
     if argv is None:
         import sys
         argv = sys.argv
@@ -37,27 +65,56 @@ def initialize(argv=None):
     argv[:] = [_argv[i] for i in range(_argc.value)]
 
 def main_loop():
+    """Enter the GLUT main loop."""
     _glut.glutMainLoop()
     initialize()
 
 def main_loop_event():
+    """Allow GLUT to process events."""
     _glut.glutMainLoopEvent()
 
 def leave_main_loop():
+    """Leave the GLUT main loop."""
     _glut.glutLeaveMainLoop()
 
+def get_screen_shape():
+    """Screen height and width in pixels."""
+    return _glut.glutGet(_glut.GLUT_SCREEN_HEIGHT, _glut.GLUT_SCREEN_WIDTH)
+
+def get_screen_shape_mm():
+    """Screen height and width in millimeters."""
+    return _glut.glutGet(_glut.GLUT_SCREEN_HEIGHT_MM, _glut.GLUT_SCREEN_WIDTH_MM)
+
+def get_elapsed_time():
+    """Time in seconds since GLUT was initialized."""
+    return _glut.glutGet(_glut.GLUT_ELAPSED_TIME) / 1000.0
+
+def get_shift_state():
+    """Only available in keyboard, special, and mouse callbacks."""
+    return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_SHIFT)
+
+def get_ctrl_state():
+    """Only available in keyboard, special, and mouse callbacks."""
+    return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_CTRL)
+
+def get_alt_state():
+    """Only available in keyboard, special, and mouse callbacks."""
+    return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_ALT)
+
 class GlutWindow(object):
+    cursors = _cursors
+
     def __init__(self, version=(4, 0), compatibility_profile=False,
-            debug=False, forward_compatible=True, width=300, height=300, x=-1,
-            y=-1, index=False, double=False, accum=False, alpha=False,
-            depth=False, stencil=False, multisample=False, stereo=False,
-            luminance=False, name="", hide=False):
+            debug=False, forward_compatible=True, shape=(300, 300),
+            position=(-1, -1), index=False, double=False, accum=False,
+            alpha=False, depth=False, stencil=False, multisample=False,
+            stereo=False, luminance=False, name="", hide=False):
         """Create a new GLUT window.
 
         `version` is the OpenGL version to use. It can be either an integer or a (major, minor) tuple.
         If `compatibility_profile` is `True`, the compatibility profile will be used instead of the core profile.
         `debug` enables OpenGL debug mode, `forward_compatible` the forward compatibility mode.
-        `width`, `height`, `x`, and `y` control the initial size and position of the window.
+        `shape` and `position` control the initial (height, width) shape and (y, x) position of the window.
         `index` enables color index mode instead of RGBA.
         `double` enables double buffering.
         `accum`, `alpha`, `depth`, and `stencil` enable the corresponding buffers.
@@ -77,7 +134,7 @@ class GlutWindow(object):
         self._motion_func = None
         self._keyboard_func = None
 
-        self._name = self._title = name
+        self._name = self._window_title = self._icon_title = name
 
         if hasattr(version, "__iter__"):
             _glut.glutInitContextVersion(*version)
@@ -91,7 +148,10 @@ class GlutWindow(object):
                 (_glut.GLUT_FORWARD_COMPATIBLE if forward_compatible else 0)
                 )
 
+        height, width = shape
         _glut.glutInitWindowSize(width, height)
+
+        y, x = position
         _glut.glutInitWindowPosition(x, y)
 
         _glut.glutInitDisplayMode(
@@ -108,8 +168,11 @@ class GlutWindow(object):
 
         _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_CONTINUE_EXECUTION)
 
+        if not _glut.glutGet(_glut.GLUT_DISPLAY_MODE_POSSIBLE):
+            raise RuntimeError("display mode not possible")
+
         old_binding = _glut.glutGetWindow()
-        self._id = _glut.glutCreateWindow(self._title)
+        self._id = _glut.glutCreateWindow(self._name)
         if old_binding:
             _glut.glutSetWindow(old_binding)
 
@@ -141,6 +204,26 @@ class GlutWindow(object):
         with self:
             _glut.glutPostRedisplay()
 
+    def full_screen(self):
+        with self:
+            _glut.glutFullScreen()
+
+    def leave_full_screen(self):
+        with self:
+            _glut.glutLeaveFullScreen()
+
+    def toggle_full_screen(self):
+        with self:
+            _glut.glutFullScreenToggle()
+
+    def push(self):
+        with self:
+            _glut.glutPushWindow()
+
+    def pop(self):
+        with self:
+            _glut.glutPopWindow()
+
     def show(self):
         with self:
             _glut.glutShowWindow()
@@ -149,36 +232,75 @@ class GlutWindow(object):
         with self:
             _glut.glutHideWindow()
 
+    def iconify(self):
+        with self:
+            _glut.glutIconifyWindow()
+
+    @property
+    def cursor(self):
+        with self:
+            return GlutWindow.cursors[_glut.glutGet(_glut.GLUT_WINDOW_CURSOR)]
+
+    @cursor.setter
+    def cursor(self, cursor):
+        with self:
+            _glut.glutSetCursor(cursor._value)
+
+    @property
+    def num_children(self):
+        with self:
+            return _glut.glutGet(_glut.GLUT_WINDOW_NUM_CHILDREN)
+
     @property
     def shape(self):
         with self:
-            return _glut.glutGet(_glut.GLUT_WINDOW_WIDTH), _glut.glutGet(_glut.GLUT_WINDOW_HEIGHT)
+            return _glut.glutGet(_glut.GLUT_WINDOW_HEIGHT), _glut.glutGet(_glut.GLUT_WINDOW_WIDTH)
 
     @shape.setter
     def shape(self, shape):
-        width, height = shape
+        height, width = shape
         with self:
             _glut.glutReshapeWindow(width, height)
+
+    @property
+    def position(self):
+        with self:
+            return _glut.glutGet(_glut.GLUT_WINDOW_Y), _glut.glutGet(_glut.GLUT_WINDOW_X)
+
+    @position.setter
+    def position(self, position):
+        y, x = position
+        with self:
+            _glut.glutPositionWindow(x, y)
 
     @property
     def name(self):
         return self._name
 
     @property
-    def title(self):
-        return self._title
+    def window_title(self):
+        return self._window_title
 
-    @title.setter
-    def title(self, title):
-        self._title = title
+    @window_title.setter
+    def window_title(self, window_title):
+        self._window_title = window_title
         with self:
-            _glut.glutSetWindowTitle(title)
+            _glut.glutSetWindowTitle(window_title)
 
+    @property
+    def icon_title(self):
+        return self._icon_title
+
+    @icon_title.setter
+    def icon_title(self, icon_title):
+        self._icon_title = icon_title
+        with self:
+            _glut.glutSetIconTitle(icon_title)
 
     close_callback = _func_property(_glut.glutCloseFunc)
     display_callback = _func_property(_glut.glutDisplayFunc)
     entry_callback = _func_property(_glut.glutEntryFunc)
-    idle_callback = _func_property(_glut.glutIdleFunc)
+    idle_callback = _func_property(_glut.glutIdleFunc) # within the callback, current window is not necessarily this window
     joystick_callback = _func_property(_glut.glutJoystickFunc)
     keyboard_callback = _func_property(_glut.glutKeyboardFunc)
     keyboard_up_callback = _func_property(_glut.glutKeyboardUpFunc)
@@ -192,7 +314,7 @@ class GlutWindow(object):
     reshape_callback = _func_property(_glut.glutReshapeFunc)
     special_callback = _func_property(_glut.glutSpecialFunc)
     special_up_callback = _func_property(_glut.glutSpecialUpFunc)
-    timer_callback = _func_property(_glut.glutTimerFunc)
+    timer_callback = _func_property(_glut.glutTimerFunc) # within the callback, current window is not necessarily this window
     visibility_callback = _func_property(_glut.glutVisibilityFunc)
     window_status_callback = _func_property(_glut.glutWindowStatusFunc)
     wm_close_callback = _func_property(_glut.glutWMCloseFunc)
