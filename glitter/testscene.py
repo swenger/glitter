@@ -1,4 +1,4 @@
-from rawgl import gl, glut
+from rawgl import gl
 
 from GlutWindow import GlutWindow
 from ShaderProgram import ShaderProgram
@@ -55,10 +55,10 @@ def display():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
     with shader:
         vao.draw()
-    glut.glutSwapBuffers()
-    glut.glutPostRedisplay()
+    window.swap_buffers()
+    window.post_redisplay()
 
-window = GlutWindow(mode=glut.GLUT_DOUBLE|glut.GLUT_DEPTH|glut.GLUT_RGBA)
+window = GlutWindow(double=True)
 window.display_func = display
 
 vao = VertexArray([vertices, colors], elements=indices)

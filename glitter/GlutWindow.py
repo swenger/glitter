@@ -1,10 +1,21 @@
+import sys
 from rawgl import glut as _glut
 
-# TODO swap_buffers() / post_redisplay()
-# TODO menus etc.
+# TODO http://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf from p. 9 / http://freeglut.sourceforge.net/docs/api.php
+
+argc_c = _glut.c_int(len(sys.argv))
+argv_c = (_glut.c_char_p * argc_c.value)()
+for i, a in enumerate(sys.argv):
+    argv_c[i] = a
+_glut.glutInit(_glut.pointer(argc_c), argv_c)
+sys.argv = [argv_c[i] for i in range(argc_c.value)]
 
 class GlutWindow(object):
-    def __init__(self, title="", width=512, height=512, argv=[], mode=_glut.GLUT_DOUBLE|_glut.GLUT_RGB, hide=False):
+    def __init__(self, version=(4, 0), compatibility_profile=False,
+            debug=False, forward_compatible=True, width=300, height=300, x=-1,
+            y=-1, index=False, double=False, accum=False, alpha=False,
+            depth=False, stencil=False, multisample=False, stereo=False,
+            luminance=False, name="", hide=False):
         self._called = False
         self._stack = []
 
@@ -15,21 +26,37 @@ class GlutWindow(object):
         self._motion_func = None
         self._keyboard_func = None
 
-        self._title = title
+        self._title = name
 
-        argc = _glut.c_int(len(argv))
-        argv_c = (_glut.c_char_p * argc.value)()
-        for i, a in enumerate(argv):
-            argv_c[i] = a
-        _glut.glutInit(_glut.pointer(argc), argv_c)
-        # TODO modify argv
+        if hasattr(version, "__iter__"):
+            _glut.glutInitContextVersion(*version)
+        else:
+            _glut.glutInitContextVersion(version, 0)
 
-        _glut.glutInitContextVersion(4, 0)
-        _glut.glutInitContextFlags(_glut.GLUT_FORWARD_COMPATIBLE)
-        _glut.glutInitContextProfile(_glut.GLUT_CORE_PROFILE)
-        _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_GLUTMAINLOOP_RETURNS)
-        _glut.glutInitDisplayMode(mode) # TODO boolean flags
+        _glut.glutInitContextProfile(_glut.GLUT_COMPATIBILITY_PROFILE if compatibility_profile else _glut.GLUT_CORE_PROFILE)
+
+        _glut.glutInitContextFlags(
+                (_glut.GLUT_DEBUG if debug else 0) |
+                (_glut.GLUT_FORWARD_COMPATIBLE if forward_compatible else 0)
+                )
+
         _glut.glutInitWindowSize(width, height)
+        _glut.glutInitWindowPosition(x, y)
+
+        _glut.glutInitDisplayMode(
+                (_glut.GLUT_INDEX if index else _glut.GLUT_RGBA) |
+                (_glut.GLUT_DOUBLE if double else _glut.GLUT_SINGLE) |
+                (_glut.GLUT_ACCUM if accum else 0) |
+                (_glut.GLUT_ALPHA if alpha else 0) |
+                (_glut.GLUT_DEPTH if depth else 0) |
+                (_glut.GLUT_STENCIL if stencil else 0) |
+                (_glut.GLUT_MULTISAMPLE if multisample else 0) |
+                (_glut.GLUT_STEREO if stereo else 0) |
+                (_glut.GLUT_LUMINANCE if luminance else 0)
+                )
+
+        _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_CONTINUE_EXECUTION)
+        _glut.glutSetOption(_glut.GLUT_RENDERING_CONTEXT, _glut.GLUT_USE_CURRENT_CONTEXT)
         self._id = _glut.glutCreateWindow(self._title)
 
         if hide:
@@ -66,6 +93,14 @@ class GlutWindow(object):
             _glut.glutMainLoop()
         else:
             _glut.glutMainLoopEvent()
+
+    def swap_buffers(self):
+        with self:
+            _glut.glutSwapBuffers()
+
+    def post_redisplay(self):
+        with self:
+            _glut.glutPostRedisplay()
 
 
     @property
