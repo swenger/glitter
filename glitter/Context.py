@@ -1,4 +1,4 @@
-from rawgl import _gl
+from rawgl import gl as _gl
 
 # TODO with statements for state changes, e.g. with context.set(active_texture=0): ...
 # TODO default context singleton

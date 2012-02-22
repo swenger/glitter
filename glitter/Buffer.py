@@ -1,62 +1,24 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from util import BindableObject, Enum, is_float, gl_type
+import constants
+from util import BindableObject, is_float, gl_type
 
 # TODO one buffer can be bound to different targets; how should this be represented? BufferBinding()?
 # TODO buffers should be castable into each other, refcount!
 # TODO buffers likely contain meaningful array data; remember the dtypes and shape
 # TODO slicing with glGetBufferSubData
 
-_buffer_targets = [ # target, binding
-        (_gl.GL_ARRAY_BUFFER,              _gl.GL_ARRAY_BUFFER_BINDING             ),
-        (_gl.GL_ATOMIC_COUNTER_BUFFER,     _gl.GL_ATOMIC_COUNTER_BUFFER_BINDING    ),
-        (_gl.GL_COPY_READ_BUFFER,          None                                    ), # XXX why is there no GL_COPY_READ_BUFFER_BINDING?
-        (_gl.GL_COPY_WRITE_BUFFER,         None                                    ), # XXX why is there no GL_COPY_WRITE_BUFFER_BINING?
-        (_gl.GL_DRAW_INDIRECT_BUFFER,      _gl.GL_DRAW_INDIRECT_BUFFER_BINDING     ),
-        (_gl.GL_ELEMENT_ARRAY_BUFFER,      _gl.GL_ELEMENT_ARRAY_BUFFER_BINDING     ),
-        (_gl.GL_PIXEL_PACK_BUFFER,         _gl.GL_PIXEL_PACK_BUFFER_BINDING        ),
-        (_gl.GL_PIXEL_UNPACK_BUFFER,       _gl.GL_PIXEL_UNPACK_BUFFER_BINDING      ),
-        (_gl.GL_TEXTURE_BUFFER,            None                                    ), # XXX why is there no GL_TEXTURE_BUFFER_BINDING?
-        (_gl.GL_TRANSFORM_FEEDBACK_BUFFER, _gl.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING),
-        (_gl.GL_UNIFORM_BUFFER,            _gl.GL_UNIFORM_BUFFER_BINDING           ),
-]
-_buffer_target_to_binding = dict((x[0], x[1]) for x in _buffer_targets)
-
 class Buffer(BindableObject):
-    drawmodes = Enum(
-            POINTS=_gl.GL_POINTS,
-            LINE_STRIP=_gl.GL_LINE_STRIP,
-            LINE_LOOP=_gl.GL_LINE_LOOP,
-            LINES=_gl.GL_LINES,
-            LINE_STRIP_ADJACENCY=_gl.GL_LINE_STRIP_ADJACENCY,
-            LINES_ADJACENCY=_gl.GL_LINES_ADJACENCY,
-            TRIANGLE_STRIP=_gl.GL_TRIANGLE_STRIP,
-            TRIANGLE_FAN=_gl.GL_TRIANGLE_FAN,
-            TRIANGLES=_gl.GL_TRIANGLES,
-            TRIANGLE_STRIP_ADJACENCY=_gl.GL_TRIANGLE_STRIP_ADJACENCY,
-            TRIANGLES_ADJACENCY=_gl.GL_TRIANGLES_ADJACENCY,
-            PATCHES=_gl.GL_PATCHES,
-    )
-
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _bind = _gl.glBindBuffer
 
-    usages = Enum(
-            STREAM_DRAW=_gl.GL_STREAM_DRAW,
-            STREAM_READ=_gl.GL_STREAM_READ,
-            STREAM_COPY=_gl.GL_STREAM_COPY,
-            STATIC_DRAW=_gl.GL_STATIC_DRAW,
-            STATIC_READ=_gl.GL_STATIC_READ,
-            STATIC_COPY=_gl.GL_STATIC_COPY,
-            DYNAMIC_DRAW=_gl.GL_DYNAMIC_DRAW,
-            DYNAMIC_READ=_gl.GL_DYNAMIC_READ,
-            DYNAMIC_COPY=_gl.GL_DYNAMIC_COPY,
-    )
+    drawmodes = constants.buffer_drawmodes
+    usages = constants.buffer_usages
 
     def __init__(self, data=None, shape=None, dtype=None, usage=usages.STATIC_DRAW):
-        self._binding = _buffer_target_to_binding[self._target]
+        self._binding = constants.buffer_target_to_binding[self._target]
         super(Buffer, self).__init__()
         self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
 
@@ -115,7 +77,7 @@ class Buffer(BindableObject):
         _usage = _gl.GLint()
         with self:
             _gl.glGetBufferParameteriv(self._target, _gl.GL_BUFFER_USAGE, _gl.pointer(_usage))
-        return self.usages[_usage.value]
+        return Buffer.usages[_usage.value]
 
 class ArrayBuffer(Buffer):
     _target = _gl.GL_ARRAY_BUFFER

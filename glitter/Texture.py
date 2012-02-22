@@ -1,51 +1,13 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from util import BindableObject, Enum, is_float, is_signed
+import constants
+from util import BindableObject, is_float, is_signed
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
 # TODO mipmaps (level != 0) with glGenerateMipmap
-
-_texture_formats = [ # (_np dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
-        ((_np.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
-        ((_np.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
-        ((_np.uint16,  1), _gl.GL_R16UI,    (_gl.GL_UNSIGNED_SHORT, _gl.GL_RED_INTEGER )),
-        ((_np.int16,   1), _gl.GL_R16I,     (_gl.GL_SHORT,          _gl.GL_RED_INTEGER )),
-        ((_np.uint32,  1), _gl.GL_R32UI,    (_gl.GL_UNSIGNED_INT,   _gl.GL_RED_INTEGER )),
-        ((_np.int32,   1), _gl.GL_R32I,     (_gl.GL_INT,            _gl.GL_RED_INTEGER )),
-        ((_np.float32, 1), _gl.GL_R32F,     (_gl.GL_FLOAT,          _gl.GL_RED         )),
-        ((_np.uint8,   2), _gl.GL_RG8UI,    (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RG_INTEGER  )),
-        ((_np.int8,    2), _gl.GL_RG8I,     (_gl.GL_BYTE,           _gl.GL_RG_INTEGER  )),
-        ((_np.uint16,  2), _gl.GL_RG16UI,   (_gl.GL_UNSIGNED_SHORT, _gl.GL_RG_INTEGER  )),
-        ((_np.int16,   2), _gl.GL_RG16I,    (_gl.GL_SHORT,          _gl.GL_RG_INTEGER  )),
-        ((_np.uint32,  2), _gl.GL_RG32UI,   (_gl.GL_UNSIGNED_INT,   _gl.GL_RG_INTEGER  )),
-        ((_np.int32,   2), _gl.GL_RG32I,    (_gl.GL_INT,            _gl.GL_RG_INTEGER  )),
-        ((_np.float32, 2), _gl.GL_RG32F,    (_gl.GL_FLOAT,          _gl.GL_RG          )),
-        ((_np.uint8,   3), _gl.GL_RGB8UI,   (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGB_INTEGER )),
-        ((_np.int8,    3), _gl.GL_RGB8I,    (_gl.GL_BYTE,           _gl.GL_RGB_INTEGER )),
-        ((_np.uint16,  3), _gl.GL_RGB16UI,  (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGB_INTEGER )),
-        ((_np.int16,   3), _gl.GL_RGB16I,   (_gl.GL_SHORT,          _gl.GL_RGB_INTEGER )),
-        ((_np.uint32,  3), _gl.GL_RGB32UI,  (_gl.GL_UNSIGNED_INT,   _gl.GL_RGB_INTEGER )),
-        ((_np.int32,   3), _gl.GL_RGB32I,   (_gl.GL_INT,            _gl.GL_RGB_INTEGER )),
-        ((_np.float32, 3), _gl.GL_RGB32F,   (_gl.GL_FLOAT,          _gl.GL_RGB         )),
-        ((_np.uint8,   4), _gl.GL_RGBA8UI,  (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGBA_INTEGER)),
-        ((_np.int8,    4), _gl.GL_RGBA8I,   (_gl.GL_BYTE,           _gl.GL_RGBA_INTEGER)),
-        ((_np.uint16,  4), _gl.GL_RGBA16UI, (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGBA_INTEGER)),
-        ((_np.int16,   4), _gl.GL_RGBA16I,  (_gl.GL_SHORT,          _gl.GL_RGBA_INTEGER)),
-        ((_np.uint32,  4), _gl.GL_RGBA32UI, (_gl.GL_UNSIGNED_INT,   _gl.GL_RGBA_INTEGER)),
-        ((_np.int32,   4), _gl.GL_RGBA32I,  (_gl.GL_INT,            _gl.GL_RGBA_INTEGER)),
-        ((_np.float32, 4), _gl.GL_RGBA32F,  (_gl.GL_FLOAT,          _gl.GL_RGBA        )),
-        # TODO add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL
-]
-_numpy_to_gl_iformat =   dict((x[0],    x[1]   ) for x in _texture_formats)
-_gl_iformat_to_numpy =   dict((x[1],    x[0]   ) for x in _texture_formats)
-_numpy_to_gl_format =    dict((x[0],    x[2][1]) for x in _texture_formats)
-_gl_format_to_numpy =    dict((x[2][1], x[0]   ) for x in _texture_formats)
-_numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in _texture_formats)
-_gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in _texture_formats)
-_gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in _texture_formats)
 
 class Texture(BindableObject):
     _generate_id = _gl.glGenTextures
@@ -55,51 +17,12 @@ class Texture(BindableObject):
     _ndim = NotImplemented
     _set = NotImplemented
 
-    compare_funcs = Enum(
-            LEQUAL=_gl.GL_LEQUAL,
-            GEQUAL=_gl.GL_GEQUAL,
-            LESS=_gl.GL_LESS,
-            GREATER=_gl.GL_GREATER,
-            EQUAL=_gl.GL_EQUAL,
-            NOTEQUAL=_gl.GL_NOTEQUAL,
-            ALWAYS=_gl.GL_ALWAYS,
-            NEVER=_gl.GL_NEVER,
-    )
-
-    compare_modes = Enum(
-            COMPARE_REF_TO_TEXTURE=_gl.GL_COMPARE_REF_TO_TEXTURE,
-            NONE=_gl.GL_NONE,
-    )
-
-    min_filters = Enum(
-            NEAREST=_gl.GL_NEAREST,
-            LINEAR=_gl.GL_LINEAR,
-            NEAREST_MIPMAP_NEAREST=_gl.GL_NEAREST_MIPMAP_NEAREST,
-            LINEAR_MIPMAP_NEAREST=_gl.GL_LINEAR_MIPMAP_NEAREST,
-            NEAREST_MIPMAP_LINEAR=_gl.GL_NEAREST_MIPMAP_LINEAR,
-            LINEAR_MIPMAP_LINEAR=_gl.GL_LINEAR_MIPMAP_LINEAR,
-    )
-
-    mag_filters = Enum(
-            NEAREST=_gl.GL_NEAREST,
-            LINEAR=_gl.GL_LINEAR,
-    )
-
-    swizzles = Enum(
-            RED=_gl.GL_RED,
-            GREEN=_gl.GL_GREEN,
-            BLUE=_gl.GL_BLUE,
-            ALPHA=_gl.GL_ALPHA,
-            ZERO=_gl.GL_ZERO,
-            ONE=_gl.GL_ONE,
-    )
-
-    wrapmodes = Enum(
-            CLAMP_TO_EDGE=_gl.GL_CLAMP_TO_EDGE,
-            CLAMP_TO_BORDER=_gl.GL_CLAMP_TO_BORDER,
-            MIRRORED_REPEAT=_gl.GL_MIRRORED_REPEAT,
-            REPEAT=_gl.GL_REPEAT,
-    )
+    compare_funcs = constants.texture_compare_funcs
+    compare_modes = constants.texture_compare_modes
+    min_filters = constants.texture_min_filters
+    mag_filters = constants.texture_mag_filters
+    swizzles = constants.texture_swizzles
+    wrapmodes = constants.texture_wrapmodes
 
     def __init__(self, data=None, shape=None, dtype=None):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
@@ -121,17 +44,17 @@ class Texture(BindableObject):
         if len(shape) != self._ndim:
             raise TypeError("shape must be %d-dimensional" % self._ndim)
 
-        _iformat = _numpy_to_gl_iformat[dtype, shape[-1]]
-        _format = _numpy_to_gl_format[dtype, shape[-1]]
-        _type = _numpy_to_gl_type[dtype]
+        _iformat = constants.numpy_to_gl_iformat[dtype, shape[-1]]
+        _format = constants.numpy_to_gl_format[dtype, shape[-1]]
+        _type = constants.numpy_to_gl_type[dtype]
         _data = _np.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
         if not is_float[self.dtype]:
-            self.min_filter = self.min_filters.NEAREST
-            self.mag_filter = self.mag_filters.NEAREST
+            self.min_filter = Texture.min_filters.NEAREST
+            self.mag_filter = Texture.mag_filters.NEAREST
 
     def get_data(self, level=0):
         _data = _np.empty(self.shape, dtype=self.dtype)
@@ -151,7 +74,7 @@ class Texture(BindableObject):
     @property
     def shape(self):
         with self:
-            colors = _gl_iformat_to_numpy[self._iformat][1]        
+            colors = constants.gl_iformat_to_numpy[self._iformat][1]        
             _width = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
             if self._ndim == 2:
@@ -167,7 +90,7 @@ class Texture(BindableObject):
 
     @property
     def dtype(self):
-        return _gl_iformat_to_numpy[self._iformat][0]
+        return constants.gl_iformat_to_numpy[self._iformat][0]
 
     @property
     def _iformat(self):
@@ -178,11 +101,11 @@ class Texture(BindableObject):
 
     @property
     def _format(self):
-        return _numpy_to_gl_format[self.dtype, self.shape[-1]]
+        return constants.numpy_to_gl_format[self.dtype, self.shape[-1]]
 
     @property
     def _type(self):
-        return _gl_iformat_to_gl_type[self._iformat]
+        return constants.gl_iformat_to_gl_type[self._iformat]
 
     @property
     def base_level(self):
@@ -238,7 +161,7 @@ class Texture(BindableObject):
         _compare_func = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_compare_func))
-        return self.compare_funcs[_compare_func.value]
+        return Texture.compare_funcs[_compare_func.value]
 
     @compare_func.setter
     def compare_func(self, compare_func):
@@ -250,7 +173,7 @@ class Texture(BindableObject):
         _compare_mode = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
-        return self.compare_modes[_compare_mode.value]
+        return Texture.compare_modes[_compare_mode.value]
 
     @compare_mode.setter
     def compare_mode(self, compare_mode):
@@ -281,7 +204,7 @@ class Texture(BindableObject):
         _min_filter = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_min_filter))
-        return self.min_filters[_min_filter.value]
+        return Texture.min_filters[_min_filter.value]
 
     @min_filter.setter
     def min_filter(self, min_filter):
@@ -293,7 +216,7 @@ class Texture(BindableObject):
         _mag_filter = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_mag_filter))
-        return self.mag_filters[_mag_filter.value]
+        return Texture.mag_filters[_mag_filter.value]
 
     @mag_filter.setter
     def mag_filter(self, mag_filter):
@@ -341,7 +264,7 @@ class Texture(BindableObject):
         _swizzle_r = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_R, _gl.pointer(_swizzle_r))
-        return self.swizzles[_swizzle_r.value]
+        return Texture.swizzles[_swizzle_r.value]
 
     @swizzle_r.setter
     def swizzle_r(self, swizzle_r):
@@ -353,7 +276,7 @@ class Texture(BindableObject):
         _swizzle_g = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_G, _gl.pointer(_swizzle_g))
-        return self.swizzles[_swizzle_g.value]
+        return Texture.swizzles[_swizzle_g.value]
 
     @swizzle_g.setter
     def swizzle_g(self, swizzle_g):
@@ -365,7 +288,7 @@ class Texture(BindableObject):
         _swizzle_b = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_B, _gl.pointer(_swizzle_b))
-        return self.swizzles[_swizzle_b.value]
+        return Texture.swizzles[_swizzle_b.value]
 
     @swizzle_b.setter
     def swizzle_b(self, swizzle_b):
@@ -377,7 +300,7 @@ class Texture(BindableObject):
         _swizzle_a = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_A, _gl.pointer(_swizzle_a))
-        return self.swizzles[_swizzle_a.value]
+        return Texture.swizzles[_swizzle_a.value]
 
     @swizzle_a.setter
     def swizzle_a(self, swizzle_a):
@@ -389,7 +312,7 @@ class Texture(BindableObject):
         _swizzle_rgba = (_gl.GLenum * 4)()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)
-        return [self.swizzles[_swizzle_rgba[i]] for i in range(4)]
+        return [Texture.swizzles[_swizzle_rgba[i]] for i in range(4)]
 
     @swizzle_rgba.setter
     def swizzle_rgba(self, swizzle_rgba):
@@ -404,7 +327,7 @@ class Texture(BindableObject):
         _wrap_s = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_wrap_s))
-        return self.wrapmodes[_wrap_s.value]
+        return Texture.wrapmodes[_wrap_s.value]
 
     @wrap_s.setter
     def wrap_s(self, wrap_s):
@@ -416,7 +339,7 @@ class Texture(BindableObject):
         _wrap_t = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_wrap_t))
-        return self.wrapmodes[_wrap_t.value]
+        return Texture.wrapmodes[_wrap_t.value]
 
     @wrap_t.setter
     def wrap_t(self, wrap_t):
@@ -428,7 +351,7 @@ class Texture(BindableObject):
         _wrap_r = _gl.GLenum()
         with self:
             _gl.glGetTexParameterIuiv(self._target, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_wrap_r))
-        return self.wrapmodes[_wrap_r.value]
+        return Texture.wrapmodes[_wrap_r.value]
 
     @wrap_r.setter
     def wrap_r(self, wrap_r):
@@ -505,9 +428,9 @@ def check_texture(shape, dtype, vrange):
     assert (texture.data == data).all(), "data is broken"
     assert texture.shape == data.shape, "shape is broken"
     assert texture.dtype == data.dtype, "dtype is broken"
-    assert texture._iformat == _numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
-    assert texture._format == _numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"
-    assert texture._type == _numpy_to_gl_type[data.dtype.type], "_type is broken"
+    assert texture._iformat == constants.numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
+    assert texture._format == constants.numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"
+    assert texture._type == constants.numpy_to_gl_type[data.dtype.type], "_type is broken"
 
 def test_texture_generator():
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))

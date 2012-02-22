@@ -1,6 +1,7 @@
 from rawgl import gl as _gl
 
-from util import BindableObject, Enum
+import constants
+from util import BindableObject
 
 # TODO one sampler can be bound to different units; how should this be represented? SamplerBinding()?
 
@@ -10,42 +11,11 @@ class Sampler(BindableObject):
     _bind = _gl.glBindSampler
     _binding = _gl.GL_SAMPLER_BINDING
 
-    compare_funcs = Enum(
-            LEQUAL=_gl.GL_LEQUAL,
-            GEQUAL=_gl.GL_GEQUAL,
-            LESS=_gl.GL_LESS,
-            GREATER=_gl.GL_GREATER,
-            EQUAL=_gl.GL_EQUAL,
-            NOTEQUAL=_gl.GL_NOTEQUAL,
-            ALWAYS=_gl.GL_ALWAYS,
-            NEVER=_gl.GL_NEVER,
-    )
-
-    compare_modes = Enum(
-            COMPARE_REF_TO_TEXTURE=_gl.GL_COMPARE_REF_TO_TEXTURE,
-            NONE=_gl.GL_NONE,
-    )
-
-    min_filters = Enum(
-            NEAREST=_gl.GL_NEAREST,
-            LINEAR=_gl.GL_LINEAR,
-            NEAREST_MIPMAP_NEAREST=_gl.GL_NEAREST_MIPMAP_NEAREST,
-            LINEAR_MIPMAP_NEAREST=_gl.GL_LINEAR_MIPMAP_NEAREST,
-            NEAREST_MIPMAP_LINEAR=_gl.GL_NEAREST_MIPMAP_LINEAR,
-            LINEAR_MIPMAP_LINEAR=_gl.GL_LINEAR_MIPMAP_LINEAR,
-    )
-
-    mag_filters = Enum(
-            NEAREST=_gl.GL_NEAREST,
-            LINEAR=_gl.GL_LINEAR,
-    )
-
-    wrapmodes = Enum(
-            CLAMP_TO_EDGE=_gl.GL_CLAMP_TO_EDGE,
-            CLAMP_TO_BORDER=_gl.GL_CLAMP_TO_BORDER,
-            MIRRORED_REPEAT=_gl.GL_MIRRORED_REPEAT,
-            REPEAT=_gl.GL_REPEAT,
-    )
+    compare_funcs = constants.texture_compare_funcs
+    compare_modes = constants.texture_compare_modes
+    min_filters = constants.texture_min_filters
+    mag_filters = constants.texture_mag_filters
+    wrapmodes = constants.texture_wrapmodes
 
     def __init__(self, unit):
         self._target = unit # TODO check for 0 <= unit < GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS
