@@ -1,6 +1,29 @@
 from rawgl import glut as _glut
 
 # TODO implement complete API as in http://www.opengl.org/resources/libraries/glut/glut-3.spec.pdf from p. 9
+# TODO glutLeaveFullScreen, glutFullScreenToggle, string rendering, no overlays, no spaceball/button box/dials/tablet
+# TODO glutGet as in http://freeglut.sourceforge.net/docs/api.php
+
+def _func_property(glut_func):
+    import re
+    name = re.match("^glut(.*)Func$", glut_func.__name__).groups()[0]
+    name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)).lower()
+    private_name = "_%s_func" % name
+    private_c_name = "_%s_func_c" % name
+
+    def getter(self):
+        if not hasattr(self, private_name):
+            setattr(self, private_name, None)
+        return getattr(self, private_name)
+
+    def setter(self, func):
+        ftype = glut_func.argtypes[0]
+        setattr(self, private_c_name, ftype(func) if func is not None else ftype())
+        setattr(self, private_name, func)
+        with self:
+            glut_func(getattr(self, private_c_name))
+
+    return property(getter, setter)
 
 def initialize(argv=None):
     if argv is None:
@@ -126,7 +149,6 @@ class GlutWindow(object):
         with self:
             _glut.glutHideWindow()
 
-
     @property
     def shape(self):
         with self:
@@ -137,78 +159,6 @@ class GlutWindow(object):
         width, height = shape
         with self:
             _glut.glutReshapeWindow(width, height)
-
-    @property
-    def idle_func(self):
-        return self._idle_func
-
-    @idle_func.setter
-    def idle_func(self, idle_func):
-        self._idle_func = idle_func
-        ftype = _glut.glutIdleFunc.argtypes[0]
-        self._idle_func_c = ftype(idle_func) if idle_func is not None else ftype()
-        with self:
-            _glut.glutIdleFunc(self._idle_func_c)
-
-    @property
-    def display_func(self):
-        return self._display_func
-
-    @display_func.setter
-    def display_func(self, display_func):
-        self._display_func = display_func
-        ftype = _glut.glutDisplayFunc.argtypes[0]
-        self._display_func_c = ftype(display_func) if display_func is not None else ftype()
-        with self:
-            _glut.glutDisplayFunc(self._display_func_c)
-
-    @property
-    def reshape_func(self):
-        return self._reshape_func
-
-    @reshape_func.setter
-    def reshape_func(self, reshape_func):
-        self._reshape_func = reshape_func
-        ftype = _glut.glutReshapeFunc.argtypes[0]
-        self._reshape_func_c = ftype(reshape_func) if reshape_func is not None else ftype()
-        with self:
-            _glut.glutReshapeFunc(self._reshape_func_c)
-
-    @property
-    def mouse_func(self):
-        return self._mouse_func
-
-    @mouse_func.setter
-    def mouse_func(self, mouse_func):
-        self._mouse_func = mouse_func
-        ftype = _glut.glutMouseFunc.argtypes[0]
-        self._mouse_func_c = ftype(mouse_func) if mouse_func is not None else ftype()
-        with self:
-            _glut.glutMouseFunc(self._mouse_func_c)
-
-    @property
-    def motion_func(self):
-        return self._motion_func
-
-    @motion_func.setter
-    def motion_func(self, motion_func):
-        self._motion_func = motion_func
-        ftype = _glut.glutMotionFunc.argtypes[0]
-        self._motion_func_c = ftype(motion_func) if motion_func is not None else ftype()
-        with self:
-            _glut.glutMotionFunc(self._motion_func_c)
-
-    @property
-    def keyboard_func(self):
-        return self._keyboard_func
-
-    @keyboard_func.setter
-    def keyboard_func(self, keyboard_func):
-        self._keyboard_func = keyboard_func
-        ftype = _glut.glutKeyboardFunc.argtypes[0]
-        self._keyboard_func_c = ftype(keyboard_func) if keyboard_func is not None else ftype()
-        with self:
-            _glut.glutKeyboardFunc(self._keyboard_func_c)
 
     @property
     def name(self):
@@ -223,6 +173,29 @@ class GlutWindow(object):
         self._title = title
         with self:
             _glut.glutSetWindowTitle(title)
+
+
+    close_callback = _func_property(_glut.glutCloseFunc)
+    display_callback = _func_property(_glut.glutDisplayFunc)
+    entry_callback = _func_property(_glut.glutEntryFunc)
+    idle_callback = _func_property(_glut.glutIdleFunc)
+    joystick_callback = _func_property(_glut.glutJoystickFunc)
+    keyboard_callback = _func_property(_glut.glutKeyboardFunc)
+    keyboard_up_callback = _func_property(_glut.glutKeyboardUpFunc)
+    menu_destroy_callback = _func_property(_glut.glutMenuDestroyFunc)
+    menu_state_callback = _func_property(_glut.glutMenuStateFunc)
+    menu_status_callback = _func_property(_glut.glutMenuStatusFunc)
+    motion_callback = _func_property(_glut.glutMotionFunc)
+    mouse_callback = _func_property(_glut.glutMouseFunc)
+    mouse_wheel_callback = _func_property(_glut.glutMouseWheelFunc)
+    passive_motion_callback = _func_property(_glut.glutPassiveMotionFunc)
+    reshape_callback = _func_property(_glut.glutReshapeFunc)
+    special_callback = _func_property(_glut.glutSpecialFunc)
+    special_up_callback = _func_property(_glut.glutSpecialUpFunc)
+    timer_callback = _func_property(_glut.glutTimerFunc)
+    visibility_callback = _func_property(_glut.glutVisibilityFunc)
+    window_status_callback = _func_property(_glut.glutWindowStatusFunc)
+    wm_close_callback = _func_property(_glut.glutWMCloseFunc)
 
 initialize()
 

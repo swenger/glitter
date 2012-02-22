@@ -59,7 +59,7 @@ def display():
     window.post_redisplay()
 
 window = GlutWindow(double=True)
-window.display_func = display
+window.display_callback = display
 
 vao = VertexArray([vertices, colors], elements=indices)
 shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
