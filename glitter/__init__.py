@@ -1,7 +1,6 @@
 from Buffer import Buffer, ArrayBuffer, ElementArrayBuffer, AtomicCounterBuffer, CopyReadBuffer, CopyWriteBuffer, DrawIndirectBuffer, PixelPackBuffer, PixelUnpackBuffer, TextureBuffer, TransformFeedbackBuffer, UniformBuffer
 from Context import Context
 from Framebuffer import Framebuffer, DrawFramebuffer, ReadFramebuffer
-from GlutWindow import GlutWindow
 from ProgramPipeline import ProgramPipeline
 from Query import Query, SamplesPassedQuery, AnySamplesPassedQuery, PrimitivesGeneratedQuery, TransformFeedbackPrimitivesWrittenQuery, TimeElapsedQuery
 from Renderbuffer import Renderbuffer
@@ -18,8 +17,8 @@ __all__ = [
 "CopyReadBuffer", "CopyWriteBuffer", "DrawIndirectBuffer", "PixelPackBuffer",
 "PixelUnpackBuffer", "TextureBuffer", "TransformFeedbackBuffer",
 "UniformBuffer", "Context", "Framebuffer", "DrawFramebuffer",
-"ReadFramebuffer", "GlutWindow", "ProgramPipeline", "Query",
-"SamplesPassedQuery", "AnySamplesPassedQuery", "PrimitivesGeneratedQuery",
+"ReadFramebuffer", "ProgramPipeline", "Query", "SamplesPassedQuery",
+"AnySamplesPassedQuery", "PrimitivesGeneratedQuery",
 "TransformFeedbackPrimitivesWrittenQuery", "TimeElapsedQuery", "Renderbuffer",
 "Sampler", "ShaderProgram", "Shader", "VertexShader", "GeometryShader",
 "FragmentShader", "Sync", "Texture", "Texture1D", "Texture2D",
@@ -29,6 +28,6 @@ __all__ = [
 ]
 
 def setup_package(): # nosetests
-    from glitter.GlutWindow import GlutWindow # TODO use raw GLX context
+    from glut import GlutWindow # TODO use raw GLX context when it becomes available
     globals()["glut_window"] = GlutWindow()
 

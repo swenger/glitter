@@ -1,6 +1,6 @@
 from rawgl import gl
 
-from GlutWindow import GlutWindow, main_loop
+from glut import GlutWindow, main_loop
 from ShaderProgram import ShaderProgram
 from VertexArray import VertexArray
 
