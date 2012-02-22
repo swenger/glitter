@@ -2,6 +2,7 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
+from dtypes import Datatype
 from util import BindableObject
 
 # TODO slicing with glGetBufferSubData
@@ -43,22 +44,22 @@ class Buffer(BindableObject):
             self._shape = shape
             self._dtype = dtype
         else:
-            data = _np.asarray(data, dtype)
+            data = _np.asarray(data, dtype.as_numpy() if dtype else None)
             if shape is not None:
                 data = data.reshape(shape)
             self._shape = data.shape
-            self._dtype = data.dtype.type
+            self._dtype = Datatype.from_numpy(data.dtype)
 
         if usage is None:
             usage = self.usage
 
-        _nbytes = _np.prod(self._shape) * self._dtype().nbytes
+        _nbytes = _np.prod(self._shape) * self._dtype.nbytes
         _data = _np.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         with self:
             _gl.glBufferData(self._target, _nbytes, _data, usage._value)
 
     def get_data(self):
-        _data = _np.empty(self.shape, dtype=self.dtype)
+        _data = _np.empty(self.shape, dtype=self.dtype.as_numpy())
         with self:
             _gl.glGetBufferSubData(self._target, 0, _data.nbytes, _data.ctypes)
         return _data
@@ -105,12 +106,12 @@ class ArrayBuffer(Buffer):
                 num_components = self.shape[1]
             else:
                 raise ValueError("must specify num_components")
-        if constants.is_float[self.dtype]:
+        if self.dtype.is_float():
             with self:
-                _gl.glVertexAttribPointer(index, num_components, constants.gl_type[self.dtype], _gl.GL_FALSE, stride * constants.sizeof[self.dtype], first * constants.sizeof[self.dtype])
+                _gl.glVertexAttribPointer(index, num_components, self.dtype._as_gl(), _gl.GL_FALSE, stride * self.dtype.nbytes, first * self.dtype.nbytes)
         else:
             with self:
-                _gl.glVertexAttribIPointer(index, num_components, constants.gl_type[self.dtype], stride * constants.sizeof[self.dtype], first * constants.sizeof[self.dtype])
+                _gl.glVertexAttribIPointer(index, num_components, self.dtype._as_gl(), stride * self.dtype.nbytes, first * self.dtype.nbytes)
 
         _gl.glEnableVertexAttribArray(index) # TODO this should have __enter__/__exit__ semantics
 
@@ -131,29 +132,27 @@ class ElementArrayBuffer(Buffer):
     _binding = constants.buffer_target_to_binding[_target]
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
-        if dtype is not None:
-            if dtype not in [_np.uint8, _np.uint16, _np.uint]:
-                raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
-        elif data is not None:
-            data = _np.asarray(data, dtype)
-            if data.dtype.type not in [_np.uint8, _np.uint16, _np.uint]:
-                raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
+        if data is not None:
+            data = _np.asarray(data, dtype.as_numpy() if dtype else None)
+            dtype = Datatype.from_numpy(data.dtype)
+        if dtype.is_signed() or not dtype.is_integer():
+            raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
         super(ElementArrayBuffer, self).set_data(data, shape, dtype, usage)
 
     def draw(self, mode=None, count=None, first=0, instances=None):
         if mode is None:
             if len(self.shape) >= 2:
-                mode = constants.dimensions_to_primitive.get(self.shape[-1], None)
+                mode = constants.buffer_dimensions_to_primitive.get(self.shape[-1], None)
         if mode is None:
             raise ValueError("must specify mode")
         if count is None:
             count = _np.prod(self.shape)
         if instances is None:
             with self:
-                _gl.glDrawElements(mode._value, count, constants.gl_type[self.dtype], first * constants.sizeof[self.dtype])
+                _gl.glDrawElements(mode._value, count, self.dtype._as_gl(), first * self.dtype.nbytes)
         else:
             with self:
-                _gl.glDrawElementsInstanced(mode._value, count, constants.gl_type[self.dtype], first * constants.sizeof[self.dtype], instances)
+                _gl.glDrawElementsInstanced(mode._value, count, self.dtype._as_gl(), first * self.dtype.nbytes, instances)
 
 class AtomicCounterBuffer(Buffer):
     _target = _gl.GL_ATOMIC_COUNTER_BUFFER
@@ -196,16 +195,18 @@ class UniformBuffer(Buffer):
 
 def check_buffer(shape, dtype, vrange):
     minval, maxval = vrange
-    data = ((maxval - minval) * _np.random.random(shape) + minval).astype(dtype)
+    data = ((maxval - minval) * _np.random.random(shape) + minval).astype(dtype.as_numpy())
     buf = ArrayBuffer(data)
     assert (buf.data == data).all(), "data is broken"
     assert buf.shape == data.shape, "shape is broken"
-    assert buf.dtype == data.dtype, "dtype is broken"
+    assert buf.dtype == Datatype.from_numpy(data.dtype), "dtype is broken"
     assert buf._size == data.nbytes, "_size is broken"
 
 def test_generator():
+    import dtypes
+
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
-    dtypes = (_np.uint8, _np.int8, _np.uint16, _np.int16, _np.uint32, _np.int32, _np.float32)
+    dtypes = (dtypes.uint8, dtypes.int8, dtypes.uint16, dtypes.int16, dtypes.uint32, dtypes.int32, dtypes.float32)
     vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
 
     for shape in shapes:

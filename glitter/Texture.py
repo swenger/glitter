@@ -2,6 +2,7 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
+from dtypes import Datatype
 from util import BindableObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
@@ -34,29 +35,29 @@ class Texture(BindableObject):
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
         else:
-            data = _np.asarray(data, dtype)
+            data = _np.asarray(data, dtype.as_numpy() if dtype else None)
             if shape is not None:
                 data = data.reshape(shape)
             shape = data.shape
-            dtype = data.dtype.type
+            dtype = Datatype.from_numpy(data.dtype)
 
         if len(shape) != self._ndim:
             raise TypeError("shape must be %d-dimensional" % self._ndim)
 
-        _iformat = constants.numpy_to_gl_iformat[dtype, shape[-1]]
-        _format = constants.numpy_to_gl_format[dtype, shape[-1]]
-        _type = constants.numpy_to_gl_type[dtype]
+        _iformat = constants.dtype_to_gl_iformat[dtype, shape[-1]]
+        _format = constants.dtype_to_gl_format[dtype, shape[-1]]
+        _type = dtype._as_gl()
         _data = _np.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
-        if not constants.is_float[self.dtype]:
+        if not dtype.is_float():
             self.min_filter = Texture.min_filters.NEAREST
             self.mag_filter = Texture.mag_filters.NEAREST
 
     def get_data(self, level=0):
-        _data = _np.empty(self.shape, dtype=self.dtype)
+        _data = _np.empty(self.shape, dtype=self.dtype.as_numpy())
         _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
         with self:
             _gl.glGetTexImage(self._target, level, self._format, self._type, _data.ctypes)
@@ -77,7 +78,7 @@ class Texture(BindableObject):
     @property
     def shape(self):
         with self:
-            colors = constants.gl_iformat_to_numpy[self._iformat][1]        
+            colors = constants.gl_iformat_to_dtype[self._iformat][1]        
             _width = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
             if self._ndim == 2:
@@ -93,7 +94,7 @@ class Texture(BindableObject):
 
     @property
     def dtype(self):
-        return constants.gl_iformat_to_numpy[self._iformat][0]
+        return constants.gl_iformat_to_dtype[self._iformat][0]
 
     @property
     def _iformat(self):
@@ -104,7 +105,7 @@ class Texture(BindableObject):
 
     @property
     def _format(self):
-        return constants.numpy_to_gl_format[self.dtype, self.shape[-1]]
+        return constants.dtype_to_gl_format[self.dtype, self.shape[-1]]
 
     @property
     def _type(self):
@@ -124,11 +125,11 @@ class Texture(BindableObject):
 
     @property
     def border_color(self):
-        if constants.is_float[self.dtype]:
+        if self.dtype.is_float():
             _border_color = (_gl.GLfloat * 4)()
             with self:
                 _gl.glGetTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
-        elif constants.is_signed[self.dtype]:
+        elif self.dtype.is_signed():
             _border_color = (_gl.GLint * 4)()
             with self:
                 _gl.glGetTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
@@ -140,13 +141,13 @@ class Texture(BindableObject):
 
     @border_color.setter
     def border_color(self, border_color):
-        if constants.is_float[self.dtype]:
+        if self.dtype.is_float():
             _border_color = (_gl.GLfloat * 4)()
             for i, v in zip(range(4), border_color):
                 _border_color[i] = v
             with self:
                 _gl.glTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
-        elif constants.is_signed[self.dtype]:
+        elif self.dtype.is_signed():
             _border_color = (_gl.GLint * 4)()
             for i, v in zip(range(4), border_color):
                 _border_color[i] = v
@@ -426,18 +427,17 @@ class MultisampleTextureArray2D(Texture):
 
 def check_texture(shape, dtype, vrange):
     minval, maxval = vrange
-    data = ((maxval - minval) * _np.random.random(shape) + minval).astype(dtype)
+    data = ((maxval - minval) * _np.random.random(shape) + minval).astype(dtype.as_numpy())
     texture = Texture3D(data)
     assert (texture.data == data).all(), "data is broken"
     assert texture.shape == data.shape, "shape is broken"
-    assert texture.dtype == data.dtype, "dtype is broken"
-    assert texture._iformat == constants.numpy_to_gl_iformat[data.dtype.type, data.shape[-1]], "_iformat is broken"
-    assert texture._format == constants.numpy_to_gl_format[data.dtype.type, data.shape[-1]], "_format is broken"
-    assert texture._type == constants.numpy_to_gl_type[data.dtype.type], "_type is broken"
+    assert texture.dtype == Datatype.from_numpy(data.dtype), "dtype is broken"
 
 def test_texture_generator():
+    import dtypes
+
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
-    dtypes = (_np.uint8, _np.int8, _np.uint16, _np.int16, _np.uint32, _np.int32, _np.float32)
+    dtypes = (dtypes.uint8, dtypes.int8, dtypes.uint16, dtypes.int16, dtypes.uint32, dtypes.int32, dtypes.float32)
     vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
 
     for shape in shapes:

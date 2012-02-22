@@ -1,48 +1,44 @@
-import numpy as _np
 from rawgl import gl as _gl
 
+from dtypes import uint8, uint16, uint32, int8, int16, int32, float32
 from util import Enum
 
 texture_formats = [ # (_np dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
-        ((_np.uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
-        ((_np.int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
-        ((_np.uint16,  1), _gl.GL_R16UI,    (_gl.GL_UNSIGNED_SHORT, _gl.GL_RED_INTEGER )),
-        ((_np.int16,   1), _gl.GL_R16I,     (_gl.GL_SHORT,          _gl.GL_RED_INTEGER )),
-        ((_np.uint32,  1), _gl.GL_R32UI,    (_gl.GL_UNSIGNED_INT,   _gl.GL_RED_INTEGER )),
-        ((_np.int32,   1), _gl.GL_R32I,     (_gl.GL_INT,            _gl.GL_RED_INTEGER )),
-        ((_np.float32, 1), _gl.GL_R32F,     (_gl.GL_FLOAT,          _gl.GL_RED         )),
-        ((_np.uint8,   2), _gl.GL_RG8UI,    (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RG_INTEGER  )),
-        ((_np.int8,    2), _gl.GL_RG8I,     (_gl.GL_BYTE,           _gl.GL_RG_INTEGER  )),
-        ((_np.uint16,  2), _gl.GL_RG16UI,   (_gl.GL_UNSIGNED_SHORT, _gl.GL_RG_INTEGER  )),
-        ((_np.int16,   2), _gl.GL_RG16I,    (_gl.GL_SHORT,          _gl.GL_RG_INTEGER  )),
-        ((_np.uint32,  2), _gl.GL_RG32UI,   (_gl.GL_UNSIGNED_INT,   _gl.GL_RG_INTEGER  )),
-        ((_np.int32,   2), _gl.GL_RG32I,    (_gl.GL_INT,            _gl.GL_RG_INTEGER  )),
-        ((_np.float32, 2), _gl.GL_RG32F,    (_gl.GL_FLOAT,          _gl.GL_RG          )),
-        ((_np.uint8,   3), _gl.GL_RGB8UI,   (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGB_INTEGER )),
-        ((_np.int8,    3), _gl.GL_RGB8I,    (_gl.GL_BYTE,           _gl.GL_RGB_INTEGER )),
-        ((_np.uint16,  3), _gl.GL_RGB16UI,  (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGB_INTEGER )),
-        ((_np.int16,   3), _gl.GL_RGB16I,   (_gl.GL_SHORT,          _gl.GL_RGB_INTEGER )),
-        ((_np.uint32,  3), _gl.GL_RGB32UI,  (_gl.GL_UNSIGNED_INT,   _gl.GL_RGB_INTEGER )),
-        ((_np.int32,   3), _gl.GL_RGB32I,   (_gl.GL_INT,            _gl.GL_RGB_INTEGER )),
-        ((_np.float32, 3), _gl.GL_RGB32F,   (_gl.GL_FLOAT,          _gl.GL_RGB         )),
-        ((_np.uint8,   4), _gl.GL_RGBA8UI,  (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGBA_INTEGER)),
-        ((_np.int8,    4), _gl.GL_RGBA8I,   (_gl.GL_BYTE,           _gl.GL_RGBA_INTEGER)),
-        ((_np.uint16,  4), _gl.GL_RGBA16UI, (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGBA_INTEGER)),
-        ((_np.int16,   4), _gl.GL_RGBA16I,  (_gl.GL_SHORT,          _gl.GL_RGBA_INTEGER)),
-        ((_np.uint32,  4), _gl.GL_RGBA32UI, (_gl.GL_UNSIGNED_INT,   _gl.GL_RGBA_INTEGER)),
-        ((_np.int32,   4), _gl.GL_RGBA32I,  (_gl.GL_INT,            _gl.GL_RGBA_INTEGER)),
-        ((_np.float32, 4), _gl.GL_RGBA32F,  (_gl.GL_FLOAT,          _gl.GL_RGBA        )),
+        ((uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
+        ((int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
+        ((uint16,  1), _gl.GL_R16UI,    (_gl.GL_UNSIGNED_SHORT, _gl.GL_RED_INTEGER )),
+        ((int16,   1), _gl.GL_R16I,     (_gl.GL_SHORT,          _gl.GL_RED_INTEGER )),
+        ((uint32,  1), _gl.GL_R32UI,    (_gl.GL_UNSIGNED_INT,   _gl.GL_RED_INTEGER )),
+        ((int32,   1), _gl.GL_R32I,     (_gl.GL_INT,            _gl.GL_RED_INTEGER )),
+        ((float32, 1), _gl.GL_R32F,     (_gl.GL_FLOAT,          _gl.GL_RED         )),
+        ((uint8,   2), _gl.GL_RG8UI,    (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RG_INTEGER  )),
+        ((int8,    2), _gl.GL_RG8I,     (_gl.GL_BYTE,           _gl.GL_RG_INTEGER  )),
+        ((uint16,  2), _gl.GL_RG16UI,   (_gl.GL_UNSIGNED_SHORT, _gl.GL_RG_INTEGER  )),
+        ((int16,   2), _gl.GL_RG16I,    (_gl.GL_SHORT,          _gl.GL_RG_INTEGER  )),
+        ((uint32,  2), _gl.GL_RG32UI,   (_gl.GL_UNSIGNED_INT,   _gl.GL_RG_INTEGER  )),
+        ((int32,   2), _gl.GL_RG32I,    (_gl.GL_INT,            _gl.GL_RG_INTEGER  )),
+        ((float32, 2), _gl.GL_RG32F,    (_gl.GL_FLOAT,          _gl.GL_RG          )),
+        ((uint8,   3), _gl.GL_RGB8UI,   (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGB_INTEGER )),
+        ((int8,    3), _gl.GL_RGB8I,    (_gl.GL_BYTE,           _gl.GL_RGB_INTEGER )),
+        ((uint16,  3), _gl.GL_RGB16UI,  (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGB_INTEGER )),
+        ((int16,   3), _gl.GL_RGB16I,   (_gl.GL_SHORT,          _gl.GL_RGB_INTEGER )),
+        ((uint32,  3), _gl.GL_RGB32UI,  (_gl.GL_UNSIGNED_INT,   _gl.GL_RGB_INTEGER )),
+        ((int32,   3), _gl.GL_RGB32I,   (_gl.GL_INT,            _gl.GL_RGB_INTEGER )),
+        ((float32, 3), _gl.GL_RGB32F,   (_gl.GL_FLOAT,          _gl.GL_RGB         )),
+        ((uint8,   4), _gl.GL_RGBA8UI,  (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RGBA_INTEGER)),
+        ((int8,    4), _gl.GL_RGBA8I,   (_gl.GL_BYTE,           _gl.GL_RGBA_INTEGER)),
+        ((uint16,  4), _gl.GL_RGBA16UI, (_gl.GL_UNSIGNED_SHORT, _gl.GL_RGBA_INTEGER)),
+        ((int16,   4), _gl.GL_RGBA16I,  (_gl.GL_SHORT,          _gl.GL_RGBA_INTEGER)),
+        ((uint32,  4), _gl.GL_RGBA32UI, (_gl.GL_UNSIGNED_INT,   _gl.GL_RGBA_INTEGER)),
+        ((int32,   4), _gl.GL_RGBA32I,  (_gl.GL_INT,            _gl.GL_RGBA_INTEGER)),
+        ((float32, 4), _gl.GL_RGBA32F,  (_gl.GL_FLOAT,          _gl.GL_RGBA        )),
         # TODO add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL
         ]
-numpy_to_gl_iformat =   dict((x[0],    x[1]   ) for x in texture_formats)
-gl_iformat_to_numpy =   dict((x[1],    x[0]   ) for x in texture_formats)
-numpy_to_gl_format =    dict((x[0],    x[2][1]) for x in texture_formats)
-gl_format_to_numpy =    dict((x[2][1], x[0]   ) for x in texture_formats)
-numpy_to_gl_type =      dict((x[0][0], x[2][0]) for x in texture_formats)
-gl_type_to_numpy =      dict((x[2][0], x[0][0]) for x in texture_formats)
+dtype_to_gl_iformat =   dict((x[0],    x[1]   ) for x in texture_formats)
+gl_iformat_to_dtype =   dict((x[1],    x[0]   ) for x in texture_formats)
+dtype_to_gl_format =    dict((x[0],    x[2][1]) for x in texture_formats)
+gl_format_to_dtype =    dict((x[2][1], x[0]   ) for x in texture_formats)
 gl_iformat_to_gl_type = dict((x[1],    x[2][0]) for x in texture_formats)
-
-dimensions_to_primitive = {1: _gl.GL_POINTS, 2: _gl.GL_LINES, 3: _gl.GL_TRIANGLES} # TODO complete table
 
 texture_compare_funcs = Enum(
         LEQUAL=_gl.GL_LEQUAL,
@@ -99,7 +95,7 @@ buffer_targets = [ # target, binding
         (_gl.GL_ELEMENT_ARRAY_BUFFER,      _gl.GL_ELEMENT_ARRAY_BUFFER_BINDING     ),
         (_gl.GL_PIXEL_PACK_BUFFER,         _gl.GL_PIXEL_PACK_BUFFER_BINDING        ),
         (_gl.GL_PIXEL_UNPACK_BUFFER,       _gl.GL_PIXEL_UNPACK_BUFFER_BINDING      ),
-        (_gl.GL_TEXTURE_BUFFER,            None                                    ), # XXX why is there no GL_TEXTURE_BUFFER_BINDING?
+        (_gl.GL_TEXTURE_BUFFER,            None                                    ), # TODO use glGetTexLevelParameter with GL_TEXTURE_BUFFER_DATA_STORE_BINDING
         (_gl.GL_TRANSFORM_FEEDBACK_BUFFER, _gl.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING),
         (_gl.GL_UNIFORM_BUFFER,            _gl.GL_UNIFORM_BUFFER_BINDING           ),
         ]
@@ -132,6 +128,8 @@ buffer_usages = Enum(
         DYNAMIC_COPY=_gl.GL_DYNAMIC_COPY,
         )
 
+buffer_dimensions_to_primitive = {1: _gl.GL_POINTS, 2: _gl.GL_LINES, 3: _gl.GL_TRIANGLES}
+
 framebuffer_attachment_names = Enum(
         DEPTH=_gl.GL_DEPTH_ATTACHMENT,
         STENCIL=_gl.GL_STENCIL_ATTACHMENT,
@@ -144,44 +142,4 @@ framebuffer_targets = [
         (_gl.GL_READ_FRAMEBUFFER, None                      ), # XXX why is there no GL_READ_FRAMEBUFFER_BINDING?
 ]
 framebuffer_target_to_binding = dict((x[0], x[1]) for x in framebuffer_targets)
-
-is_float = {
-        _np.uint8: False,
-        _np.int8: False,
-        _np.uint16: False,
-        _np.int16: False,
-        _np.uint32: False,
-        _np.int32: False,
-        _np.float32: True,
-}
-
-is_signed = {
-        _np.uint8: False,
-        _np.int8: True,
-        _np.uint16: False,
-        _np.int16: True,
-        _np.uint32: False,
-        _np.int32: True,
-        _np.float32: True,
-}
-
-gl_type = {
-        _np.uint8: _gl.GL_UNSIGNED_BYTE,
-        _np.int8: _gl.GL_BYTE,
-        _np.uint16: _gl.GL_UNSIGNED_SHORT,
-        _np.int16: _gl.GL_SHORT,
-        _np.uint32: _gl.GL_UNSIGNED_INT,
-        _np.int32: _gl.GL_INT,
-        _np.float32: _gl.GL_FLOAT,
-}
-
-sizeof = {
-        _np.uint8: _np.uint8().itemsize,
-        _np.int8: _np.int8().itemsize,
-        _np.uint16: _np.uint16().itemsize,
-        _np.int16: _np.int16().itemsize,
-        _np.uint32: _np.uint32().itemsize,
-        _np.int32: _np.int32().itemsize,
-        _np.float32: _np.float32().itemsize,
-}
 
