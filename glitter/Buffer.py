@@ -6,7 +6,7 @@ from dtypes import Datatype, uint32
 from GLObject import ManagedObject, BindableObject
 
 # TODO slicing with glGetBufferSubData
-# TODO binding as separate object
+# TODO binding as separate object to allow binding buffers to different targets
 
 class Buffer(ManagedObject, BindableObject):
     _generate_id = _gl.glGenBuffers
@@ -179,7 +179,9 @@ class PixelUnpackBuffer(Buffer):
     _binding = "pixel_unpack_buffer_binding"
     _target = _gl.GL_PIXEL_UNPACK_BUFFER
 
-class TextureBuffer(Buffer): pass # TODO
+class TextureBuffer(Buffer):
+    _binding = "texture_buffer_binding"
+    _target = _gl.GL_TEXTURE_BUFFER
 
 class TransformFeedbackBuffer(Buffer):
     _binding = "transform_feedback_buffer_binding"

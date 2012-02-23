@@ -29,10 +29,11 @@ class ManagedObject(GLObject):
 
     def __del__(self):
         try:
-            if len(self._delete_id.argtypes) == 1:
-                self._delete_id(self._id)
-            else:
-                self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
+            with self._context:
+                if len(self._delete_id.argtypes) == 1:
+                    self._delete_id(self._id)
+                else:
+                    self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
             self._id = 0
         except:
             pass
@@ -52,10 +53,30 @@ class BindableObject(GLObject): # TODO this is not generic; e.g. binding buffers
         return old_binding
 
     def __enter__(self):
+        self._context.__enter__()
         self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
         setattr(self._context, self._binding, self._stack.pop())
+        self._context.__exit__(type, value, traceback)
+
+class BindReleaseObject(GLObject):
+    bind = NotImplemented
+    release = NotImplemented
+
+    def __init__(self, context=None):
+        super(BindReleaseObject, self).__init__(context)
+        if any(x is NotImplemented for x in (self.bind, self.release)):
+            raise TypeError("%s is abstract" % self.__class__.__name__)
+    
+    def __enter__(self):
+        self._context.__enter__()
+        self.bind()
+
+    def __exit__(self, type, value, traceback):
+        self.release()
+        self._context.__exit__(type, value, traceback)
+
 
 class BeginEndObject(GLObject):
     _target = NotImplemented

@@ -1,3 +1,4 @@
+import itertools as _itertools
 from weakref import WeakKeyDictionary, WeakValueDictionary
 import numpy as _np
 from rawgl import gl as _gl
@@ -147,7 +148,6 @@ class BindingProxy(object):
         return self.value.get(obj, None)
 
     def __set__(self, obj, value=None):
-        # TODO typecheck for value
         with obj:
             self.setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self.set_args] + [0 if value is None else value._id]))
         self.value[obj] = value
@@ -156,6 +156,12 @@ class TextureUnit(object):
     def __init__(self, _context, _id):
         self._context = _context
         self._id = _id
+
+    def __enter__(self):
+        self._context.__enter__()
+
+    def __exit__(self, type, value, traceback):
+        self._context.__exit__(type, value, traceback)
 
     def activate(self):
         self._context.active_texture = self
@@ -177,9 +183,33 @@ class TextureUnitList(object):
         self._context = _context
         self._texture_units = [TextureUnit(_context, _gl.GL_TEXTURE0 + i) for i in range(_context.max_combined_texture_image_units)]
         self._context.active_texture = self[0]
+        self._bound_textures = dict()
 
     def __getitem__(self, index):
         return self._texture_units[index]
+
+    def bind(self, texture):
+        """Bind `texture` to a free unit and return the unit id."""
+        if texture in self._bound_textures:
+            unit, refcount = self._bound_textures[texture]
+            self._bound_textures[texture] = (unit, refcount + 1)
+            return unit._id
+        try:
+            unit = _itertools.dropwhile(lambda x: getattr(x, texture._binding) is not None, self).next()
+        except StopIteration:
+            raise RuntimeError("no free texture units available")
+        setattr(unit, texture._binding, texture)
+        self._bound_textures[texture] = (unit, 1)
+        return unit._id
+
+    def release(self, texture):
+        """Unbind `texture`."""
+        unit, refcount = self._bound_textures[texture]
+        if refcount == 1:
+            setattr(unit, texture._binding, None)
+            del self._bound_textures[texture]
+        else:
+            self._bound_textures[texture] = (unit, refcount - 1)
 
 class GLObjectLibrary(object):
     def __init__(self, _context):
@@ -206,7 +236,6 @@ class Context(object):
         self.textures = GLObjectLibrary(self)
         self.transform_feedbacks = GLObjectLibrary(self)
         self.vertex_arrays = GLObjectLibrary(self)
-        # TODO other objects
 
     # buffer bindings
     array_buffer_binding                 = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ARRAY_BUFFER                ])

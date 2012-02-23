@@ -35,61 +35,7 @@ fbo = FBO()
 fbo.color_attachments[0] = shader.texture1
 fbo.color_attachments[1] = shader.texture2
 
-with shader:
-	fbo.clear()
+with shader: # TODO autobind textures
+	fbo.clear() # TODO
 	vao.draw()
-
-
-
-context.buffers[0] = Buffer(random((32, 3)))
-context.array_buffer_binding = context.buffers[0]
-context.element_array_buffer_binding = context.buffers[2]
-context.vertex_arrays[0] = VertexArray(...)
-
-context.shaders[0] = vertex_shader
-context.shaders[1] = fragment_shader
-context.shader_programs[0] = ShaderProgram(...)
-
-context.textures[0] = Texture2D(...)
-
-
-
-
-class Texture(object):
-	_db = "textures"
-
-class Texture2D(Texture):
-	_binding = "texture_binding_2d"
-
-
-class Buffer(object):
-	_db = "buffers"
-
-class ArrayBuffer(Buffer):
-	_binding = "array_buffer_binding"
-
-
-class BufferBindingProperty(property):
-	# TODO
-
-class Context(object):
-	def __init__(self):
-		self._buffers = WeakValueDictionary()
-		self._array_buffer_binding = None
-
-	@property
-	def array_buffer_binding(self):
-		return self._array_buffer_binding
-	
-	@array_buffer_binding.setter
-	def array_buffer_binding(self, value):
-		_gl.glBindBuffer(_gl.GL_ARRAY_BUFFER, value._id)
-		self._array_buffer_binding = value
-	
-	@array_buffer_binding.deleter
-	def array_buffer_binding(self):
-		_gl.glBindBuffer(_gl.GL_ARRAY_BUFFER, 0)
-		self._array_buffer_binding = None
-	
-	array_buffer_binding = BufferProperty(_gl.GL_ARRAY_BUFFER)
 

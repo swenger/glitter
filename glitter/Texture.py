@@ -3,17 +3,16 @@ from rawgl import gl as _gl
 
 import constants
 from dtypes import Datatype
-from GLObject import ManagedObject, BindableObject
+from GLObject import ManagedObject, BindReleaseObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
 
-class Texture(ManagedObject, BindableObject):
+class Texture(ManagedObject, BindReleaseObject):
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
     _db = "textures"
-    _bind = _gl.glBindTexture
 
     _ndim = NotImplemented
     _set = NotImplemented
@@ -24,6 +23,12 @@ class Texture(ManagedObject, BindableObject):
     mag_filters = constants.texture_mag_filters
     swizzles = constants.texture_swizzles
     wrapmodes = constants.texture_wrapmodes
+
+    def bind(self):
+        self._context.texture_units.bind(self)
+
+    def release(self):
+        self._context.texture_units.release(self)
 
     def __init__(self, data=None, shape=None, dtype=None):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
