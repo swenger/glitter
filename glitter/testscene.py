@@ -1,8 +1,10 @@
 from math import sin, pi
+from numpy.random import random
 from rawgl import gl
 
 from glut import GlutWindow, main_loop, get_elapsed_time
 from ShaderProgram import ShaderProgram
+from Texture import RectangleTexture
 from VertexArray import VertexArray
 
 vertex_shader = """
@@ -21,14 +23,16 @@ void main() {
 
 fragment_shader = """
 #version 410 core
+#extension GL_ARB_texture_rectangle : enable
 
 in vec4 ex_color;
 layout(location=0) out vec4 out_color;
 
 uniform float scaling;
+uniform sampler2DRect texture;
 
 void main() {
-    out_color = ex_color * scaling;
+    out_color = ex_color * scaling + texture2DRect(texture, gl_FragCoord.xy);
 }
 """
 
@@ -73,8 +77,10 @@ window.add_timer(40, timer)
 
 vao = VertexArray([vertices, colors], elements=indices)
 shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
+t = RectangleTexture(random((300, 300, 4)).astype("float32"))
 shader.multiplier = 1.0
 shader.scaling = 1.0
+shader.texture = t
 
 main_loop()
 

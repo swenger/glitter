@@ -6,7 +6,7 @@ class GLObject(object):
     def __init__(self, context=None):
         self._context = context or get_default_context()
 
-class ManagedObject(GLObject):
+class ManagedObject(GLObject): # inherit from BindableObject, then ManagedObject!
     _generate_id = NotImplemented # constructor function, e.g. glGenShader
     _delete_id = NotImplemented # destructor function, e.g. glDeleteShader
     _type = NotImplemented # type (if appropriate), e.g. GL_VERTEX_SHADER
@@ -64,7 +64,8 @@ class BindableObject(GLObject):
         self._stack.append(self.bind())
 
     def __exit__(self, type, value, traceback):
-        setattr(self._context, self._binding, self._stack.pop())
+        old_binding = self._stack.pop()
+        setattr(self._context, self._binding, old_binding)
         self._context.__exit__(type, value, traceback)
 
 class BindReleaseObject(GLObject):

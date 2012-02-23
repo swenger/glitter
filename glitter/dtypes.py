@@ -151,6 +151,12 @@ class ShaderDatatype(object):
     def is_boolean(self):
         return self.dtype.is_boolean()
 
+    def is_texture(self):
+        return self._texture
+
+    def is_atomic(self):
+        return self._atomic
+
     def __str__(self):
         return self._name
 

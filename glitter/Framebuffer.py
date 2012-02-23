@@ -1,10 +1,10 @@
 from rawgl import gl as _gl
 
 import constants
-from GLObject import ManagedObject, BindableObject
+from GLObject import BindableObject, ManagedObject
 from util import EnumConstant
 
-class Framebuffer(ManagedObject, BindableObject):
+class Framebuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "framebuffers"

@@ -1,9 +1,9 @@
 from rawgl import gl as _gl
 
-from GLObject import ManagedObject, BindableObject
+from GLObject import BindableObject, ManagedObject
 from Buffer import Buffer, ArrayBuffer, ElementArrayBuffer
 
-class VertexArray(ManagedObject, BindableObject):
+class VertexArray(BindableObject, ManagedObject):
     _generate_id = _gl.glGenVertexArrays
     _delete_id = _gl.glDeleteVertexArrays
     _db = "vertex_arrays"

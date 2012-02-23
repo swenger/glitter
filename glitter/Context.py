@@ -201,12 +201,17 @@ class BindingProxy(object):
     def __set__(self, obj, value=None):
         with obj:
             old_value = self.value.get(obj, None)
-            if old_value is not None and hasattr(old_value, "_on_release"):
+            self.value[obj] = value
+            if old_value is not None and old_value != value and hasattr(old_value, "_on_release"):
                 old_value._on_release()
-            self.setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self.set_args] + [0 if value is None else value._id]))
-            if value is not None and hasattr(value, "_on_bind"):
-                value._on_bind()
-        self.value[obj] = value
+            try:
+                self.setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self.set_args] + [0 if value is None else value._id]))
+            except:
+                self.value[obj] = old_value
+                raise
+            else:
+                if value is not None and value != old_value and hasattr(value, "_on_bind"):
+                    value._on_bind()
 
 class TextureUnit(object):
     def __init__(self, _context, _id):
@@ -215,9 +220,6 @@ class TextureUnit(object):
 
     def __str__(self):
         return "GL_TEXTURE%d" % (self._id - _gl.GL_TEXTURE0)
-
-    def __repr__(self):
-        return str(self)
 
     def __enter__(self):
         self._context.__enter__()
@@ -264,14 +266,14 @@ class TextureUnitList(object):
         if texture in self._bound_textures:
             unit, refcount = self._bound_textures[texture]
             self._bound_textures[texture] = (unit, refcount + 1)
-            return unit._id
+            return unit._id - _gl.GL_TEXTURE0
         try:
             unit = _itertools.dropwhile(lambda x: getattr(x, texture._binding) is not None, self).next()
         except StopIteration:
             raise RuntimeError("no free texture units available")
         setattr(unit, texture._binding, texture)
         self._bound_textures[texture] = (unit, 1)
-        return unit._id
+        return unit._id - _gl.GL_TEXTURE0
 
     def release(self, texture):
         """Unbind `texture`."""
@@ -296,7 +298,7 @@ class GLObjectLibrary(object):
     def __repr__(self):
         return str(self)
 
-class Context(InstanceDescriptorMixin):
+class Context(InstanceDescriptorMixin): # TODO subclass this for different window systems, override __init__, __enter__, and __exit__
     def __enter__(self): pass
     def __exit__(self, type, value, traceback): pass
 
@@ -496,10 +498,8 @@ class Context(InstanceDescriptorMixin):
     # GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC
     # GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
 
-def get_default_context(context=None):
-    if context is None:
-        context = Context() # TODO
-    return context
+def get_default_context(_={}):
+    return _.setdefault("context", Context()) # TODO get context from windowing system
 
 
 # nosetests

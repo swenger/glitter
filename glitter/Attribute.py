@@ -1,11 +1,12 @@
 from collections import OrderedDict as _odict
 
 class Attribute(object):
-    def __init__(self, name, location, dtype, size):
+    def __init__(self, name, location, dtype, size, parent):
         self.name = name
         self.location = location
         self.dtype = dtype
         self.size = size
+        self.parent = parent
 
     def __repr__(self):
         if self.size == 1:
@@ -29,9 +30,10 @@ class Attribute(object):
         pass # TODO restore old vertex attrib values if possible
 
 class AttributeStruct(_odict):
-    def __init__(self, name):
+    def __init__(self, name, parent):
         super(AttributeStruct, self).__init__()
         self.name = name
+        self.parent = parent
 
     def __repr__(self):
         return "struct { %s } %s;" % (" ".join(str(value) for value in self.values()), self.name)
@@ -52,9 +54,10 @@ class AttributeStruct(_odict):
         pass # TODO restore old vertex attrib values if possible
 
 class AttributeStructArray(_odict):
-    def __init__(self, name):
+    def __init__(self, name, parent):
         super(AttributeStructArray, self).__init__()
         self.name = name
+        self.parent = parent
 
     @property
     def size(self):

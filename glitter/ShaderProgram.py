@@ -4,45 +4,18 @@ from rawgl import gl as _gl
 
 from constants import transform_feedback_buffer_modes
 from dtypes import int32, ShaderDatatype
-from GLObject import ManagedObject, BindableObject
+from GLObject import BindableObject, ManagedObject
 from util import ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin
 from Shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 from Proxy import Proxy
 from Attribute import Attribute, AttributeStruct, AttributeStructArray
 from Uniform import Uniform, UniformStruct, UniformStructArray
 
-def _group_structs(lst, make_variable, make_struct, make_array):
-    array_of_structs_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\[([0-9]+)\]\.([a-zA-Z_][a-zA-Z_0-9]*)$")
-    struct_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\.([a-zA-Z_][a-zA-Z_0-9]*)$")
-    basic_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)$")
-    names = _odict()
-    for location, size, dtype, name in lst:
-        m = array_of_structs_re.match(name)
-        if m is not None:
-            name, index, field = m.groups()
-            index = int(index)
-            array = names.setdefault(name, make_array(name))
-            array[index, field] = make_variable(field, location, dtype, size)
-            continue
-        m = struct_re.match(name)
-        if m is not None:
-            name, field = m.groups()
-            struct = names.setdefault(name, make_struct(name))
-            struct[field] = make_variable(field, location, dtype, size)
-            continue
-        m = basic_re.match(name)
-        if m is not None:
-            name, = m.groups()
-            names[name] = make_variable(name, location, dtype, size)
-            continue
-        raise NameError("shader variable '%s' could not be parsed" % name)
-    return names
-
 class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
-class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
+class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
     _db = "shader_programs"
@@ -85,7 +58,9 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         if link is None:
             link = bool(shaders)
         if link:
+            old_program = self._context.current_program
             self.link()
+            self._context.current_program = old_program
 
         for name, proxy in self._get_active_attributes().items():
             setattr(self, name, proxy)
@@ -121,15 +96,42 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         return self._get_active_X(_gl.glGetActiveAttrib, _gl.glGetAttribLocation, self._active_attribute_max_length, index)
 
     def _get_active_attributes(self):
-        return _group_structs((self._get_active_attribute(i) for i in range(self._active_attributes)),
+        return self._group_structs((self._get_active_attribute(i) for i in range(self._active_attributes)),
                 Attribute, AttributeStruct, AttributeStructArray)
 
     def _get_active_uniform(self, index):
         return self._get_active_X(_gl.glGetActiveUniform, _gl.glGetUniformLocation, self._active_uniform_max_length, index)
 
     def _get_active_uniforms(self):
-        return _group_structs((self._get_active_uniform(i) for i in range(self._active_uniforms)),
+        return self._group_structs((self._get_active_uniform(i) for i in range(self._active_uniforms)),
                 Uniform, UniformStruct, UniformStructArray)
+
+    def _group_structs(self, lst, make_variable, make_struct, make_array):
+        array_of_structs_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\[([0-9]+)\]\.([a-zA-Z_][a-zA-Z_0-9]*)$")
+        struct_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\.([a-zA-Z_][a-zA-Z_0-9]*)$")
+        basic_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)$")
+        names = _odict()
+        for location, size, dtype, name in lst:
+            m = array_of_structs_re.match(name)
+            if m is not None:
+                name, index, field = m.groups()
+                index = int(index)
+                array = names.setdefault(name, make_array(name, parent=self))
+                array[index, field] = make_variable(field, location, dtype, size, parent=self)
+                continue
+            m = struct_re.match(name)
+            if m is not None:
+                name, field = m.groups()
+                struct = names.setdefault(name, make_struct(name, parent=self))
+                struct[field] = make_variable(field, location, dtype, size, parent=self)
+                continue
+            m = basic_re.match(name)
+            if m is not None:
+                name, = m.groups()
+                names[name] = make_variable(name, location, dtype, size, parent=self)
+                continue
+            raise NameError("shader variable '%s' could not be parsed" % name)
+        return names
 
     @property
     def shaders(self):
