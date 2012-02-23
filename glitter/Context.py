@@ -200,7 +200,12 @@ class BindingProxy(object):
 
     def __set__(self, obj, value=None):
         with obj:
+            old_value = self.value.get(obj, None)
+            if old_value is not None and hasattr(old_value, "_on_release"):
+                old_value._on_release()
             self.setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self.set_args] + [0 if value is None else value._id]))
+            if value is not None and hasattr(value, "_on_bind"):
+                value._on_bind()
         self.value[obj] = value
 
 class TextureUnit(object):

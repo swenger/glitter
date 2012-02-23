@@ -1,3 +1,5 @@
+from collections import OrderedDict as _odict
+import re as _re
 from rawgl import gl as _gl
 
 from constants import transform_feedback_buffer_modes, shader_variable_types
@@ -6,6 +8,35 @@ from GLObject import ManagedObject, BindableObject
 from util import ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin
 from Shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 from Proxy import Proxy
+from Attribute import make_attribute, AttributeStruct, AttributeStructArray
+from Uniform import make_uniform, UniformStruct, UniformStructArray
+
+def _group_structs(lst, make_variable, make_struct, make_array):
+    array_of_structs_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\[([0-9]+)\]\.([a-zA-Z_][a-zA-Z_0-9]*)$")
+    struct_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\.([a-zA-Z_][a-zA-Z_0-9]*)$")
+    basic_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)$")
+    names = _odict()
+    for location, size, type, name in lst:
+        m = array_of_structs_re.match(name)
+        if m is not None:
+            name, index, field = m.groups()
+            index = int(index)
+            array = names.setdefault(name, make_array(name))
+            array[index, field] = make_variable(field, location, type, size)
+            continue
+        m = struct_re.match(name)
+        if m is not None:
+            name, field = m.groups()
+            struct = names.setdefault(name, make_struct(name))
+            struct[field] = make_variable(field, location, type, size)
+            continue
+        m = basic_re.match(name)
+        if m is not None:
+            name, = m.groups()
+            names[name] = make_variable(name, location, type, size)
+            continue
+        raise NameError("shader variable '%s' could not be parsed" % name)
+    return names
 
 class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
@@ -20,6 +51,7 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
     def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None):
         super(ShaderProgram, self).__init__()
         self._shaders = []
+        self._variable_proxies = []
 
         self._delete_status = ProgramProxy(self._id, _gl.GL_DELETE_STATUS)
         self._link_status = ProgramProxy(self._id, _gl.GL_LINK_STATUS)
@@ -55,11 +87,20 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         if link:
             self.link()
 
-        # DEBUG
-        for index in range(self._active_attributes):
-            print self._get_active_attribute(index)
-        for index in range(self._active_uniforms):
-            print self._get_active_uniform(index)
+        for name, proxy in self._get_active_attributes().items():
+            setattr(self, name, proxy)
+            self._variable_proxies.append(proxy)
+        for name, proxy in self._get_active_uniforms().items():
+            setattr(self, name, proxy)
+            self._variable_proxies.append(proxy)
+
+    def _on_bind(self):
+        for proxy in self._variable_proxies:
+            proxy._on_bind()
+
+    def _on_release(self):
+        for proxy in self._variable_proxies:
+            proxy._on_release()
 
     def _attach(self, shader):
         _gl.glAttachShader(self._id, shader._id)
@@ -67,7 +108,7 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
     def _detach(self, shader):
         _gl.glDetachShader(self._id, shader._id)
 
-    def _get_active_X(self, getter, location_getter, max_length, index): # TODO unify arrays and structs
+    def _get_active_X(self, getter, location_getter, max_length, index):
         _size = _gl.GLint()
         _type = _gl.GLenum()
         _name = _gl.create_string_buffer(max_length)
@@ -79,8 +120,16 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
     def _get_active_attribute(self, index):
         return self._get_active_X(_gl.glGetActiveAttrib, _gl.glGetAttribLocation, self._active_attribute_max_length, index)
 
+    def _get_active_attributes(self):
+        return _group_structs((self._get_active_attribute(i) for i in range(self._active_attributes)),
+                make_attribute, AttributeStruct, AttributeStructArray)
+
     def _get_active_uniform(self, index):
         return self._get_active_X(_gl.glGetActiveUniform, _gl.glGetUniformLocation, self._active_uniform_max_length, index)
+
+    def _get_active_uniforms(self):
+        return _group_structs((self._get_active_uniform(i) for i in range(self._active_uniforms)),
+                make_uniform, UniformStruct, UniformStructArray)
 
     @property
     def shaders(self):
@@ -103,6 +152,4 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         _info_log = _gl.create_string_buffer(self._info_log_length)
         _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
-
-    # TODO attributes and uniforms
 

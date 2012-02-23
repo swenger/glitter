@@ -38,8 +38,15 @@ class ManagedObject(GLObject):
         except:
             pass
 
-class BindableObject(GLObject): # TODO this is not generic; e.g. binding buffers to different targets, framebuffers to read or draw only, or textures and samplers to different units is not covered
-    _binding = NotImplemented # name of corresponding binding in context, e.g. "array_buffer_binding"
+class BindableObject(GLObject):
+    # this is not generic; e.g. binding buffers to different targets,
+    # framebuffers to read or draw only, or textures and samplers to different
+    # units is not covered
+
+    # _on_bind and _on_release, if defined, will be called by the context when
+    # the value is bound and released
+
+    _binding = NotImplemented # name of corresponding binding in context, e.g.  "array_buffer_binding"
 
     def __init__(self, context=None):
         super(BindableObject, self).__init__(context)

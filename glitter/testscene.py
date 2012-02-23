@@ -9,11 +9,12 @@ vertex_shader = """
 
 layout(location=0) in vec4 in_position;
 layout(location=1) in vec4 in_color;
+layout(location=2) in float multiplier;
 out vec4 ex_color;
 
 void main() {
     gl_Position = in_position;
-    ex_color = in_color;
+    ex_color = in_color * (1.0 + multiplier);
 }
 """
 
@@ -21,14 +22,15 @@ fragment_shader = """
 #version 410 core
 
 in vec4 ex_color;
-out vec4 out_color;
+layout(location=0) out vec4 out_color;
 
 uniform float scaling[3];
 uniform vec4 offset[3];
-uniform struct { vec4 x[3]; float y[3]; } z;
+uniform struct { vec4 x[3]; float y[3]; } a;
+uniform struct { vec4 x[3]; float y[3]; } z[2];
 
 void main() {
-    out_color = ex_color + offset[2] * scaling[2] + z.x[2] * z.y[2];
+    out_color = ex_color + offset[2] * scaling[2] + z[1].x[2] * z[1].y[2] + a.x[2] * a.y[1] * z[0].x[0];
 }
 """
 
@@ -66,6 +68,9 @@ window.display_callback = display
 
 vao = VertexArray([vertices, colors], elements=indices)
 shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
+shader.multiplier = 1.0
+shader.scaling = (1.0, 1.0, 1.0)
+shader.offset = ((1.0, 0.0, 0.0, 0.0), (0.0, 1.0, 0.0, 0.0), (0.0, 0.0, 1.0, 0.0))
 
 main_loop()
 

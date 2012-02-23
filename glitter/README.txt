@@ -8,6 +8,10 @@ Design principles:
 - All GL state changes that are independent of objects should go through a Context object.
 - Platform independence should be sought for, although Linux/GLX is the primary target.
 
+vertex attrib pointer bindings have to go through a vertex array object
+texture bindings have to go through a texture unit object or are automatically attached to one
+ids and bindings are only unique per context!
+
 TODO move tests to separate package
 TODO use context's getters and setters in library, make sure to use "with self._context" where necessary
 TODO create raw offscreen GLX context
@@ -18,10 +22,6 @@ TODO import enums from constants into corresponding classes
 
 
 TODO:
-
-# vertex attrib pointer bindings have to go through a vertex array object
-# texture bindings have to go through a texture unit object or are automatically attached to one
-# ids and bindings are only unique per context
 
 ab0 = ArrayBuffer(random((32, 3)))
 ab1 = ArrayBuffer(random((32, 3)))
