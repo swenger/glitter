@@ -249,6 +249,7 @@ color_read_types = Enum(
 )
 
 read_buffers = Enum( # TODO GL_COLOR_ATTACHMENTi
+        NONE=_gl.GL_NONE,
         FRONT_LEFT=_gl.GL_FRONT_LEFT,
         FRONT_RIGHT=_gl.GL_FRONT_RIGHT,
         BACK_LEFT=_gl.GL_BACK_LEFT,

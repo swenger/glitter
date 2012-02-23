@@ -1,6 +1,6 @@
 from Buffer import Buffer, ArrayBuffer, ElementArrayBuffer, AtomicCounterBuffer, CopyReadBuffer, CopyWriteBuffer, DrawIndirectBuffer, PixelPackBuffer, PixelUnpackBuffer, TextureBuffer, TransformFeedbackBuffer, UniformBuffer
 from Context import Context
-from Framebuffer import Framebuffer, DrawFramebuffer, ReadFramebuffer
+from Framebuffer import Framebuffer
 from ProgramPipeline import ProgramPipeline
 from Query import Query, SamplesPassedQuery, AnySamplesPassedQuery, PrimitivesGeneratedQuery, TransformFeedbackPrimitivesWrittenQuery, TimeElapsedQuery
 from Renderbuffer import Renderbuffer
@@ -16,9 +16,8 @@ __all__ = [
 "Buffer", "ArrayBuffer", "ElementArrayBuffer", "AtomicCounterBuffer",
 "CopyReadBuffer", "CopyWriteBuffer", "DrawIndirectBuffer", "PixelPackBuffer",
 "PixelUnpackBuffer", "TextureBuffer", "TransformFeedbackBuffer",
-"UniformBuffer", "Context", "Framebuffer", "DrawFramebuffer",
-"ReadFramebuffer", "ProgramPipeline", "Query", "SamplesPassedQuery",
-"AnySamplesPassedQuery", "PrimitivesGeneratedQuery",
+"UniformBuffer", "Context", "Framebuffer", "ProgramPipeline", "Query",
+"SamplesPassedQuery", "AnySamplesPassedQuery", "PrimitivesGeneratedQuery",
 "TransformFeedbackPrimitivesWrittenQuery", "TimeElapsedQuery", "Renderbuffer",
 "Sampler", "ShaderProgram", "Shader", "VertexShader", "GeometryShader",
 "FragmentShader", "Sync", "Texture", "Texture1D", "Texture2D",

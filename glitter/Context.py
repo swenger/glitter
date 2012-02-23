@@ -5,8 +5,10 @@ from rawgl import gl as _gl
 
 from constants import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers
 from dtypes import bool8, int32, int64, float32
+from util import InstanceDescriptorMixin
 
 # TODO with statements for state changes, e.g. with context.set(active_texture=0): ...
+# TODO global statements: glClear etc.
 
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None):
@@ -124,19 +126,95 @@ class HintProxy(EnumProxy):
         super(HintProxy, self).__init__(hints, hint, _gl.glHint, [hint])
 
 class StringProxy(object):
-    def __init__(self, arg, index=None):
+    def __init__(self, arg, count_attr=None):
         self.arg = arg
-        self.index = index
+        self.count_attr = count_attr
 
     def __get__(self, obj, cls=None):
-        if self.index is None:
+        if self.count_attr is None:
             with obj:
                 return _gl.string_at(_gl.glGetString(self.arg))
         else:
             with obj:
                 _n = _gl.GLint()
-                _gl.glGetIntegerv(self.index, _gl.pointer(_n))
+                _gl.glGetIntegerv(self.count_attr, _gl.pointer(_n))
                 return [_gl.string_at(_gl.glGetStringi(self.arg, i)) for i in range(_n.value)]
+
+class DrawBufferProxy(object):
+    def __init__(self, _context, _id):
+        self._context = _context
+        self._id = _id
+
+    def __str__(self):
+        return str(self.buffer)
+
+    def __repr__(self):
+        return str(self)
+
+    @property
+    def buffer(self):
+        _buffer = _gl.GLint()
+        with self._context:
+            _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + self._id, _buffer)
+        return read_buffers[_buffer.value]
+
+    @buffer.setter
+    def buffer(self, buffer):
+        n = len(self._context.draw_buffers)
+        _buffers = (_gl.GLenum * n)()
+        for i in range(n):
+            if i == self._id:
+                _value = buffer._value if buffer is not None else _gl.GL_NONE
+            else:
+                _value = self._context.draw_buffers[i].buffer._value
+            _buffers[i] = _value
+        with self._context:
+            _gl.glDrawBuffers(n, _buffers)
+
+    @buffer.deleter
+    def buffer(self):
+        self.buffer = None
+
+    @property
+    def color_writemask(self):
+        mask = _np.empty(4, bool8.as_numpy())
+        _gl.glGetBooleani_v(_gl.GL_COLOR_WRITEMASK, self._id, _gl.cast(mask.ctypes, _gl.glGetBooleani_v.argtypes[-1]))
+        return mask
+
+    @color_writemask.setter
+    def color_writemask(self, color_writemask):
+        _gl.glColorMaski(self._id, *color_writemask)
+
+    @color_writemask.deleter
+    def color_writemask(self, color_writemask):
+        _gl.glColorMaski(self._id, True, True, True, True)
+
+class DrawBufferList(object):
+    def __init__(self, _context):
+        self._context = _context
+        self._draw_buffers = [DrawBufferProxy(_context, i) for i in range(_context.max_draw_buffers)]
+
+    def __set__(self, obj, value):
+        _buffers = (_gl.GLenum * len(self))()
+        for i, o in _itertools.islice(_itertools.izip_longest(range(len(self)), value, fillvalue=None), len(self)):
+            _buffers[i] = _gl.GL_NONE if o is None else o._value
+        with obj:
+            _gl.glDrawBuffers(len(self), _buffers)
+
+    def __getitem__(self, index):
+        return self._draw_buffers[index]
+
+    def __setitem__(self, index, value):
+        self._draw_buffers[index].buffer = value
+
+    def __len__(self):
+        return len(self._draw_buffers)
+
+    def __str__(self):
+        return str(self._draw_buffers)
+
+    def __repr__(self):
+        return repr(self._draw_buffers)
 
 class BindingProxy(object):
     def __init__(self, setter, set_args=()):
@@ -188,6 +266,15 @@ class TextureUnitList(object):
     def __getitem__(self, index):
         return self._texture_units[index]
 
+    def __len__(self):
+        return len(self._texture_units)
+
+    def __str__(self):
+        return str(self._texture_units)
+
+    def __repr__(self):
+        return repr(self._texture_units)
+
     def bind(self, texture):
         """Bind `texture` to a free unit and return the unit id."""
         if texture in self._bound_textures:
@@ -219,12 +306,13 @@ class GLObjectLibrary(object):
     def __getitem__(self, key):
         return self._objects[key]
 
-class Context(object):
+class Context(InstanceDescriptorMixin):
     def __enter__(self): pass
     def __exit__(self, type, value, traceback): pass
 
     def __init__(self):
         self.texture_units = TextureUnitList(self)
+        self.draw_buffers = DrawBufferList(self)
         self.buffers = GLObjectLibrary(self)
         self.framebuffers = GLObjectLibrary(self)
         self.program_pipelines = GLObjectLibrary(self)
@@ -300,8 +388,8 @@ class Context(object):
     vertex_program_point_size = EnableDisableProxy(_gl.GL_VERTEX_PROGRAM_POINT_SIZE)
 
     # boolean values
-    color_write_mask = BooleanProxy([_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4) # TODO indexed variant
-    depth_write_mask = BooleanProxy([_gl.GL_DEPTH_WRITEMASK], _gl.glDepthMask)
+    color_writemask = BooleanProxy([_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4)
+    depth_writemask = BooleanProxy([_gl.GL_DEPTH_WRITEMASK], _gl.glDepthMask)
     doublebuffer = BooleanProxy([_gl.GL_DOUBLEBUFFER])
     pack_lsb_first = BooleanProxy([_gl.GL_PACK_LSB_FIRST], _gl.glPixelStorei, [_gl.GL_PACK_LSB_FIRST])
     pack_swap_bytes = BooleanProxy([_gl.GL_PACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_PACK_SWAP_BYTES])
@@ -407,7 +495,6 @@ class Context(object):
     shading_language_version = StringProxy(_gl.GL_SHADING_LANGUAGE_VERSION)
     extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
 
-    # TODO GL_DRAW_BUFFERi
     # TODO GL_POLYGON_OFFSET_FACTOR, GL_POLYGON_OFFSET_UNITS (glPolygonOffset)
     # TODO GL_SAMPLE_COVERAGE_VALUE, GL_SAMPLE_COVERAGE_INVERT (glSampleCoverage)
     # TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE

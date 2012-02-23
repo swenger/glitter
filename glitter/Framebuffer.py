@@ -9,7 +9,7 @@ class Framebuffer(ManagedObject, BindableObject):
     _delete_id = _gl.glDeleteBuffers
     _db = "framebuffers"
     _target = _gl.GL_FRAMEBUFFER
-    _binding = "framebuffer_binding"
+    _binding = "framebuffer_draw_binding" # TODO and framebuffer_read_binding
 
     attachment_names = constants.framebuffer_attachment_names
 
@@ -26,8 +26,5 @@ class Framebuffer(ManagedObject, BindableObject):
             _gl.glFramebufferTexture(self._target, _attachment, _texture, level)
 
     # TODO get and set attachments using __getitem__/__setitem__
-
-class DrawFramebuffer(Framebuffer): pass # TODO
-
-class ReadFramebuffer(Framebuffer): pass # TODO
+    # TODO binding for drawing or reading only
 
