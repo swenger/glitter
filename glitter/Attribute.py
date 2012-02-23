@@ -1,17 +1,17 @@
 from collections import OrderedDict as _odict
 
 class Attribute(object):
-    def __init__(self, name, location, type, size):
+    def __init__(self, name, location, dtype, size):
         self.name = name
         self.location = location
-        self.type = type
+        self.dtype = dtype
         self.size = size
 
     def __repr__(self):
         if self.size == 1:
-            return "%s %s;" % (self.type, self.name)
+            return "%s %s;" % (self.dtype, self.name)
         else:
-            return "%s %s[%d];" % (self.type, self.name, self.size)
+            return "%s %s[%d];" % (self.dtype, self.name, self.size)
 
     def __str__(self):
         return "in %r" % self
@@ -78,7 +78,4 @@ class AttributeStructArray(_odict):
 
     def _on_release(self):
         pass # TODO restore old vertex attrib values if possible
-
-def make_attribute(name, location, type, size):
-    return Attribute(name, location, type, size) # TODO return appropriate type
 

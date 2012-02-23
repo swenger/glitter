@@ -1,20 +1,28 @@
 from collections import OrderedDict as _odict
+import numpy as _np
+from rawgl import gl as _gl
 
 class Uniform(object):
-    def __init__(self, name, location, type, size):
+    def __init__(self, name, location, dtype, size):
         self.name = name
         self.location = location
-        self.type = type
+        self.dtype = dtype
         self.size = size
 
     def __str__(self):
-        return "uniform %s %s[%d];" % (self.type, self.name, self.size)
+        return "uniform %s %s[%d];" % (self.dtype, self.name, self.size)
 
     def __get__(self, obj, cls=None):
-        pass # TODO
+        with obj._context:
+            if self.size == 1:
+                return self.dtype.get_value(obj, self.location)
+            else:
+                data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, "%s[%d]" % (self.name, i))) for i in range(self.size)]
+                return _np.concatenate([x.squeeze()[None] for x in data])
 
     def __set__(self, obj, value):
-        pass # TODO
+        with obj._context:
+            return self.dtype.set_value(obj, self.location, value, self.size)
 
     def _on_bind(self):
         pass # TODO bind textures and set uniforms
@@ -66,7 +74,4 @@ class UniformStructArray(_odict):
 
     def _on_release(self):
         pass # TODO restore old texture bindings
-
-def make_uniform(name, location, type, size):
-    return Uniform(name, location, type, size) # TODO return appropriate type
 

@@ -72,5 +72,7 @@ shader.multiplier = 1.0
 shader.scaling = (1.0, 1.0, 1.0)
 shader.offset = ((1.0, 0.0, 0.0, 0.0), (0.0, 1.0, 0.0, 0.0), (0.0, 0.0, 1.0, 0.0))
 
+print shader.scaling.shape, shader.offset.shape
+
 main_loop()
 
