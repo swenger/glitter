@@ -1,11 +1,11 @@
+from weakref import WeakKeyDictionary, WeakValueDictionary
 import numpy as _np
 from rawgl import gl as _gl
 
 from constants import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers
-from dtypes import bool8, int32, int64, float32, float64
+from dtypes import bool8, int32, int64, float32
 
 # TODO with statements for state changes, e.g. with context.set(active_texture=0): ...
-# TODO default context singleton
 
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None):
@@ -13,18 +13,6 @@ class Proxy(object):
         self._get_args = get_args
         self._setter = setter
         self._set_args = set_args
-        if dtype is None:
-            dtype = {
-                    "glGetBooleani_v": bool8,
-                    "glGetBooleanv": bool8,
-                    "glGetDoublev": float64,
-                    "glGetFloatv": float32,
-                    "glGetInteger64i_v": int64,
-                    "glGetInteger64v": int64,
-                    "glGetIntegeri_v": int32,
-                    "glGetIntegerv": int32,
-                    }[getter.__name__]
-
         self._dtype = dtype
         self._shape = None if shape is None else tuple(shape) if hasattr(shape, "__iter__") else (shape,)
 
@@ -47,6 +35,22 @@ class Proxy(object):
             raise RuntimeError("no valid setter invocation found")
         with obj:
             self._setter(*args)
+
+class BooleanProxy(Proxy):
+    def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
+        super(BooleanProxy, self).__init__(_gl.glGetBooleanv, get_args, setter, set_args, bool8, shape)
+
+class FloatProxy(Proxy):
+    def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
+        super(FloatProxy, self).__init__(_gl.glGetFloatv, get_args, setter, set_args, float32, shape)
+
+class IntegerProxy(Proxy):
+    def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
+        super(IntegerProxy, self).__init__(_gl.glGetIntegerv, get_args, setter, set_args, int32, shape)
+
+class Integer64Proxy(Proxy):
+    def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
+        super(Integer64Proxy, self).__init__(_gl.glGetInteger64v, get_args, setter, set_args, int64, shape)
 
 class EnableDisableProxy(object):
     def __init__(self, arg):
@@ -114,191 +118,272 @@ class EnumProxy(object):
         with obj:
             self._setter(*args)
 
-class Context(object): # TODO this should be bindable, but that is window system dependent
+class HintProxy(EnumProxy):
+    def __init__(self, hint):
+        super(HintProxy, self).__init__(hints, hint, _gl.glHint, [hint])
+
+class StringProxy(object):
+    def __init__(self, arg, index=None):
+        self.arg = arg
+        self.index = index
+
+    def __get__(self, obj, cls=None):
+        if self.index is None:
+            with obj:
+                return _gl.string_at(_gl.glGetString(self.arg))
+        else:
+            with obj:
+                _n = _gl.GLint()
+                _gl.glGetIntegerv(self.index, _gl.pointer(_n))
+                return [_gl.string_at(_gl.glGetStringi(self.arg, i)) for i in range(_n.value)]
+
+class BindingProxy(object):
+    def __init__(self, setter, set_args=()):
+        self.value = WeakKeyDictionary()
+        self.setter = setter
+        self.set_args = set_args
+
+    def __get__(self, obj, cls=None):
+        return self.value.get(obj, None)
+
+    def __set__(self, obj, value=None):
+        # TODO typecheck for value
+        with obj:
+            self.setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self.set_args] + [0 if value is None else value._id]))
+        self.value[obj] = value
+
+class TextureUnit(object):
+    def __init__(self, _context, _id):
+        self._context = _context
+        self._id = _id
+
+    def activate(self):
+        self._context.active_texture = self
+
+    texture_binding_1d                   = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_1D                  ])
+    texture_binding_1d_array             = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_1D_ARRAY            ])
+    texture_binding_2d                   = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_2D                  ])
+    texture_binding_2d_array             = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_2D_ARRAY            ])
+    texture_binding_2d_multisample       = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_2D_MULTISAMPLE      ])
+    texture_binding_2d_multisample_array = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY])
+    texture_binding_3d                   = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_3D                  ])
+    texture_binding_buffer               = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_BUFFER              ])
+    texture_binding_cube_map             = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_CUBE_MAP            ])
+    texture_binding_rectangle            = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_RECTANGLE           ])
+    sampler_binding                      = BindingProxy(_gl.glBindSampler,         ["_unit"                            ])
+
+class TextureUnitList(object):
+    def __init__(self, _context):
+        self._context = _context
+        self._texture_units = [TextureUnit(_context, _gl.GL_TEXTURE0 + i) for i in range(_context.max_combined_texture_image_units)]
+        self._context.active_texture = self[0]
+
+    def __getitem__(self, index):
+        return self._texture_units[index]
+
+class GLObjectLibrary(object):
+    def __init__(self, _context):
+        self._context = _context
+        self._objects = WeakValueDictionary()
+
+    def __getitem__(self, key):
+        return self._objects[key]
+
+class Context(object):
     def __enter__(self): pass
     def __exit__(self, type, value, traceback): pass
 
-    #active_texture = ActiveTextureProxy(_gl.glGetIntegerv, [_gl.GL_ACTIVE_TEXTURE], _gl.glActiveTexture) # TODO subtract GL_TEXTURE0
-    aliased_line_width_range = Proxy(_gl.glGetFloatv, [_gl.GL_ALIASED_LINE_WIDTH_RANGE], shape=2)
-    array_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_ARRAY_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_ARRAY_BUFFER]) # TODO buffer obj
-    # XXX atomic_counter_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_ATOMIC_COUNTER_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_ATOMIC_COUNTER_BUFFER]) # TODO buffer obj
-    blend = EnableDisableProxy(_gl.GL_BLEND)
-    blend_color = Proxy(_gl.glGetFloatv, [_gl.GL_BLEND_COLOR], _gl.glBlendColor, shape=4)
+    def __init__(self):
+        self.texture_units = TextureUnitList(self)
+        self.buffers = GLObjectLibrary(self)
+        self.textures = GLObjectLibrary(self)
+        # TODO other objects
+
+    # buffer bindings
+    array_buffer_binding                 = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ARRAY_BUFFER                ])
+    atomic_counter_buffer_binding        = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ATOMIC_COUNTER_BUFFER       ])
+    copy_read_buffer_binding             = BindingProxy(_gl.glBindBuffer,          [_gl.GL_COPY_READ_BUFFER            ])
+    copy_write_buffer_binding            = BindingProxy(_gl.glBindBuffer,          [_gl.GL_COPY_WRITE_BUFFER           ])
+    draw_indirect_buffer_binding         = BindingProxy(_gl.glBindBuffer,          [_gl.GL_DRAW_INDIRECT_BUFFER        ])
+    element_array_buffer_binding         = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ELEMENT_ARRAY_BUFFER        ])
+    pixel_pack_buffer_binding            = BindingProxy(_gl.glBindBuffer,          [_gl.GL_PIXEL_PACK_BUFFER           ])
+    pixel_unpack_buffer_binding          = BindingProxy(_gl.glBindBuffer,          [_gl.GL_PIXEL_UNPACK_BUFFER         ])
+    texture_buffer_binding               = BindingProxy(_gl.glBindBuffer,          [_gl.GL_TEXTURE_BUFFER              ])
+    transform_feedback_buffer_binding    = BindingProxy(_gl.glBindBuffer,          [_gl.GL_TRANSFORM_FEEDBACK_BUFFER   ])
+    uniform_buffer_binding               = BindingProxy(_gl.glBindBuffer,          [_gl.GL_UNIFORM_BUFFER              ])
+
+    # miscellaneous bindings
+    program_pipeline_binding             = BindingProxy(_gl.glBindProgramPipeline, [                                   ])
+    renderbuffer_binding                 = BindingProxy(_gl.glBindRenderbuffer,    [_gl.GL_RENDERBUFFER                ])
+    vertex_array_binding                 = BindingProxy(_gl.glBindVertexArray,     [                                   ])
+    draw_framebuffer_binding             = BindingProxy(_gl.glBindFramebuffer,     [_gl.GL_DRAW_FRAMEBUFFER            ])
+    read_framebuffer_binding             = BindingProxy(_gl.glBindFramebuffer,     [_gl.GL_READ_FRAMEBUFFER            ])
+    current_program                      = BindingProxy(_gl.glUseProgram,          [                                   ])
+    active_texture                       = BindingProxy(_gl.glActiveTexture,       [                                   ])
+
+    # blend function and equation
     blend_dst_alpha = BlendFuncProxy(_gl.GL_BLEND_DST_ALPHA)
     blend_dst_rgb = BlendFuncProxy(_gl.GL_BLEND_DST_RGB)
     blend_src_alpha = BlendFuncProxy(_gl.GL_BLEND_SRC_ALPHA)
     blend_src_rgb = BlendFuncProxy(_gl.GL_BLEND_SRC_RGB)
     blend_equation_alpha = BlendEquationProxy(_gl.GL_BLEND_EQUATION_ALPHA)
     blend_equation_rgb = BlendEquationProxy(_gl.GL_BLEND_EQUATION_RGB)
-    color_clear_value = Proxy(_gl.glGetFloatv, [_gl.GL_COLOR_CLEAR_VALUE], _gl.glClearColor, shape=4)
-    color_logic_op = EnableDisableProxy(_gl.GL_COLOR_LOGIC_OP)
-    color_write_mask = Proxy(_gl.glGetBooleanv, [_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4) # TODO indexed variant
-    # TODO GL_COMPRESSED_TEXTURE_FORMATS
-    # TODO GL_CONTEXT_FLAGS
-    cull_face = EnableDisableProxy(_gl.GL_CULL_FACE)
-    current_program = Proxy(_gl.glGetIntegerv, [_gl.GL_CURRENT_PROGRAM], _gl.glUseProgram) # TODO program obj
-    depth_clear_value = Proxy(_gl.glGetFloatv, [_gl.GL_DEPTH_CLEAR_VALUE], _gl.glClearDepth)
+
+    # miscellaneous enumerations
     depth_func = EnumProxy(depth_functions, _gl.GL_DEPTH_FUNC, _gl.glDepthFunc)
-    depth_range = Proxy(_gl.glGetFloatv, [_gl.GL_DEPTH_RANGE], _gl.glDepthRange, shape=2)
-    depth_test = EnableDisableProxy(_gl.GL_DEPTH_TEST)
-    depth_write_mask = Proxy(_gl.glGetBooleanv, [_gl.GL_DEPTH_WRITEMASK], _gl.glDepthMask)
-    dither = EnableDisableProxy(_gl.GL_DITHER)
-    doublebuffer = Proxy(_gl.glGetBooleanv, [_gl.GL_DOUBLEBUFFER])
     draw_buffer = EnumProxy(draw_buffers, _gl.GL_DRAW_BUFFER, _gl.glDrawBuffer)
-    draw_indirect_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_DRAW_INDIRECT_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_DRAW_INDIRECT_BUFFER]) # TODO buffer obj
-    # TODO GL_DRAW_BUFFERi
-    # XXX draw_framebuffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_DRAW_FRAMEBUFFER_BINDING], _gl.glBindFramebuffer, [_gl.GL_DRAW_FRAMEBUFFER]) # TODO buffer obj
-    # XXX read_framebuffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_READ_FRAMEBUFFER_BINDING], _gl.glBindFramebuffer, [_gl.GL_READ_FRAMEBUFFER]) # TODO buffer obj
-    element_array_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_ELEMENT_ARRAY_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_ELEMENT_ARRAY_BUFFER]) # TODO buffer obj
-    fragment_shader_derivative_hint = EnumProxy(hints, _gl.GL_FRAGMENT_SHADER_DERIVATIVE_HINT, _gl.glHint, [_gl.GL_FRAGMENT_SHADER_DERIVATIVE_HINT])
     implementation_color_read_format = EnumProxy(color_read_formats, _gl.GL_IMPLEMENTATION_COLOR_READ_FORMAT)
     implementation_color_read_type = EnumProxy(color_read_types, _gl.GL_IMPLEMENTATION_COLOR_READ_TYPE)
-    line_smooth = EnableDisableProxy(_gl.GL_LINE_SMOOTH)
-    line_smooth_hint = EnumProxy(hints, _gl.GL_LINE_SMOOTH_HINT, _gl.glHint, [_gl.GL_LINE_SMOOTH_HINT])
-    line_width = Proxy(_gl.glGetFloatv, [_gl.GL_LINE_WIDTH], _gl.glLineWidth)
     layer_provoking_vertex = EnumProxy(provoking_vertices, _gl.GL_LAYER_PROVOKING_VERTEX)
-    line_width_granularity = Proxy(_gl.glGetFloatv, [_gl.GL_LINE_WIDTH_GRANULARITY])
-    line_width_range = Proxy(_gl.glGetFloatv, [_gl.GL_LINE_WIDTH_RANGE], shape=2)
     logic_op_mode = EnumProxy(logic_op_modes, _gl.GL_LOGIC_OP_MODE, _gl.glLogicOp)
-    major_version = Proxy(_gl.glGetIntegerv, [_gl.GL_MAJOR_VERSION])
-    max_3d_texture_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_3D_TEXTURE_SIZE])
-    max_array_texture_layers = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_3D_TEXTURE_SIZE])
-    max_clip_distances = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_CLIP_DISTANCES])
-    max_color_texture_samples = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COLOR_TEXTURE_SAMPLES])
-    # XXX max_combined_atomic_counters = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COMBINED_ATOMIC_COUNTERS])
-    max_combined_fragment_uniform_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS])
-    max_combined_geometry_uniform_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS])
-    max_combined_texture_image_units = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS])
-    max_combined_uniform_blocks = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COMBINED_UNIFORM_BLOCKS])
-    max_combined_vertex_uniform_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS])
-    max_cube_map_texture_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_CUBE_MAP_TEXTURE_SIZE])
-    max_depth_texture_samples = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_DEPTH_TEXTURE_SAMPLES])
-    max_draw_buffers = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_DRAW_BUFFERS])
-    # XXX max_dualsource_draw_buffers = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_DUALSOURCE_DRAW_BUFFERS])
-    max_elements_indices = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_ELEMENTS_INDICES])
-    max_elements_vertices = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_ELEMENTS_VERTICES])
-    # XXX max_fragment_atomic_counters = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_FRAGMENT_ATOMIC_COUNTERS])
-    max_fragment_input_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_FRAGMENT_INPUT_COMPONENTS])
-    max_fragment_uniform_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_FRAGMENT_UNIFORM_COMPONENTS])
-    max_fragment_uniform_vectors = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_FRAGMENT_UNIFORM_VECTORS])
-    max_fragment_uniform_blocks = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_FRAGMENT_UNIFORM_BLOCKS])
-    # XXX max_geometry_atomic_counters = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_GEOMETRY_ATOMIC_COUNTERS])
-    max_geometry_input_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_GEOMETRY_INPUT_COMPONENTS])
-    max_geometry_output_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_GEOMETRY_OUTPUT_COMPONENTS])
-    max_geometry_texture_image_units = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS])
-    max_geometry_uniform_blocks = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_GEOMETRY_UNIFORM_BLOCKS])
-    max_geometry_uniform_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_GEOMETRY_UNIFORM_COMPONENTS])
-    max_integer_samples = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_INTEGER_SAMPLES])
-    # XXX min_map_buffer_alignment = Proxy(_gl.glGetIntegerv, [_gl.GL_MIN_MAP_BUFFER_ALIGNMENT])
-    max_program_texel_offset = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_PROGRAM_TEXEL_OFFSET])
-    min_program_texel_offset = Proxy(_gl.glGetIntegerv, [_gl.GL_MIN_PROGRAM_TEXEL_OFFSET])
-    max_rectangle_texture_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_RECTANGLE_TEXTURE_SIZE])
-    max_renderbuffer_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_RENDERBUFFER_SIZE])
-    max_sample_mask_words = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_SAMPLE_MASK_WORDS])
-    max_server_wait_timeout = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_SERVER_WAIT_TIMEOUT])
-    # XXX max_tess_control_atomic_counters = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS])
-    # XXX max_tess_evaluation_atomic_counters = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS])
-    max_texture_buffer_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_TEXTURE_BUFFER_SIZE])
-    max_texture_image_units = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_TEXTURE_IMAGE_UNITS])
-    max_texture_lod_bias = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_TEXTURE_LOD_BIAS])
-    max_texture_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_TEXTURE_SIZE])
-    max_uniform_buffer_bindings = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_UNIFORM_BUFFER_BINDINGS])
-    max_uniform_block_size = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_UNIFORM_BLOCK_SIZE])
-    # XXX max_varying_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VARYING_COMPONENTS])
-    max_varying_vectors = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VARYING_VECTORS])
-    # XXX max_varying_floats = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VARYING_FLOATS])
-    # XXX max_vertex_atomic_counters = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_ATOMIC_COUNTERS])
-    max_vertex_attribs = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_ATTRIBS])
-    max_vertex_texture_image_units = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS])
-    max_vertex_uniform_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_UNIFORM_COMPONENTS])
-    max_vertex_uniform_vectors = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_UNIFORM_VECTORS])
-    max_vertex_output_components = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_OUTPUT_COMPONENTS])
-    max_vertex_uniform_blocks = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VERTEX_UNIFORM_BLOCKS])
-    max_viewport_dims = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VIEWPORT_DIMS])
-    max_viewports = Proxy(_gl.glGetIntegerv, [_gl.GL_MAX_VIEWPORTS])
-    minor_version = Proxy(_gl.glGetIntegerv, [_gl.GL_MINOR_VERSION])
-    num_compressed_texture_formats = Proxy(_gl.glGetIntegerv, [_gl.GL_NUM_COMPRESSED_TEXTURE_FORMATS])
-    num_extensions = Proxy(_gl.glGetIntegerv, [_gl.GL_NUM_EXTENSIONS])
-    num_program_binary_formats = Proxy(_gl.glGetIntegerv, [_gl.GL_NUM_PROGRAM_BINARY_FORMATS])
-    num_shader_binary_formats = Proxy(_gl.glGetIntegerv, [_gl.GL_NUM_SHADER_BINARY_FORMATS])
-    pack_alignment = Proxy(_gl.glGetIntegerv, [_gl.GL_PACK_ALIGNMENT])
-    pack_image_height = Proxy(_gl.glGetIntegerv, [_gl.GL_PACK_IMAGE_HEIGHT])
-    pack_lsb_first = Proxy(_gl.glGetBooleanv, [_gl.GL_PACK_LSB_FIRST], _gl.glPixelStorei, [_gl.GL_PACK_LSB_FIRST])
-    pack_row_length = Proxy(_gl.glGetIntegerv, [_gl.GL_PACK_ROW_LENGTH], _gl.glPixelStorei, [_gl.GL_PACK_ROW_LENGTH])
-    pack_skip_images = Proxy(_gl.glGetIntegerv, [_gl.GL_PACK_SKIP_IMAGES], _gl.glPixelStorei, [_gl.GL_PACK_SKIP_IMAGES])
-    pack_skip_pixels = Proxy(_gl.glGetIntegerv, [_gl.GL_PACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_PACK_SKIP_PIXELS])
-    pack_skip_rows = Proxy(_gl.glGetIntegerv, [_gl.GL_PACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_PACK_SKIP_ROWS])
-    pack_swap_bytes = Proxy(_gl.glGetBooleanv, [_gl.GL_PACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_PACK_SWAP_BYTES])
-    pixel_pack_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_PIXEL_PACK_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_PIXEL_PACK_BUFFER]) # TODO buffer obj
-    pixel_unpack_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_PIXEL_UNPACK_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_PIXEL_UNPACK_BUFFER]) # TODO buffer obj
-    point_fade_threshold_size = Proxy(_gl.glGetFloatv, [_gl.GL_POINT_FADE_THRESHOLD_SIZE], _gl.glPointParameterf, [_gl.GL_POINT_FADE_THRESHOLD_SIZE])
-    primitive_restart_index = Proxy(_gl.glGetIntegerv, [_gl.GL_PRIMITIVE_RESTART_INDEX], _gl.glPrimitiveRestartIndex)
-    # TODO GL_PROGRAM_BINARY_FORMATS
-    program_pipeline_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_PROGRAM_PIPELINE_BINDING], _gl.glBindProgramPipeline)
     provoking_vertex = EnumProxy(provoke_modes, _gl.GL_PROVOKING_VERTEX, _gl.glProvokingVertex)
-    point_size = Proxy(_gl.glGetFloatv, [_gl.GL_POINT_SIZE], _gl.glPointSize)
-    point_size_granularity = Proxy(_gl.glGetFloatv, [_gl.GL_POINT_SIZE_GRANULARITY])
-    point_size_range = Proxy(_gl.glGetFloatv, [_gl.GL_POINT_SIZE_RANGE], shape=2)
-    # TODO glPolygonMode
-    # TODO GL_POLYGON_OFFSET_FACTOR, GL_POLYGON_OFFSET_UNITS (glPolygonOffset)
+    read_buffer = EnumProxy(read_buffers, _gl.GL_READ_BUFFER, _gl.glReadBuffer)
+    viewport_index_provoking_vertex = EnumProxy(provoking_vertices, _gl.GL_VIEWPORT_INDEX_PROVOKING_VERTEX)
+
+    # hints
+    fragment_shader_derivative_hint = HintProxy(_gl.GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
+    line_smooth_hint = HintProxy(_gl.GL_LINE_SMOOTH_HINT)
+    polygon_smooth_hint = HintProxy(_gl.GL_POLYGON_SMOOTH_HINT)
+    texture_compression_hint = HintProxy(_gl.GL_TEXTURE_COMPRESSION_HINT)
+
+    # enabling and disabling
+    blend = EnableDisableProxy(_gl.GL_BLEND)
+    color_logic_op = EnableDisableProxy(_gl.GL_COLOR_LOGIC_OP)
+    cull_face = EnableDisableProxy(_gl.GL_CULL_FACE)
+    depth_test = EnableDisableProxy(_gl.GL_DEPTH_TEST)
+    dither = EnableDisableProxy(_gl.GL_DITHER)
+    line_smooth = EnableDisableProxy(_gl.GL_LINE_SMOOTH)
     polygon_offset_fill = EnableDisableProxy(_gl.GL_POLYGON_OFFSET_FILL)
     polygon_offset_line = EnableDisableProxy(_gl.GL_POLYGON_OFFSET_LINE)
     polygon_offset_point = EnableDisableProxy(_gl.GL_POLYGON_OFFSET_POINT)
     polygon_smooth = EnableDisableProxy(_gl.GL_POLYGON_SMOOTH)
-    polygon_smooth_hint = EnumProxy(hints, _gl.GL_POLYGON_SMOOTH_HINT, _gl.glHint, [_gl.GL_POLYGON_SMOOTH_HINT])
-    read_buffer = EnumProxy(read_buffers, _gl.GL_READ_BUFFER, _gl.glReadBuffer)
-    renderbuffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_RENDERBUFFER_BINDING], _gl.glBindRenderbuffer, [_gl.GL_RENDERBUFFER]) # TODO renderbuffer obj
-    sample_buffers = Proxy(_gl.glGetIntegerv, [_gl.GL_SAMPLE_BUFFERS])
-    # TODO GL_SAMPLE_COVERAGE_VALUE, GL_SAMPLE_COVERAGE_INVERT (glSampleCoverage)
-    sampler_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_SAMPLER_BINDING]) # TODO setter: bind to active texture unit
-    samples = Proxy(_gl.glGetIntegerv, [_gl.GL_SAMPLES])
-    scissor_box = Proxy(_gl.glGetIntegerv, [_gl.GL_SCISSOR_BOX], _gl.glScissor, shape=4)
     scissor_test = EnableDisableProxy(_gl.GL_SCISSOR_TEST)
-    shader_compiler = Proxy(_gl.glGetBooleanv, [_gl.GL_SHADER_COMPILER])
-    smooth_line_width_range = Proxy(_gl.glGetFloatv, [_gl.GL_SMOOTH_LINE_WIDTH_RANGE], shape=2)
-    smooth_line_width_granularity = Proxy(_gl.glGetFloatv, [_gl.GL_SMOOTH_LINE_WIDTH_GRANULARITY])
-    # TODO GL_STENCIL_BACK_FAIL, GL_STENCIL_BACK_PASS_DEPTH_FAIL, GL_STENCIL_BACK_PASS_DEPTH_PASS,
-    #      GL_STENCIL_FAIL, GL_STENCIL_PASS_DEPTH_FAIL, GL_STENCIL_PASS_DEPTH_PASS...
-    # TODO GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC, 
-    # TODO GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
-    stencil_clear_value = Proxy(_gl.glGetIntegerv, [_gl.GL_STENCIL_CLEAR_VALUE], _gl.glClearStencil)
     stencil_test = EnableDisableProxy(_gl.GL_STENCIL_TEST)
-    stereo = Proxy(_gl.glGetBooleanv, [_gl.GL_STEREO])
-    subpixel_bits = Proxy(_gl.glGetIntegerv, [_gl.GL_SUBPIXEL_BITS])
-    texture_binding_1d = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_1D], _gl.glBindTexture, [_gl.GL_TEXTURE_1D]) # TODO texture obj
-    texture_binding_1d_array = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_1D_ARRAY], _gl.glBindTexture, [_gl.GL_TEXTURE_1D_ARRAY]) # TODO texture obj
-    texture_binding_2d = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_2D], _gl.glBindTexture, [_gl.GL_TEXTURE_2D]) # TODO texture obj
-    texture_binding_2d_array = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_2D_ARRAY], _gl.glBindTexture, [_gl.GL_TEXTURE_2D_ARRAY]) # TODO texture obj
-    texture_binding_2d_multisample = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE], _gl.glBindTexture, [_gl.GL_TEXTURE_2D_MULTISAMPLE]) # TODO texture obj
-    texture_binding_2d_multisample_array = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY], _gl.glBindTexture, [_gl.GL_TEXTURE_2D_MULTISAMPLE_ARRAY]) # TODO texture obj
-    texture_binding_3d = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_3D], _gl.glBindTexture, [_gl.GL_TEXTURE_3D]) # TODO texture obj
-    texture_binding_buffer = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_BUFFER], _gl.glBindTexture, [_gl.GL_TEXTURE_BUFFER]) # TODO texture obj
-    texture_binding_cube_map = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_CUBE_MAP], _gl.glBindTexture, [_gl.GL_TEXTURE_CUBE_MAP]) # TODO texture obj
-    texture_binding_rectangle = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BINDING_RECTANGLE], _gl.glBindTexture, [_gl.GL_TEXTURE_RECTANGLE]) # TODO texture obj
-    texture_compression_hint = EnumProxy(hints, _gl.GL_TEXTURE_COMPRESSION_HINT, _gl.glHint, [_gl.GL_TEXTURE_COMPRESSION_HINT]) # TODO texture obj
-    # TODO texture_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_TEXTURE_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_TEXTURE_BUFFER]) # TODO use glGetTexLevelParameter with GL_TEXTURE_BUFFER_DATA_STORE_BINDING instead
-    timestamp = Proxy(_gl.glGetInteger64v, [_gl.GL_TIMESTAMP])
-    transform_feedback_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_TRANSFORM_FEEDBACK_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_TRANSFORM_FEEDBACK_BUFFER]) # TODO buffer obj TODO indexed variant
-    # TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
-    uniform_buffer_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_UNIFORM_BUFFER_BINDING], _gl.glBindBuffer, [_gl.GL_UNIFORM_BUFFER]) # TODO buffer obj
-    uniform_buffer_offset_alignment = Proxy(_gl.glGetIntegerv, [_gl.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT])
-    # TODO indexed GL_UNIFORM_BUFFER_SIZE, GL_UNIFORM_BUFFER_START
-    unpack_alignment = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_ALIGNMENT], _gl.glPixelStorei, [_gl.GL_UNPACK_ALIGNMENT])
-    unpack_image_height = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_IMAGE_HEIGHT], _gl.glPixelStorei, [_gl.GL_UNPACK_IMAGE_HEIGHT])
-    unpack_lsb_first = Proxy(_gl.glGetBooleanv, [_gl.GL_UNPACK_LSB_FIRST], _gl.glPixelStorei, [_gl.GL_UNPACK_LSB_FIRST])
-    unpack_row_length = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_ROW_LENGTH], _gl.glPixelStorei, [_gl.GL_UNPACK_ROW_LENGTH])
-    unpack_skip_images = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_SKIP_IMAGES], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_IMAGES])
-    unpack_skip_pixels = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_PIXELS])
-    unpack_skip_rows = Proxy(_gl.glGetIntegerv, [_gl.GL_UNPACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_ROWS])
-    unpack_swap_bytes = Proxy(_gl.glGetBooleanv, [_gl.GL_UNPACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_UNPACK_SWAP_BYTES])
-    vertex_array_binding = Proxy(_gl.glGetIntegerv, [_gl.GL_VERTEX_ARRAY_BINDING], _gl.glBindVertexArray)
     vertex_program_point_size = EnableDisableProxy(_gl.GL_VERTEX_PROGRAM_POINT_SIZE)
-    viewport = Proxy(_gl.glGetIntegerv, [_gl.GL_VIEWPORT], _gl.glViewport, shape=4) # TODO indexed variant
-    viewport_bounds_range = Proxy(_gl.glGetIntegerv, [_gl.GL_VIEWPORT_BOUNDS_RANGE], shape=2)
-    viewport_index_provoking_vertex = EnumProxy(provoking_vertices, _gl.GL_VIEWPORT_INDEX_PROVOKING_VERTEX)
-    viewport_subpixel_bits = Proxy(_gl.glGetIntegerv, [_gl.GL_VIEWPORT_SUBPIXEL_BITS])
 
-default_context = Context() # TODO
+    # boolean values
+    color_write_mask = BooleanProxy([_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4) # TODO indexed variant
+    depth_write_mask = BooleanProxy([_gl.GL_DEPTH_WRITEMASK], _gl.glDepthMask)
+    doublebuffer = BooleanProxy([_gl.GL_DOUBLEBUFFER])
+    pack_lsb_first = BooleanProxy([_gl.GL_PACK_LSB_FIRST], _gl.glPixelStorei, [_gl.GL_PACK_LSB_FIRST])
+    pack_swap_bytes = BooleanProxy([_gl.GL_PACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_PACK_SWAP_BYTES])
+    shader_compiler = BooleanProxy([_gl.GL_SHADER_COMPILER])
+    stereo = BooleanProxy([_gl.GL_STEREO])
+    unpack_lsb_first = BooleanProxy([_gl.GL_UNPACK_LSB_FIRST], _gl.glPixelStorei, [_gl.GL_UNPACK_LSB_FIRST])
+    unpack_swap_bytes = BooleanProxy([_gl.GL_UNPACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_UNPACK_SWAP_BYTES])
+    
+    # float values
+    aliased_line_width_range = FloatProxy([_gl.GL_ALIASED_LINE_WIDTH_RANGE], shape=2)
+    blend_color = FloatProxy([_gl.GL_BLEND_COLOR], _gl.glBlendColor, shape=4)
+    color_clear_value = FloatProxy([_gl.GL_COLOR_CLEAR_VALUE], _gl.glClearColor, shape=4)
+    depth_clear_value = FloatProxy([_gl.GL_DEPTH_CLEAR_VALUE], _gl.glClearDepth)
+    depth_range = FloatProxy([_gl.GL_DEPTH_RANGE], _gl.glDepthRange, shape=2)
+    line_width = FloatProxy([_gl.GL_LINE_WIDTH], _gl.glLineWidth)
+    line_width_granularity = FloatProxy([_gl.GL_LINE_WIDTH_GRANULARITY])
+    line_width_range = FloatProxy([_gl.GL_LINE_WIDTH_RANGE], shape=2)
+    point_fade_threshold_size = FloatProxy([_gl.GL_POINT_FADE_THRESHOLD_SIZE], _gl.glPointParameterf, [_gl.GL_POINT_FADE_THRESHOLD_SIZE])
+    point_size = FloatProxy([_gl.GL_POINT_SIZE], _gl.glPointSize)
+    point_size_granularity = FloatProxy([_gl.GL_POINT_SIZE_GRANULARITY])
+    point_size_range = FloatProxy([_gl.GL_POINT_SIZE_RANGE], shape=2)
+    smooth_line_width_range = FloatProxy([_gl.GL_SMOOTH_LINE_WIDTH_RANGE], shape=2)
+    smooth_line_width_granularity = FloatProxy([_gl.GL_SMOOTH_LINE_WIDTH_GRANULARITY])
+
+    # integer values
+    major_version = IntegerProxy([_gl.GL_MAJOR_VERSION])
+    max_3d_texture_size = IntegerProxy([_gl.GL_MAX_3D_TEXTURE_SIZE])
+    max_array_texture_layers = IntegerProxy([_gl.GL_MAX_3D_TEXTURE_SIZE])
+    max_clip_distances = IntegerProxy([_gl.GL_MAX_CLIP_DISTANCES])
+    max_color_texture_samples = IntegerProxy([_gl.GL_MAX_COLOR_TEXTURE_SAMPLES])
+    max_combined_fragment_uniform_components = IntegerProxy([_gl.GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS])
+    max_combined_geometry_uniform_components = IntegerProxy([_gl.GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS])
+    max_combined_texture_image_units = IntegerProxy([_gl.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS])
+    max_combined_uniform_blocks = IntegerProxy([_gl.GL_MAX_COMBINED_UNIFORM_BLOCKS])
+    max_combined_vertex_uniform_components = IntegerProxy([_gl.GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS])
+    max_cube_map_texture_size = IntegerProxy([_gl.GL_MAX_CUBE_MAP_TEXTURE_SIZE])
+    max_depth_texture_samples = IntegerProxy([_gl.GL_MAX_DEPTH_TEXTURE_SAMPLES])
+    max_draw_buffers = IntegerProxy([_gl.GL_MAX_DRAW_BUFFERS])
+    max_elements_indices = IntegerProxy([_gl.GL_MAX_ELEMENTS_INDICES])
+    max_elements_vertices = IntegerProxy([_gl.GL_MAX_ELEMENTS_VERTICES])
+    max_fragment_input_components = IntegerProxy([_gl.GL_MAX_FRAGMENT_INPUT_COMPONENTS])
+    max_fragment_uniform_components = IntegerProxy([_gl.GL_MAX_FRAGMENT_UNIFORM_COMPONENTS])
+    max_fragment_uniform_vectors = IntegerProxy([_gl.GL_MAX_FRAGMENT_UNIFORM_VECTORS])
+    max_fragment_uniform_blocks = IntegerProxy([_gl.GL_MAX_FRAGMENT_UNIFORM_BLOCKS])
+    max_geometry_input_components = IntegerProxy([_gl.GL_MAX_GEOMETRY_INPUT_COMPONENTS])
+    max_geometry_output_components = IntegerProxy([_gl.GL_MAX_GEOMETRY_OUTPUT_COMPONENTS])
+    max_geometry_texture_image_units = IntegerProxy([_gl.GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS])
+    max_geometry_uniform_blocks = IntegerProxy([_gl.GL_MAX_GEOMETRY_UNIFORM_BLOCKS])
+    max_geometry_uniform_components = IntegerProxy([_gl.GL_MAX_GEOMETRY_UNIFORM_COMPONENTS])
+    max_integer_samples = IntegerProxy([_gl.GL_MAX_INTEGER_SAMPLES])
+    max_program_texel_offset = IntegerProxy([_gl.GL_MAX_PROGRAM_TEXEL_OFFSET])
+    min_program_texel_offset = IntegerProxy([_gl.GL_MIN_PROGRAM_TEXEL_OFFSET])
+    max_rectangle_texture_size = IntegerProxy([_gl.GL_MAX_RECTANGLE_TEXTURE_SIZE])
+    max_renderbuffer_size = IntegerProxy([_gl.GL_MAX_RENDERBUFFER_SIZE])
+    max_sample_mask_words = IntegerProxy([_gl.GL_MAX_SAMPLE_MASK_WORDS])
+    max_server_wait_timeout = IntegerProxy([_gl.GL_MAX_SERVER_WAIT_TIMEOUT])
+    max_texture_buffer_size = IntegerProxy([_gl.GL_MAX_TEXTURE_BUFFER_SIZE])
+    max_texture_image_units = IntegerProxy([_gl.GL_MAX_TEXTURE_IMAGE_UNITS])
+    max_texture_lod_bias = IntegerProxy([_gl.GL_MAX_TEXTURE_LOD_BIAS])
+    max_texture_size = IntegerProxy([_gl.GL_MAX_TEXTURE_SIZE])
+    max_uniform_buffer_bindings = IntegerProxy([_gl.GL_MAX_UNIFORM_BUFFER_BINDINGS])
+    max_uniform_block_size = IntegerProxy([_gl.GL_MAX_UNIFORM_BLOCK_SIZE])
+    max_varying_vectors = IntegerProxy([_gl.GL_MAX_VARYING_VECTORS])
+    max_vertex_attribs = IntegerProxy([_gl.GL_MAX_VERTEX_ATTRIBS])
+    max_vertex_texture_image_units = IntegerProxy([_gl.GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS])
+    max_vertex_uniform_components = IntegerProxy([_gl.GL_MAX_VERTEX_UNIFORM_COMPONENTS])
+    max_vertex_uniform_vectors = IntegerProxy([_gl.GL_MAX_VERTEX_UNIFORM_VECTORS])
+    max_vertex_output_components = IntegerProxy([_gl.GL_MAX_VERTEX_OUTPUT_COMPONENTS])
+    max_vertex_uniform_blocks = IntegerProxy([_gl.GL_MAX_VERTEX_UNIFORM_BLOCKS])
+    max_viewport_dims = IntegerProxy([_gl.GL_MAX_VIEWPORT_DIMS])
+    max_viewports = IntegerProxy([_gl.GL_MAX_VIEWPORTS])
+    minor_version = IntegerProxy([_gl.GL_MINOR_VERSION])
+    pack_alignment = IntegerProxy([_gl.GL_PACK_ALIGNMENT])
+    pack_image_height = IntegerProxy([_gl.GL_PACK_IMAGE_HEIGHT])
+    pack_row_length = IntegerProxy([_gl.GL_PACK_ROW_LENGTH], _gl.glPixelStorei, [_gl.GL_PACK_ROW_LENGTH])
+    pack_skip_images = IntegerProxy([_gl.GL_PACK_SKIP_IMAGES], _gl.glPixelStorei, [_gl.GL_PACK_SKIP_IMAGES])
+    pack_skip_pixels = IntegerProxy([_gl.GL_PACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_PACK_SKIP_PIXELS])
+    pack_skip_rows = IntegerProxy([_gl.GL_PACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_PACK_SKIP_ROWS])
+    primitive_restart_index = IntegerProxy([_gl.GL_PRIMITIVE_RESTART_INDEX], _gl.glPrimitiveRestartIndex)
+    sample_buffers = IntegerProxy([_gl.GL_SAMPLE_BUFFERS])
+    samples = IntegerProxy([_gl.GL_SAMPLES])
+    scissor_box = IntegerProxy([_gl.GL_SCISSOR_BOX], _gl.glScissor, shape=4)
+    stencil_clear_value = IntegerProxy([_gl.GL_STENCIL_CLEAR_VALUE], _gl.glClearStencil)
+    subpixel_bits = IntegerProxy([_gl.GL_SUBPIXEL_BITS])
+    uniform_buffer_offset_alignment = IntegerProxy([_gl.GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT])
+    unpack_alignment = IntegerProxy([_gl.GL_UNPACK_ALIGNMENT], _gl.glPixelStorei, [_gl.GL_UNPACK_ALIGNMENT])
+    unpack_image_height = IntegerProxy([_gl.GL_UNPACK_IMAGE_HEIGHT], _gl.glPixelStorei, [_gl.GL_UNPACK_IMAGE_HEIGHT])
+    unpack_row_length = IntegerProxy([_gl.GL_UNPACK_ROW_LENGTH], _gl.glPixelStorei, [_gl.GL_UNPACK_ROW_LENGTH])
+    unpack_skip_images = IntegerProxy([_gl.GL_UNPACK_SKIP_IMAGES], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_IMAGES])
+    unpack_skip_pixels = IntegerProxy([_gl.GL_UNPACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_PIXELS])
+    unpack_skip_rows = IntegerProxy([_gl.GL_UNPACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_ROWS])
+    viewport = IntegerProxy([_gl.GL_VIEWPORT], _gl.glViewport, shape=4) # TODO indexed variant as float
+    viewport_bounds_range = IntegerProxy([_gl.GL_VIEWPORT_BOUNDS_RANGE], shape=2)
+    viewport_subpixel_bits = IntegerProxy([_gl.GL_VIEWPORT_SUBPIXEL_BITS])
+
+    # 64-bit integer values
+    timestamp = Integer64Proxy([_gl.GL_TIMESTAMP])
+
+    # strings
+    vendor = StringProxy(_gl.GL_VENDOR)
+    renderer = StringProxy(_gl.GL_RENDERER)
+    version = StringProxy(_gl.GL_VERSION)
+    shading_language_version = StringProxy(_gl.GL_SHADING_LANGUAGE_VERSION)
+    extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
+
+    # TODO GL_DRAW_BUFFERi
+    # TODO GL_POLYGON_OFFSET_FACTOR, GL_POLYGON_OFFSET_UNITS (glPolygonOffset)
+    # TODO GL_SAMPLE_COVERAGE_VALUE, GL_SAMPLE_COVERAGE_INVERT (glSampleCoverage)
+    # TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
+    # TODO indexed GL_UNIFORM_BUFFER_SIZE, GL_UNIFORM_BUFFER_START
+
+    # TODO stencil:
+    # GL_STENCIL_BACK_FAIL, GL_STENCIL_BACK_PASS_DEPTH_FAIL, GL_STENCIL_BACK_PASS_DEPTH_PASS, GL_STENCIL_FAIL, GL_STENCIL_PASS_DEPTH_FAIL, GL_STENCIL_PASS_DEPTH_PASS...
+    # GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC
+    # GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
+
+def get_default_context(context=None):
+    if context is None:
+        context = Context() # TODO
+    return context
 
 
 # nosetests

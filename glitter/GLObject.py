@@ -1,72 +1,50 @@
-from weakref import WeakSet
 from rawgl import gl as _gl
 
-from Context import default_context
+from Context import get_default_context
 
 class GLObject(object):
-    _generate_id = NotImplemented
-    _delete_id = NotImplemented
-    _type = NotImplemented
-    _db = {}
+    _generate_id = NotImplemented # constructor function, e.g. glGenShader
+    _delete_id = NotImplemented # destructor function, e.g. glDeleteShader
+    _type = NotImplemented # type (if appropriate), e.g. GL_VERTEX_SHADER
+    _db = NotImplemented # name of corresponding object database in context, e.g. "shaders"
 
-    def __init__(self, other=None, context=None):
+    def __init__(self, context=None):
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        if other is None:
-            self._context = context or default_context
-            with self._context:
-                if len(self._generate_id.argtypes) == 0:
-                    self._id = self._generate_id()
-                elif len(self._generate_id.argtypes) == 1:
-                    self._id = self._generate_id(self._type)
-                else:
-                    _id = _gl.GLuint()
-                    self._generate_id(1, _gl.pointer(_id))
-                    self._id = _id.value
-        else:
-            if other._generate_id != self._generate_id:
-                raise TypeError("cannot cast %s into %s" % (other.__class__.__name__, self.__class__.__name__))
-            if other._clone_into.im_func == GLObject._clone_into.im_func: # _clone_into has not been overridden
-                raise TypeError("cannot clone %s" % other.__class__.__name__)
-            self._context = other._context
-            self._id = other._id
-            other._clone_into(self)
-        self._db.setdefault((self._generate_id.__name__, self._id), WeakSet()).add(self)
-
-    @classmethod
-    def _retrieve(cls, _id):
-        return cls._db.get((cls._generate_id.__name__, _id), None)
+        self._context = context or get_default_context()
+        with self._context:
+            if len(self._generate_id.argtypes) == 0:
+                self._id = self._generate_id()
+            elif len(self._generate_id.argtypes) == 1:
+                self._id = self._generate_id(self._type)
+            else:
+                _id = _gl.GLuint()
+                self._generate_id(1, _gl.pointer(_id))
+                self._id = _id.value
+        getattr(self._context, self._db)._objects[self._id] = self
 
     def __del__(self):
         try:
-            self._db[self._generate_id.__name__, self._id].remove(self) # TODO will self have been removed from the WeakSet anyway by now?
-        except:
-            pass
-        try:
-            if not self._db[self._generate_id.__name__, self._id]: # nobody uses the _id any more, so free it
-                if len(self._delete_id.argtypes) == 1:
-                    self._delete_id(self._id)
-                else:
-                    self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
-                self._id = 0
+            if len(self._delete_id.argtypes) == 1:
+                self._delete_id(self._id)
+            else:
+                self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
+            self._id = 0
         except:
             pass
 
-    def _clone_into(self, other):
-        pass
+class BindableObject(GLObject): # TODO this is not generic; e.g. binding buffers to different targets, framebuffers to read or draw only, or textures and samplers to different units is not covered
+    _binding = NotImplemented # name of corresponding binding in context, e.g. "array_buffer_binding"
 
-class BindableObject(GLObject):
-    _binding = NotImplemented
-
-    def __init__(self, other=None, context=None):
-        super(BindableObject, self).__init__(other, context)
+    def __init__(self, context=None):
+        super(BindableObject, self).__init__(context)
         if any(x is NotImplemented for x in (self._binding,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         self._stack = []
     
     def bind(self):
         old_binding = getattr(self._context, self._binding)
-        setattr(self._context, self._binding, self._id)
+        setattr(self._context, self._binding, self)
         return old_binding
 
     def __enter__(self):
@@ -80,8 +58,8 @@ class BeginEndObject(GLObject):
     _begin = NotImplemented
     _end = NotImplemented
 
-    def __init__(self, other=None, context=None):
-        super(BeginEndObject, self).__init__(other, context)
+    def __init__(self, context=None):
+        super(BeginEndObject, self).__init__(context)
         if any(x is NotImplemented for x in (self._begin, self._end)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
 

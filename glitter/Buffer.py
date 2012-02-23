@@ -10,6 +10,7 @@ from GLObject import BindableObject
 class Buffer(BindableObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
+    _db = "buffers"
 
     drawmodes = constants.buffer_drawmodes
     usages = constants.buffer_usages
@@ -17,24 +18,10 @@ class Buffer(BindableObject):
     def __init__(self, data=None, shape=None, dtype=None, usage=None):
         if any(x is NotImplemented for x in (self._target,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        if isinstance(data, Buffer): # copy constructor
-            if shape is not None and _np.prod(shape) != _np.prod(data.shape):
-                raise ValueError("shapes do not match")
-            if dtype is not None:
-                raise ValueError("cannot change dtype on the fly, copy manually")
-            if usage is not None:
-                raise ValueError("cannot change usages on the fly, copy manually")
-            super(Buffer, self).__init__(data)
-        else:
-            super(Buffer, self).__init__()
-            if usage is None:
-                usage = Buffer.usages.STATIC_DRAW
-            self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
-
-    def _clone_into(self, other):
-        super(Buffer, self)._clone_into(self, other)
-        other._shape = self._shape
-        other._dtype = self._dtype
+        super(Buffer, self).__init__()
+        if usage is None:
+            usage = Buffer.usages.STATIC_DRAW
+        self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is None:
@@ -168,9 +155,13 @@ class AtomicCounterBuffer(Buffer):
     _binding = "atomic_counter_buffer_binding"
     _target = _gl.GL_ATOMIC_COUNTER_BUFFER
 
-class CopyReadBuffer(Buffer): pass # TODO
+class CopyReadBuffer(Buffer):
+    _binding = "copy_read_buffer_binding"
+    _target = _gl.GL_COPY_READ_BUFFER
 
-class CopyWriteBuffer(Buffer): pass # TODO
+class CopyWriteBuffer(Buffer):
+    _binding = "copy_write_buffer_binding"
+    _target = _gl.GL_COPY_WRITE_BUFFER
 
 class DrawIndirectBuffer(Buffer):
     _binding = "draw_indirect_buffer_binding"

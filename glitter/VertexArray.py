@@ -62,3 +62,5 @@ class VertexArray(BindableObject):
             with self:
                 self[index].draw(mode, count, first, instances)
 
+# TODO put vertexattribpointer and enablearray calls here
+
