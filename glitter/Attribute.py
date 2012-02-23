@@ -20,7 +20,7 @@ class Attribute(object):
         pass # TODO
 
     def __set__(self, obj, value):
-        pass # TODO
+        pass # TODO if the shader is currently bound, set the attribute at once, else store only
 
     def _on_bind(self):
         pass # TODO call glVertexAttrib; where do we know the index from, glBindAttribLocation? how about layout qualifiers?

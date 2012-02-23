@@ -1,6 +1,7 @@
+from math import sin, pi
 from rawgl import gl
 
-from glut import GlutWindow, main_loop
+from glut import GlutWindow, main_loop, get_elapsed_time
 from ShaderProgram import ShaderProgram
 from VertexArray import VertexArray
 
@@ -24,13 +25,10 @@ fragment_shader = """
 in vec4 ex_color;
 layout(location=0) out vec4 out_color;
 
-uniform float scaling[3];
-uniform vec4 offset[3];
-uniform struct { vec4 x[3]; float y[3]; } a;
-uniform struct { vec4 x[3]; float y[3]; } z[2];
+uniform float scaling;
 
 void main() {
-    out_color = ex_color + offset[2] * scaling[2] + z[1].x[2] * z[1].y[2] + a.x[2] * a.y[1] * z[0].x[0];
+    out_color = ex_color * scaling;
 }
 """
 
@@ -63,16 +61,20 @@ def display():
         vao.draw()
     window.swap_buffers()
 
+def timer():
+    period_length = 0.4
+    shader.scaling = 0.5 + 0.5 * sin(2 * pi * get_elapsed_time() / period_length)
+    window.add_timer(40, timer)
+    window.post_redisplay()
+
 window = GlutWindow(double=True, multisample=True)
 window.display_callback = display
+window.add_timer(40, timer)
 
 vao = VertexArray([vertices, colors], elements=indices)
 shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
 shader.multiplier = 1.0
-shader.scaling = (1.0, 1.0, 1.0)
-shader.offset = ((1.0, 0.0, 0.0, 0.0), (0.0, 1.0, 0.0, 0.0), (0.0, 0.0, 1.0, 0.0))
-
-print shader.scaling.shape, shader.offset.shape
+shader.scaling = 1.0
 
 main_loop()
 

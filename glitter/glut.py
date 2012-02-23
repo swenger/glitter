@@ -1,3 +1,4 @@
+import random as _random
 from rawgl import glut as _glut
 
 from util import Enum
@@ -133,6 +134,11 @@ class GlutWindow(object):
         self._mouse_func = None
         self._motion_func = None
         self._keyboard_func = None
+        
+        self._timer_funcs = {}
+        def timer_func(value):
+            self._timer_funcs.pop(value)()
+        self._timer_func = _glut.glutTimerFunc.argtypes[1](timer_func)
 
         self._name = self._window_title = self._icon_title = name
 
@@ -297,6 +303,13 @@ class GlutWindow(object):
         with self:
             _glut.glutSetIconTitle(icon_title)
 
+    def add_timer(self, msecs, func):
+        timer_id = _random.randint(0, 1 << 30)
+        while timer_id in self._timer_funcs:
+            timer_id = _random.randint(0, 1 << 30)
+        self._timer_funcs[timer_id] = func
+        _glut.glutTimerFunc(msecs, self._timer_func, timer_id)
+
     close_callback = _func_property(_glut.glutCloseFunc)
     display_callback = _func_property(_glut.glutDisplayFunc)
     entry_callback = _func_property(_glut.glutEntryFunc)
@@ -314,7 +327,6 @@ class GlutWindow(object):
     reshape_callback = _func_property(_glut.glutReshapeFunc)
     special_callback = _func_property(_glut.glutSpecialFunc)
     special_up_callback = _func_property(_glut.glutSpecialUpFunc)
-    timer_callback = _func_property(_glut.glutTimerFunc) # within the callback, current window is not necessarily this window
     visibility_callback = _func_property(_glut.glutVisibilityFunc)
     window_status_callback = _func_property(_glut.glutWindowStatusFunc)
     wm_close_callback = _func_property(_glut.glutWMCloseFunc)

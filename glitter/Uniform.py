@@ -15,14 +15,14 @@ class Uniform(object):
     def __get__(self, obj, cls=None):
         with obj._context:
             if self.size == 1:
-                return self.dtype.get_value(obj, self.location)
+                data = self.dtype.get_value(obj, self.location)
+                return data.item() if len(data) == 1 else data
             else:
                 data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, "%s[%d]" % (self.name, i))) for i in range(self.size)]
                 return _np.concatenate([x.squeeze()[None] for x in data])
 
     def __set__(self, obj, value):
-        with obj._context:
-            return self.dtype.set_value(obj, self.location, value, self.size)
+        self.dtype.set_value(obj, self.location, value, self.size)
 
     def _on_bind(self):
         pass # TODO bind textures and set uniforms
