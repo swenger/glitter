@@ -5,6 +5,7 @@ from GLObject import BindableObject
 class TransformFeedback(BindableObject): # TODO
     _generate_id = _gl.glGenTransformFeedbacks
     _delete_id = _gl.glDeleteTransformFeedbacks
+    _db = "transform_feedbacks"
     _binding = "transform_feedback_binding"
     _target = _gl.GL_TRANSFORM_FEEDBACK
 

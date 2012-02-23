@@ -52,7 +52,7 @@ indices = (
     )
 
 def display():
-    gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+    gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
     with shader:
         vao.draw()
     window.swap_buffers()

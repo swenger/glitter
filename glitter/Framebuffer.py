@@ -7,6 +7,7 @@ from util import EnumConstant
 class Framebuffer(BindableObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
+    _db = "framebuffers"
     _target = _gl.GL_FRAMEBUFFER
     _binding = "framebuffer_binding"
 

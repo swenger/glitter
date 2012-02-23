@@ -7,6 +7,7 @@ from Shader import Shader, VertexShader, TesselationControlShader, TesselationEv
 class ShaderProgram(BindableObject):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
+    _db = "shader_programs"
     _binding = "current_program"
 
     def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None):

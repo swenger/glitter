@@ -6,6 +6,7 @@ from GLObject import BindableObject
 class Sampler(BindableObject):
     _generate_id = _gl.glGenSamplers
     _delete_id = _gl.glDeleteSamplers
+    _db = "samplers"
     _binding = "sampler_binding"
 
     compare_funcs = constants.texture_compare_funcs

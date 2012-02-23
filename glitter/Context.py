@@ -196,7 +196,16 @@ class Context(object):
     def __init__(self):
         self.texture_units = TextureUnitList(self)
         self.buffers = GLObjectLibrary(self)
+        self.framebuffers = GLObjectLibrary(self)
+        self.program_pipelines = GLObjectLibrary(self)
+        self.queries = GLObjectLibrary(self)
+        self.renderbuffers = GLObjectLibrary(self)
+        self.samplers = GLObjectLibrary(self)
+        self.shader_programs = GLObjectLibrary(self)
+        self.shaders = GLObjectLibrary(self)
         self.textures = GLObjectLibrary(self)
+        self.transform_feedbacks = GLObjectLibrary(self)
+        self.vertex_arrays = GLObjectLibrary(self)
         # TODO other objects
 
     # buffer bindings

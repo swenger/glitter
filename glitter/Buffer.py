@@ -84,7 +84,7 @@ class ArrayBuffer(Buffer):
     _binding = "array_buffer_binding"
     _target = _gl.GL_ARRAY_BUFFER
 
-    def use(self, index, num_components=None, stride=0, first=0):
+    def _use(self, index, num_components=None, stride=0, first=0):
         if num_components is None:
             if len(self.shape) == 1:
                 num_components = 1
@@ -99,9 +99,12 @@ class ArrayBuffer(Buffer):
             with self:
                 _gl.glVertexAttribIPointer(index, num_components, self.dtype._as_gl(), stride * self.dtype.nbytes, first * self.dtype.nbytes)
 
-        _gl.glEnableVertexAttribArray(index) # TODO this should have __enter__/__exit__ semantics
-
-    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, first=0, instances=None):
+    def draw(self, mode=None, count=None, first=0, instances=None):
+        if mode is None:
+            if len(self.shape) >= 2:
+                mode = constants.buffer_dimensions_to_primitive.get(self.shape[-1], None)
+        if mode is None:
+            raise ValueError("must specify mode")
         if count is None:
             count = self.shape[0]
         if instances is None:

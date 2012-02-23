@@ -5,6 +5,7 @@ from GLObject import BeginEndObject
 class Query(BeginEndObject):
     _generate_id = _gl.glGenQueries
     _delete_id = _gl.glDeleteQueries
+    _db = "queries"
     _begin = _gl.glBeginQuery
     _end = _gl.glEndQuery
     _target = NotImplemented

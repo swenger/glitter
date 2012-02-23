@@ -6,6 +6,7 @@ from Buffer import Buffer, ArrayBuffer, ElementArrayBuffer
 class VertexArray(BindableObject):
     _generate_id = _gl.glGenVertexArrays
     _delete_id = _gl.glDeleteVertexArrays
+    _db = "vertex_arrays"
     _binding = "vertex_array_binding"
 
     def __init__(self, arrays=[], elements=None):
@@ -16,21 +17,23 @@ class VertexArray(BindableObject):
         if elements is not None:
             self.elements = elements
 
-    def __getitem__(self, key):
-        return self._bound_buffers[key]
+    def __getitem__(self, index):
+        return self._bound_buffers[index]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, index, value):
         if not isinstance(value, ArrayBuffer):
             value = ArrayBuffer(value)
         with self:
             with value:
-                value.use(key)
-        self._bound_buffers[key] = value
+                value._use(index)
+            _gl.glEnableVertexAttribArray(index)
+        self._bound_buffers[index] = value
 
-    def __delitem__(self, key):
+    def __delitem__(self, index):
         with self:
-            _gl.glVertexAttribPointer(key, 0, _gl.GL_FLOAT, _gl.GL_FALSE, 0, _gl.POINTER(_gl.GLvoid)())
-        del self._bound_buffers[key]
+            _gl.glVertexAttribPointer(index, 0, _gl.GL_FLOAT, _gl.GL_FALSE, 0, _gl.POINTER(_gl.GLvoid)())
+            _gl.glDisableVertexAttribArray(index)
+        del self._bound_buffers[index]
 
     @property
     def elements(self):
@@ -61,6 +64,4 @@ class VertexArray(BindableObject):
         else:
             with self:
                 self[index].draw(mode, count, first, instances)
-
-# TODO put vertexattribpointer and enablearray calls here
 

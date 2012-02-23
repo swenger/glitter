@@ -6,6 +6,7 @@ from util import ShaderCompileError
 class Shader(GLObject):
     _generate_id = _gl.glCreateShader
     _delete_id = _gl.glDeleteShader
+    _db = "shaders"
 
     def __init__(self, source=None, compile=None):
         if any(x is NotImplemented for x in (self._type,)):
