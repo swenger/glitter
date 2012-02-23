@@ -29,5 +29,5 @@ __all__ = [
 
 def setup_package(): # nosetests
     from glut import GlutWindow # TODO use raw GLX context when it becomes available
-    globals()["glut_window"] = GlutWindow()
+    globals()["glut_window"] = GlutWindow(hide=True)
 
