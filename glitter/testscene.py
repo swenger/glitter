@@ -23,8 +23,12 @@ fragment_shader = """
 in vec4 ex_color;
 out vec4 out_color;
 
+uniform float scaling[3];
+uniform vec4 offset[3];
+uniform struct { vec4 x[3]; float y[3]; } z;
+
 void main() {
-    out_color = ex_color;
+    out_color = ex_color + offset[2] * scaling[2] + z.x[2] * z.y[2];
 }
 """
 

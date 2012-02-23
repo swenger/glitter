@@ -13,6 +13,7 @@ TODO use context's getters and setters in library, make sure to use "with self._
 TODO create raw offscreen GLX context
 TODO replace relative imports by absolute imports
 TODO make rawgl replaceable
+TODO import enums from constants into corresponding classes
 
 
 

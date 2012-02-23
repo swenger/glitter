@@ -13,7 +13,7 @@ class Buffer(ManagedObject, BindableObject):
     _delete_id = _gl.glDeleteBuffers
     _db = "buffers"
 
-    drawmodes = constants.buffer_drawmodes
+    drawmodes = constants.primitive_types
     usages = constants.buffer_usages
 
     def __init__(self, data=None, shape=None, dtype=None, usage=None):

@@ -5,39 +5,11 @@ from rawgl import gl as _gl
 
 from constants import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers
 from dtypes import bool8, int32, int64, float32
+from Proxy import Proxy
 from util import InstanceDescriptorMixin
 
 # TODO with statements for state changes, e.g. with context.set(active_texture=0): ...
 # TODO global statements: glClear etc.
-
-class Proxy(object):
-    def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None):
-        self._getter = getter
-        self._get_args = get_args
-        self._setter = setter
-        self._set_args = set_args
-        self._dtype = dtype
-        self._shape = None if shape is None else tuple(shape) if hasattr(shape, "__iter__") else (shape,)
-
-    def __get__(self, obj, cls=None):
-        _value = _np.empty(self._shape, dtype=self._dtype.as_numpy())
-        args = list(self._get_args) + [_gl.cast(_value.ctypes, self._getter.argtypes[-1])]
-        with obj:
-            self._getter(*args)
-        return _value.item() if _value.shape is () else _value
-
-    def __set__(self, obj, value):
-        if self._setter is None:
-            raise AttributeError("can't set attribute")
-        _value = _np.ascontiguousarray(value, dtype=self._dtype.as_numpy())
-        if len(self._set_args) + len(_value) == len(self._setter.argtypes):
-            args = list(self._set_args) + (list(_value) if _value.ndim == 1 else [x.ctypes for x in _value])
-        elif len(self._set_args) + 1 == len(self._setter.argtypes):
-            args = list(self._set_args) + [_value.ctypes]
-        else:
-            raise RuntimeError("no valid setter invocation found")
-        with obj:
-            self._setter(*args)
 
 class BooleanProxy(Proxy):
     def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
