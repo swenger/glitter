@@ -1,8 +1,8 @@
 from rawgl import gl as _gl
 
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 
-class TransformFeedback(BindableObject): # TODO
+class TransformFeedback(ManagedObject, BindableObject): # TODO
     _generate_id = _gl.glGenTransformFeedbacks
     _delete_id = _gl.glDeleteTransformFeedbacks
     _db = "transform_feedbacks"

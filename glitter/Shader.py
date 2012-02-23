@@ -1,9 +1,9 @@
 from rawgl import gl as _gl
 
-from GLObject import GLObject
+from GLObject import ManagedObject
 from util import ShaderCompileError
 
-class Shader(GLObject):
+class Shader(ManagedObject):
     _generate_id = _gl.glCreateShader
     _delete_id = _gl.glDeleteShader
     _db = "shaders"

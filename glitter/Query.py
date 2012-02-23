@@ -1,8 +1,8 @@
 from rawgl import gl as _gl
 
-from GLObject import BeginEndObject
+from GLObject import ManagedObject, BeginEndObject
 
-class Query(BeginEndObject):
+class Query(ManagedObject, BeginEndObject):
     _generate_id = _gl.glGenQueries
     _delete_id = _gl.glDeleteQueries
     _db = "queries"

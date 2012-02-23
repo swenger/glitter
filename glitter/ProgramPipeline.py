@@ -1,8 +1,8 @@
 from rawgl import gl as _gl
 
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 
-class ProgramPipeline(BindableObject): # TODO
+class ProgramPipeline(ManagedObject, BindableObject): # TODO
     _generate_id = _gl.glGenProgramPipelines
     _delete_id = _gl.glDeleteProgramPipelines
     _db = "program_pipelines"

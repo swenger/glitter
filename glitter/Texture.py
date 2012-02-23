@@ -3,13 +3,13 @@ from rawgl import gl as _gl
 
 import constants
 from dtypes import Datatype
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
 
-class Texture(BindableObject):
+class Texture(ManagedObject, BindableObject):
     _generate_id = _gl.glGenTextures
     _delete_id = _gl.glDeleteTextures
     _db = "textures"

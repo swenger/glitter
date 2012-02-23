@@ -1,8 +1,8 @@
 from rawgl import gl as _gl
 
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 
-class Renderbuffer(BindableObject): # TODO
+class Renderbuffer(ManagedObject, BindableObject): # TODO
     _generate_id = _gl.glGenRenderbuffers
     _delete_id = _gl.glDeleteRenderbuffers
     _db = "renderbuffers"

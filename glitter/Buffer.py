@@ -3,11 +3,12 @@ from rawgl import gl as _gl
 
 import constants
 from dtypes import Datatype, uint32
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 
 # TODO slicing with glGetBufferSubData
+# TODO binding as separate object
 
-class Buffer(BindableObject):
+class Buffer(ManagedObject, BindableObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "buffers"

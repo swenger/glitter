@@ -1,10 +1,10 @@
 from rawgl import gl as _gl
 
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 from util import ShaderLinkError, ShaderValidateError, ListProxy
 from Shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 
-class ShaderProgram(BindableObject):
+class ShaderProgram(ManagedObject, BindableObject):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
     _db = "shader_programs"

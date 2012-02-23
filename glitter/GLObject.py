@@ -3,6 +3,10 @@ from rawgl import gl as _gl
 from Context import get_default_context
 
 class GLObject(object):
+    def __init__(self, context=None):
+        self._context = context or get_default_context()
+
+class ManagedObject(GLObject):
     _generate_id = NotImplemented # constructor function, e.g. glGenShader
     _delete_id = NotImplemented # destructor function, e.g. glDeleteShader
     _type = NotImplemented # type (if appropriate), e.g. GL_VERTEX_SHADER
@@ -11,7 +15,7 @@ class GLObject(object):
     def __init__(self, context=None):
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        self._context = context or get_default_context()
+        super(ManagedObject, self).__init__(context)
         with self._context:
             if len(self._generate_id.argtypes) == 0:
                 self._id = self._generate_id()

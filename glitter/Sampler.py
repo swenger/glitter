@@ -1,9 +1,9 @@
 from rawgl import gl as _gl
 
 import constants
-from GLObject import BindableObject
+from GLObject import ManagedObject, BindableObject
 
-class Sampler(BindableObject):
+class Sampler(ManagedObject, BindableObject):
     _generate_id = _gl.glGenSamplers
     _delete_id = _gl.glDeleteSamplers
     _db = "samplers"
