@@ -140,81 +140,82 @@ class StringProxy(object):
                 _gl.glGetIntegerv(self.count_attr, _gl.pointer(_n))
                 return [_gl.string_at(_gl.glGetStringi(self.arg, i)) for i in range(_n.value)]
 
-class DrawBufferProxy(object):
-    def __init__(self, _context, _id):
+class DrawBufferList(object):
+    def __init__(self, _context):
         self._context = _context
-        self._id = _id
+        self._num_buffers = _context.max_draw_buffers
+
+    def __set__(self, obj, value):
+        _buffers = (_gl.GLenum * self._num_buffers)()
+        for i, o in _itertools.islice(_itertools.izip_longest(range(self._num_buffers), value, fillvalue=None), self._num_buffers):
+            _buffers[i] = _gl.GL_NONE if o is None else o._value
+        with self._context:
+            _gl.glDrawBuffers(self._num_buffers, _buffers)
+
+    def __getitem__(self, index):
+        if not 0 <= index < self._num_buffers:
+            raise IndexError
+        _buffer = _gl.GLint()
+        with self._context:
+            _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + index, _buffer)
+        return read_buffers[_buffer.value]
+
+    def __setitem__(self, index, value):
+        _buffers = (_gl.GLenum * self._num_buffers)()
+        for i in range(self._num_buffers):
+            if i == index:
+                _buffers[i] = value._value if value is not None else _gl.GL_NONE
+            else:
+                _buffers[i] = self[i]._value
+        with self._context:
+            _gl.glDrawBuffers(self._num_buffers, _buffers)
+
+    def __delitem__(self, index):
+        self[index] = None
+
+    def __len__(self):
+        return self._num_buffers
 
     def __str__(self):
-        return str(self.buffer)
+        return str(list(self))
 
     def __repr__(self):
         return str(self)
 
-    @property
-    def buffer(self):
-        _buffer = _gl.GLint()
-        with self._context:
-            _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + self._id, _buffer)
-        return read_buffers[_buffer.value]
-
-    @buffer.setter
-    def buffer(self, buffer):
-        n = len(self._context.draw_buffers)
-        _buffers = (_gl.GLenum * n)()
-        for i in range(n):
-            if i == self._id:
-                _value = buffer._value if buffer is not None else _gl.GL_NONE
-            else:
-                _value = self._context.draw_buffers[i].buffer._value
-            _buffers[i] = _value
-        with self._context:
-            _gl.glDrawBuffers(n, _buffers)
-
-    @buffer.deleter
-    def buffer(self):
-        self.buffer = None
-
-    @property
-    def color_writemask(self):
-        mask = _np.empty(4, bool8.as_numpy())
-        _gl.glGetBooleani_v(_gl.GL_COLOR_WRITEMASK, self._id, _gl.cast(mask.ctypes, _gl.glGetBooleani_v.argtypes[-1]))
-        return mask
-
-    @color_writemask.setter
-    def color_writemask(self, color_writemask):
-        _gl.glColorMaski(self._id, *color_writemask)
-
-    @color_writemask.deleter
-    def color_writemask(self, color_writemask):
-        _gl.glColorMaski(self._id, True, True, True, True)
-
-class DrawBufferList(object):
+class ColorWritemaskList(object):
     def __init__(self, _context):
         self._context = _context
-        self._draw_buffers = [DrawBufferProxy(_context, i) for i in range(_context.max_draw_buffers)]
+        self._num_buffers = _context.max_draw_buffers
 
     def __set__(self, obj, value):
-        _buffers = (_gl.GLenum * len(self))()
-        for i, o in _itertools.islice(_itertools.izip_longest(range(len(self)), value, fillvalue=None), len(self)):
-            _buffers[i] = _gl.GL_NONE if o is None else o._value
-        with obj:
-            _gl.glDrawBuffers(len(self), _buffers)
+        if len(value) != self._num_buffers:
+            raise ValueError("wrong size")
+        for i, v in enumerate(value):
+            self[i] = v
 
     def __getitem__(self, index):
-        return self._draw_buffers[index]
+        if not 0 <= index < self._num_buffers:
+            raise IndexError
+        mask = _np.empty(4, bool8.as_numpy())
+        with self._context:
+            _gl.glGetBooleani_v(_gl.GL_COLOR_WRITEMASK, index, _gl.cast(mask.ctypes, _gl.glGetBooleani_v.argtypes[-1]))
+        return mask
 
     def __setitem__(self, index, value):
-        self._draw_buffers[index].buffer = value
+        with self._context:
+            _gl.glColorMaski(index, *value)
+
+    def __delitem__(self, index):
+        self[index] = (True, True, True, True)
 
     def __len__(self):
-        return len(self._draw_buffers)
+        return self._num_buffers
 
     def __str__(self):
-        return str(self._draw_buffers)
+        return str(_np.array(self))
 
     def __repr__(self):
-        return repr(self._draw_buffers)
+        return str(self)
 
 class BindingProxy(object):
     def __init__(self, setter, set_args=()):
@@ -234,6 +235,12 @@ class TextureUnit(object):
     def __init__(self, _context, _id):
         self._context = _context
         self._id = _id
+
+    def __str__(self):
+        return "GL_TEXTURE%d" % (self._id - _gl.GL_TEXTURE0)
+
+    def __repr__(self):
+        return str(self)
 
     def __enter__(self):
         self._context.__enter__()
@@ -270,10 +277,10 @@ class TextureUnitList(object):
         return len(self._texture_units)
 
     def __str__(self):
-        return str(self._texture_units)
+        return "[%d texture units]" % len(self)
 
     def __repr__(self):
-        return repr(self._texture_units)
+        return str(self)
 
     def bind(self, texture):
         """Bind `texture` to a free unit and return the unit id."""
@@ -306,12 +313,19 @@ class GLObjectLibrary(object):
     def __getitem__(self, key):
         return self._objects[key]
 
+    def __str__(self):
+        return str(dict(self._objects))
+
+    def __repr__(self):
+        return str(self)
+
 class Context(InstanceDescriptorMixin):
     def __enter__(self): pass
     def __exit__(self, type, value, traceback): pass
 
     def __init__(self):
         self.texture_units = TextureUnitList(self)
+        self.color_writemasks = ColorWritemaskList(self)
         self.draw_buffers = DrawBufferList(self)
         self.buffers = GLObjectLibrary(self)
         self.framebuffers = GLObjectLibrary(self)
