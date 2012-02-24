@@ -1,4 +1,4 @@
-from math import sin, pi
+from numpy import array, sin, cos, pi
 from numpy.random import random
 from rawgl import gl
 
@@ -12,12 +12,12 @@ vertex_shader = """
 
 layout(location=0) in vec4 in_position;
 layout(location=1) in vec4 in_color;
-layout(location=2) in float multiplier;
+uniform mat4 modelview_matrix;
 out vec4 ex_color;
 
 void main() {
-    gl_Position = in_position;
-    ex_color = in_color * (1.0 + multiplier);
+    gl_Position = modelview_matrix * in_position;
+    ex_color = in_color;
 }
 """
 
@@ -26,10 +26,9 @@ fragment_shader = """
 #extension GL_ARB_texture_rectangle : enable
 
 in vec4 ex_color;
-layout(location=0) out vec4 out_color;
-
 uniform float scaling;
 uniform sampler2DRect texture;
+layout(location=0) out vec4 out_color;
 
 void main() {
     out_color = ex_color * scaling + texture2DRect(texture, gl_FragCoord.xy);
@@ -66,8 +65,10 @@ def display():
     window.swap_buffers()
 
 def timer():
-    period_length = 0.4
-    shader.scaling = 0.5 + 0.5 * sin(2 * pi * get_elapsed_time() / period_length)
+    t = get_elapsed_time()
+    shader.scaling = 0.5 + 0.5 * sin(2 * pi * t / 1.0)
+    phi = 2 * pi * t / 4.0
+    shader.modelview_matrix = array(((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
     window.add_timer(40, timer)
     window.post_redisplay()
 
@@ -78,10 +79,7 @@ if __name__ == "__main__":
 
     vao = VertexArray([vertices, colors], elements=indices)
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
-    t = RectangleTexture(random((300, 300, 4)).astype("float32"))
-    shader.multiplier = 1.0
-    shader.scaling = 1.0
-    shader.texture = t
+    shader.texture = RectangleTexture(random((300, 300, 4)).astype("float32"))
 
     main_loop()
 
