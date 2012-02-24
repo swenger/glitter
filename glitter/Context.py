@@ -202,6 +202,8 @@ class BindingProxy(object):
         with obj:
             old_value = self.value.get(obj, None)
             self.value[obj] = value
+            if old_value is not None and old_value != value and hasattr(obj, "_on_release_value"):
+                obj._on_release_value()
             if old_value is not None and old_value != value and hasattr(old_value, "_on_release"):
                 old_value._on_release()
             try:
@@ -212,11 +214,14 @@ class BindingProxy(object):
             else:
                 if value is not None and value != old_value and hasattr(value, "_on_bind"):
                     value._on_bind()
+                if value is not None and value != old_value and hasattr(obj, "_on_bind_value"):
+                    obj._on_bind_value()
 
 class TextureUnit(object):
     def __init__(self, _context, _id):
         self._context = _context
         self._id = _id
+        self._use_count = 0
 
     def __str__(self):
         return "GL_TEXTURE%d" % (self._id - _gl.GL_TEXTURE0)
@@ -229,6 +234,15 @@ class TextureUnit(object):
 
     def activate(self):
         self._context.active_texture = self
+
+    def _on_release_value(self):
+        self._use_count -= 1
+
+    def _on_bind_value(self):
+        self._use_count += 1
+
+    def is_available(self):
+        return self._use_count == 0
 
     texture_binding_1d                   = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_1D                  ])
     texture_binding_1d_array             = BindingProxy(_gl.glBindTexture,         [_gl.GL_TEXTURE_1D_ARRAY            ])
@@ -268,7 +282,7 @@ class TextureUnitList(object):
             self._bound_textures[texture] = (unit, refcount + 1)
             return unit._id - _gl.GL_TEXTURE0
         try:
-            unit = _itertools.dropwhile(lambda x: getattr(x, texture._binding) is not None, self).next()
+            unit = _itertools.dropwhile(lambda x: not x.is_available(), self).next()
         except StopIteration:
             raise RuntimeError("no free texture units available")
         setattr(unit, texture._binding, texture)

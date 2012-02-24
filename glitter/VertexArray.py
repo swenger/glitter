@@ -10,15 +10,15 @@ class VertexArray(BindableObject, ManagedObject):
     _db = "vertex_arrays"
     _binding = "vertex_array_binding"
 
-    def __init__(self, arrays=[], elements=None):
+    def __init__(self, attributes=[], elements=None):
         super(VertexArray, self).__init__()
-        self._bound_buffers = {}
-        for i, array in _zip(range(self._context.max_vertex_attribs), arrays, fillvalue=None):
-            self[i] = array
+        self._attributes = {}
+        for i, attributes in _zip(range(self._context.max_vertex_attribs), attributes, fillvalue=None):
+            self[i] = attributes
         self.elements = elements
 
     def __getitem__(self, index):
-        return self._bound_buffers[index]
+        return self._attributes[index]
 
     def __setitem__(self, index, value):
         if value is None:
@@ -32,7 +32,7 @@ class VertexArray(BindableObject, ManagedObject):
                 with value:
                     value._use(index)
                 _gl.glEnableVertexAttribArray(index)
-        self._bound_buffers[index] = value
+        self._attributes[index] = value
 
     def __delitem__(self, index):
         self[index] = None
@@ -59,7 +59,7 @@ class VertexArray(BindableObject, ManagedObject):
                 if self.elements is not None:
                     self.elements.draw(mode, count, first, instances)
                 else:
-                    min(self._bound_buffers.items())[1].draw(mode, count, first, instances)
+                    min(self._attributes.items())[1].draw(mode, count, first, instances)
             else:
                 self[index].draw(mode, count, first, instances)
 

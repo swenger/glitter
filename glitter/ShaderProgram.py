@@ -83,6 +83,13 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     def _detach(self, shader):
         _gl.glDetachShader(self._id, shader._id)
 
+    def _get_texture_unit(self, name):
+        candidates = [x for x in self._variable_proxies if x.name == name]
+        if candidates:
+            return candidates[0].__get__(self, get_texture_unit_instead_of_object=True)
+        else:
+            return None
+
     def _get_active_X(self, getter, location_getter, max_length, index):
         _size = _gl.GLint()
         _type = _gl.GLenum()
@@ -144,7 +151,9 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         return self._log or None
 
     def validate(self):
+        self._on_bind()
         _gl.glValidateProgram(self._id)
+        self._on_release()
         if self._validate_status != _gl.GL_TRUE:
             raise ShaderValidateError(self._log)
         return self._log or None

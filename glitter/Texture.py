@@ -58,7 +58,10 @@ class Texture(ManagedObject, BindReleaseObject):
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
-        if not dtype.is_float():
+        if dtype.is_float():
+            self.min_filter = Texture.min_filters.LINEAR
+            self.mag_filter = Texture.mag_filters.LINEAR
+        else:
             self.min_filter = Texture.min_filters.NEAREST
             self.mag_filter = Texture.mag_filters.NEAREST
 

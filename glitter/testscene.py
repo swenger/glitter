@@ -4,7 +4,7 @@ from rawgl import gl
 
 from glut import GlutWindow, main_loop, get_elapsed_time
 from ShaderProgram import ShaderProgram
-from Texture import RectangleTexture
+from Texture import RectangleTexture, Texture2D
 from VertexArray import VertexArray
 
 vertex_shader = """
@@ -14,10 +14,12 @@ layout(location=0) in vec4 in_position;
 layout(location=1) in vec4 in_color;
 uniform mat4 modelview_matrix;
 out vec4 ex_color;
+out vec2 texcoord;
 
 void main() {
     gl_Position = modelview_matrix * in_position;
     ex_color = in_color;
+    texcoord = in_position.xy * 0.5 + 0.5;
 }
 """
 
@@ -26,12 +28,18 @@ fragment_shader = """
 #extension GL_ARB_texture_rectangle : enable
 
 in vec4 ex_color;
+in vec2 texcoord;
 uniform float scaling;
-uniform sampler2DRect texture;
+uniform sampler2D texture_0;
+uniform sampler2DRect texture_1;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = ex_color * scaling + texture2DRect(texture, gl_FragCoord.xy);
+    out_color = vec4(0.0)
+    //+ ex_color * scaling
+    + texture2D(texture_0, texcoord)
+    * texture2DRect(texture_1, gl_FragCoord.xy / 10.0)
+    ;
 }
 """
 
@@ -61,6 +69,8 @@ indices = (
 def display():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
     with shader:
+        shader._context.active_texture = shader._context.texture_units[1]
+        # TODO somehow, only the texture bound to unit 0 works unless glActiveTexture is set to GL_TEXTURE1
         vao.draw()
     window.swap_buffers()
 
@@ -79,7 +89,10 @@ if __name__ == "__main__":
 
     vao = VertexArray([vertices, colors], elements=indices)
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
-    shader.texture = RectangleTexture(random((300, 300, 4)).astype("float32"))
+    shader.texture_0 = Texture2D(random((30, 30, 4)).astype("float32"))
+    shader.texture_0.min_filter = Texture2D.min_filters.NEAREST
+    shader.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
+    shader.texture_1 = RectangleTexture(random((30, 30, 4)).astype("float32"))
 
     main_loop()
 

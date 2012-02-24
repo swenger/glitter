@@ -14,14 +14,17 @@ class Uniform(object):
     def __str__(self):
         return "uniform %s %s[%d];" % (self.dtype, self.name, self.size)
 
-    def __get__(self, obj, cls=None):
-        with obj._context:
-            if self.size == 1:
-                data = self.dtype.get_value(obj, self.location)
-                return data.item() if len(data) == 1 else data
-            else:
-                data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, "%s[%d]" % (self.name, i))) for i in range(self.size)]
-                return _np.concatenate([x.squeeze()[None] for x in data])
+    def __get__(self, obj, cls=None, get_texture_unit_instead_of_object=False):
+        if self.dtype.is_texture() and not get_texture_unit_instead_of_object:
+            return self.textures[0] if len(self.textures) == 1 else self.textures
+        else:
+            with obj._context:
+                if self.size == 1:
+                    data = self.dtype.get_value(obj, self.location)
+                    return data.item() if len(data) == 1 else data
+                else:
+                    data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, "%s[%d]" % (self.name, i))) for i in range(self.size)]
+                    return _np.concatenate([x.squeeze()[None] for x in data])
 
     def __set__(self, obj, value):
         if self.dtype.is_texture():
