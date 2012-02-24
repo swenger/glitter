@@ -2,7 +2,7 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
-from dtypes import Datatype, uint32
+from dtypes import Datatype, make_dtype, make_array
 from GLObject import BindableObject, ManagedObject
 
 # TODO slicing with glGetBufferSubData
@@ -28,10 +28,12 @@ class Buffer(BindableObject, ManagedObject):
         if data is None:
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
+            if dtype._as_gl() is None:
+                raise ValueError("dtype cannot be represented in OpenGL")
             self._shape = shape
-            self._dtype = dtype
+            self._dtype = make_dtype(dtype, force_gl=True)
         else:
-            data = _np.ascontiguousarray(data, dtype.as_numpy() if dtype else None)
+            data = make_array(data, dtype, force_gl=True)
             if shape is not None:
                 data = data.reshape(shape)
             self._shape = data.shape
@@ -41,7 +43,7 @@ class Buffer(BindableObject, ManagedObject):
             usage = self.usage
 
         _nbytes = _np.prod(self._shape) * self._dtype.nbytes
-        _data = _np.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
+        _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         with self:
             _gl.glBufferData(self._target, _nbytes, _data, usage._value)
 
@@ -123,18 +125,7 @@ class ElementArrayBuffer(Buffer):
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is not None:
-            if dtype is None:
-                if isinstance(data, _np.ndarray):
-                    dtype = Datatype.from_numpy(data.dtype)
-                    if not dtype.is_integer():
-                        raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)
-                    if not dtype.is_unsigned():
-                        dtype = dtype.as_unsigned()
-                    if dtype._as_gl() is None:
-                        dtype = dtype.as_nbytes(4)
-                else:
-                    dtype = uint32
-            data = _np.ascontiguousarray(data, dtype.as_numpy())
+            data = make_array(data, dtype, force_integer=True, force_unsigned=True)
             dtype = Datatype.from_numpy(data.dtype)
         if dtype.is_signed() or not dtype.is_integer():
             raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)

@@ -1,6 +1,8 @@
 import numpy as _np
 from rawgl import gl as _gl
 
+from dtypes import make_array
+
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None, enum=None):
         self._getter = getter
@@ -29,7 +31,7 @@ class Proxy(object):
             raise AttributeError("can't set attribute")
         if self._enum is not None:
             value = [x._value for x in value]
-        _value = _np.ascontiguousarray(value, dtype=self._dtype.as_numpy())
+        _value = make_array(value, dtype=self._dtype)
         if len(self._set_args) + len(_value) == len(self._setter.argtypes):
             args = list(self._set_args) + (list(_value) if _value.ndim == 1 else [x.ctypes for x in _value])
         elif len(self._set_args) + 1 == len(self._setter.argtypes):

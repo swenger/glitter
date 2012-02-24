@@ -82,6 +82,13 @@ int64 = Datatype(integer=True, signed=True, nptype=_np.int64, charcode="i64")
 float32 = Datatype(integer=False, signed=True, nptype=_np.float32, _gltype=_gl.GL_FLOAT, charcode="f")
 float64 = Datatype(integer=False, signed=True, nptype=_np.float64, _gltype=_gl.GL_DOUBLE, charcode="d")
 
+def make_dtype(dtype, force_integer=False, force_unsigned=False, force_float=False, force_gl=False, max_width=4):
+    return dtype # TODO
+
+def make_array(data, dtype=None, force_integer=False, force_unsigned=False, force_float=False, force_gl=False, max_width=4):
+    # TODO produce results with the smallest possible dtype, at most max_width bytes etc.
+    return _np.ascontiguousarray(data, dtype.as_numpy() if dtype is not None else None)
+
 class ShaderDatatype(object):
     _gltype_db = {}
     _db = {}

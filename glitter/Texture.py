@@ -2,7 +2,7 @@ import numpy as _np
 from rawgl import gl as _gl
 
 import constants
-from dtypes import Datatype
+from dtypes import Datatype, make_array
 from GLObject import ManagedObject, BindReleaseObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
@@ -41,7 +41,7 @@ class Texture(ManagedObject, BindReleaseObject):
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
         else:
-            data = _np.ascontiguousarray(data, dtype.as_numpy() if dtype else None)
+            data = make_array(data, dtype)
             if shape is not None:
                 data = data.reshape(shape)
             shape = data.shape
@@ -53,7 +53,7 @@ class Texture(ManagedObject, BindReleaseObject):
         _iformat = constants.dtype_to_gl_iformat[dtype, shape[-1]]
         _format = constants.dtype_to_gl_format[dtype, shape[-1]]
         _type = dtype._as_gl()
-        _data = _np.ascontiguousarray(data).ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
+        _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]

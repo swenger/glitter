@@ -12,9 +12,7 @@ vertex attrib pointer bindings have to go through a vertex array object
 texture bindings have to go through a texture unit object or are automatically attached to one
 ids and bindings are only unique per context!
 
-TODO glTexParameter per unit or per texture?
-TODO glBindTexture bind different targets to same unit simultaneously?
-
+TODO add a generic mechanism for setting and resetting state
 TODO move tests to separate package
 TODO use context's getters and setters in library, make sure to use "with self._context" where necessary
 TODO create raw offscreen GLX context

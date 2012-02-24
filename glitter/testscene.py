@@ -1,3 +1,8 @@
+import logging
+logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+import rawgl
+rawgl.DEBUG_MODE = True
+
 from numpy import array, sin, cos, pi, eye
 from numpy.random import random
 from rawgl import gl
@@ -45,6 +50,28 @@ void main() {
 }
 """
 
+copy_vertex_shader = """
+#version 410 core
+
+layout(location=0) in vec4 in_position;
+
+void main() {
+    gl_Position = in_position;
+}
+"""
+
+copy_fragment_shader = """
+#version 410 core
+#extension GL_ARB_texture_rectangle : enable
+
+uniform sampler2DRect texture;
+layout(location=0) out vec4 out_color;
+
+void main() {
+    out_color = vec4(0.0, 0.0, 0.0, 1.0) + texture2DRect(texture, gl_FragCoord.xy); // TODO this is black
+}
+"""
+
 vertices = (
     ( 0.0,  0.0, 0.0, 1.0), # center
     (-0.2,  0.8, 0.0, 1.0), ( 0.2,  0.8, 0.0, 1.0), ( 0.0,  0.8, 0.0, 1.0), ( 0.0,  1.0, 0.0, 1.0), # top
@@ -61,12 +88,12 @@ colors = (
     (0.0, 0.0, 1.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 1.0, 1.0, 1.0), (1.0, 0.0, 0.0, 1.0), # right
     )
 
-indices = (
+indices = array((
     (0,  1,  3), (0,  3,  2), ( 3,  1,  4), ( 3,  4,  2), # top
     (0,  5,  7), (0,  7,  6), ( 7,  5,  8), ( 7,  8,  6), # bottom
     (0,  9, 11), (0, 11, 10), (11,  9, 12), (11, 12, 10), # left
     (0, 13, 15), (0, 15, 14), (15, 13, 16), (15, 16, 14), # right
-    )
+    ), dtype="uint8")
 
 def display():
     with fbo:
@@ -74,10 +101,10 @@ def display():
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
         with shader:
             vao.draw()
-    
-    from scipy.misc import imsave
-    print fbo[0].get_data().sum()
-    imsave("/tmp/test.png", fbo[0].get_data())
+
+    with copy_shader:
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
+        fullscreen_quad.draw()
 
     window.swap_buffers()
 
@@ -90,7 +117,7 @@ def timer():
     window.post_redisplay()
 
 if __name__ == "__main__":
-    window = GlutWindow(hide=True)# DEBUG double=True, multisample=True)
+    window = GlutWindow(double=True, multisample=True)
     window.display_callback = display
     window.add_timer(40, timer)
 
@@ -105,7 +132,9 @@ if __name__ == "__main__":
     shader.scaling = 1
     shader.modelview_matrix = eye(4)
 
-    display()
+    copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader)
+    copy_shader.texture = fbo[0]
+    fullscreen_quad = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], array(((0, 1, 2), (0, 2, 3)), dtype="uint8"))
 
-    #main_loop()
+    main_loop()
 
