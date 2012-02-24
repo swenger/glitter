@@ -14,8 +14,7 @@ class VertexArray(BindableObject, ManagedObject):
         self._bound_buffers = {}
         for i, array in enumerate(arrays):
             self[i] = array
-        if elements is not None:
-            self.elements = elements
+        self.elements = elements
 
     def __getitem__(self, index):
         return self._bound_buffers[index]
@@ -41,27 +40,23 @@ class VertexArray(BindableObject, ManagedObject):
 
     @elements.setter
     def elements(self, elements):
-        if not isinstance(elements, ElementArrayBuffer):
+        if elements is not None and not isinstance(elements, ElementArrayBuffer):
             elements = ElementArrayBuffer(elements)
         with self:
-            elements.bind()
+            self._context.element_array_buffer_binding = elements
         self._elements = elements
 
     @elements.deleter
     def elements(self):
-        with self:
-            self._elements._bind(self._elements._target, 0)
-        del self._elements
+        self.elements = None
 
     def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, first=0, instances=None, index=None):
-        if index is None:
-            if hasattr(self, "_elements"):
-                with self:
+        with self:
+            if index is None:
+                if self.elements is not None:
                     self.elements.draw(mode, count, first, instances)
-            else:
-                with self:
+                else:
                     min(self._bound_buffers.items())[1].draw(mode, count, first, instances)
-        else:
-            with self:
+            else:
                 self[index].draw(mode, count, first, instances)
 
