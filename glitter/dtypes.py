@@ -132,7 +132,10 @@ class ShaderDatatype(object):
             with program:
                 setter(location, count, _gl.cast(value.ctypes, setter.argtypes[-1]))
         else:
-            setter = getattr(_gl, "glUniformMatrix%dx%d%sv" % (self._shape[1], self._shape[0], dtype.charcode))
+            if self._shape[0] == self._shape[1]:
+                setter = getattr(_gl, "glUniformMatrix%d%sv" % (self._shape[0], dtype.charcode))
+            else:
+                setter = getattr(_gl, "glUniformMatrix%dx%d%sv" % (self._shape[1], self._shape[0], dtype.charcode))
             with program:
                 setter(location, count, _gl.GL_TRUE, _gl.cast(value.ctypes, setter.argtypes[-1]))
 

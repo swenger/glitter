@@ -1,3 +1,4 @@
+from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
 from GLObject import BindableObject, ManagedObject
@@ -12,7 +13,7 @@ class VertexArray(BindableObject, ManagedObject):
     def __init__(self, arrays=[], elements=None):
         super(VertexArray, self).__init__()
         self._bound_buffers = {}
-        for i, array in enumerate(arrays):
+        for i, array in _zip(range(self._context.max_vertex_attribs), arrays, fillvalue=None):
             self[i] = array
         self.elements = elements
 
@@ -20,19 +21,21 @@ class VertexArray(BindableObject, ManagedObject):
         return self._bound_buffers[index]
 
     def __setitem__(self, index, value):
-        if not isinstance(value, ArrayBuffer):
-            value = ArrayBuffer(value)
-        with self:
-            with value:
-                value._use(index)
-            _gl.glEnableVertexAttribArray(index)
+        if value is None:
+            with self:
+                _gl.glVertexAttribPointer(index, 4, _gl.GL_FLOAT, _gl.GL_FALSE, 0, _gl.POINTER(_gl.GLvoid)())
+                _gl.glDisableVertexAttribArray(index)
+        else:
+            if not isinstance(value, ArrayBuffer):
+                value = ArrayBuffer(value)
+            with self:
+                with value:
+                    value._use(index)
+                _gl.glEnableVertexAttribArray(index)
         self._bound_buffers[index] = value
 
     def __delitem__(self, index):
-        with self:
-            _gl.glVertexAttribPointer(index, 0, _gl.GL_FLOAT, _gl.GL_FALSE, 0, _gl.POINTER(_gl.GLvoid)())
-            _gl.glDisableVertexAttribArray(index)
-        del self._bound_buffers[index]
+        self[index] = None
 
     @property
     def elements(self):
