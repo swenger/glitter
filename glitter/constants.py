@@ -115,12 +115,6 @@ buffer_usages = Enum(
 
 buffer_dimensions_to_primitive = {1: _gl.GL_POINTS, 2: _gl.GL_LINES, 3: _gl.GL_TRIANGLES}
 
-framebuffer_attachment_names = Enum(
-        DEPTH=_gl.GL_DEPTH_ATTACHMENT,
-        STENCIL=_gl.GL_STENCIL_ATTACHMENT,
-        DEPTH_STENCIL=_gl.GL_DEPTH_STENCIL_ATTACHMENT,
-)
-
 blend_functions = Enum(
         ZERO=_gl.GL_ZERO,
         ONE=_gl.GL_ONE,

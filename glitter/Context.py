@@ -413,6 +413,7 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     max_array_texture_layers = IntegerProxy([_gl.GL_MAX_3D_TEXTURE_SIZE])
     max_clip_distances = IntegerProxy([_gl.GL_MAX_CLIP_DISTANCES])
     max_color_texture_samples = IntegerProxy([_gl.GL_MAX_COLOR_TEXTURE_SAMPLES])
+    max_color_attachments = IntegerProxy([_gl.GL_MAX_COLOR_ATTACHMENTS])
     max_combined_fragment_uniform_components = IntegerProxy([_gl.GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS])
     max_combined_geometry_uniform_components = IntegerProxy([_gl.GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS])
     max_combined_texture_image_units = IntegerProxy([_gl.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS])
