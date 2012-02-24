@@ -1,6 +1,8 @@
 from rawgl import gl as _gl
 
-from Context import get_default_context
+def get_default_context():
+    from Context import get_default_context
+    return get_default_context()
 
 class GLObject(object):
     def __init__(self, context=None):

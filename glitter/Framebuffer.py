@@ -7,16 +7,19 @@ class Framebuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "framebuffers"
-    _binding = "framebuffer_draw_binding"
+    _binding = "draw_framebuffer_binding"
     _target = _gl.GL_DRAW_FRAMEBUFFER
 
     def __init__(self, attachments=[], depth=None, stencil=None):
         super(Framebuffer, self).__init__()
         self._attachments = {}
         for i, attachment in _zip(range(self._context.max_color_attachments), attachments, fillvalue=None):
-            self[i] = attachment
-        self.depth = depth
-        self.stencil = stencil
+            if attachment is not None: # TODO bind nothing instead
+                self[i] = attachment
+        if depth is not None: # TODO bind nothing instead
+            self.depth = depth
+        if stencil is not None: # TODO bind nothing instead
+            self.stencil = stencil
 
     def __getitem__(self, index):
         return self._attachments[index]
@@ -26,6 +29,12 @@ class Framebuffer(BindableObject, ManagedObject):
 
     def __delitem__(self, index):
         self.attach(index, None)
+
+    def _on_bind(self):
+        pass # TODO self._context.draw_buffers = range(len(self)) or the like, also viewport, color_writemask, depth_writemask
+
+    def _on_release(self):
+        pass # TODO reset draw buffers
 
     def attach(self, index, texture=None, level=0):
         with self:

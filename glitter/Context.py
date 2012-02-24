@@ -6,7 +6,8 @@ from rawgl import gl as _gl
 from constants import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers
 from dtypes import bool8, int32, int64, float32
 from Proxy import Proxy
-from util import InstanceDescriptorMixin
+from util import InstanceDescriptorMixin, EnumConstant
+from GLObject import BindableObject
 
 # TODO with statements for state changes, e.g. with context.set(active_texture=0): ...
 # TODO global statements: glClear etc.
@@ -120,11 +121,11 @@ class DrawBufferList(object):
     def __set__(self, obj, value):
         _buffers = (_gl.GLenum * self._num_buffers)()
         for i, o in _itertools.islice(_itertools.izip_longest(range(self._num_buffers), value, fillvalue=None), self._num_buffers):
-            _buffers[i] = _gl.GL_NONE if o is None else o._value
+            _buffers[i] = _gl.GL_NONE if o is None else o._value if isinstance(o, EnumConstant) else _gl.GL_COLOR_ATTACHMENT0 + o
         with self._context:
             _gl.glDrawBuffers(self._num_buffers, _buffers)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index): # TODO return color attachments as integers
         if not 0 <= index < self._num_buffers:
             raise IndexError
         _buffer = _gl.GLint()
@@ -132,7 +133,7 @@ class DrawBufferList(object):
             _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + index, _buffer)
         return read_buffers[_buffer.value]
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value): # TODO set color attachments as integers
         _buffers = (_gl.GLenum * self._num_buffers)()
         for i in range(self._num_buffers):
             if i == index:
@@ -217,20 +218,17 @@ class BindingProxy(object):
                 if value is not None and value != old_value and hasattr(obj, "_on_bind_value"):
                     obj._on_bind_value()
 
-class TextureUnit(object):
+class TextureUnit(BindableObject):
+    _binding = "active_texture"
+
     def __init__(self, _context, _id):
+        super(TextureUnit, self).__init__(_context)
         self._context = _context
         self._id = _id
         self._use_count = 0
 
     def __str__(self):
         return "GL_TEXTURE%d" % (self._id - _gl.GL_TEXTURE0)
-
-    def __enter__(self):
-        self._context.__enter__()
-
-    def __exit__(self, type, value, traceback):
-        self._context.__exit__(type, value, traceback)
 
     def activate(self):
         self._context.active_texture = self

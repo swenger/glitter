@@ -1,8 +1,10 @@
-from numpy import array, sin, cos, pi
+from numpy import array, sin, cos, pi, eye
 from numpy.random import random
 from rawgl import gl
 
+from dtypes import float32
 from glut import GlutWindow, main_loop, get_elapsed_time
+from Framebuffer import Framebuffer
 from ShaderProgram import ShaderProgram
 from Texture import RectangleTexture, Texture2D
 from VertexArray import VertexArray
@@ -67,11 +69,16 @@ indices = (
     )
 
 def display():
-    gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
-    with shader:
-        shader._context.active_texture = shader._context.texture_units[1]
-        # TODO somehow, only the texture bound to unit 0 works unless glActiveTexture is set to GL_TEXTURE1
-        vao.draw()
+    with fbo:
+        fbo._context.draw_buffers = [0] # TODO set automatically in FBO
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
+        with shader:
+            vao.draw()
+    
+    from scipy.misc import imsave
+    print fbo[0].get_data().sum()
+    imsave("/tmp/test.png", fbo[0].get_data())
+
     window.swap_buffers()
 
 def timer():
@@ -83,16 +90,22 @@ def timer():
     window.post_redisplay()
 
 if __name__ == "__main__":
-    window = GlutWindow(double=True, multisample=True)
+    window = GlutWindow(hide=True)# DEBUG double=True, multisample=True)
     window.display_callback = display
     window.add_timer(40, timer)
 
+    texture = Texture2D(shape=(300, 300, 3), dtype=float32)
+    fbo = Framebuffer([texture])
     vao = VertexArray([vertices, colors], elements=indices)
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
     shader.texture_0 = Texture2D(random((30, 30, 4)).astype("float32"))
     shader.texture_0.min_filter = Texture2D.min_filters.NEAREST
     shader.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
     shader.texture_1 = RectangleTexture(random((30, 30, 4)).astype("float32"))
+    shader.scaling = 1
+    shader.modelview_matrix = eye(4)
 
-    main_loop()
+    display()
+
+    #main_loop()
 
