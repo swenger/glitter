@@ -71,16 +71,17 @@ def timer():
     window.add_timer(40, timer)
     window.post_redisplay()
 
-window = GlutWindow(double=True, multisample=True)
-window.display_callback = display
-window.add_timer(40, timer)
+if __name__ == "__main__":
+    window = GlutWindow(double=True, multisample=True)
+    window.display_callback = display
+    window.add_timer(40, timer)
 
-vao = VertexArray([vertices, colors], elements=indices)
-shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
-t = RectangleTexture(random((300, 300, 4)).astype("float32"))
-shader.multiplier = 1.0
-shader.scaling = 1.0
-shader.texture = t
+    vao = VertexArray([vertices, colors], elements=indices)
+    shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
+    t = RectangleTexture(random((300, 300, 4)).astype("float32"))
+    shader.multiplier = 1.0
+    shader.scaling = 1.0
+    shader.texture = t
 
-main_loop()
+    main_loop()
 
