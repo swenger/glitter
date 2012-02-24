@@ -96,12 +96,14 @@ indices = array((
     ), dtype="uint8")
 
 def display():
+    logging.info("\nusing fbo")
     with fbo:
         fbo._context.draw_buffers = [0] # TODO set automatically in FBO
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
         with shader:
             vao.draw()
 
+    logging.info("\nusing copy shader")
     with copy_shader:
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
         fullscreen_quad.draw()
