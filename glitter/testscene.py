@@ -1,7 +1,7 @@
 import logging
-logging.basicConfig(level=logging.DEBUG, format="%(message)s")
-import rawgl
-rawgl.DEBUG_MODE = True
+#logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+#import rawgl
+#rawgl.DEBUG_MODE = True
 
 from numpy import array, sin, cos, pi, eye
 from numpy.random import random
@@ -68,7 +68,7 @@ uniform sampler2DRect texture;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = vec4(0.0, 0.0, 0.0, 1.0) + texture2DRect(texture, gl_FragCoord.xy); // TODO this is black
+    out_color = texture2DRect(texture, gl_FragCoord.xy);
 }
 """
 
@@ -121,22 +121,19 @@ def timer():
 if __name__ == "__main__":
     window = GlutWindow(double=True, multisample=True)
     window.display_callback = display
-    window.add_timer(40, timer)
 
-    texture = Texture2D(shape=(300, 300, 3), dtype=float32)
-    fbo = Framebuffer([texture])
+    fbo = Framebuffer([RectangleTexture(shape=(300, 300, 3), dtype=float32)])
     vao = VertexArray([vertices, colors], elements=indices)
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
     shader.texture_0 = Texture2D(random((30, 30, 4)).astype("float32"))
     shader.texture_0.min_filter = Texture2D.min_filters.NEAREST
     shader.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
     shader.texture_1 = RectangleTexture(random((30, 30, 4)).astype("float32"))
-    shader.scaling = 1
-    shader.modelview_matrix = eye(4)
 
     copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader)
     copy_shader.texture = fbo[0]
     fullscreen_quad = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], array(((0, 1, 2), (0, 2, 3)), dtype="uint8"))
 
+    timer()
     main_loop()
 
