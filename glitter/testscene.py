@@ -1,8 +1,3 @@
-import logging
-#logging.basicConfig(level=logging.DEBUG, format="%(message)s")
-#import rawgl
-#rawgl.DEBUG_MODE = True
-
 from numpy import array, sin, cos, pi
 from numpy.random import random
 from rawgl import gl

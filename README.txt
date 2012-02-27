@@ -19,25 +19,7 @@ TODO create raw offscreen GLX context
 TODO replace relative imports by absolute imports
 TODO make rawgl replaceable
 TODO import enums from constants into corresponding classes
-
-
-
-TODO:
-
-ab0 = ArrayBuffer(random((32, 3)))
-ab1 = ArrayBuffer(random((32, 3)))
-eab = ElementArrayBuffer((random((16, 3)) * 32).astype(uint8))
-vao = VertexArray([ab0, ab1], elements=eab)
-
-shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
-shader.texture1 = Texture2D(random((32, 32, 3)).astype(float32))
-shader.texture2 = Texture2D(random((32, 32, 3)).astype(float32))
-
-fbo = FBO()
-fbo.color_attachments[0] = shader.texture1
-fbo.color_attachments[1] = shader.texture2
-
-with shader: # TODO autobind textures
-	fbo.clear() # TODO
-	vao.draw()
+TODO glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
+TODO transparent CUDA and OpenCL interoperability
+TODO context generation and switching
 
