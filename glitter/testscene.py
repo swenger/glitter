@@ -1,3 +1,12 @@
+import logging
+logger = logging.getLogger("rawgl")
+logger.setLevel(logging.DEBUG)
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s: %(message)s")
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
 from numpy import array, sin, cos, pi
 from numpy.random import random
 from rawgl import gl
@@ -91,6 +100,8 @@ indices = array((
     ), dtype="uint8")
 
 def display():
+    logger.info("enter display()")
+
     with fbo:
         fbo._context.draw_buffers = [0] # TODO set automatically in FBO
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
@@ -103,15 +114,20 @@ def display():
 
     window.swap_buffers()
 
+    logger.info("leave display()")
+    logger.disabled = True
+
 def timer():
     t = get_elapsed_time()
     shader.scaling = 0.5 + 0.5 * sin(2 * pi * t / 1.0)
     phi = 2 * pi * t / 4.0
     shader.modelview_matrix = array(((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
-    window.add_timer(40, timer)
+    window.add_timer(10, timer)
     window.post_redisplay()
 
 if __name__ == "__main__":
+    logger.disabled = True
+
     window = GlutWindow(double=True, multisample=True)
     window.display_callback = display
 
@@ -128,5 +144,8 @@ if __name__ == "__main__":
     fullscreen_quad = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], array(((0, 1, 2), (0, 2, 3)), dtype="uint8"))
 
     timer()
+
+    logger.disabled = False
+
     main_loop()
 
