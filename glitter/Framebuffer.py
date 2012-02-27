@@ -44,7 +44,7 @@ class Framebuffer(BindableObject, ManagedObject):
                 _gl.glFramebufferTexture(self._target, _gl.GL_COLOR_ATTACHMENT0 + index, 0 if texture is None else texture._id, level)
         self._attachments[index] = texture
 
-    # TODO properties for viewport, color_writemask, depth_writemask
+    # TODO properties for viewport, color_writemask, depth_writemask, blend_func, blend_equation
 
     @property
     def depth(self):

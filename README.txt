@@ -1,25 +1,32 @@
 Design principles:
-- The user should not need to use the raw GL/GLUT wrappers at any time.
-- If possible, changes in the GL should be reflected in the wrapper, but unchecked caching is okay if it cannot easily be avoided (e.g. to keep references to bound shader objects).
-- When choosing between inituitive use and performance, choose intuitive use (no premature optimization; make it run, then make it fast).
+- The user should not (need to) use the raw GL/GLUT wrappers at any time.
+- If possible, changes in the GL should be reflected in the wrapper, but unchecked caching is okay to keep references to bound objects.
+- Choose inituitive use over performance (no premature optimization; make it run, then make it fast).
 - Array data is represented in numpy, but objects should convert as appropriate.
 - Objects should accept convenience constructor parameters (e.g. VertexArray, ShaderProgram).
-- Binding and unbinding should be possible manually via bind(), or automatically via with statements.
-- All GL state changes that are independent of objects should go through a Context object.
+- Binding and unbinding should be possible automatically (via with statements) as well as manually.
+- All GL state changes that are independent of objects should go through a Context object. Other changes go through the corresponding objects:
+  - Vertex attribute pointer bindings are performed by vertex array objects only.
+  - Settings for draw buffers other than the screen are performed by framebuffer objects only.
+  - Texture bindings are performed by shader programs only.
 - Platform independence should be sought for, although Linux/GLX is the primary target.
 
-vertex attrib pointer bindings have to go through a vertex array object
-texture bindings have to go through a texture unit object or are automatically attached to one
-ids and bindings are only unique per context!
+Remember:
+- IDs and bindings are only unique per context!
+- glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
+- docs: epydoc --html glitter
 
-TODO add a generic mechanism for setting and resetting state
-TODO move tests to separate package
-TODO use context's getters and setters in library, make sure to use "with self._context" where necessary
-TODO create raw offscreen GLX context
-TODO replace relative imports by absolute imports
-TODO make rawgl replaceable
-TODO import enums from constants into corresponding classes
-TODO glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
-TODO transparent CUDA and OpenCL interoperability
-TODO context generation and switching
+TODO:
+- import enums from constants into corresponding classes
+- package structure:
+  - better module names (avoid name clashes with classes); maybe subpackages?
+  - replace relative imports by absolute imports
+  - move tests to a separate package
+- contexts:
+  - add a generic mechanism for setting and resetting state and use it (instead of maintaining stacks in objects)
+  - use context's getters and setters in library, make sure to use "with self._context" where necessary
+  - create a raw offscreen GLX context class with context generation and switching and a GLUT context class (or make GlutWindow a Context subclass)
+- make rawgl replaceable
+- transparent CUDA and OpenCL interoperability
+- write documentation and tests
 
