@@ -2,7 +2,7 @@ from collections import OrderedDict as _odict
 import re as _re
 from rawgl import gl as _gl
 
-from constants import transform_feedback_buffer_modes
+import constants
 from dtypes import int32, ShaderDatatype
 from GLObject import BindableObject, ManagedObject
 from util import ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin
@@ -21,6 +21,8 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     _db = "shader_programs"
     _binding = "current_program"
 
+    transform_feedback_buffer_modes = constants.transform_feedback_buffer_modes
+
     def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None):
         super(ShaderProgram, self).__init__()
         self._shaders = []
@@ -36,7 +38,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         self._active_uniforms = ProgramProxy(self._id, _gl.GL_ACTIVE_UNIFORMS)
         self._active_uniform_max_length = ProgramProxy(self._id, _gl.GL_ACTIVE_UNIFORM_MAX_LENGTH)
         self._program_binary_length = ProgramProxy(self._id, _gl.GL_PROGRAM_BINARY_LENGTH)
-        self._transform_feedback_buffer_mode = ProgramProxy(self._id, _gl.GL_TRANSFORM_FEEDBACK_BUFFER_MODE, transform_feedback_buffer_modes)
+        self._transform_feedback_buffer_mode = ProgramProxy(self._id, _gl.GL_TRANSFORM_FEEDBACK_BUFFER_MODE, self.transform_feedback_buffer_modes)
         self._transform_feedback_varyings = ProgramProxy(self._id, _gl.GL_TRANSFORM_FEEDBACK_VARYINGS)
         self._transform_feedback_varying_max_length = ProgramProxy(self._id, _gl.GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH)
 

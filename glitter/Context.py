@@ -3,7 +3,7 @@ from weakref import WeakKeyDictionary, WeakValueDictionary
 import numpy as _np
 from rawgl import gl as _gl
 
-from constants import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers
+import constants
 from dtypes import bool8, int32, int64, float32
 from Proxy import Proxy
 from util import InstanceDescriptorMixin, EnumConstant
@@ -48,7 +48,7 @@ class BlendFuncProxy(object): # TODO indexed variant
         _value = _gl.GLint()
         with obj:
             _gl.glGetIntegerv(self._arg, _gl.pointer(_value))
-        return blend_functions[_value.value]
+        return constants.blend_functions[_value.value]
 
     def __set__(self, obj, value):
         src_rgb = value if self._arg == _gl.GL_BLEND_SRC_RGB else obj.blend_src_rgb
@@ -66,7 +66,7 @@ class BlendEquationProxy(object): # TODO indexed variant
         _value = _gl.GLint()
         with obj:
             _gl.glGetIntegerv(self._arg, _gl.pointer(_value))
-        return blend_equations[_value.value]
+        return constants.blend_equations[_value.value]
 
     def __set__(self, obj, value):
         mode_rgb = value if self._arg == _gl.GL_BLEND_EQUATION_RGB else obj.blend_equation_rgb
@@ -96,7 +96,7 @@ class EnumProxy(object):
 
 class HintProxy(EnumProxy):
     def __init__(self, hint):
-        super(HintProxy, self).__init__(hints, hint, _gl.glHint, [hint])
+        super(HintProxy, self).__init__(constants.hints, hint, _gl.glHint, [hint])
 
 class StringProxy(object):
     def __init__(self, arg, count_attr=None):
@@ -131,7 +131,7 @@ class DrawBufferList(object):
         _buffer = _gl.GLint()
         with self._context:
             _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + index, _buffer)
-        return read_buffers[_buffer.value]
+        return constants.read_buffers[_buffer.value]
 
     def __setitem__(self, index, value): # TODO set color attachments as integers
         _buffers = (_gl.GLenum * self._num_buffers)()
@@ -329,6 +329,19 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
         self.textures = GLObjectLibrary(self)
         self.transform_feedbacks = GLObjectLibrary(self)
         self.vertex_arrays = GLObjectLibrary(self)
+
+    # enums
+    blend_functions = constants.blend_functions
+    blend_equations = constants.blend_equations
+    depth_functions = constants.depth_functions
+    draw_buffers = constants.draw_buffers
+    hints = constants.hints
+    provoking_vertices = constants.provoking_vertices
+    logic_op_modes = constants.logic_op_modes
+    provoke_modes = constants.provoke_modes
+    color_read_formats = constants.color_read_formats
+    color_read_types = constants.color_read_types
+    read_buffers = constants.read_buffers
 
     # buffer bindings
     array_buffer_binding                 = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ARRAY_BUFFER                ])

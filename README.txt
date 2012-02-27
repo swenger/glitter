@@ -14,10 +14,10 @@ Design principles:
 Remember:
 - IDs and bindings are only unique per context!
 - glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
+- when using enums, import them into the corresponding class
 - docs: epydoc --html glitter
 
 TODO:
-- import enums from constants into corresponding classes
 - package structure:
   - better module names (avoid name clashes with classes); maybe subpackages?
   - replace relative imports by absolute imports
