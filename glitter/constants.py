@@ -242,7 +242,7 @@ color_read_types = Enum(
         FLOAT_32_UNSIGNED_INT_24_8_REV=_gl.GL_FLOAT_32_UNSIGNED_INT_24_8_REV,
 )
 
-read_buffers = Enum( # TODO GL_COLOR_ATTACHMENTi
+read_buffers = Enum(
         NONE=_gl.GL_NONE,
         FRONT_LEFT=_gl.GL_FRONT_LEFT,
         FRONT_RIGHT=_gl.GL_FRONT_RIGHT,
@@ -251,8 +251,11 @@ read_buffers = Enum( # TODO GL_COLOR_ATTACHMENTi
         FRONT=_gl.GL_FRONT,
         BACK=_gl.GL_BACK,
         LEFT=_gl.GL_LEFT,
-        RIGHT=_gl.GL_RIGHT
+        RIGHT=_gl.GL_RIGHT,
 )
+for key, value in _gl.__dict__.items():
+    if key.startswith("GL_COLOR_ATTACHMENT"):
+        read_buffers._add(key, value)
 
 transform_feedback_buffer_modes = Enum(
         SEPARATE_ATTRIBS=_gl.GL_SEPARATE_ATTRIBS,

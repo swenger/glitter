@@ -103,7 +103,6 @@ def display():
     logger.info("enter display()")
 
     with fbo:
-        fbo._context.draw_buffers = [0] # TODO set automatically in FBO
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
         with shader:
             vao.draw()

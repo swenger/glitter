@@ -14,12 +14,9 @@ class Framebuffer(BindableObject, ManagedObject):
         super(Framebuffer, self).__init__()
         self._attachments = {}
         for i, attachment in _zip(range(self._context.max_color_attachments), attachments, fillvalue=None):
-            if attachment is not None: # TODO bind nothing instead
-                self[i] = attachment
-        if depth is not None: # TODO bind nothing instead
-            self.depth = depth
-        if stencil is not None: # TODO bind nothing instead
-            self.stencil = stencil
+            self[i] = attachment
+        self.depth = depth
+        self.stencil = stencil
 
     def __getitem__(self, index):
         return self._attachments[index]
@@ -31,15 +28,23 @@ class Framebuffer(BindableObject, ManagedObject):
         self.attach(index, None)
 
     def _on_bind(self):
-        pass # TODO self._context.draw_buffers = range(len(self)) or the like, also viewport, color_writemask, depth_writemask
+        self._stack.append(self._context.draw_buffers)
+        self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
+        # TODO set viewport, color_writemask, depth_writemask
 
     def _on_release(self):
-        pass # TODO reset draw buffers
+        # TODO reset viewport, color_writemask, depth_writemask
+        self._context.draw_buffers = self._stack.pop()
 
     def attach(self, index, texture=None, level=0):
         with self:
-            _gl.glFramebufferTexture(self._target, _gl.GL_COLOR_ATTACHMENT0 + index, 0 if texture is None else texture._id, level)
+            if texture is None:
+                _gl.glFramebufferTextureLayer(self._target, _gl.GL_COLOR_ATTACHMENT0 + index, 0, level, 0)
+            else:
+                _gl.glFramebufferTexture(self._target, _gl.GL_COLOR_ATTACHMENT0 + index, 0 if texture is None else texture._id, level)
         self._attachments[index] = texture
+
+    # TODO properties for viewport, color_writemask, depth_writemask
 
     @property
     def depth(self):
@@ -55,7 +60,10 @@ class Framebuffer(BindableObject, ManagedObject):
 
     def attach_depth(self, texture=None, level=0):
         with self:
-            _gl.glFramebufferTexture(self._target, _gl.GL_DEPTH_ATTACHMENT, 0 if texture is None else texture._id, level)
+            if texture is None:
+                _gl.glFramebufferTextureLayer(self._target, _gl.GL_DEPTH_ATTACHMENT, 0, level, 0)
+            else:
+                _gl.glFramebufferTexture(self._target, _gl.GL_DEPTH_ATTACHMENT, 0 if texture is None else texture._id, level)
         self._depth = texture
 
     @property
@@ -72,6 +80,9 @@ class Framebuffer(BindableObject, ManagedObject):
 
     def attach_stencil(self, texture=None, level=0):
         with self:
-            _gl.glFramebufferTexture(self._target, _gl.GL_STENCIL_ATTACHMENT, 0 if texture is None else texture._id, level)
+            if texture is None:
+                _gl.glFramebufferTextureLayer(self._target, _gl.GL_STENCIL_ATTACHMENT, 0, level, 0)
+            else:
+                _gl.glFramebufferTexture(self._target, _gl.GL_STENCIL_ATTACHMENT, 0 if texture is None else texture._id, level)
         self._stencil = texture
 
