@@ -1,7 +1,7 @@
 from rawgl import gl as _gl
 
-from dtypes import uint8, uint16, uint32, int8, int16, int32, float32
-from util import Enum
+from glitter.util.dtypes import uint8, uint16, uint32, int8, int16, int32, float32
+from glitter.util.enum import Enum
 
 texture_formats = [ # (_np dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
         ((uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),

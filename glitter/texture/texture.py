@@ -1,9 +1,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-import constants
-from dtypes import Datatype, make_array
-from GLObject import ManagedObject, BindReleaseObject
+from glitter.util import constants, Datatype, make_array, ManagedObject, BindReleaseObject
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
@@ -431,48 +429,17 @@ class MultisampleTextureArray2D(Texture):
     _ndim = 4
     _set = _gl.glTexImage3D
 
-
-# nosetests
-
-def check_texture(shape, dtype, vrange):
-    minval, maxval = vrange
-    data = ((maxval - minval) * _np.random.random(shape) + minval).astype(dtype.as_numpy())
-    texture = Texture3D(data)
-    assert (texture.data == data).all(), "data is broken"
-    assert texture.shape == data.shape, "shape is broken"
-    assert texture.dtype == Datatype.from_numpy(data.dtype), "dtype is broken"
-
-def test_texture_generator():
-    import dtypes
-
-    shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
-    dtypes = (dtypes.uint8, dtypes.int8, dtypes.uint16, dtypes.int16, dtypes.uint32, dtypes.int32, dtypes.float32)
-    vranges = ((0, (1<<8)-1), (-1<<7, (1<<7)-1), (0, (1<<16)-1), (-1<<15, (1<<15)-1), (0, (1<<32)-1), (-1<<31, (1<<31)-1), (-10.0, 10.0))
-
-    for shape in shapes:
-        for dtype, vrange in zip(dtypes, vranges):
-            yield check_texture, shape, dtype, vrange
-
-def check_property(texture, name):
-    from util import EnumConstant
-    value = getattr(texture, name)
-    if isinstance(value, EnumConstant):
-        valid_values = value._enum._reverse_dict.values()
-        for value in valid_values:
-            setattr(texture, name, value)
-            assert getattr(texture, name) == value, "property %s is broken" % name
-    else:
-        setattr(texture, name, value)
-        assert getattr(texture, name) == value, "property %s is broken" % name
-
-def test_property_generator():
-    texture = Texture3D(_np.random.random((1, 1, 1, 4)).astype(_np.float32))
-    properties = [x for x in dir(texture) if not x.startswith("_") and type(getattr(Texture, x)) == property]
-
-    for p in properties:
-        if p in ("data", "shape", "dtype"):
-            continue
-        if getattr(Texture, p).fset is None:
-            continue
-        yield check_property, texture, p
+__all__ = [
+    "Texture",
+    "Texture1D",
+    "Texture2D",
+    "TextureArray1D",
+    "RectangleTexture",
+    "BufferTexture",
+    "CubeMapTexture",
+    "MultisampleTexture2D",
+    "Texture3D",
+    "TextureArray2D",
+    "MultisampleTextureArray2D",
+]
 

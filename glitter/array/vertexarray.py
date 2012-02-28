@@ -1,8 +1,8 @@
 from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
-from GLObject import BindableObject, ManagedObject
-from Buffer import Buffer, ArrayBuffer, ElementArrayBuffer
+from glitter.util import BindableObject, ManagedObject
+from glitter.array import BaseBuffer, ArrayBuffer, ElementArrayBuffer
 
 class VertexArray(BindableObject, ManagedObject):
     _generate_id = _gl.glGenVertexArrays
@@ -53,7 +53,7 @@ class VertexArray(BindableObject, ManagedObject):
     def elements(self):
         self.elements = None
 
-    def draw(self, mode=Buffer.drawmodes.TRIANGLES, count=None, first=0, instances=None, index=None):
+    def draw(self, mode=BaseBuffer.drawmodes.TRIANGLES, count=None, first=0, instances=None, index=None):
         with self:
             if index is None:
                 if self.elements is not None:
@@ -62,4 +62,6 @@ class VertexArray(BindableObject, ManagedObject):
                     min(self._attributes.items())[1].draw(mode, count, first, instances)
             else:
                 self[index].draw(mode, count, first, instances)
+
+__all__ = ["VertexArray"]
 

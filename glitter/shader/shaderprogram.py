@@ -2,14 +2,10 @@ from collections import OrderedDict as _odict
 import re as _re
 from rawgl import gl as _gl
 
-import constants
-from dtypes import int32, ShaderDatatype
-from GLObject import BindableObject, ManagedObject
-from util import ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin
-from Shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
-from Proxy import Proxy
-from Attribute import Attribute, AttributeStruct, AttributeStructArray
-from Uniform import Uniform, UniformStruct, UniformStructArray
+from glitter.util import constants, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy
+from glitter.shader.shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
+from glitter.shader.attribute import Attribute, AttributeStruct, AttributeStructArray
+from glitter.shader.uniform import Uniform, UniformStruct, UniformStructArray
 
 class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
@@ -165,4 +161,6 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         _info_log = _gl.create_string_buffer(self._info_log_length)
         _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
+
+__all__ = ["ShaderProgram"]
 

@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from GLObject import BindableObject, ManagedObject
+from glitter.util import BindableObject, ManagedObject
 
 class TransformFeedback(BindableObject, ManagedObject): # TODO
     _generate_id = _gl.glGenTransformFeedbacks
@@ -10,4 +10,6 @@ class TransformFeedback(BindableObject, ManagedObject): # TODO
     _target = _gl.GL_TRANSFORM_FEEDBACK
 
     # TODO glBeginTransformFeedback, glPauseTransformFeedback, glResumeTransformFeedback, glEndTransformFeedback etc.
+
+__all__ = ["TransformFeedback"]
 

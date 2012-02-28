@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from GLObject import ManagedObject, BeginEndObject
+from glitter.util import ManagedObject, BeginEndObject
 
 class Query(ManagedObject, BeginEndObject):
     _generate_id = _gl.glGenQueries
@@ -60,4 +60,13 @@ class TransformFeedbackPrimitivesWrittenQuery(Query):
 
 class TimeElapsedQuery(Query):
     _target = _gl.GL_TIME_ELAPSED
+
+__all__ = [
+    "Query",
+    "SamplesPassedQuery",
+    "AnySamplesPassedQuery",
+    "PrimitivesGeneratedQuery",
+    "TransformFeedbackPrimitivesWrittenQuery",
+    "TimeElapsedQuery",
+]
 

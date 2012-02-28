@@ -1,32 +1,8 @@
-from Buffer import Buffer, ArrayBuffer, ElementArrayBuffer, AtomicCounterBuffer, CopyReadBuffer, CopyWriteBuffer, DrawIndirectBuffer, PixelPackBuffer, PixelUnpackBuffer, TextureBuffer, TransformFeedbackBuffer, UniformBuffer
-from Context import Context
-from Framebuffer import Framebuffer
-from ProgramPipeline import ProgramPipeline
-from Query import Query, SamplesPassedQuery, AnySamplesPassedQuery, PrimitivesGeneratedQuery, TransformFeedbackPrimitivesWrittenQuery, TimeElapsedQuery
-from Renderbuffer import Renderbuffer
-from Sampler import Sampler
-from ShaderProgram import ShaderProgram
-from Shader import Shader, VertexShader, GeometryShader, FragmentShader
-from Sync import Sync
-from Texture import Texture, Texture1D, Texture2D, TextureArray1D, RectangleTexture, BufferTexture, CubeMapTexture, MultisampleTexture2D, Texture3D, TextureArray2D, MultisampleTextureArray2D
-from TransformFeedback import TransformFeedback
-from VertexArray import VertexArray
-
-__all__ = [
-"Buffer", "ArrayBuffer", "ElementArrayBuffer", "AtomicCounterBuffer",
-"CopyReadBuffer", "CopyWriteBuffer", "DrawIndirectBuffer", "PixelPackBuffer",
-"PixelUnpackBuffer", "TextureBuffer", "TransformFeedbackBuffer",
-"UniformBuffer", "Context", "Framebuffer", "ProgramPipeline", "Query",
-"SamplesPassedQuery", "AnySamplesPassedQuery", "PrimitivesGeneratedQuery",
-"TransformFeedbackPrimitivesWrittenQuery", "TimeElapsedQuery", "Renderbuffer",
-"Sampler", "ShaderProgram", "Shader", "VertexShader", "GeometryShader",
-"FragmentShader", "Sync", "Texture", "Texture1D", "Texture2D",
-"TextureArray1D", "RectangleTexture", "BufferTexture", "CubeMapTexture",
-"MultisampleTexture2D", "Texture3D", "TextureArray2D",
-"MultisampleTextureArray2D", "TransformFeedback", "VertexArray",
-]
-
-def setup_package(): # nosetests
-    from glut import GlutWindow # TODO use raw GLX context when it becomes available
-    globals()["glut_window"] = GlutWindow(hide=True)
+from array import *
+from context import *
+from framebuffer import *
+from misc import *
+from shader import *
+from texture import *
+from util import *
 

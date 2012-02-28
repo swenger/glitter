@@ -1,7 +1,7 @@
 from rawgl import gl as _gl
 
 def get_default_context():
-    from Context import get_default_context
+    from glitter.context import get_default_context
     return get_default_context()
 
 class GLObject(object):
@@ -115,4 +115,6 @@ class BeginEndObject(GLObject):
 
     def __exit__(self, type, value, traceback):
         self.end()
+
+__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "BeginEndObject"]
 

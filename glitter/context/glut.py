@@ -1,7 +1,7 @@
 import random as _random
 from rawgl import glut as _glut
 
-from util import Enum
+from glitter.util import Enum
 
 # TODO glutCreateSubWindow and glutGet(GLUT_WINDOW_PARENT)
 # TODO Menus, Font Rendering, Geometric Object Rendering
@@ -332,4 +332,17 @@ class GlutWindow(object):
     wm_close_callback = _func_property(_glut.glutWMCloseFunc)
 
 initialize()
+
+__all__ = [
+    "main_loop",
+    "main_loop_event",
+    "leave_main_loop",
+    "get_screen_shape",
+    "get_screen_shape_mm",
+    "get_elapsed_time",
+    "get_shift_state",
+    "get_ctrl_state",
+    "get_alt_state",
+    "GlutWindow",
+]
 

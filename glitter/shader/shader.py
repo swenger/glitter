@@ -1,7 +1,6 @@
 from rawgl import gl as _gl
 
-from GLObject import ManagedObject
-from util import ShaderCompileError
+from glitter.util import ManagedObject, ShaderCompileError
 
 class Shader(ManagedObject):
     _generate_id = _gl.glCreateShader
@@ -63,4 +62,13 @@ class GeometryShader(Shader):
 
 class FragmentShader(Shader):
     _type = _gl.GL_FRAGMENT_SHADER
+
+__all__ = [
+    "Shader",
+    "VertexShader",
+    "TesselationControlShader",
+    "TesselationEvaluationShader",
+    "GeometryShader",
+    "FragmentShader",
+]
 

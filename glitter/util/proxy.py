@@ -1,7 +1,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from dtypes import make_array
+from glitter.util.dtypes import make_array
 
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None, enum=None):
@@ -40,4 +40,33 @@ class Proxy(object):
             raise RuntimeError("no valid setter invocation found")
         with obj:
             self._setter(*args)
+
+class ListProxy(object):
+    def __init__(self, lst, insert_callback=None, delete_callback=None):
+        self._lst = lst
+        self._insert_callback = insert_callback
+        self._delete_callback = delete_callback
+
+    def append(self, x):
+        self._lst.append(x)
+        self._insert_callback(x)
+
+    def extend(self, xs):
+        for x in xs:
+            self.append(x)
+
+    def remove(self, x):
+        self._lst.remove(x)
+        self._delete_callback(x)
+
+    def __iadd__(self, xs):
+        self.extend(xs)
+
+    def __getitem__(self, key):
+        return self._lst[key]
+
+    def __len__(self):
+        return len(self._lst)
+
+__all__ = ["Proxy", "ListProxy"]
 

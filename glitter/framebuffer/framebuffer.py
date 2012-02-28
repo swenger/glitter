@@ -1,7 +1,7 @@
 from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
-from GLObject import BindableObject, ManagedObject
+from glitter.util import BindableObject, ManagedObject
 
 class Framebuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenFramebuffers
@@ -85,4 +85,6 @@ class Framebuffer(BindableObject, ManagedObject):
             else:
                 _gl.glFramebufferTexture(self._target, _gl.GL_STENCIL_ATTACHMENT, 0 if texture is None else texture._id, level)
         self._stencil = texture
+
+__all__ = ["Framebuffer"]
 

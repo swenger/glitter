@@ -11,12 +11,8 @@ from numpy import array, sin, cos, pi
 from numpy.random import random
 from rawgl import gl
 
-from dtypes import float32
-from glut import GlutWindow, main_loop, get_elapsed_time
-from Framebuffer import Framebuffer
-from ShaderProgram import ShaderProgram
-from Texture import RectangleTexture, Texture2D
-from VertexArray import VertexArray
+from glitter import Framebuffer, ShaderProgram, RectangleTexture, Texture2D, VertexArray, float32
+from glitter.context.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
 #version 410 core
