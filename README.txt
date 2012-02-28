@@ -1,5 +1,7 @@
 Design principles:
 - The user should not (need to) use the raw GL/GLUT wrappers at any time.
+- The library has a focus on GPGPU computing, but standard usage should also be possible.
+- No loss of precision should occur when copying data to and from the GPU.
 - If possible, changes in the GL should be reflected in the wrapper, but unchecked caching is okay to keep references to bound objects.
 - Choose inituitive use over performance (no premature optimization; make it run, then make it fast).
 - Array data is represented in numpy, but objects should convert as appropriate.
