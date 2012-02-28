@@ -58,7 +58,7 @@ class BindableObject(GLObject):
     
     def bind(self):
         old_binding = getattr(self._context, self._binding)
-        setattr(self._context, self._binding, self)
+        setattr(self._context, self._binding, self._bind_value if hasattr(self, "_bind_value") else self)
         return old_binding
 
     def __enter__(self):
@@ -69,6 +69,12 @@ class BindableObject(GLObject):
         old_binding = self._stack.pop()
         setattr(self._context, self._binding, old_binding)
         self._context.__exit__(type, value, traceback)
+
+class Reset(BindableObject):
+    def __init__(self, context, prop, value):
+        self._binding = prop
+        self._bind_value = value
+        super(Reset, self).__init__(context)
 
 class BindReleaseObject(GLObject):
     bind = NotImplemented
@@ -86,7 +92,6 @@ class BindReleaseObject(GLObject):
     def __exit__(self, type, value, traceback):
         self.release()
         self._context.__exit__(type, value, traceback)
-
 
 class BeginEndObject(GLObject):
     _target = NotImplemented
@@ -116,5 +121,5 @@ class BeginEndObject(GLObject):
     def __exit__(self, type, value, traceback):
         self.end()
 
-__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "BeginEndObject"]
+__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "BeginEndObject", "Reset"]
 

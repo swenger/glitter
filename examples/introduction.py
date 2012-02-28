@@ -99,12 +99,12 @@ def display():
     logger.info("enter display()")
 
     with fbo:
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
+        fbo.clear()
         with shader:
             vao.draw()
 
     with copy_shader:
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT) # TODO
+        window.clear()
         fullscreen_quad.draw()
 
     window.swap_buffers()

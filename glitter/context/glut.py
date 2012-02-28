@@ -2,6 +2,7 @@ import random as _random
 from rawgl import glut as _glut
 
 from glitter.util import Enum
+from glitter.context.context import Context
 
 # TODO glutCreateSubWindow and glutGet(GLUT_WINDOW_PARENT)
 # TODO Menus, Font Rendering, Geometric Object Rendering
@@ -102,7 +103,7 @@ def get_alt_state():
     """Only available in keyboard, special, and mouse callbacks."""
     return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_ALT)
 
-class GlutWindow(object):
+class GlutWindow(Context):
     cursors = _cursors
 
     def __init__(self, version=(4, 0), compatibility_profile=False,

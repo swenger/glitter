@@ -1,7 +1,7 @@
 from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 
-from glitter.util import constants, InstanceDescriptorMixin
+from glitter.util import constants, InstanceDescriptorMixin, Reset
 from glitter.context.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.context.textures import TextureUnitList
 from glitter.context.drawbuffers import DrawBufferList, ColorWritemaskList
@@ -237,6 +237,19 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     # GL_STENCIL_BACK_FAIL, GL_STENCIL_BACK_PASS_DEPTH_FAIL, GL_STENCIL_BACK_PASS_DEPTH_PASS, GL_STENCIL_FAIL, GL_STENCIL_PASS_DEPTH_FAIL, GL_STENCIL_PASS_DEPTH_PASS...
     # GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC
     # GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
+
+    def _clear(self, color=True, depth=True, stencil=True):
+        # TODO set and reset clear color/depth/stencil if given as arrays
+        _gl.glClear(
+                (_gl.GL_COLOR_BUFFER_BIT if color else 0) |
+                (_gl.GL_DEPTH_BUFFER_BIT if depth else 0) |
+                (_gl.GL_STENCIL_BUFFER_BIT if stencil else 0)
+                )
+
+    def clear(self, color=True, depth=True, stencil=True):
+        with self:
+            with Reset(self, "draw_framebuffer_binding", None):
+                self._clear(color, depth, stencil)
 
 def get_default_context(_={}):
     return _.setdefault("context", Context()) # TODO get context from windowing system

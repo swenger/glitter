@@ -86,5 +86,9 @@ class Framebuffer(BindableObject, ManagedObject):
                 _gl.glFramebufferTexture(self._target, _gl.GL_STENCIL_ATTACHMENT, 0 if texture is None else texture._id, level)
         self._stencil = texture
 
+    def clear(self, color=True, depth=True, stencil=True):
+        with self:
+            self._context._clear(color, depth, stencil)
+
 __all__ = ["Framebuffer"]
 
