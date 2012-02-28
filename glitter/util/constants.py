@@ -262,3 +262,10 @@ transform_feedback_buffer_modes = Enum(
         INTERLEAVED_ATTRIBS=_gl.GL_INTERLEAVED_ATTRIBS,
 )
 
+client_wait_sync_returns = Enum(
+        ALREADY_SIGNALED=_gl.GL_ALREADY_SIGNALED,
+        TIMEOUT_EXPIRED=_gl.GL_TIMEOUT_EXPIRED,
+        CONDITION_SATISFIED=_gl.GL_CONDITION_SATISFIED,
+        WAIT_FAILED=_gl.GL_WAIT_FAILED,
+)
+

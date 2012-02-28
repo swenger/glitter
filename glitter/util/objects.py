@@ -19,23 +19,23 @@ class ManagedObject(GLObject): # inherit from BindableObject, then ManagedObject
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(ManagedObject, self).__init__(context)
         with self._context:
-            if len(self._generate_id.argtypes) == 0:
-                self._id = self._generate_id()
-            elif len(self._generate_id.argtypes) == 1:
+            if hasattr(self._generate_id, "argtypes") and len(self._generate_id.argtypes) == 1:
                 self._id = self._generate_id(self._type)
-            else:
+            elif hasattr(self._generate_id, "argtypes") and len(self._generate_id.argtypes) == 2:
                 _id = _gl.GLuint()
                 self._generate_id(1, _gl.pointer(_id))
                 self._id = _id.value
+            else:
+                self._id = self._generate_id()
         getattr(self._context, self._db)._objects[self._id] = self
 
     def __del__(self):
         try:
             with self._context:
-                if len(self._delete_id.argtypes) == 1:
-                    self._delete_id(self._id)
-                else:
+                if hasattr(self._delete_id, "argtypes") and len(self._delete_id.argtypes) == 2:
                     self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
+                else:
+                    self._delete_id(self._id)
             self._id = 0
         except:
             pass
