@@ -1,7 +1,7 @@
 from rawgl import gl as _gl
 
-from glitter.util.objects import ManagedObject
-from glitter.util import constants
+from glitter.utils.objects import ManagedObject
+from glitter.utils import constants
 
 class Sync(ManagedObject):
     _delete_id = _gl.glDeleteSync

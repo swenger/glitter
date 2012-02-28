@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from glitter.util import BindableObject, ManagedObject
+from glitter.utils import BindableObject, ManagedObject
 
 class TransformFeedback(BindableObject, ManagedObject):
     _generate_id = _gl.glGenTransformFeedbacks

@@ -1,8 +1,8 @@
-from array import *
-from context import *
-from framebuffer import *
+from arrays import *
+from contexts import *
+from framebuffers import *
 from misc import *
-from shader import *
-from texture import *
-from util import *
+from shaders import *
+from textures import *
+from utils import *
 

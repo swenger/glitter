@@ -1,7 +1,7 @@
 import numpy
 
 from glitter import EnumConstant
-from glitter.context import Context
+from glitter.contexts import Context
 
 def check_property(context, name):
     value = getattr(context, name)

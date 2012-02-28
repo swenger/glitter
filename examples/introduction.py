@@ -9,10 +9,9 @@ logger.addHandler(ch)
 
 from numpy import array, sin, cos, pi
 from numpy.random import random
-from rawgl import gl
 
-from glitter import Framebuffer, ShaderProgram, RectangleTexture, Texture2D, VertexArray, float32
-from glitter.context.glut import GlutWindow, main_loop, get_elapsed_time
+from glitter import Framebuffer, ShaderProgram, RectangleTexture, Texture2D, VertexArray
+from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
 #version 410 core

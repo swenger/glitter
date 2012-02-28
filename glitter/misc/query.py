@@ -1,6 +1,6 @@
 from rawgl import gl as _gl
 
-from glitter.util import ManagedObject, BeginEndObject
+from glitter.utils import ManagedObject, BeginEndObject
 
 class Query(ManagedObject, BeginEndObject):
     _generate_id = _gl.glGenQueries
