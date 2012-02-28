@@ -83,9 +83,9 @@ class BindingProxy(object):
         with obj:
             old_value = self.value.get(obj, None)
             self.value[obj] = value
-            if old_value is not None and old_value != value and hasattr(obj, "_on_release_value"):
+            if old_value is not None and old_value != value and hasattr(obj, "_on_release_value") and obj._on_release_value is not NotImplemented:
                 obj._on_release_value()
-            if old_value is not None and old_value != value and hasattr(old_value, "_on_release"):
+            if old_value is not None and old_value != value and hasattr(old_value, "_on_release") and old_value._on_release is not NotImplemented:
                 old_value._on_release()
             try:
                 self.setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self.set_args] + [0 if value is None else value._id]))
@@ -93,8 +93,8 @@ class BindingProxy(object):
                 self.value[obj] = old_value
                 raise
             else:
-                if value is not None and value != old_value and hasattr(value, "_on_bind"):
+                if value is not None and value != old_value and hasattr(value, "_on_bind") and value._on_bind is not NotImplemented:
                     value._on_bind()
-                if value is not None and value != old_value and hasattr(obj, "_on_bind_value"):
+                if value is not None and value != old_value and hasattr(obj, "_on_bind_value") and obj._on_bind_value is not NotImplemented:
                     obj._on_bind_value()
 

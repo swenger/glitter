@@ -1,14 +1,11 @@
 from rawgl import gl as _gl
 
-from glitter.utils import ManagedObject, BeginEndObject
+from glitter.utils import ManagedObject, BindReleaseObject
 
-class Query(ManagedObject, BeginEndObject):
+class Query(ManagedObject, BindReleaseObject):
     _generate_id = _gl.glGenQueries
     _delete_id = _gl.glDeleteQueries
     _db = "queries"
-    _begin = _gl.glBeginQuery
-    _end = _gl.glEndQuery
-    _target = NotImplemented
 
     def __init__(self):
         if any(x is NotImplemented for x in (self._target,)):
@@ -16,6 +13,12 @@ class Query(ManagedObject, BeginEndObject):
         super(Query, self).__init__()
         if self._counter_bits == 0:
             raise RuntimeError("%s not supported" % self.__class__.__name__)
+
+    def bind(self):
+        _gl.glBeginQuery(self._id)
+
+    def release(self):
+        _gl.glEndQuery()
 
     @property
     def _current_query(self):
