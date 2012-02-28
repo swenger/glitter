@@ -70,6 +70,9 @@ class Datatype(object):
     def __str__(self):
         return "%s%s%d" % ("u" if self.is_unsigned() else "", "int" if self.is_integer() else "float", 8 * self.nbytes)
 
+    def __repr__(self):
+        return str(self)
+
 bool8 = Datatype(integer=True, signed=True, nptype=_np.bool8, _gltype=_gl.GL_BOOL, charcode="b")
 uint8 = Datatype(integer=True, signed=False, nptype=_np.uint8, _gltype=_gl.GL_UNSIGNED_BYTE, charcode="ub")
 uint16 = Datatype(integer=True, signed=False, nptype=_np.uint16, _gltype=_gl.GL_UNSIGNED_SHORT)
@@ -80,14 +83,56 @@ int16 = Datatype(integer=True, signed=True, nptype=_np.int16, _gltype=_gl.GL_SHO
 int32 = Datatype(integer=True, signed=True, nptype=_np.int32, _gltype=_gl.GL_INT, charcode="i")
 int64 = Datatype(integer=True, signed=True, nptype=_np.int64, charcode="i64")
 float32 = Datatype(integer=False, signed=True, nptype=_np.float32, _gltype=_gl.GL_FLOAT, charcode="f")
-float64 = Datatype(integer=False, signed=True, nptype=_np.float64, _gltype=_gl.GL_DOUBLE, charcode="d")
+float64 = Datatype(integer=False, signed=True, nptype=_np.float64, charcode="d") # GL_DOUBLE exists but is not supported by, e.g., textures
 
-def make_dtype(dtype, force_integer=False, force_unsigned=False, force_float=False, force_gl=False, max_width=4):
-    return dtype # TODO
+def make_dtype(dtype, force_integer=False, force_unsigned=False, force_float=False, force_gl=True):
+    """Find a datatype with the specified properties.
 
-def make_array(data, dtype=None, force_integer=False, force_unsigned=False, force_float=False, force_gl=False, max_width=4):
-    # TODO produce results with the smallest possible dtype, at most max_width bytes etc.
-    return _np.ascontiguousarray(data, dtype.as_numpy() if dtype is not None else None)
+    The returned datatype will match `dtype` as closely as possible.
+    If `force_integer` is `True`, it will be an integer datatype.
+    If `force_unsigned` is `True`, it will be an unsigned datatype.
+    If `force_float` is `True`, it will be a floating point datatype.
+    If `force_gl` is `True`, it will have an OpenGL equivalent.
+
+    If conversion of `dtype` to the resulting datatype would likely result in a
+    severe loss of precision or overflows, an error may be raised.
+    """
+
+    if force_integer and not dtype.is_integer():
+        raise TypeError("no matching datatype")
+    if force_float and not dtype.is_float():
+        raise TypeError("no matching datatype")
+    if force_unsigned and not dtype.is_unsigned():
+        dtype = dtype.as_unsigned()
+    while force_gl and dtype._as_gl() is None:
+        dtype = dtype.as_nbytes(dtype.nbytes / 2)
+
+    return dtype
+
+def make_array(data, dtype=None, force_integer=False, force_unsigned=False, force_float=False, force_gl=True):
+    """Convert `data` to a contiguous array with the specified properties.
+
+    The datatype of the array will match `dtype` as closely as possible.
+    If `force_integer` is `True`, it will be an integer datatype.
+    If `force_unsigned` is `True`, it will be an unsigned datatype.
+    If `force_float` is `True`, it will be a floating point datatype.
+    If `force_gl` is `True`, it will have an OpenGL equivalent.
+
+    If conversion to the resulting datatype would likely result in a severe
+    loss of precision or overflows, an error may be raised.
+    """
+
+    if dtype is None:
+        if hasattr(data, "dtype"):
+            dtype = Datatype.from_numpy(data.dtype)
+        else:
+            if force_integer:
+                dtype = int32
+            else:
+                dtype = float32
+    dtype = make_dtype(dtype, force_integer, force_unsigned, force_float, force_gl)
+
+    return _np.ascontiguousarray(data, dtype.as_numpy())
 
 __all__ = [
     "Datatype",

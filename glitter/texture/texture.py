@@ -1,7 +1,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.util import constants, Datatype, make_array, ManagedObject, BindReleaseObject
+from glitter.util import constants, Datatype, make_array, ManagedObject, BindReleaseObject, float32
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
@@ -37,8 +37,10 @@ class Texture(ManagedObject, BindReleaseObject):
 
     def set_data(self, data=None, shape=None, dtype=None, level=0):
         if data is None:
-            if shape is None or dtype is None:
-                raise ValueError("must specify either data or both shape and dtype")
+            if shape is None:
+                raise ValueError("must specify either data or shape")
+            if dtype is None:
+                dtype = float32
         else:
             data = make_array(data, dtype)
             if shape is not None:

@@ -7,8 +7,8 @@ def check_texture(shape, dtype, vrange):
     data = ((maxval - minval) * numpy.random.random(shape) + minval).astype(dtype.as_numpy())
     texture = Texture3D(data)
     assert (texture.data == data).all(), "data is broken"
-    assert texture.shape == data.shape, "shape is broken"
-    assert texture.dtype == Datatype.from_numpy(data.dtype), "dtype is broken"
+    assert texture.shape == data.shape, "shape is broken (was %s, is %s)" % (data.shape, texture.shape)
+    assert texture.dtype == Datatype.from_numpy(data.dtype), "dtype is broken (was %s, is %s)" % (Datatype.from_numpy(data.dtype), texture.dtype)
 
 def test_texture_generator():
     shapes = ((4, 4, 4, 4), (4, 4, 4, 3), (4, 16, 8, 3), (5, 4, 4, 3), (5, 5, 5, 3), (6, 6, 6, 3), (7, 13, 5, 3), (1, 1, 3, 3))
