@@ -1,14 +1,17 @@
 from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
-from glitter.util import BindableObject, ManagedObject
+from glitter.util import BindableObject, ManagedObject, constants
 
+# TODO binding as read_framebuffer_binding, glBlitFramebuffer, glCopyTexSubImage
 class Framebuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "framebuffers"
     _binding = "draw_framebuffer_binding"
     _target = _gl.GL_DRAW_FRAMEBUFFER
+
+    framebuffer_status = constants.framebuffer_status
 
     def __init__(self, attachments=[], depth=None, stencil=None):
         super(Framebuffer, self).__init__()
@@ -30,10 +33,10 @@ class Framebuffer(BindableObject, ManagedObject):
     def _on_bind(self):
         self._stack.append(self._context.draw_buffers)
         self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
-        # TODO set viewport, color_writemask, depth_writemask
+        # TODO set viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range
 
     def _on_release(self):
-        # TODO reset viewport, color_writemask, depth_writemask
+        # TODO reset viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range
         self._context.draw_buffers = self._stack.pop()
 
     def attach(self, index, texture=None, level=0):
@@ -44,7 +47,7 @@ class Framebuffer(BindableObject, ManagedObject):
                 _gl.glFramebufferTexture(self._target, _gl.GL_COLOR_ATTACHMENT0 + index, 0 if texture is None else texture._id, level)
         self._attachments[index] = texture
 
-    # TODO properties for viewport, color_writemask, depth_writemask, blend_func, blend_equation
+    # TODO properties for viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range (glDepthRangeArray, glDepthRangeIndexed)
 
     @property
     def depth(self):
@@ -86,7 +89,11 @@ class Framebuffer(BindableObject, ManagedObject):
                 _gl.glFramebufferTexture(self._target, _gl.GL_STENCIL_ATTACHMENT, 0 if texture is None else texture._id, level)
         self._stencil = texture
 
-    def clear(self, color=True, depth=True, stencil=True):
+    def check(self):
+        with self:
+            return self.framebuffer_status[_gl.glCheckFramebufferStatus(self._target)]
+
+    def clear(self, color=None, depth=None, stencil=None): # TODO glClearBuffer for clearing selected attachments
         with self:
             self._context._clear(color, depth, stencil)
 

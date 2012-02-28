@@ -24,7 +24,7 @@ class Attribute(object):
         pass # TODO if the shader is currently bound, set the attribute at once, else store only
 
     def _on_bind(self):
-        pass # TODO call glVertexAttrib; where do we know the index from, glBindAttribLocation? how about layout qualifiers?
+        pass # TODO call glVertexAttrib with index=self._location
 
     def _on_release(self):
         pass # TODO restore old vertex attrib values if possible
@@ -48,7 +48,7 @@ class AttributeStruct(_odict):
         pass # TODO
 
     def _on_bind(self):
-        pass # TODO call glVertexAttrib; where do we know the index from, glBindAttribLocation? how about layout qualifiers?
+        pass # TODO call glVertexAttrib with index=self._location
 
     def _on_release(self):
         pass # TODO restore old vertex attrib values if possible
@@ -77,7 +77,7 @@ class AttributeStructArray(_odict):
         pass # TODO
 
     def _on_bind(self):
-        pass # TODO call glVertexAttrib; where do we know the index from, glBindAttribLocation? how about layout qualifiers?
+        pass # TODO call glVertexAttrib with index=self._location
 
     def _on_release(self):
         pass # TODO restore old vertex attrib values if possible

@@ -4,6 +4,8 @@ from rawgl import gl as _gl
 from glitter.util import BindableObject, ManagedObject
 from glitter.array import BaseBuffer, ArrayBuffer, ElementArrayBuffer
 
+# TODO glVertexAttribDivisor
+
 class VertexArray(BindableObject, ManagedObject):
     _generate_id = _gl.glGenVertexArrays
     _delete_id = _gl.glDeleteVertexArrays

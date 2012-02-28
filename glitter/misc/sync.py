@@ -6,6 +6,8 @@ from glitter.util import constants
 class Sync(ManagedObject):
     _delete_id = _gl.glDeleteSync
 
+    # TODO properties via glGetSynciv
+
 class FenceSync(Sync):
     _generate_id = lambda: _gl.glFenceSync(_gl.GL_SYNC_GPU_COMMANDS_COMPLETE, 0)
 

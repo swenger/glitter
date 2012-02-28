@@ -7,6 +7,7 @@ class Renderbuffer(BindableObject, ManagedObject): # TODO
     _delete_id = _gl.glDeleteRenderbuffers
     _db = "renderbuffers"
     # TODO glFramebufferRenderbuffer instead of _bind; returns GLsync
+    # TODO glRenderbufferStorage, glRenderbufferStorageMultisample
 
 __all__ = ["Renderbuffer"]
 

@@ -5,10 +5,21 @@ from glitter.util import constants, InstanceDescriptorMixin, Reset
 from glitter.context.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.context.textures import TextureUnitList
 from glitter.context.drawbuffers import DrawBufferList, ColorWritemaskList
-from glitter.context.blending import BlendFuncProxy, BlendEquationProxy
+from glitter.context.multiproxies import BlendFuncProxy, BlendEquationProxy, PolygonOffsetProxy
 
-# TODO with statements for state changes, e.g. with context.set(active_texture=0): ...
 # TODO global statements: glClear etc.
+# TODO indexed variants for glEnable?
+# TODO glPatchParameter
+# TODO multiple viewports with glViewportIndexed / glViewportArray, glScissorIndexed / glScissorArray
+
+# TODO GL_SAMPLE_COVERAGE_VALUE, GL_SAMPLE_COVERAGE_INVERT (glSampleCoverage)
+# TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
+# TODO indexed GL_UNIFORM_BUFFER_SIZE, GL_UNIFORM_BUFFER_START
+
+# TODO stencil:
+# GL_STENCIL_BACK_FAIL, GL_STENCIL_BACK_PASS_DEPTH_FAIL, GL_STENCIL_BACK_PASS_DEPTH_PASS, GL_STENCIL_FAIL, GL_STENCIL_PASS_DEPTH_FAIL, GL_STENCIL_PASS_DEPTH_PASS...
+# GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC
+# GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
 
 class GLObjectLibrary(object):
     def __init__(self, _context):
@@ -56,6 +67,9 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     color_read_formats = constants.color_read_formats
     color_read_types = constants.color_read_types
     read_buffers = constants.read_buffers
+    cull_face_modes = constants.cull_face_modes
+    front_face_modes = constants.front_face_modes
+    polygon_modes = constants.polygon_modes
 
     # buffer bindings
     array_buffer_binding                 = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ARRAY_BUFFER                ])
@@ -79,13 +93,15 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     current_program                      = BindingProxy(_gl.glUseProgram,          [                                   ])
     active_texture                       = BindingProxy(_gl.glActiveTexture,       [                                   ])
 
-    # blend function and equation
+    # properties with separate getters but joint setters
     blend_dst_alpha = BlendFuncProxy(_gl.GL_BLEND_DST_ALPHA)
     blend_dst_rgb = BlendFuncProxy(_gl.GL_BLEND_DST_RGB)
     blend_src_alpha = BlendFuncProxy(_gl.GL_BLEND_SRC_ALPHA)
     blend_src_rgb = BlendFuncProxy(_gl.GL_BLEND_SRC_RGB)
     blend_equation_alpha = BlendEquationProxy(_gl.GL_BLEND_EQUATION_ALPHA)
     blend_equation_rgb = BlendEquationProxy(_gl.GL_BLEND_EQUATION_RGB)
+    polygon_offset_factor = PolygonOffsetProxy(_gl.GL_POLYGON_OFFSET_FACTOR)
+    polygon_offset_units = PolygonOffsetProxy(_gl.GL_POLYGON_OFFSET_UNITS)
 
     # miscellaneous enumerations
     depth_func = EnumProxy(depth_functions, _gl.GL_DEPTH_FUNC, _gl.glDepthFunc)
@@ -97,6 +113,9 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     provoking_vertex = EnumProxy(provoke_modes, _gl.GL_PROVOKING_VERTEX, _gl.glProvokingVertex)
     read_buffer = EnumProxy(read_buffers, _gl.GL_READ_BUFFER, _gl.glReadBuffer)
     viewport_index_provoking_vertex = EnumProxy(provoking_vertices, _gl.GL_VIEWPORT_INDEX_PROVOKING_VERTEX)
+    cull_face_mode = EnumProxy(cull_face_modes, _gl.GL_CULL_FACE_MODE, _gl.glCullFace)
+    front_face = EnumProxy(front_face_modes, _gl.GL_FRONT_FACE, _gl.glFrontFace)
+    polygon_mode = EnumProxy(polygon_modes, _gl.GL_POLYGON_MODE, _gl.glPolygonMode, [_gl.GL_FRONT_AND_BACK])
 
     # hints
     fragment_shader_derivative_hint = HintProxy(_gl.GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
@@ -118,6 +137,9 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     scissor_test = EnableDisableProxy(_gl.GL_SCISSOR_TEST)
     stencil_test = EnableDisableProxy(_gl.GL_STENCIL_TEST)
     vertex_program_point_size = EnableDisableProxy(_gl.GL_VERTEX_PROGRAM_POINT_SIZE)
+    # TODO GL_CLIP_DISTANCEi, GL_DEPTH_CLAMP, GL_FRAMEBUFFER_SRGB, GL_MULTISAMPLE, GL_PRIMITIVE_RESTART, GL_TEXTURE_CUBE_MAP_SEAMLESS
+    # TODO GL_SAMPLE_ALPHA_TO_ONE, GL_SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_COVERAGE, GL_SAMPLE_SHADING, GL_SAMPLE_MASK
+    # TODO glSampleCoverage, glSampleMaski, glMinSampleShading
 
     # boolean values
     color_writemask = BooleanProxy([_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4)
@@ -214,7 +236,7 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     unpack_skip_images = IntegerProxy([_gl.GL_UNPACK_SKIP_IMAGES], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_IMAGES])
     unpack_skip_pixels = IntegerProxy([_gl.GL_UNPACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_PIXELS])
     unpack_skip_rows = IntegerProxy([_gl.GL_UNPACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_ROWS])
-    viewport = IntegerProxy([_gl.GL_VIEWPORT], _gl.glViewport, shape=4) # TODO indexed variant as float
+    viewport = IntegerProxy([_gl.GL_VIEWPORT], _gl.glViewport, shape=4)
     viewport_bounds_range = IntegerProxy([_gl.GL_VIEWPORT_BOUNDS_RANGE], shape=2)
     viewport_subpixel_bits = IntegerProxy([_gl.GL_VIEWPORT_SUBPIXEL_BITS])
 
@@ -228,17 +250,9 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
     shading_language_version = StringProxy(_gl.GL_SHADING_LANGUAGE_VERSION)
     extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
 
-    # TODO GL_POLYGON_OFFSET_FACTOR, GL_POLYGON_OFFSET_UNITS (glPolygonOffset)
-    # TODO GL_SAMPLE_COVERAGE_VALUE, GL_SAMPLE_COVERAGE_INVERT (glSampleCoverage)
-    # TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
-    # TODO indexed GL_UNIFORM_BUFFER_SIZE, GL_UNIFORM_BUFFER_START
-
-    # TODO stencil:
-    # GL_STENCIL_BACK_FAIL, GL_STENCIL_BACK_PASS_DEPTH_FAIL, GL_STENCIL_BACK_PASS_DEPTH_PASS, GL_STENCIL_FAIL, GL_STENCIL_PASS_DEPTH_FAIL, GL_STENCIL_PASS_DEPTH_PASS...
-    # GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC
-    # GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
-
-    def _clear(self, color=True, depth=True, stencil=True):
+    def _clear(self, color=None, depth=None, stencil=None):
+        if color is None and depth is None and stencil is None:
+            color = depth = stencil = True
         # TODO set and reset clear color/depth/stencil if given as arrays
         _gl.glClear(
                 (_gl.GL_COLOR_BUFFER_BIT if color else 0) |
@@ -246,10 +260,18 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
                 (_gl.GL_STENCIL_BUFFER_BIT if stencil else 0)
                 )
 
-    def clear(self, color=True, depth=True, stencil=True):
+    def clear(self, color=None, depth=None, stencil=None):
         with self:
             with Reset(self, "draw_framebuffer_binding", None):
                 self._clear(color, depth, stencil)
+
+    def finish(self):
+        with self:
+            _gl.glFinish()
+
+    def flush(self):
+        with self:
+            _gl.glFlush()
 
 def get_default_context(_={}):
     return _.setdefault("context", Context()) # TODO get context from windowing system

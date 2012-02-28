@@ -7,6 +7,10 @@ class Shader(ManagedObject):
     _delete_id = _gl.glDeleteShader
     _db = "shaders"
 
+    @classmethod
+    def release_compiler(cls):
+        _gl.glReleaseShaderCompiler()
+
     def __init__(self, source=None, compile=None):
         if any(x is NotImplemented for x in (self._type,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
@@ -50,6 +54,7 @@ class Shader(ManagedObject):
 
 class VertexShader(Shader):
     _type = _gl.GL_VERTEX_SHADER
+    # TODO glGetShaderPrecisionFormat
 
 class TesselationControlShader(Shader):
     _type = _gl.GL_TESS_CONTROL_SHADER
@@ -62,6 +67,7 @@ class GeometryShader(Shader):
 
 class FragmentShader(Shader):
     _type = _gl.GL_FRAGMENT_SHADER
+    # TODO glGetShaderPrecisionFormat
 
 __all__ = [
     "Shader",

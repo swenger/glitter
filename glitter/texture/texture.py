@@ -6,6 +6,7 @@ from glitter.util import constants, Datatype, make_array, ManagedObject, BindRel
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
+# TODO image textures
 
 class Texture(ManagedObject, BindReleaseObject):
     _generate_id = _gl.glGenTextures

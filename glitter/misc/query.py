@@ -45,10 +45,10 @@ class Query(ManagedObject, BeginEndObject):
             _gl.glGetQueryObjectui64v(self._id, _gl.GL_QUERY_RESULT_AVAILABLE, _gl.pointer(_result))
         return _result.value
 
-class SamplesPassedQuery(Query):
+class SamplesPassedQuery(Query): # TODO glBeginConditionalRender / glEndConditionalRender
     _target = _gl.GL_SAMPLES_PASSED
 
-class AnySamplesPassedQuery(Query):
+class AnySamplesPassedQuery(Query): # TODO glBeginConditionalRender / glEndConditionalRender
     _target = _gl.GL_ANY_SAMPLES_PASSED
     result = property(lambda self: bool(Query.result.fget(self)))
 

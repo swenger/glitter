@@ -162,5 +162,10 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
 
+    # TODO glGetFragDataLocation / glGetFragDataIndex
+    # TODO glGetProgramStage, glGetActiveSubroutineName, glGetActiveSubroutineUniform, glGetActiveSubroutineUniformName, glGetSubroutineIndex, glGetSubroutineUniformLocation
+    # TODO glGetTransformFeedbackVarying, glTransformFeedbackVaryings
+    # TODO glGetUniformBlockIndex, glGetUniformIndices, glGetActiveUniformBlock, glGetActiveUniformBlockName, glUniformBlockBinding, glUniformSubroutines
+
 __all__ = ["ShaderProgram"]
 
