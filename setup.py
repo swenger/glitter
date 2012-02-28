@@ -9,5 +9,6 @@ setup(
   license = "MIT",
   requires = ["rawgl"],
   packages = ["glitter"],
+  # TODO add test and doc targets
 )
 

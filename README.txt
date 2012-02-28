@@ -16,12 +16,9 @@ Remember:
 - glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
 - when using enums, import them into the corresponding class
 - docs: epydoc --html glitter
+- tests: nosetests tests
 
 TODO:
-- package structure:
-  - better module names (avoid name clashes with classes); maybe subpackages?
-  - replace relative imports by absolute imports
-  - move tests to a separate package
 - contexts:
   - add a generic mechanism for setting and resetting state and use it (instead of maintaining stacks in objects)
   - use context's getters and setters in library, make sure to use "with self._context" where necessary
