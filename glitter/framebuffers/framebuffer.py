@@ -33,6 +33,7 @@ class Framebuffer(BindableObject, ManagedObject):
     def _on_bind(self):
         self._stack.append(self._context.draw_buffers)
         self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
+        # TODO does this work correctly during __init__?
         # TODO set viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range
 
     def _on_release(self):

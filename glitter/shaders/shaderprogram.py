@@ -57,7 +57,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
             link = bool(shaders)
         if link:
             old_program = self._context.current_program
-            self.link()
+            self.link() # linking binds the program
             self._context.current_program = old_program
 
         for name, proxy in self._get_active_attributes().items():
