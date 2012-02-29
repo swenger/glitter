@@ -28,4 +28,5 @@ TODO:
 - make rawgl replaceable
 - transparent CUDA and OpenCL interoperability
 - write documentation and tests
+- add convenience tools for loading meshes, rendering a fullscreen quad, displaying a texture
 

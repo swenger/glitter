@@ -11,6 +11,8 @@ class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
+# TODO disallow adding properties
+
 class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram

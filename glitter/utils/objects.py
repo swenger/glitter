@@ -1,10 +1,10 @@
 from rawgl import gl as _gl
 
 def _get_default_context():
-    """Grab the default context from the `context` module.
+    """Grab the default context from the L{context} module.
 
     The import is wrapped in a function definition to avoid infinite recursion
-    on import because the `context` module implements this module.
+    on import because the L{context} module imports this module.
     """
 
     from glitter.contexts import get_default_context
@@ -20,10 +20,10 @@ class GLObject(object):
 class ManagedObject(GLObject): # inherit from BindableObject, then ManagedObject!
     """Base class for objects that can be created and deleted in OpenGL.
 
-    When a `ManagedObject` instance is garbage collected, the corresponding
+    When a C{ManagedObject} instance is garbage collected, the corresponding
     OpenGL object is deleted as well.
     
-    For each `ManagedObject` subclass, the context keeps a database of existing
+    For each C{ManagedObject} subclass, the context keeps a database of existing
     objects.
     """
 
@@ -65,20 +65,20 @@ class BindableObject(GLObject):
     When the object is bound, it returns the object that was previously bound
     to the same target.
 
-    `BindableObject` instances can be used in `with` statements so that binding
+    C{BindableObject} instances can be used in C{with} statements so that binding
     and resetting the previous state happens automatically.
 
-    If subclasses define the methods `_on_bind` or `_on_release`, these will be
+    If subclasses define the methods L{_on_bind} or L{_on_release}, these will be
     called by the binding handler in the context whenever the instance is bound
     or unbound, respectively.
 
-    If subclasses define a property `_bind_value`, this value will be passed to
-    the binding function instead of `self`.
+    If subclasses define a property C{_bind_value}, this value will be passed to
+    the binding function instead of C{self}.
 
     Binding of an object to different targets (e.g. buffers that are bound to
     different targets, framebuffers that are bound for reading or drawing, and
     textures that are bound to different texture image units) is not covered by
-    the `BindableObject` class.
+    the C{BindableObject} class.
     """
 
     _binding = NotImplemented #: name of corresponding property in context, e.g. "array_buffer_binding"
@@ -115,14 +115,14 @@ class Reset(BindableObject):
     """Helper class to add binding semantics to context property changes.
 
     To set a property of the context and automatically reset it to its old
-    value later, use a `with` statement with a `Reset` object.
+    value later, use a C{with} statement with a C{Reset} object.
     """
 
     def __init__(self, context, prop, value):
-        """Create a `Reset` object for use in `with` statements.
+        """Create a C{Reset} object for use in C{with} statements.
 
-        When entering the `with` statement, the property `prop` of context
-        `context` will be set to `value`. On exiting the `with` statement, the
+        When entering the C{with} statement, the property C{prop} of L{context}
+        C{context} will be set to C{value}. On exiting the C{with} statement, the
         old value will be restored.
         """
 
@@ -133,9 +133,9 @@ class Reset(BindableObject):
 class BindReleaseObject(GLObject):
     """Base class for objects that can be bound and released.
 
-    `BindReleaseObject` should be used instead of `BindableObject` when binding
+    C{BindReleaseObject} should be used instead of L{BindableObject} when binding
     and releasing are not performed by setting a property on a context, but by
-    custom `bind` and `release` methods.
+    custom L{bind} and L{release} methods.
 
     Subclasses are responsible for restoring any objects previously bound to
     the same target.

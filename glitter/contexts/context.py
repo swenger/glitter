@@ -7,6 +7,8 @@ from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
 from glitter.contexts.multiproxies import BlendFuncProxy, BlendEquationProxy, PolygonOffsetProxy
 
+# TODO disallow adding properties
+
 # TODO global statements: glClear etc.
 # TODO indexed variants for glEnable?
 # TODO glPatchParameter
