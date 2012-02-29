@@ -1,3 +1,9 @@
+"""Descriptors for L{ShaderProgram} attributes.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from collections import OrderedDict as _odict
 
 class Attribute(object):

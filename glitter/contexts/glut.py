@@ -1,3 +1,9 @@
+"""GLUT context creation and management.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 import random as _random
 from rawgl import glut as _glut
 

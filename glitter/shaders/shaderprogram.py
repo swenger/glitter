@@ -1,3 +1,9 @@
+"""Shader program class.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from collections import OrderedDict as _odict
 import re as _re
 from rawgl import gl as _gl

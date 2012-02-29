@@ -1,3 +1,9 @@
+"""Error classes.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 class GlitterError(Exception):
     def __init__(self, message):
         self.message = message

@@ -1,3 +1,9 @@
+"""Constants and enums.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from rawgl import gl as _gl
 
 from glitter.utils.dtypes import uint8, uint16, uint32, int8, int16, int32, float32

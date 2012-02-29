@@ -1,3 +1,9 @@
+"""Framebuffer object class.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 

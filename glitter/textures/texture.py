@@ -1,3 +1,9 @@
+"""Texture classes.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 import numpy as _np
 from rawgl import gl as _gl
 

@@ -1,3 +1,9 @@
+"""Descriptors for texture image units.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 import itertools as _itertools
 from rawgl import gl as _gl
 

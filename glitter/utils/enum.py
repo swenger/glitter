@@ -1,3 +1,9 @@
+"""Base classes for enumerations.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 class EnumConstant(object):
     def __init__(self, enum, name, value):
         self._enum = enum

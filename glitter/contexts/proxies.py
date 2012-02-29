@@ -1,3 +1,9 @@
+"""Generic descriptor classes for per-context state.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from weakref import WeakKeyDictionary
 from rawgl import gl as _gl
 

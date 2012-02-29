@@ -1,3 +1,11 @@
+"""Base class for OpenGL contexts.
+
+This module wraps large parts of per-context state.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 

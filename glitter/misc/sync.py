@@ -1,3 +1,9 @@
+"""Sync classes.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from rawgl import gl as _gl
 
 from glitter.utils.objects import ManagedObject

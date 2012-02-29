@@ -1,3 +1,9 @@
+"""Descriptors for per-drawbuffer state.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 import itertools as _itertools
 import numpy as _np
 from rawgl import gl as _gl
