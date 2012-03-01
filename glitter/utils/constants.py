@@ -263,7 +263,7 @@ read_buffers = Enum(
 )
 for key, value in _gl.__dict__.items():
     if key.startswith("GL_COLOR_ATTACHMENT"):
-        read_buffers._add(key, value)
+        read_buffers._add(key[3:], value)
 
 transform_feedback_buffer_modes = Enum(
         SEPARATE_ATTRIBS=_gl.GL_SEPARATE_ATTRIBS,

@@ -78,7 +78,7 @@ class Context(InstanceDescriptorMixin):
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
         return super(Context, self).__setattr__(name, value)
 
-    # enums
+    #{ Enums
     blend_functions = constants.blend_functions
     blend_equations = constants.blend_equations
     depth_functions = constants.depth_functions
@@ -94,7 +94,7 @@ class Context(InstanceDescriptorMixin):
     front_face_modes = constants.front_face_modes
     polygon_modes = constants.polygon_modes
 
-    # buffer bindings
+    #{ Buffer bindings
     array_buffer_binding                 = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ARRAY_BUFFER                ])
     atomic_counter_buffer_binding        = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ATOMIC_COUNTER_BUFFER       ])
     copy_read_buffer_binding             = BindingProxy(_gl.glBindBuffer,          [_gl.GL_COPY_READ_BUFFER            ])
@@ -107,7 +107,7 @@ class Context(InstanceDescriptorMixin):
     transform_feedback_buffer_binding    = BindingProxy(_gl.glBindBuffer,          [_gl.GL_TRANSFORM_FEEDBACK_BUFFER   ])
     uniform_buffer_binding               = BindingProxy(_gl.glBindBuffer,          [_gl.GL_UNIFORM_BUFFER              ])
 
-    # miscellaneous bindings
+    #{ Miscellaneous bindings
     program_pipeline_binding             = BindingProxy(_gl.glBindProgramPipeline, [                                   ])
     renderbuffer_binding                 = BindingProxy(_gl.glBindRenderbuffer,    [_gl.GL_RENDERBUFFER                ])
     vertex_array_binding                 = BindingProxy(_gl.glBindVertexArray,     [                                   ])
@@ -116,7 +116,7 @@ class Context(InstanceDescriptorMixin):
     current_program                      = BindingProxy(_gl.glUseProgram,          [                                   ])
     active_texture                       = BindingProxy(_gl.glActiveTexture,       [                                   ])
 
-    # properties with separate getters but joint setters
+    #{ Properties with separate getters but joint setters
     blend_dst_alpha = BlendFuncProxy(_gl.GL_BLEND_DST_ALPHA)
     blend_dst_rgb = BlendFuncProxy(_gl.GL_BLEND_DST_RGB)
     blend_src_alpha = BlendFuncProxy(_gl.GL_BLEND_SRC_ALPHA)
@@ -126,7 +126,7 @@ class Context(InstanceDescriptorMixin):
     polygon_offset_factor = PolygonOffsetProxy(_gl.GL_POLYGON_OFFSET_FACTOR)
     polygon_offset_units = PolygonOffsetProxy(_gl.GL_POLYGON_OFFSET_UNITS)
 
-    # miscellaneous enumerations
+    #{ Miscellaneous enumerations
     depth_func = EnumProxy(depth_functions, _gl.GL_DEPTH_FUNC, _gl.glDepthFunc)
     draw_buffer = EnumProxy(draw_buffers, _gl.GL_DRAW_BUFFER, _gl.glDrawBuffer)
     implementation_color_read_format = EnumProxy(color_read_formats, _gl.GL_IMPLEMENTATION_COLOR_READ_FORMAT)
@@ -140,13 +140,13 @@ class Context(InstanceDescriptorMixin):
     front_face = EnumProxy(front_face_modes, _gl.GL_FRONT_FACE, _gl.glFrontFace)
     polygon_mode = EnumProxy(polygon_modes, _gl.GL_POLYGON_MODE, _gl.glPolygonMode, [_gl.GL_FRONT_AND_BACK])
 
-    # hints
+    #{ Hints
     fragment_shader_derivative_hint = HintProxy(_gl.GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
     line_smooth_hint = HintProxy(_gl.GL_LINE_SMOOTH_HINT)
     polygon_smooth_hint = HintProxy(_gl.GL_POLYGON_SMOOTH_HINT)
     texture_compression_hint = HintProxy(_gl.GL_TEXTURE_COMPRESSION_HINT)
 
-    # enabling and disabling
+    #{ Enabling and disabling
     blend = EnableDisableProxy(_gl.GL_BLEND)
     color_logic_op = EnableDisableProxy(_gl.GL_COLOR_LOGIC_OP)
     cull_face = EnableDisableProxy(_gl.GL_CULL_FACE)
@@ -164,7 +164,7 @@ class Context(InstanceDescriptorMixin):
     # TODO GL_SAMPLE_ALPHA_TO_ONE, GL_SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_COVERAGE, GL_SAMPLE_SHADING, GL_SAMPLE_MASK
     # TODO glSampleCoverage, glSampleMaski, glMinSampleShading
 
-    # boolean values
+    #{ Boolean values
     color_writemask = BooleanProxy([_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4)
     depth_writemask = BooleanProxy([_gl.GL_DEPTH_WRITEMASK], _gl.glDepthMask)
     doublebuffer = BooleanProxy([_gl.GL_DOUBLEBUFFER])
@@ -175,7 +175,7 @@ class Context(InstanceDescriptorMixin):
     unpack_lsb_first = BooleanProxy([_gl.GL_UNPACK_LSB_FIRST], _gl.glPixelStorei, [_gl.GL_UNPACK_LSB_FIRST])
     unpack_swap_bytes = BooleanProxy([_gl.GL_UNPACK_SWAP_BYTES], _gl.glPixelStorei, [_gl.GL_UNPACK_SWAP_BYTES])
     
-    # float values
+    #{ Float values
     aliased_line_width_range = FloatProxy([_gl.GL_ALIASED_LINE_WIDTH_RANGE], shape=2)
     blend_color = FloatProxy([_gl.GL_BLEND_COLOR], _gl.glBlendColor, shape=4)
     color_clear_value = FloatProxy([_gl.GL_COLOR_CLEAR_VALUE], _gl.glClearColor, shape=4)
@@ -191,7 +191,7 @@ class Context(InstanceDescriptorMixin):
     smooth_line_width_range = FloatProxy([_gl.GL_SMOOTH_LINE_WIDTH_RANGE], shape=2)
     smooth_line_width_granularity = FloatProxy([_gl.GL_SMOOTH_LINE_WIDTH_GRANULARITY])
 
-    # integer values
+    #{ Integer values
     major_version = IntegerProxy([_gl.GL_MAJOR_VERSION])
     max_3d_texture_size = IntegerProxy([_gl.GL_MAX_3D_TEXTURE_SIZE])
     max_array_texture_layers = IntegerProxy([_gl.GL_MAX_3D_TEXTURE_SIZE])
@@ -263,15 +263,17 @@ class Context(InstanceDescriptorMixin):
     viewport_bounds_range = IntegerProxy([_gl.GL_VIEWPORT_BOUNDS_RANGE], shape=2)
     viewport_subpixel_bits = IntegerProxy([_gl.GL_VIEWPORT_SUBPIXEL_BITS])
 
-    # 64-bit integer values
+    #{ 64-bit integer values
     timestamp = Integer64Proxy([_gl.GL_TIMESTAMP])
 
-    # strings
+    #{ Strings
     vendor = StringProxy(_gl.GL_VENDOR)
     renderer = StringProxy(_gl.GL_RENDERER)
     version = StringProxy(_gl.GL_VERSION)
     shading_language_version = StringProxy(_gl.GL_SHADING_LANGUAGE_VERSION)
     extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
+
+    #{ Global actions
 
     def _clear(self, color=None, depth=None, stencil=None):
         if color is None and depth is None and stencil is None:
@@ -295,6 +297,8 @@ class Context(InstanceDescriptorMixin):
     def flush(self):
         with self:
             _gl.glFlush()
+
+    #}
 
 def get_current_context(): # TODO actually get the current context from the OS
     if Context._current_context is None:

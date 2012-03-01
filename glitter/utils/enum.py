@@ -29,3 +29,6 @@ class Enum(object):
         setattr(self, key, EnumConstant(self, key, value))
         self._reverse_dict[value] = getattr(self, key)
 
+    def __repr__(self):
+        return "Enum(%s)" % ", ".join(map(str, self._reverse_dict.values()))
+

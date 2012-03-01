@@ -26,6 +26,9 @@ class BlendFuncProxy(object):
         with obj:
             _gl.glBlendFuncSeparate(src_rgb._value, dst_rgb._value, src_alpha._value, dst_alpha._value)
 
+    def __repr__(self):
+        return "proxy for %s" % self._arg
+
 class BlendEquationProxy(object):
     def __init__(self, arg):
         self._arg = arg
@@ -42,6 +45,9 @@ class BlendEquationProxy(object):
         with obj:
             _gl.glBlendEquationSeparate(mode_rgb._value, mode_alpha._value)
 
+    def __repr__(self):
+        return "proxy for %s" % self._arg
+
 class PolygonOffsetProxy(object):
     def __init__(self, arg):
         self._arg = arg
@@ -57,4 +63,7 @@ class PolygonOffsetProxy(object):
         units = value if self._arg == _gl.GL_POLYGON_OFFSET_UNITS else obj.polygon_offset_units
         with obj:
             _gl.glPolygonOffset(factor, units)
+
+    def __repr__(self):
+        return "proxy for %s" % self._arg
 
