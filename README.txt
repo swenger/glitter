@@ -31,4 +31,5 @@ TODO:
 - write documentation and tests
 - add convenience tools for loading meshes, rendering a fullscreen quad, displaying a texture
 - add listing of all bound textures, buffers, etc.
+- rethink what __del__ and __exit__ methods should do when the interpreter exits (e.g. restoring to a deleted object will not work)
 

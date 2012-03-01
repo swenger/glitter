@@ -24,6 +24,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     _binding = "current_program"
 
     transform_feedback_buffer_modes = constants.transform_feedback_buffer_modes
+    _frozen = False
 
     def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], variables={}, link=None):
         super(ShaderProgram, self).__init__()
@@ -73,10 +74,15 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
             setattr(self, name, proxy)
             self._variable_proxies.append(proxy)
 
-        # TODO freeze adding of unknown attributes
+        self._frozen = True
 
         for key, value in variables.items():
             setattr(self, key, value)
+
+    def __setattr__(self, name, value):
+        if self._frozen and not hasattr(self, name):
+            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
+        return super(ShaderProgram, self).__setattr__(name, value)
 
     def _on_bind(self):
         for proxy in self._variable_proxies:

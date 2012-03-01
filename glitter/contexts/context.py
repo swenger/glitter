@@ -43,7 +43,8 @@ class GLObjectLibrary(object):
         return str(self)
 
 class Context(InstanceDescriptorMixin): # TODO subclass this for different window systems, override __init__, __enter__, and __exit__
-    _contexts = []
+    _contexts = [] # TODO weak list!
+    _frozen = False
 
     def __enter__(self): return self
     def __exit__(self, type, value, traceback): pass
@@ -66,7 +67,12 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
         self.transform_feedbacks = GLObjectLibrary(self)
         self.vertex_arrays = GLObjectLibrary(self)
 
-        # TODO freeze adding of unknown attributes
+        self._frozen = True
+
+    def __setattr__(self, name, value):
+        if self._frozen and not hasattr(self, name):
+            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
+        return super(Context, self).__setattr__(name, value)
 
     # enums
     blend_functions = constants.blend_functions
