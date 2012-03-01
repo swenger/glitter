@@ -35,11 +35,11 @@ class Texture(ManagedObject, BindReleaseObject):
     def release(self):
         self._context.texture_units.release(self)
 
-    def __init__(self, data=None, shape=None, dtype=None):
+    def __init__(self, data=None, shape=None, dtype=None, mipmap=False):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Texture, self).__init__()
-        self.set_data(data, shape, dtype)
+        self.set_data(data, shape, dtype, mipmap)
 
     def __getitem__(self, key):
         """Return a tuple describing a texture layer.
@@ -53,7 +53,7 @@ class Texture(ManagedObject, BindReleaseObject):
     def __len__(self):
         return self.shape[0]
 
-    def set_data(self, data=None, shape=None, dtype=None, level=0):
+    def set_data(self, data=None, shape=None, dtype=None, level=0, mipmap=False):
         if data is None:
             if shape is None:
                 raise ValueError("must specify either data or shape")
@@ -78,11 +78,14 @@ class Texture(ManagedObject, BindReleaseObject):
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
         if dtype.is_float():
-            self.min_filter = Texture.min_filters.LINEAR
+            self.min_filter = Texture.min_filters.LINEAR_MIPMAP_LINEAR if mipmap else Texture.min_filters.LINEAR
             self.mag_filter = Texture.mag_filters.LINEAR
         else:
             self.min_filter = Texture.min_filters.NEAREST
             self.mag_filter = Texture.mag_filters.NEAREST
+
+        if mipmap:
+            self.generate_mipmap()
 
     def get_data(self, level=0):
         _data = _np.empty(self.shape, dtype=self.dtype.as_numpy())
