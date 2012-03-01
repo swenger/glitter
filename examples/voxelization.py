@@ -15,7 +15,6 @@ void main() {
 
 fragment_code = """
 #version 410 core
-#extension GL_EXT_gpu_shader4 : enable
 
 in vec4 ex_position;
 uniform bool solid;
