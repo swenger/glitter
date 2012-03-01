@@ -41,6 +41,18 @@ class Texture(ManagedObject, BindReleaseObject):
         super(Texture, self).__init__()
         self.set_data(data, shape, dtype)
 
+    def __getitem__(self, key):
+        """Return a tuple describing a texture layer.
+
+        This is mainly provided as a convenience notation for binding texture
+        layers to framebuffers.
+        """
+
+        return (self, key)
+
+    def __len__(self):
+        return self.shape[0]
+
     def set_data(self, data=None, shape=None, dtype=None, level=0):
         if data is None:
             if shape is None:

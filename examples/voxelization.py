@@ -76,9 +76,7 @@ def voxelize(filename, size, solid=True):
     shader.zfar = 1
 
     volume = TextureArray2D(shape=(num_targets, size, size, 4), dtype=uint32)
-    fbo = Framebuffer() # TODO Framebuffer([volume[i] for i in range(len(volume))]) with volume array
-    for i in range(num_targets):
-        fbo.attach(i, volume, i)
+    fbo = Framebuffer([volume[i] for i in range(len(volume))])
     fbo.check()
 
     with h5py.File(filename) as f:
