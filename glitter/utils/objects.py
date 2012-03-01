@@ -101,6 +101,8 @@ class ManagedObject(GLObject):
                 self._id = _id.value
             else:
                 self._id = self._generate_id()
+        if self._id == 0:
+            raise RuntimeError("could not create %s" % self.__class__.__name__)
         if self._db is not NotImplemented:
             getattr(self._context, self._db)._objects[self._id] = self
 

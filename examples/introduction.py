@@ -109,6 +109,9 @@ def display():
     logger.info("leave display()")
     logger.disabled = True
 
+def keyboard(key, x, y):
+    raise SystemExit()
+
 def timer():
     t = get_elapsed_time()
     phi = 2 * pi * t / 4.0
@@ -121,6 +124,7 @@ if __name__ == "__main__":
 
     window = GlutWindow(double=True, multisample=True)
     window.display_callback = display
+    window.keyboard_callback = keyboard
 
     fbo = Framebuffer([RectangleTexture(shape=(300, 300, 3))])
     vao = VertexArray([vertices, colors], elements=indices)

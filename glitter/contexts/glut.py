@@ -10,6 +10,7 @@ from rawgl import glut as _glut
 from glitter.utils import Enum
 from glitter.contexts.context import Context
 
+# TODO catch window closing (causes strange error messages)
 # TODO glutCreateSubWindow and glutGet(GLUT_WINDOW_PARENT)
 # TODO Menus, Font Rendering, Geometric Object Rendering
 
@@ -203,11 +204,15 @@ class GlutWindow(Context):
         self._id = 0
 
     def bind(self):
+        if self._id == 0:
+            raise RuntimeError("window has already been destroyed")
         old_binding = _glut.glutGetWindow()
         _glut.glutSetWindow(self._id)
         return old_binding
 
     def __enter__(self):
+        if self._id == 0:
+            raise RuntimeError("window has already been destroyed")
         super(GlutWindow, self).__enter__()
         self._stack.append(self.bind())
         return self
