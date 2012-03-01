@@ -188,6 +188,8 @@ class GlutWindow(Context):
         self._id = _glut.glutCreateWindow(self._name)
         if old_binding:
             _glut.glutSetWindow(old_binding)
+        else:
+            Context._current_context = self
 
         super(GlutWindow, self).__init__()
 
@@ -206,11 +208,13 @@ class GlutWindow(Context):
         return old_binding
 
     def __enter__(self):
+        super(GlutWindow, self).__enter__()
         self._stack.append(self.bind())
         return self
 
     def __exit__(self, type, value, traceback):
         _glut.glutSetWindow(self._stack.pop())
+        super(GlutWindow, self).__exit__(type, value, traceback)
 
     def swap_buffers(self):
         with self:

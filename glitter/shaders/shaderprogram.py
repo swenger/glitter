@@ -80,7 +80,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
             setattr(self, key, value)
 
     def __setattr__(self, name, value):
-        if self._frozen and not hasattr(self, name):
+        if self._frozen and not name.startswith("_") and not hasattr(self, name):
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
         return super(ShaderProgram, self).__setattr__(name, value)
 

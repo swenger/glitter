@@ -35,14 +35,12 @@ fragment_shader = """
 
 in vec4 ex_color;
 in vec2 texcoord;
-uniform float scaling;
 uniform sampler2D texture_0;
 uniform sampler2DRect texture_1;
 layout(location=0) out vec4 out_color;
 
 void main() {
     out_color = vec4(0.0)
-    //+ ex_color * scaling
     + texture2D(texture_0, texcoord)
     * texture2DRect(texture_1, gl_FragCoord.xy / 10.0)
     ;
@@ -113,7 +111,6 @@ def display():
 
 def timer():
     t = get_elapsed_time()
-    shader.scaling = 0.5 + 0.5 * sin(2 * pi * t / 1.0)
     phi = 2 * pi * t / 4.0
     shader.modelview_matrix = array(((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
     window.add_timer(10, timer)

@@ -42,16 +42,20 @@ class GLObjectLibrary(object):
     def __repr__(self):
         return str(self)
 
-class Context(InstanceDescriptorMixin): # TODO subclass this for different window systems, override __init__, __enter__, and __exit__
-    _contexts = [] # TODO weak list!
+class Context(InstanceDescriptorMixin):
+    _stack = []
+    _current_context = None
     _frozen = False
 
-    def __enter__(self): return self
-    def __exit__(self, type, value, traceback): pass
+    def __enter__(self):
+        Context._stack.append(Context._current_context)
+        Context._current_context = self
+        return self
+
+    def __exit__(self, type, value, traceback):
+        Context._current_context = Context._stack.pop()
 
     def __init__(self):
-        Context._contexts.append(self)
-
         self.texture_units = TextureUnitList(self)
         self.color_writemasks = ColorWritemaskList(self)
         self.draw_buffers = DrawBufferList(self)
@@ -70,7 +74,7 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
         self._frozen = True
 
     def __setattr__(self, name, value):
-        if self._frozen and not hasattr(self, name):
+        if self._frozen and not name.startswith("_") and not hasattr(self, name):
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
         return super(Context, self).__setattr__(name, value)
 
@@ -293,10 +297,10 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
             _gl.glFlush()
 
 def get_current_context():
-    if len(Context._contexts) == 0:
+    if Context._current_context is None:
         from glitter.contexts.glut import GlutWindow
         return GlutWindow(shape=(1, 1), hide=True) # TODO use raw GLX context instead
-    return Context._contexts[0] # TODO return current context instead
+    return Context._current_context
 
 class ContextProxy(object):
     def __getattr__(self, name):
