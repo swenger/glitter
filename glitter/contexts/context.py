@@ -296,7 +296,7 @@ class Context(InstanceDescriptorMixin):
         with self:
             _gl.glFlush()
 
-def get_current_context():
+def get_current_context(): # TODO actually get the current context from the OS
     if Context._current_context is None:
         from glitter.contexts.glut import GlutWindow
         return GlutWindow(shape=(1, 1), hide=True) # TODO use raw GLX context instead

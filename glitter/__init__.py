@@ -29,7 +29,7 @@ Design principles:
 
 Build instructions:
   - installing: C{sudo python setup.py install}
-  - docs: C{epydoc --html -v glitter}
+  - docs: C{epydoc --html -v glitter examples tests}
   - tests: C{nosetests tests}
 
 @todo: make sure to use C{with self._context} where necessary
@@ -41,6 +41,7 @@ Build instructions:
 @todo: add listing of all bound textures, buffers, etc.
 @todo: rethink what C{__del__} and C{__exit__} methods should do when the interpreter exits (e.g. restoring to a deleted object will not work)
 @todo: use C{@todo}, C{@note}, C{@attention}, C{@bug}, C{@warning} in docs
+@todo: Qt GL widgets and contexts
 
 @author: Stephan Wenger
 @date: 2012-02-29

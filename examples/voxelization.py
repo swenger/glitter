@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""Voxelize a mesh.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
 from glitter import VertexArray, TextureArray2D, uint32, Framebuffer, Reset, current_context, ShaderProgram
 
 vertex_code = """
@@ -12,6 +18,7 @@ void main() {
     gl_Position = ex_position = in_position;
 }
 """
+"""Vertex shader for solid or boundary voxelization."""
 
 fragment_code = """
 #version 410 core
@@ -38,8 +45,23 @@ void main() { // if solid, switch on all bits >= z; else, switch on bit == z
         fragmentColor[i] = voxelize(z, i, solid ? 0xffffffffu : 0u, solid ? 0xffffffffu : 1u);
 }
 """
+"""Fragment shader for solid or boundary voxelization."""
 
 def voxelize(mesh, size, solid=True):
+    """Voxelize a mesh into a cube of length C{size}.
+
+    @param mesh: The mesh to voxelize.
+    @type mesh: L{VertexArray}
+    @param size: The length of the resulting cube.
+    @type size: C{int}
+    @param solid: Whether to perform solid voxelization instead of boundary voxelization.
+    @type solid: C{bool}
+
+    @attention: The result of boundary voxelization is likely to have holes. To
+    obtain a watertight volume, you can voxelize the volume from different
+    directions and combine the results, or use the gradient of a solid volume.
+    """
+
     volume = TextureArray2D(shape=(size // 128, size, size, 4), dtype=uint32)
     with Framebuffer([volume[i] for i in range(len(volume))]) as fbo:
         fbo.clear()
