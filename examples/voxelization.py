@@ -13,8 +13,7 @@ logger.addHandler(ch)
 
 import h5py
 
-from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset
-from glitter.contexts.glut import GlutWindow
+from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset, get_default_context
 
 vertex_code = """
 #version 410 core
@@ -83,8 +82,9 @@ def voxelize(filename, size, solid=True):
 
     with fbo:
         fbo.clear()
-        with Reset(window, "logic_op_mode", window.logic_op_modes.XOR if solid else window.logic_op_modes.OR):
-            with Reset(window, "color_logic_op", True):
+        context = get_default_context()
+        with Reset(context, "logic_op_mode", context.logic_op_modes.XOR if solid else context.logic_op_modes.OR):
+            with Reset(context, "color_logic_op", True):
                 with shader:
                     vao.draw()
 
@@ -96,8 +96,6 @@ if __name__ == "__main__":
     infilename = sys.argv[1]
     outfilename = sys.argv[2]
     size = int(sys.argv[3]) if len(sys.argv) > 3 else 128
-
-    window = GlutWindow(shape=(1, 1), hide=True) # TODO context should implicitly be initialized when the shader program is generated
 
     volume = voxelize(infilename, size)
 
