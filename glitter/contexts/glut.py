@@ -189,6 +189,8 @@ class GlutWindow(Context):
         if old_binding:
             _glut.glutSetWindow(old_binding)
 
+        super(GlutWindow, self).__init__()
+
         if hide:
             self.hide()
         else:

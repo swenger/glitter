@@ -17,7 +17,6 @@ from glitter.contexts.multiproxies import BlendFuncProxy, BlendEquationProxy, Po
 
 # TODO disallow adding properties
 
-# TODO global statements: glClear etc.
 # TODO indexed variants for glEnable?
 # TODO glPatchParameter
 # TODO multiple viewports with glViewportIndexed / glViewportArray, glScissorIndexed / glScissorArray
@@ -46,10 +45,14 @@ class GLObjectLibrary(object):
         return str(self)
 
 class Context(InstanceDescriptorMixin): # TODO subclass this for different window systems, override __init__, __enter__, and __exit__
+    _contexts = []
+
     def __enter__(self): pass
     def __exit__(self, type, value, traceback): pass
 
     def __init__(self):
+        Context._contexts.append(self)
+
         self.texture_units = TextureUnitList(self)
         self.color_writemasks = ColorWritemaskList(self)
         self.draw_buffers = DrawBufferList(self)
@@ -284,7 +287,10 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
             _gl.glFlush()
 
 def get_default_context(_={}):
-    return _.setdefault("context", Context()) # TODO get context from windowing system
+    if len(Context._contexts) == 0:
+        from glitter.contexts.glut import GlutWindow
+        return GlutWindow(shape=(1, 1), hide=True) # TODO use raw GLX context instead
+    return Context._contexts[0]
 
 __all__ = ["Context", "get_default_context"]
 
