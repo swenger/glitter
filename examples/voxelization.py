@@ -13,7 +13,7 @@ logger.addHandler(ch)
 
 import h5py
 
-from glitter import Framebuffer, ShaderProgram, Texture2D, uint32, VertexArray, Reset
+from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset
 from glitter.contexts.glut import GlutWindow#, main_loop
 
 vertex_code = """
@@ -30,6 +30,8 @@ void main() {
 fragment_code = """
 #version 410 core
 #extension GL_EXT_gpu_shader4 : enable
+
+#define NUM_TARGETS %d
 
 in vec4 ex_position;
 uniform float znear, zfar;
@@ -62,18 +64,21 @@ uvec4 solid_voxelize(uint z, uint offset) {
 
 void main() {
     uint z = uint(round(128.0 * (ex_position.z - znear) / (zfar - znear)));
-    fragmentColor = solid_voxelize(z, 0); // TODO multiple targets
+    fragmentColor = %s_voxelize(z, 0); // TODO multiple targets
 }
 """
 
 def voxelize(filename, size, solid=True):
-    # TODO set mode: solid or border, set number of textures
-    shader = ShaderProgram(vertex=vertex_code, fragment=fragment_code)
+    num_targets = size // 128
+
+    shader = ShaderProgram(vertex=vertex_code, fragment=fragment_code % (num_targets, "solid" if solid else "border"))
     shader.znear = -1
     shader.zfar = 1
 
-    volume = Texture2D(shape=(size, size, 4), dtype=uint32) # TODO TextureArray2D with size // 128 layers, bind layer to FBO
-    fbo = Framebuffer([volume])
+    volume = TextureArray2D(shape=(num_targets, size, size, 4), dtype=uint32)
+    fbo = Framebuffer() # TODO Framebuffer([volume[i] for i in range(len(volume))]) with volume array
+    for i in range(num_targets):
+        fbo.attach(i, volume, i)
     fbo.check()
 
     with h5py.File(filename) as f:
