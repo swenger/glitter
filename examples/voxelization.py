@@ -20,7 +20,6 @@ fragment_code = """
 #extension GL_EXT_gpu_shader4 : enable
 
 in vec4 ex_position;
-uniform float znear, zfar;
 uniform bool solid;
 layout(location=0) out uvec4 fragmentColor[%d];
 
@@ -37,45 +36,32 @@ uvec4 voxelize(uint z, uint offset, uint fill, uint base) {
 }
 
 void main() { // if solid, switch on all bits >= z; else, switch on bit == z
-    uint z = uint(round(128.0 * float(fragmentColor.length()) * (ex_position.z - znear) / (zfar - znear)));
+    uint z = uint(round(128.0 * float(fragmentColor.length()) * 0.5 * (ex_position.z + 1.0)));
     for (int i = 0; i < fragmentColor.length(); ++i)
         fragmentColor[i] = voxelize(z, i, solid ? 0xffffffffu : 0u, solid ? 0xffffffffu : 1u);
 }
 """
 
-def voxelize(filename, size, solid=True):
-    num_targets = size // 128
-
-    shader = ShaderProgram(vertex=vertex_code, fragment=fragment_code % num_targets)
-    shader.znear = -1
-    shader.zfar = 1
-    shader.solid = solid
-
-    volume = TextureArray2D(shape=(num_targets, size, size, 4), dtype=uint32)
+def voxelize(mesh, size, solid=True):
+    volume = TextureArray2D(shape=(size // 128, size, size, 4), dtype=uint32)
     fbo = Framebuffer([volume[i] for i in range(len(volume))])
-
-    with h5py.File(filename) as f:
-        vao = VertexArray([f["vertices"]], elements=f["indices"])
+    shader = ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), variables=dict(solid=solid))
 
     with fbo:
         fbo.clear()
-        context = get_default_context()
+        context = get_default_context() # TODO use a current_context proxy instead
         with Reset(context, "logic_op_mode", context.logic_op_modes.XOR if solid else context.logic_op_modes.OR):
             with Reset(context, "color_logic_op", True):
                 with shader:
-                    vao.draw()
+                    mesh.draw()
 
     return volume
 
 if __name__ == "__main__":
     import sys
-
-    infilename = sys.argv[1]
-    outfilename = sys.argv[2]
-    size = int(sys.argv[3]) if len(sys.argv) > 3 else 128
-
-    volume = voxelize(infilename, size)
-
-    with h5py.File(outfilename, "w") as f:
+    with h5py.File(sys.argv[1]) as f:
+        mesh = VertexArray([f["vertices"]], elements=f["indices"])
+    volume = voxelize(mesh, int(sys.argv[3]) if len(sys.argv) > 3 else 128)
+    with h5py.File(sys.argv[2], "w") as f:
         f.create_dataset("data", data=volume.data, compression="lzf")
 
