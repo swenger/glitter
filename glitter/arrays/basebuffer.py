@@ -11,6 +11,7 @@ from glitter.utils import constants, Datatype, make_dtype, make_array, BindableO
 
 # TODO slicing with glGetBufferSubData
 # TODO binding as separate object to allow binding buffers to different targets
+# TODO remember that glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
 
 class BaseBuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenBuffers
