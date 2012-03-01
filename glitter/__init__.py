@@ -42,6 +42,7 @@ Build instructions:
 @todo: rethink what C{__del__} and C{__exit__} methods should do when the interpreter exits (e.g. restoring to a deleted object will not work)
 @todo: use C{@todo}, C{@note}, C{@attention}, C{@bug}, C{@warning} in docs
 @todo: Qt GL widgets and contexts
+@todo: use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?)
 
 @author: Stephan Wenger
 @date: 2012-02-29
