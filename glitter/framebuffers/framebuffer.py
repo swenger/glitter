@@ -9,7 +9,6 @@ from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject, constants
 
-# TODO raise exception when bound for drawing but status is not COMPLETE XXX
 # TODO binding as read_framebuffer_binding, glBlitFramebuffer, glCopyTexSubImage
 
 class Framebuffer(BindableObject, ManagedObject):
@@ -20,6 +19,7 @@ class Framebuffer(BindableObject, ManagedObject):
     _target = _gl.GL_DRAW_FRAMEBUFFER
 
     framebuffer_status = constants.framebuffer_status
+    _initialized = False
 
     def __init__(self, attachments=[], depth=None, stencil=None):
         super(Framebuffer, self).__init__()
@@ -28,6 +28,7 @@ class Framebuffer(BindableObject, ManagedObject):
             self[i] = attachment
         self.depth = depth
         self.stencil = stencil
+        self._initialized = True
 
     def __getitem__(self, index):
         return self._attachments[index]
@@ -39,21 +40,30 @@ class Framebuffer(BindableObject, ManagedObject):
         self.attach(index, None)
 
     def _on_bind(self):
-        self._stack.append(self._context.draw_buffers)
-        self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
-        # TODO does this work correctly during __init__? XXX
+        if self._initialized:
+            self._stack.append(self._context.draw_buffers)
+            self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
 
-        self._stack.append(self._context.viewport)
-        if self.shape is not None:
-            self._context.viewport = (0, 0) + self.shape
+            self._stack.append(self._context.viewport)
+            if self.shape is not None:
+                self._context.viewport = (0, 0) + self.shape
 
-        # TODO set color_writemask, depth_writemask, blend_func, blend_equation, depth_range
+            # TODO set color_writemasks
+            # TODO set depth_writemasks
+            # TODO set blend_funcs
+            # TODO set blend_equations
+            # TODO set depth_ranges
 
     def _on_release(self):
-        # TODO reset color_writemask, depth_writemask, blend_func, blend_equation, depth_range
+        if self._initialized:
+            # TODO reset depth_ranges
+            # TODO reset blend_equations
+            # TODO reset blend_funcs
+            # TODO reset depth_writemasks
+            # TODO reset color_writemasks
 
-        self._context.viewport = self._stack.pop()
-        self._context.draw_buffers = self._stack.pop()
+            self._context.viewport = self._stack.pop()
+            self._context.draw_buffers = self._stack.pop()
 
     def _attach(self, attachment, texture=None, layer=None, level=0):
         """Attach a texture to an attachment.
@@ -168,18 +178,20 @@ class Framebuffer(BindableObject, ManagedObject):
             return self.framebuffer_status[_gl.glCheckFramebufferStatus(self._target)]
 
     @property
-    def shape(self): # TODO is this semantically correct? XXX
+    def shape(self):
+        shape = None
         for i, attachment in sorted(self._attachments.items()):
             if attachment is not None:
                 if type(attachment) is tuple:
                     texture, layer = attachment
-                    return texture.shape[1:3]
-                return attachment.shape[:2]
+                    shape = (min(shape[0], texture.shape[1]), min(shape[1], texture.shape[2])) if shape else texture.shape[1:3]
+                else:
+                    shape = (min(shape[0], attachment.shape[0]), min(shape[1], attachment.shape[1])) if shape else attachment.shape[:2]
         if self.depth is not None:
-            return self.depth.shape[:2]
+            shape = (min(shape[0], self.depth.shape[0]), min(shape[1], self.depth.shape[1])) if shape else self.depth.shape[:2]
         if self.stencil is not None:
-            return self.stencil.shape[:2]
-        return None
+            shape = (min(shape[0], self.stencil.shape[0]), min(shape[1], self.stencil.shape[1])) if shape else self.stencil.shape[:2]
+        return shape
 
     def clear(self, color=None, depth=None, stencil=None): # TODO glClearBuffer for clearing selected attachments
         with self:
