@@ -45,7 +45,7 @@ class GLObjectLibrary(object):
 class Context(InstanceDescriptorMixin): # TODO subclass this for different window systems, override __init__, __enter__, and __exit__
     _contexts = []
 
-    def __enter__(self): pass
+    def __enter__(self): return self
     def __exit__(self, type, value, traceback): pass
 
     def __init__(self):

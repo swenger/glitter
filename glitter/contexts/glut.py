@@ -207,6 +207,7 @@ class GlutWindow(Context):
 
     def __enter__(self):
         self._stack.append(self.bind())
+        return self
 
     def __exit__(self, type, value, traceback):
         _glut.glutSetWindow(self._stack.pop())

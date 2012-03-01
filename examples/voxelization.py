@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-import h5py
-
-from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset, current_context
+from glitter import VertexArray, TextureArray2D, uint32, Framebuffer, Reset, current_context, ShaderProgram
 
 vertex_code = """
 #version 410 core
@@ -44,20 +42,16 @@ void main() { // if solid, switch on all bits >= z; else, switch on bit == z
 
 def voxelize(mesh, size, solid=True):
     volume = TextureArray2D(shape=(size // 128, size, size, 4), dtype=uint32)
-    fbo = Framebuffer([volume[i] for i in range(len(volume))])
-    shader = ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), variables=dict(solid=solid))
-
-    with fbo:
+    with Framebuffer([volume[i] for i in range(len(volume))]) as fbo:
         fbo.clear()
         with Reset(current_context, "logic_op_mode", current_context.logic_op_modes.XOR if solid else current_context.logic_op_modes.OR):
             with Reset(current_context, "color_logic_op", True):
-                with shader:
+                with ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), variables=dict(solid=solid)):
                     mesh.draw()
-
     return volume
 
 if __name__ == "__main__":
-    import sys
+    import sys, h5py
     with h5py.File(sys.argv[1]) as f:
         mesh = VertexArray([f["vertices"]], elements=f["indices"])
     volume = voxelize(mesh, int(sys.argv[3]) if len(sys.argv) > 3 else 128)

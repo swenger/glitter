@@ -208,6 +208,7 @@ class BindableObject(GLObject):
 
         self._context.__enter__()
         self._stack.append(self.bind())
+        return self
 
     def __exit__(self, type, value, traceback):
         """Called when a C{with} statement is exited.
@@ -284,6 +285,7 @@ class BindReleaseObject(GLObject):
 
         self._context.__enter__()
         self.bind()
+        return self
 
     def __exit__(self, type, value, traceback):
         """Called when a C{with} statement is exited.
