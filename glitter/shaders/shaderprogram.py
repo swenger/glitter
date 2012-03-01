@@ -157,6 +157,11 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
 
     @property
     def shaders(self):
+        """The list of currently attached shaders.
+
+        @type: L{ListProxy}
+        """
+
         return ListProxy(self._shaders, self._attach, self._detach)
 
     def link(self):
@@ -175,6 +180,11 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
 
     @property
     def _log(self):
+        """The current shader info log.
+
+        @type: C{string}
+        """
+
         _info_log = _gl.create_string_buffer(self._info_log_length)
         _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
