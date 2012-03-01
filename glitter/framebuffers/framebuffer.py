@@ -9,7 +9,7 @@ from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject, constants
 
-# TODO raise exception when bound for drawing but status is not COMPLETE
+# TODO raise exception when bound for drawing but status is not COMPLETE XXX
 # TODO binding as read_framebuffer_binding, glBlitFramebuffer, glCopyTexSubImage
 
 class Framebuffer(BindableObject, ManagedObject):
@@ -41,7 +41,7 @@ class Framebuffer(BindableObject, ManagedObject):
     def _on_bind(self):
         self._stack.append(self._context.draw_buffers)
         self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
-        # TODO does this work correctly during __init__?
+        # TODO does this work correctly during __init__? XXX
 
         self._stack.append(self._context.viewport)
         if self.shape is not None:
@@ -168,7 +168,7 @@ class Framebuffer(BindableObject, ManagedObject):
             return self.framebuffer_status[_gl.glCheckFramebufferStatus(self._target)]
 
     @property
-    def shape(self): # TODO is this semantically correct?
+    def shape(self): # TODO is this semantically correct? XXX
         for i, attachment in sorted(self._attachments.items()):
             if attachment is not None:
                 if type(attachment) is tuple:

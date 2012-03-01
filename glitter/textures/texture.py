@@ -9,8 +9,8 @@ from rawgl import gl as _gl
 
 from glitter.utils import constants, Datatype, make_array, ManagedObject, BindReleaseObject, float32
 
-# TODO check memory layout: do shaders use the same coordinates as _np?
-# TODO support depth textures
+# TODO check memory layout: do shaders use the same coordinates as _np? XXX
+# TODO support depth textures XXX
 # TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
 # TODO image textures
 
