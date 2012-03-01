@@ -39,7 +39,9 @@ Build instructions:
 @todo: write documentation and tests
 @todo: add convenience tools for loading meshes, rendering a fullscreen quad, displaying a texture
 @todo: add listing of all bound textures, buffers, etc.
-@todo: rethink what C{__del__} and C{__exit__} methods should do when the interpreter exits (e.g. restoring to a deleted object will not work)
+@todo: rethink what C{__del__} and C{__exit__} methods should do when the interpreter exits (e.g. restoring to a deleted object will not work).
+       C{atexit.register} provides a means to call any cleanup functions before C{__del__} is called;
+       C{__exit__} will receive an exception of type C{SystemExit}.
 @todo: use C{@todo}, C{@note}, C{@attention}, C{@bug}, C{@warning} in docs
 
 @author: Stephan Wenger
