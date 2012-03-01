@@ -4,6 +4,8 @@
 @date: 2012-02-29
 """
 
+# TODO when using enums, import them into the corresponding class
+
 from rawgl import gl as _gl
 
 from glitter.utils.dtypes import uint8, uint16, uint32, int8, int16, int32, float32
