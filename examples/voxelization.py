@@ -77,8 +77,6 @@ def voxelize(filename, size, solid=True):
 
     volume = TextureArray2D(shape=(num_targets, size, size, 4), dtype=uint32)
     fbo = Framebuffer([volume[i] for i in range(len(volume))])
-    if fbo.status != Framebuffer.framebuffer_status.COMPLETE:
-        print "Warning: FBO incomplete"
 
     with h5py.File(filename) as f:
         vao = VertexArray([f["vertices"]], elements=f["indices"])
@@ -95,11 +93,11 @@ def voxelize(filename, size, solid=True):
 if __name__ == "__main__":
     import sys
 
-    infilename = sys.argv[1] # "/local/wenger/data/meshes/armadillo.hdf5"
-    outfilename = sys.argv[2] # "/tmp/out.hdf5"
+    infilename = sys.argv[1]
+    outfilename = sys.argv[2]
     size = int(sys.argv[3]) if len(sys.argv) > 3 else 128
 
-    window = GlutWindow(shape=(size, size), hide=True) # TODO Framebuffer should handle viewport setup
+    window = GlutWindow(shape=(1, 1), hide=True) # TODO context should implicitly be initialized when the shader program is generated
 
     volume = voxelize(infilename, size)
 

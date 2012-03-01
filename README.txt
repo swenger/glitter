@@ -25,8 +25,10 @@ TODO:
   - add a generic mechanism for setting and resetting state and use it (instead of maintaining stacks in objects)
   - use context's getters and setters in library, make sure to use "with self._context" where necessary
   - create a raw offscreen GLX context class with context generation and switching and a GLUT context class (or make GlutWindow a Context subclass)
+  - get_default_context should generate a platform-specific offscreen rendering context
 - make rawgl replaceable
 - transparent CUDA and OpenCL interoperability
 - write documentation and tests
 - add convenience tools for loading meshes, rendering a fullscreen quad, displaying a texture
+- add listing of all bound textures, buffers, etc.
 

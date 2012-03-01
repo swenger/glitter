@@ -42,10 +42,17 @@ class Framebuffer(BindableObject, ManagedObject):
         self._stack.append(self._context.draw_buffers)
         self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
         # TODO does this work correctly during __init__?
-        # TODO set viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range
+
+        self._stack.append(self._context.viewport)
+        if self.shape is not None:
+            self._context.viewport = (0, 0) + self.shape
+
+        # TODO set color_writemask, depth_writemask, blend_func, blend_equation, depth_range
 
     def _on_release(self):
-        # TODO reset viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range
+        # TODO reset color_writemask, depth_writemask, blend_func, blend_equation, depth_range
+
+        self._context.viewport = self._stack.pop()
         self._context.draw_buffers = self._stack.pop()
 
     def _attach(self, attachment, texture=None, layer=None, level=0):
@@ -90,6 +97,8 @@ class Framebuffer(BindableObject, ManagedObject):
 
     @property
     def depth(self):
+        if not hasattr(self, "_depth"):
+            return None
         return self._depth
 
     @depth.setter
@@ -119,6 +128,8 @@ class Framebuffer(BindableObject, ManagedObject):
 
     @property
     def stencil(self):
+        if not hasattr(self, "_stencil"):
+            return None
         return self._stencil
 
     @stencil.setter
@@ -155,6 +166,20 @@ class Framebuffer(BindableObject, ManagedObject):
 
         with self:
             return self.framebuffer_status[_gl.glCheckFramebufferStatus(self._target)]
+
+    @property
+    def shape(self): # TODO is this semantically correct?
+        for i, attachment in sorted(self._attachments.items()):
+            if attachment is not None:
+                if type(attachment) is tuple:
+                    texture, layer = attachment
+                    return texture.shape[1:3]
+                return attachment.shape[:2]
+        if self.depth is not None:
+            return self.depth.shape[:2]
+        if self.stencil is not None:
+            return self.stencil.shape[:2]
+        return None
 
     def clear(self, color=None, depth=None, stencil=None): # TODO glClearBuffer for clearing selected attachments
         with self:
