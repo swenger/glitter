@@ -8,7 +8,6 @@ setup(
   description = "GL InTuiTive Extensions Repository",
   license = "MIT",
   requires = ["rawgl"],
-  packages = ["glitter"],
-  # TODO add test and doc targets
+  packages = ["glitter"], # TODO add subpackages
 )
 
