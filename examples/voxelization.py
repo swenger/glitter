@@ -19,12 +19,10 @@ fragment_code = """
 #version 410 core
 #extension GL_EXT_gpu_shader4 : enable
 
-#define NUM_TARGETS %d
-
 in vec4 ex_position;
 uniform float znear, zfar;
 uniform bool solid;
-layout(location=0) out uvec4 fragmentColor; // TODO multiple targets
+layout(location=0) out uvec4 fragmentColor[%d];
 
 uvec4 voxelize(uint z, uint offset, uint fill, uint base) {
     if (z >= (offset + 1u) * 128u) return uvec4(0u);
@@ -39,8 +37,9 @@ uvec4 voxelize(uint z, uint offset, uint fill, uint base) {
 }
 
 void main() { // if solid, switch on all bits >= z; else, switch on bit == z
-    uint z = uint(round(128.0 * (ex_position.z - znear) / (zfar - znear)));
-    fragmentColor = voxelize(z, 0, solid ? 0xffffffffu : 0u, solid ? 0xffffffffu : 1u); // TODO multiple targets
+    uint z = uint(round(128.0 * float(fragmentColor.length()) * (ex_position.z - znear) / (zfar - znear)));
+    for (int i = 0; i < fragmentColor.length(); ++i)
+        fragmentColor[i] = voxelize(z, i, solid ? 0xffffffffu : 0u, solid ? 0xffffffffu : 1u);
 }
 """
 
@@ -78,5 +77,5 @@ if __name__ == "__main__":
     volume = voxelize(infilename, size)
 
     with h5py.File(outfilename, "w") as f:
-        f["data"] = volume.data
+        f.create_dataset("data", data=volume.data, compression="lzf")
 
