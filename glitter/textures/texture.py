@@ -45,7 +45,7 @@ class Texture(ManagedObject, BindReleaseObject):
         """Return a tuple describing a texture layer.
 
         This is mainly provided as a convenience notation for binding texture
-        layers to framebuffers.
+        layers to L{Framebuffer}s.
         """
 
         return (self, key)

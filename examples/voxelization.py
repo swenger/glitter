@@ -14,7 +14,7 @@ logger.addHandler(ch)
 import h5py
 
 from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset
-from glitter.contexts.glut import GlutWindow#, main_loop
+from glitter.contexts.glut import GlutWindow
 
 vertex_code = """
 #version 410 core
@@ -77,7 +77,8 @@ def voxelize(filename, size, solid=True):
 
     volume = TextureArray2D(shape=(num_targets, size, size, 4), dtype=uint32)
     fbo = Framebuffer([volume[i] for i in range(len(volume))])
-    fbo.check()
+    if fbo.status != Framebuffer.framebuffer_status.COMPLETE:
+        print "Warning: FBO incomplete"
 
     with h5py.File(filename) as f:
         vao = VertexArray([f["vertices"]], elements=f["indices"])

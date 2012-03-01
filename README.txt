@@ -17,7 +17,7 @@ Remember:
 - IDs and bindings are only unique per context!
 - glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
 - when using enums, import them into the corresponding class
-- docs: epydoc --html glitter
+- docs: epydoc --html -v glitter
 - tests: nosetests tests
 
 TODO:
