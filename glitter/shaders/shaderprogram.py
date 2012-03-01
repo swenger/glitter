@@ -17,8 +17,6 @@ class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
-# TODO disallow adding properties
-
 class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
@@ -27,7 +25,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
 
     transform_feedback_buffer_modes = constants.transform_feedback_buffer_modes
 
-    def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None):
+    def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], variables={}, link=None):
         super(ShaderProgram, self).__init__()
         self._shaders = []
         self._variable_proxies = []
@@ -74,6 +72,11 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         for name, proxy in self._get_active_uniforms().items():
             setattr(self, name, proxy)
             self._variable_proxies.append(proxy)
+
+        # TODO freeze adding of unknown attributes
+
+        for key, value in variables.items():
+            setattr(self, key, value)
 
     def _on_bind(self):
         for proxy in self._variable_proxies:

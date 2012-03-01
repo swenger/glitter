@@ -2,7 +2,7 @@
 
 import h5py
 
-from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset, get_default_context
+from glitter import Framebuffer, ShaderProgram, TextureArray2D, uint32, VertexArray, Reset, current_context
 
 vertex_code = """
 #version 410 core
@@ -49,9 +49,8 @@ def voxelize(mesh, size, solid=True):
 
     with fbo:
         fbo.clear()
-        context = get_default_context() # TODO use a current_context proxy instead
-        with Reset(context, "logic_op_mode", context.logic_op_modes.XOR if solid else context.logic_op_modes.OR):
-            with Reset(context, "color_logic_op", True):
+        with Reset(current_context, "logic_op_mode", current_context.logic_op_modes.XOR if solid else current_context.logic_op_modes.OR):
+            with Reset(current_context, "color_logic_op", True):
                 with shader:
                     mesh.draw()
 

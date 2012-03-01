@@ -6,15 +6,15 @@
 
 from rawgl import gl as _gl
 
-def _get_default_context():
-    """Grab the default context from the L{context} module.
+def _get_current_context():
+    """Grab the current context from the L{context} module.
 
     The import is wrapped in a function definition to avoid infinite recursion
     on import because the L{context} module imports this module.
     """
 
-    from glitter.contexts import get_default_context
-    return get_default_context()
+    from glitter.contexts import get_current_context
+    return get_current_context()
 
 class GLObject(object):
     """Base class for objects that belong to an OpenGL context.
@@ -25,11 +25,11 @@ class GLObject(object):
     def __init__(self, context=None):
         """Create a new C{GLObject}.
 
-        @param context: The parent context. Uses the default context if C{context} is C{None}.
+        @param context: The parent context. Uses the current context if C{context} is C{None}.
         @type context: L{Context}.
         """
 
-        self._context = context or _get_default_context()
+        self._context = context or _get_current_context()
 
 class ManagedObject(GLObject):
     """Base class for objects that can be created and deleted in OpenGL.

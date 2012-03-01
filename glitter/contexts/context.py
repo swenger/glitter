@@ -15,8 +15,6 @@ from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
 from glitter.contexts.multiproxies import BlendFuncProxy, BlendEquationProxy, PolygonOffsetProxy
 
-# TODO disallow adding properties
-
 # TODO indexed variants for glEnable?
 # TODO glPatchParameter
 # TODO multiple viewports with glViewportIndexed / glViewportArray, glScissorIndexed / glScissorArray
@@ -67,6 +65,8 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
         self.textures = GLObjectLibrary(self)
         self.transform_feedbacks = GLObjectLibrary(self)
         self.vertex_arrays = GLObjectLibrary(self)
+
+        # TODO freeze adding of unknown attributes
 
     # enums
     blend_functions = constants.blend_functions
@@ -286,11 +286,26 @@ class Context(InstanceDescriptorMixin): # TODO subclass this for different windo
         with self:
             _gl.glFlush()
 
-def get_default_context(_={}): # TODO change to get_current_context
+def get_current_context():
     if len(Context._contexts) == 0:
         from glitter.contexts.glut import GlutWindow
         return GlutWindow(shape=(1, 1), hide=True) # TODO use raw GLX context instead
-    return Context._contexts[0]
+    return Context._contexts[0] # TODO return current context instead
 
-__all__ = ["Context", "get_default_context"]
+class ContextProxy(object):
+    def __getattr__(self, name):
+        return getattr(get_current_context(), name)
+
+    def __setattr__(self, name, value):
+        return setattr(get_current_context(), name, value)
+
+    def __eq__(self, other):
+        return get_current_context() == other
+
+    def __ne__(self, other):
+        return get_current_context() != other
+
+current_context = ContextProxy()
+
+__all__ = ["Context", "get_current_context", "current_context"]
 
