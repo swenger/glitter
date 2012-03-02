@@ -37,7 +37,10 @@ class ArrayBuffer(BaseBuffer):
         if mode is None:
             raise ValueError("must specify mode")
         if count is None:
-            count = self.shape[0] * constants.primitive_to_buffer_dimensions[mode._value]
+            try:
+                count = self.shape[0] * constants.primitive_to_buffer_dimensions[mode]
+            except KeyError:
+                raise ValueError("must specify count")
         if instances is None:
             with self:
                 _gl.glDrawArrays(mode._value, first, count)

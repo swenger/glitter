@@ -43,6 +43,9 @@ Build instructions:
 @todo: use C{@todo}, C{@note}, C{@attention}, C{@bug}, C{@warning} in docs
 @todo: Qt GL widgets and contexts
 @todo: use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?)
+@todo: maybe use C{abc} module for abstract classes
+@todo: maybe add named vertex shader in variables (buffer bindings) and fragment shader out variables (draw buffers)
+@todo: rethink vertex array drawing: e.g., differing number of elements in vertex and color buffer
 
 @author: Stephan Wenger
 @date: 2012-02-29

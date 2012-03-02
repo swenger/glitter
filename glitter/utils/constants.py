@@ -121,11 +121,8 @@ buffer_usages = Enum(
         DYNAMIC_COPY=_gl.GL_DYNAMIC_COPY,
         )
 
-buffer_dimensions_to_primitive = {1: _gl.GL_POINTS, 2: _gl.GL_LINES, 3: _gl.GL_TRIANGLES}
-
-primitive_to_buffer_dimensions = {
-        _gl.GL_TRIANGLES: 3, # TODO extend XXX
-        }
+buffer_dimensions_to_primitive = {1: primitive_types.POINTS, 2: primitive_types.LINES, 3: primitive_types.TRIANGLES}
+primitive_to_buffer_dimensions = {primitive_types.POINTS: 1, primitive_types.LINES: 2, primitive_types.TRIANGLES: 3}
 
 blend_functions = Enum(
         ZERO=_gl.GL_ZERO,

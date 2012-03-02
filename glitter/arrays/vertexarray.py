@@ -8,7 +8,7 @@ from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject
-from glitter.arrays import BaseBuffer, ArrayBuffer, ElementArrayBuffer
+from glitter.arrays import ArrayBuffer, ElementArrayBuffer
 
 # TODO glVertexAttribDivisor
 
@@ -61,13 +61,13 @@ class VertexArray(BindableObject, ManagedObject):
     def elements(self):
         self.elements = None
 
-    def draw(self, mode=BaseBuffer.drawmodes.TRIANGLES, count=None, first=0, instances=None, index=None):
+    def draw(self, mode=None, count=None, first=0, instances=None, index=None):
         with self:
             if index is None:
                 if self.elements is not None:
                     self.elements.draw(mode, count, first, instances)
                 else:
-                    min(self._attributes.items())[1].draw(mode, count, first, instances)
+                    min(x for x in self._attributes.items() if x[1] is not None)[1].draw(mode, count, first, instances)
             else:
                 self[index].draw(mode, count, first, instances)
 

@@ -2,6 +2,8 @@
 
 @author: Stephan Wenger
 @date: 2012-02-29
+
+@todo: accept another buffer in constructor, copy _id, proxy shape etc., keep reference to other buffer, disable set_data and __del__
 """
 
 import numpy as _np

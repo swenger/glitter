@@ -8,6 +8,7 @@
 
 # Import math utilities from numpy.
 from numpy import array, sin, cos, pi
+from numpy.random import random
 
 # Import glitter; this imports rawgl.
 from glitter import ShaderProgram, VertexArray, State
@@ -17,12 +18,13 @@ vertex_shader = """
 #version 410 core
 
 layout(location=0) in vec4 in_position;
+layout(location=1) in vec3 in_color;
 uniform mat4 modelview_matrix;
-out vec4 ex_color;
+out vec3 ex_color;
 
 void main() {
     gl_Position = modelview_matrix * in_position;
-    ex_color = 0.5 + 0.5 * in_position;
+    ex_color = in_color;
 }
 """
 """Vertex shader for rendering animated geometry."""
@@ -30,11 +32,11 @@ void main() {
 fragment_shader = """
 #version 410 core
 
-in vec4 ex_color;
+in vec3 ex_color;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = ex_color;
+    out_color = vec4(ex_color.r, ex_color.g, ex_color.b, 1.0);
 }
 """
 """Fragment shader for rendering animated geometry."""
@@ -83,7 +85,12 @@ if __name__ == "__main__":
 
     # Create objects that are automatically placed inside the current context.
     with h5py.File(sys.argv[1], "r") as f:
-        vao = VertexArray([f["vertices"]], elements=f["indices"] if "indices" in f else None) #: The vertex array to hold the geometry.
+        vertices = f["vertices"]
+        colors = f.get("colors", None)
+        elements = f.get("indices", None)
+        if colors is None:
+            colors = random((len(vertices), 3))[:, None, :][:, [0] * vertices.shape[1], :]
+        vao = VertexArray([vertices, colors], elements=elements) #: The vertex array to hold the geometry.
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader) #: The shader program for rendering the geometry.
 
     # Call the timer once; it will trigger the subsequent calls itself.
