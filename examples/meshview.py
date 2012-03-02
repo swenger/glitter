@@ -66,7 +66,7 @@ def timer():
 
     # Animate the modelview matrix and upload it to the shader.
     t = get_elapsed_time()
-    phi = 2 * pi * t / 4.0
+    phi = 2 * pi * t / 20.0
     shader.modelview_matrix = array(((cos(phi), 0, sin(phi), 0), (0, 1, 0, 0), (-sin(phi), 0, cos(phi), 0), (0, 0, 0, 1)))
 
     # Schedule the next timer event.
