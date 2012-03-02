@@ -42,7 +42,7 @@ class Framebuffer(BindableObject, ManagedObject):
     def _on_bind(self):
         if self._initialized:
             self._stack.append(self._context.draw_buffers)
-            self._context.draw_buffers = [i if self[i] is not None else None for i in range(len(self._attachments))]
+            self._context.draw_buffers = [i if self[i] is not None else None for i in range(self._context.max_color_attachments)]
 
             self._stack.append(self._context.viewport)
             if self.shape is not None:
