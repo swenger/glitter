@@ -17,8 +17,8 @@ class ArrayBuffer(BaseBuffer):
         if num_components is None:
             if len(self.shape) == 1:
                 num_components = 1
-            elif len(self.shape) == 2 and 1 <= self.shape[1] <= 4:
-                num_components = self.shape[1]
+            elif 1 <= self.shape[-1] <= 4:
+                num_components = self.shape[-1]
             else:
                 raise ValueError("must specify num_components")
         if self.dtype.is_float():
@@ -30,12 +30,14 @@ class ArrayBuffer(BaseBuffer):
 
     def draw(self, mode=None, count=None, first=0, instances=None):
         if mode is None:
-            if len(self.shape) >= 2:
-                mode = constants.buffer_dimensions_to_primitive.get(self.shape[-1], None)
+            if len(self.shape) > 2:
+                mode = constants.buffer_dimensions_to_primitive.get(self.shape[1], None)
+            else:
+                mode = constants.buffer_dimensions_to_primitive.get(1, None)
         if mode is None:
             raise ValueError("must specify mode")
         if count is None:
-            count = self.shape[0]
+            count = self.shape[0] * constants.primitive_to_buffer_dimensions[mode._value]
         if instances is None:
             with self:
                 _gl.glDrawArrays(mode._value, first, count)

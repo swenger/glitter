@@ -123,6 +123,10 @@ buffer_usages = Enum(
 
 buffer_dimensions_to_primitive = {1: _gl.GL_POINTS, 2: _gl.GL_LINES, 3: _gl.GL_TRIANGLES}
 
+primitive_to_buffer_dimensions = {
+        _gl.GL_TRIANGLES: 3, # TODO extend XXX
+        }
+
 blend_functions = Enum(
         ZERO=_gl.GL_ZERO,
         ONE=_gl.GL_ONE,

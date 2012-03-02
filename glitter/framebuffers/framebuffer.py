@@ -195,7 +195,7 @@ class Framebuffer(BindableObject, ManagedObject):
 
     def clear(self, color=None, depth=None, stencil=None): # TODO glClearBuffer for clearing selected attachments
         with self:
-            self._context._clear(color, depth, stencil)
+            self._context._perform_gl_clear(color, depth, stencil)
 
 __all__ = ["Framebuffer"]
 

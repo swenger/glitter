@@ -275,7 +275,7 @@ class Context(InstanceDescriptorMixin):
 
     #{ Global actions
 
-    def _clear(self, color=None, depth=None, stencil=None):
+    def _perform_gl_clear(self, color=None, depth=None, stencil=None):
         if color is None and depth is None and stencil is None:
             color = depth = stencil = True
         # TODO set and reset clear color/depth/stencil if given as arrays
@@ -287,8 +287,8 @@ class Context(InstanceDescriptorMixin):
 
     def clear(self, color=None, depth=None, stencil=None):
         with self:
-            with State(self, "draw_framebuffer_binding", None):
-                self._clear(color, depth, stencil)
+            with State(self, draw_framebuffer_binding=None):
+                self._perform_gl_clear(color, depth, stencil)
 
     def finish(self):
         with self:

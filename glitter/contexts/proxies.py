@@ -68,10 +68,12 @@ class EnumProxy(object):
     def __set__(self, obj, value):
         if self._setter is None:
             raise AttributeError("can't set attribute")
-        if isinstance(value, EnumConstant):
-            value = value._value
-        elif isinstance(value, basestring):
+        if isinstance(value, basestring):
             value = getattr(self._enum, value)._value
+        if isinstance(value, EnumConstant):
+            if value not in self._enum.__dict__.values():
+                raise TypeError("wrong enum")
+            value = value._value
         args = list(self._set_args) + [value]
         with obj:
             self._setter(*args)
