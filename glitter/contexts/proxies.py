@@ -7,7 +7,7 @@
 from weakref import WeakKeyDictionary
 from rawgl import gl as _gl
 
-from glitter.utils import constants, bool8, int32, int64, float32, Proxy
+from glitter.utils import constants, bool8, int32, int64, float32, Proxy, EnumConstant
 
 class BooleanProxy(Proxy):
     def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
@@ -68,7 +68,11 @@ class EnumProxy(object):
     def __set__(self, obj, value):
         if self._setter is None:
             raise AttributeError("can't set attribute")
-        args = list(self._set_args) + [value._value]
+        if isinstance(value, EnumConstant):
+            value = value._value
+        elif isinstance(value, basestring):
+            value = getattr(self._enum, value)._value
+        args = list(self._set_args) + [value]
         with obj:
             self._setter(*args)
 

@@ -224,24 +224,41 @@ class BindableObject(GLObject):
         setattr(self._context, self._binding, old_binding)
         self._context.__exit__(type, value, traceback)
 
-class Reset(BindableObject):
-    """Helper class to add binding semantics to context property changes.
+class Reset(GLObject):
+    """Context manager to add binding semantics to context property changes.
 
-    To set a property of the context and automatically reset it to its old
+    To set properties of the context and automatically reset it to its old
     value later, use a C{with} statement with a C{Reset} object.
     """
 
-    def __init__(self, context, prop, value):
+    def __init__(self, context=None, **kwargs):
         """Create a C{Reset} object for use in C{with} statements.
 
-        When entering the C{with} statement, the property C{prop} of C{context}
-        will be set to C{value}. On exiting the C{with} statement, the old
-        value will be restored.
+        When entering the C{with} statement, the properties of C{context} given
+        in C{kwargs} will be set to their respective values. On exiting the
+        C{with} statement, the old value will be restored.
+
+        No guarantee is made about the order in which the properties are set,
+        but they are guaranteed to be reset in reverse order.
+
+        @param context: The context object on which to set the properties, or the current context if it is C{None}.
+        @type context: L{Context}
+        @param kwargs: A dictionary of property names and their values.
+        @type kwargs: C{dict}
         """
 
-        self._binding = prop
-        self._bind_value = value
         super(Reset, self).__init__(context)
+        self._properties = kwargs
+        self._stack = []
+
+    def __enter__(self):
+        for key, value in self._properties.items():
+            self._stack.append(getattr(self._context, key))
+            setattr(self._context, key, value)
+
+    def __exit__(self, type, value, traceback):
+        for key in reversed(self._properties.keys()):
+            setattr(self._context, key, self._stack.pop())
 
 class BindReleaseObject(GLObject):
     """Base class for objects that can be bound and released.
@@ -299,4 +316,5 @@ class BindReleaseObject(GLObject):
         self._context.__exit__(type, value, traceback)
 
 __all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "Reset"]
+
 

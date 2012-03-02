@@ -6,7 +6,7 @@
 @date: 2012-02-29
 """
 
-from glitter import VertexArray, TextureArray2D, uint32, Framebuffer, Reset, current_context, ShaderProgram
+from glitter import VertexArray, TextureArray2D, uint32, Framebuffer, Reset, ShaderProgram
 
 vertex_code = """
 #version 410 core
@@ -65,10 +65,9 @@ def voxelize(mesh, size, solid=True):
     volume = TextureArray2D(shape=(size // 128, size, size, 4), dtype=uint32)
     with Framebuffer([volume[i] for i in range(len(volume))]) as fbo:
         fbo.clear()
-        with Reset(current_context, "logic_op_mode", current_context.logic_op_modes.XOR if solid else current_context.logic_op_modes.OR):
-            with Reset(current_context, "color_logic_op", True):
-                with ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), variables=dict(solid=solid)):
-                    mesh.draw()
+        with Reset(logic_op_mode="XOR" if solid else "OR", color_logic_op=True):
+            with ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), variables=dict(solid=solid)):
+                mesh.draw()
     return volume
 
 if __name__ == "__main__":
