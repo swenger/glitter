@@ -224,15 +224,15 @@ class BindableObject(GLObject):
         setattr(self._context, self._binding, old_binding)
         self._context.__exit__(type, value, traceback)
 
-class Reset(GLObject):
+class State(GLObject):
     """Context manager to add binding semantics to context property changes.
 
     To set properties of the context and automatically reset it to its old
-    value later, use a C{with} statement with a C{Reset} object.
+    value later, use a C{with} statement with a C{State} object.
     """
 
     def __init__(self, context=None, **kwargs):
-        """Create a C{Reset} object for use in C{with} statements.
+        """Create a C{State} object for use in C{with} statements.
 
         When entering the C{with} statement, the properties of C{context} given
         in C{kwargs} will be set to their respective values. On exiting the
@@ -247,7 +247,7 @@ class Reset(GLObject):
         @type kwargs: C{dict}
         """
 
-        super(Reset, self).__init__(context)
+        super(State, self).__init__(context)
         self._properties = kwargs
         self._stack = []
 
@@ -315,6 +315,6 @@ class BindReleaseObject(GLObject):
         self.release()
         self._context.__exit__(type, value, traceback)
 
-__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "Reset"]
+__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "State"]
 
 

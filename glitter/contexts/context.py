@@ -9,7 +9,7 @@ This module wraps large parts of per-context state.
 from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 
-from glitter.utils import constants, InstanceDescriptorMixin, Reset
+from glitter.utils import constants, InstanceDescriptorMixin, State
 from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
@@ -287,7 +287,7 @@ class Context(InstanceDescriptorMixin):
 
     def clear(self, color=None, depth=None, stencil=None):
         with self:
-            with Reset(self, "draw_framebuffer_binding", None):
+            with State(self, "draw_framebuffer_binding", None):
                 self._clear(color, depth, stencil)
 
     def finish(self):
