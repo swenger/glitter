@@ -4,6 +4,7 @@
 @date: 2012-02-29
 """
 
+from functools import wraps as _wraps
 from rawgl import gl as _gl
 
 def _get_current_context():
@@ -315,6 +316,12 @@ class BindReleaseObject(GLObject):
         self.release()
         self._context.__exit__(type, value, traceback)
 
-__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "State"]
+def with_obj(obj, f):
+    @_wraps(f)
+    def wrapper(*args, **kwargs):
+        with obj:
+            return f(*args, **kwargs)
+    return wrapper
 
+__all__ = ["GLObject", "ManagedObject", "BindableObject", "BindReleaseObject", "State", "with_obj"]
 

@@ -4,17 +4,20 @@
 @date: 2012-03-05
 
 @todo: provide a method to specify that no framebuffer / no vertex array should be generated + make pipeline bindable
+@todo: provice a means to bind depth and stencil buffer
 """
+
+import types as _types
 
 from glitter.framebuffers.framebuffer import Framebuffer
 from glitter.arrays.vertexarray import VertexArray
-from glitter.utils.proxy import ItemProxy, InstanceDescriptorMixin
+from glitter.utils.proxy import ItemProxy, PropertyProxy, InstanceDescriptorMixin
 from glitter.shaders.attribute import BaseAttribute
 from glitter.shaders.uniform import BaseUniform
-from glitter.utils.objects import State
+from glitter.utils.objects import State, with_obj
 
 class Pipeline(InstanceDescriptorMixin):
-    def __init__(self, shader, elements=None, **bindings): # TODO what if output is to screen?
+    def __init__(self, shader, elements=None, **bindings):
         self._shader = shader
 
         buffers = {}
@@ -48,12 +51,33 @@ class Pipeline(InstanceDescriptorMixin):
         for key, value in texture_names.items():
             setattr(self, key, ItemProxy(self._fbo, value))
 
-    def clear(self, *args, **kwargs): # TODO and other Framebuffer methods
-        self._fbo.clear(*args, **kwargs)
+        # add framebuffer methods
+        for key, value in self._fbo.__class__.__dict__.items():
+            if key.startswith("_"):
+                continue
+            if callable(value):
+                setattr(self, key, with_obj(self, getattr(self._fbo, key)))
 
-    def draw(self, *args, **kwargs): # TODO and other VertexArray methods
-        with self:
-            self._vao.draw(*args, **kwargs)
+        # add framebuffer properties
+        for key, value in self._fbo.__dict__.items():
+            if key.startswith("_"):
+                continue
+            if hasattr(value, "__get__"):
+                setattr(self, key, PropertyProxy(self._fbo, key))
+
+        # add vertex array methods
+        for key, value in self._vao.__class__.__dict__.items():
+            if key.startswith("_"):
+                continue
+            if callable(value):
+                setattr(self, key, with_obj(self, getattr(self._vao, key)))
+
+        # add vertex array properties
+        for key, value in self._vao.__dict__.items():
+            if key.startswith("_"):
+                continue
+            if hasattr(value, "__get__"):
+                setattr(self, key, PropertyProxy(self._vao, key))
 
     def __call__(self, **kwargs):
         return State(self, **kwargs)
@@ -69,4 +93,6 @@ class Pipeline(InstanceDescriptorMixin):
     def draw_with(self, *args, **kwargs):
         with self(**{key: kwargs.pop(key) for key, value in kwargs.items() if key in self.__dict__}):
             self.draw(*args, **kwargs)
+
+__all__ = ["Pipeline"]
 

@@ -79,7 +79,7 @@ class InstanceDescriptorMixin(object):
 
     def __getattribute__(self, name):
         attr = super(InstanceDescriptorMixin, self).__getattribute__(name)
-        if hasattr(attr, "__get__"):
+        if hasattr(attr, "__get__") and not callable(attr):
             return attr.__get__(self, self.__class__)
         else:
             return attr
