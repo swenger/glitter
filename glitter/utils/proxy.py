@@ -100,7 +100,10 @@ class PropertyProxy(object):
         return getattr(self._obj, self._name)
 
     def __set__(self, obj, value):
-        setattr(obj, self._name, value)
+        setattr(self._obj, self._name, value)
+
+    def __delete__(self, obj):
+        delattr(self._obj, self._name)
 
 class ItemProxy(object):
     def __init__(self, obj, idx):
@@ -111,7 +114,10 @@ class ItemProxy(object):
         return self._obj[self._idx]
 
     def __set__(self, obj, value):
-        obj[self._idx] = value
+        self._obj[self._idx] = value
+
+    def __delete__(self, obj):
+        del self._obj[self._idx]
 
 __all__ = ["Proxy", "ListProxy", "InstanceDescriptorMixin", "PropertyProxy", "ItemProxy"]
 
