@@ -21,7 +21,7 @@ from numpy import array, sin, cos, pi
 from numpy.random import random
 
 # Import glitter; this imports rawgl.
-from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray
+from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
@@ -52,7 +52,7 @@ uniform sampler2DRect texture_1;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = 0.1 * ex_color
+    out_color = 0.5 * ex_color
     + texture2D(texture_0, texcoord)
     * texture2DRect(texture_1, gl_FragCoord.xy / 10.0)
     ;
@@ -121,13 +121,12 @@ def display():
     logger.info("enter display()")
 
     # Render the geometry to a texture.
-    pipeline.clear()
-    pipeline.draw()
+    render_pipeline.clear()
+    render_pipeline.draw()
 
     # Display the texture.
-    with copy_shader:
-        window.clear()
-        fullscreen_quad.draw()
+    window.clear() # TODO redirect clear() call to default FBO
+    copy_pipeline.draw()
     window.swap_buffers()
 
     logger.info("leave display()")
@@ -141,7 +140,7 @@ def keyboard(key, x, y):
     Any key press will cause the program to exit cleanly.
     """
 
-    raise SystemExit()
+    raise SystemExit
 
 def timer():
     """Timer callback.
@@ -171,17 +170,18 @@ if __name__ == "__main__":
 
     # Create objects that are automatically placed inside the current context.
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader) #: The shader program for rendering the geometry.
+    render_pipeline = Pipeline(shader, indices, in_position=vertices, in_color=colors, out_color=RectangleTexture(shape=(300, 300, 3)))
     copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader) #: The shader program for copying a texture to screen.
-    fullscreen_quad = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], ((0, 1, 2), (0, 2, 3))) #: A fullscreen quad mesh.
-
-    pipeline = Pipeline(shader, indices, in_position=vertices, in_color=colors, out_color=RectangleTexture(shape=(300, 300, 3)))
+    quad_vertices = ((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))
+    quad_indices = ((0, 1, 2), (0, 2, 3))
+    copy_pipeline = Pipeline(copy_shader, in_position=quad_vertices, elements=quad_indices, no_framebuffer=True)
 
     # Set uniform variables on shader programs.
     shader.texture_0 = Texture2D(random((30, 30, 4)))
     shader.texture_0.min_filter = Texture2D.min_filters.NEAREST
     shader.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
     shader.texture_1 = RectangleTexture(random((30, 30, 4)))
-    copy_shader.texture = pipeline.out_color
+    copy_shader.texture = render_pipeline.out_color
 
     # Call the timer once; it will trigger the subsequent calls itself.
     timer()
