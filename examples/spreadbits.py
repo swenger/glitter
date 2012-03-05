@@ -26,6 +26,8 @@ def spreadbits(data):
     assert data.ndim == 4 and data.shape[-1] == 4, "expected shape (n_slices, height, width, 4), got shape %s" % data.shape
     assert data.dtype == numpy.uint32, "expected dtype uint32, got dtype %s" % data.dtype.name
 
+    # TODO use numpy.unpackbits(data.view(numpy.uint8))
+
     data = data.swapaxes(3, 2).swapaxes(2, 1) # swap color channels to second axis
     data = data[:, ::-1] # reverse color channels, why?
     data = data.reshape((-1,) + data.shape[2:]) # unify slices and color channels

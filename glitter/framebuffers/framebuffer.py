@@ -4,7 +4,6 @@
 @date: 2012-02-29
 """
 
-from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject, constants
@@ -24,8 +23,16 @@ class Framebuffer(BindableObject, ManagedObject):
     def __init__(self, attachments=[], depth=None, stencil=None):
         super(Framebuffer, self).__init__()
         self._attachments = {}
-        for i, attachment in _zip(range(self._context.max_color_attachments), attachments, fillvalue=None):
-            self[i] = attachment
+        
+        if isinstance(attachments, dict):
+            attachments = dict(attachments)
+        else:
+            attachments = dict(enumerate(attachments))
+        for i in range(self._context.max_color_attachments):
+            self[i] = attachments.pop(i, None)
+        if attachments:
+            raise ValueError("framebuffer has no attachment(s) %s" % ", ".join("'%s'" % x for x in attachments.keys()))
+
         self.depth = depth
         self.stencil = stencil
         self._initialized = True

@@ -8,7 +8,10 @@ from collections import OrderedDict as _odict
 import numpy as _np
 from rawgl import gl as _gl
 
-class Uniform(object):
+class BaseUniform(object):
+    pass
+
+class Uniform(BaseUniform):
     def __init__(self, name, location, dtype, size, parent):
         self.name = name
         self.location = location
@@ -53,7 +56,7 @@ class Uniform(object):
             for x in self.textures:
                 self.parent._context.texture_units.release(x)
 
-class UniformStruct(_odict):
+class UniformStruct(_odict, BaseUniform):
     def __init__(self, name, parent):
         super(UniformStruct, self).__init__()
         self.name = name
@@ -74,7 +77,7 @@ class UniformStruct(_odict):
     def _on_release(self):
         pass # TODO restore old texture bindings
 
-class UniformStructArray(_odict):
+class UniformStructArray(_odict, BaseUniform):
     def __init__(self, name, parent):
         super(UniformStructArray, self).__init__()
         self.name = name

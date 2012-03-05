@@ -9,7 +9,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, Datatype, make_dtype, make_array, BindableObject, ManagedObject
+from glitter.utils import constants, Datatype, coerce_array, BindableObject, ManagedObject
 
 # TODO slicing with glGetBufferSubData
 # TODO binding as separate object to allow binding buffers to different targets
@@ -35,12 +35,10 @@ class BaseBuffer(BindableObject, ManagedObject):
         if data is None:
             if shape is None or dtype is None:
                 raise ValueError("must specify either data or both shape and dtype")
-            if dtype._as_gl() is None:
-                raise ValueError("dtype cannot be represented in OpenGL")
             self._shape = shape
-            self._dtype = make_dtype(dtype, force_gl=True)
+            self._dtype = dtype.coerced(force_gl=True)
         else:
-            data = make_array(data, dtype, force_gl=True)
+            data = coerce_array(data, dtype, force_gl=True)
             if shape is not None:
                 data = data.reshape(shape)
             self._shape = data.shape

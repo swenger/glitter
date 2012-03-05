@@ -122,8 +122,6 @@ class BindingProxy(object):
         with obj:
             old_value = self._value.get(obj, None)
             self._value[obj] = value
-            if old_value is not None and old_value != value and hasattr(obj, "_on_release_value") and obj._on_release_value is not NotImplemented:
-                obj._on_release_value()
             if old_value is not None and old_value != value and hasattr(old_value, "_on_release") and old_value._on_release is not NotImplemented:
                 old_value._on_release()
             try:
@@ -134,8 +132,6 @@ class BindingProxy(object):
             else:
                 if value is not None and value != old_value and hasattr(value, "_on_bind") and value._on_bind is not NotImplemented:
                     value._on_bind()
-                if value is not None and value != old_value and hasattr(obj, "_on_bind_value") and obj._on_bind_value is not NotImplemented:
-                    obj._on_bind_value()
 
     def __repr__(self):
         if self._set_args:

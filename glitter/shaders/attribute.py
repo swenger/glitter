@@ -6,7 +6,10 @@
 
 from collections import OrderedDict as _odict
 
-class Attribute(object):
+class BaseAttribute(object):
+    pass
+
+class Attribute(BaseAttribute):
     def __init__(self, name, location, dtype, size, parent):
         self.name = name
         self.location = location
@@ -35,7 +38,7 @@ class Attribute(object):
     def _on_release(self):
         pass # TODO restore old vertex attrib values if possible
 
-class AttributeStruct(_odict):
+class AttributeStruct(_odict, BaseAttribute):
     def __init__(self, name, parent):
         super(AttributeStruct, self).__init__()
         self.name = name
@@ -59,7 +62,7 @@ class AttributeStruct(_odict):
     def _on_release(self):
         pass # TODO restore old vertex attrib values if possible
 
-class AttributeStructArray(_odict):
+class AttributeStructArray(_odict, BaseAttribute):
     def __init__(self, name, parent):
         super(AttributeStructArray, self).__init__()
         self.name = name

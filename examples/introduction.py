@@ -21,7 +21,7 @@ from numpy import array, sin, cos, pi
 from numpy.random import random
 
 # Import glitter; this imports rawgl.
-from glitter import Framebuffer, ShaderProgram, RectangleTexture, Texture2D, VertexArray
+from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
@@ -52,7 +52,7 @@ uniform sampler2DRect texture_1;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = vec4(0.0)
+    out_color = 0.1 * ex_color
     + texture2D(texture_0, texcoord)
     * texture2DRect(texture_1, gl_FragCoord.xy / 10.0)
     ;
@@ -121,10 +121,8 @@ def display():
     logger.info("enter display()")
 
     # Render the geometry to a texture.
-    with fbo:
-        fbo.clear()
-        with shader:
-            vao.draw()
+    pipeline.clear()
+    pipeline.draw()
 
     # Display the texture.
     with copy_shader:
@@ -172,18 +170,18 @@ if __name__ == "__main__":
     window.keyboard_callback = keyboard
 
     # Create objects that are automatically placed inside the current context.
-    fbo = Framebuffer([RectangleTexture(shape=(300, 300, 3))]) #: The framebuffer to hold the rendering results.
-    vao = VertexArray([vertices, colors], elements=indices) #: The vertex array to hold the geometry.
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader) #: The shader program for rendering the geometry.
     copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader) #: The shader program for copying a texture to screen.
     fullscreen_quad = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], ((0, 1, 2), (0, 2, 3))) #: A fullscreen quad mesh.
+
+    pipeline = Pipeline(shader, indices, in_position=vertices, in_color=colors, out_color=RectangleTexture(shape=(300, 300, 3)))
 
     # Set uniform variables on shader programs.
     shader.texture_0 = Texture2D(random((30, 30, 4)))
     shader.texture_0.min_filter = Texture2D.min_filters.NEAREST
     shader.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
     shader.texture_1 = RectangleTexture(random((30, 30, 4)))
-    copy_shader.texture = fbo[0]
+    copy_shader.texture = pipeline.out_color
 
     # Call the timer once; it will trigger the subsequent calls itself.
     timer()

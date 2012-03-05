@@ -7,7 +7,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, Datatype, make_array
+from glitter.utils import constants, Datatype, coerce_array
 from glitter.arrays.basebuffer import BaseBuffer
 
 class ElementArrayBuffer(BaseBuffer):
@@ -16,7 +16,7 @@ class ElementArrayBuffer(BaseBuffer):
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
         if data is not None:
-            data = make_array(data, dtype, force_integer=True, force_unsigned=True)
+            data = coerce_array(data, dtype, force_integer=True, force_unsigned=True)
             dtype = Datatype.from_numpy(data.dtype)
         if dtype.is_signed() or not dtype.is_integer():
             raise TypeError("%s must be of unsigned integer type" % self.__class__.__name__)

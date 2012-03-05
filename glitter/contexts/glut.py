@@ -76,6 +76,7 @@ def initialize(argv=None):
 def main_loop():
     """Enter the GLUT main loop."""
     _glut.glutMainLoop()
+    # TODO avoid destroying a window in __del__ that has already been destroyed by closing it; glutCloseFunc?
     initialize()
 
 def main_loop_event():

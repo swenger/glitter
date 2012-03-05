@@ -46,6 +46,7 @@ Build instructions:
 @todo: maybe use C{abc} module for abstract classes
 @todo: maybe add named vertex shader in variables (buffer bindings) and fragment shader out variables (draw buffers)
 @todo: rethink vertex array drawing: e.g., differing number of elements in vertex and color buffer
+@todo: implement NeHe tutorials as examples
 
 @author: Stephan Wenger
 @date: 2012-02-29
@@ -53,6 +54,7 @@ Build instructions:
 
 from arrays import *
 from contexts import *
+from convenience import *
 from framebuffers import *
 from misc import *
 from shaders import *

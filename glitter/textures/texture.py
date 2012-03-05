@@ -7,7 +7,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, Datatype, make_array, ManagedObject, BindReleaseObject, float32
+from glitter.utils import constants, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
 
 # TODO check memory layout: do shaders use the same coordinates as _np?
 # TODO support depth textures
@@ -30,7 +30,7 @@ class Texture(ManagedObject, BindReleaseObject):
     wrapmodes = constants.texture_wrapmodes
 
     def bind(self):
-        self._context.texture_units.bind(self)
+        return self._context.texture_units.bind(self)
 
     def release(self):
         self._context.texture_units.release(self)
@@ -60,7 +60,7 @@ class Texture(ManagedObject, BindReleaseObject):
             if dtype is None:
                 dtype = float32
         else:
-            data = make_array(data, dtype)
+            data = coerce_array(data, dtype)
             if shape is not None:
                 data = data.reshape(shape)
             shape = data.shape

@@ -4,7 +4,6 @@
 @date: 2012-02-29
 """
 
-from itertools import izip_longest as _zip
 from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject
@@ -21,8 +20,16 @@ class VertexArray(BindableObject, ManagedObject):
     def __init__(self, attributes=[], elements=None):
         super(VertexArray, self).__init__()
         self._attributes = {}
-        for i, attributes in _zip(range(self._context.max_vertex_attribs), attributes, fillvalue=None):
-            self[i] = attributes
+
+        if isinstance(attributes, dict):
+            attributes = dict(attributes)
+        else:
+            attributes = dict(enumerate(attributes))
+        for i in range(self._context.max_vertex_attribs):
+            self[i] = attributes.pop(i, None)
+        if attributes:
+            raise ValueError("vertex array has no attribute(s) %s" % ", ".join("'%s'" % x for x in attributes.keys()))
+        
         self.elements = elements
 
     def __getitem__(self, index):

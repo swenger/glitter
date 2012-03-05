@@ -11,6 +11,12 @@ from glitter.utils import BindableObject
 from glitter.contexts.proxies import BindingProxy
 
 class TextureUnit(BindableObject):
+    """Proxy for a texture unit.
+    
+    @warning: For internal use by L{TextureUnitList} only. Do not instantiate
+    or use directly; use the methods of L{TextureUnitList} instead.
+    """
+
     _binding = "active_texture"
 
     def __init__(self, _context, _id):
@@ -24,12 +30,6 @@ class TextureUnit(BindableObject):
 
     def activate(self):
         self._context.active_texture = self
-
-    def _on_release_value(self):
-        self._use_count -= 1
-
-    def _on_bind_value(self):
-        self._use_count += 1
 
     def is_available(self):
         return self._use_count == 0
@@ -47,6 +47,15 @@ class TextureUnit(BindableObject):
     sampler_binding                      = BindingProxy(_gl.glBindSampler,         ["_unit"                            ])
 
 class TextureUnitList(object):
+    """Proxy for the list of available texture units.
+    
+    @warning: C{TextureUnitList}s are created by their respective context only.
+    Do not instantiate them directly. Using the C{TextureUnitList}'s L{bind}
+    and L{release} methods directly is usually not necessary; L{Shader}s bind
+    their textures automatically, and the L{bind<Texture.bind>} method of
+    L{Texture}s is delegated to the C{TextureUnitList}.
+    """
+
     def __init__(self, _context):
         self._context = _context
         self._texture_units = [TextureUnit(_context, _gl.GL_TEXTURE0 + i) for i in range(_context.max_combined_texture_image_units)]
@@ -68,23 +77,25 @@ class TextureUnitList(object):
     def bind(self, texture):
         """Bind `texture` to a free unit and return the unit id."""
         if texture in self._bound_textures:
-            unit, refcount = self._bound_textures[texture]
-            self._bound_textures[texture] = (unit, refcount + 1)
-            return unit._id - _gl.GL_TEXTURE0
-        try:
-            unit = _itertools.dropwhile(lambda x: not x.is_available(), self).next()
-        except StopIteration:
-            raise RuntimeError("no free texture units available")
-        setattr(unit, texture._binding, texture)
-        self._bound_textures[texture] = (unit, 1)
+            unit = self._bound_textures[texture]
+            unit._use_count += 1
+        else:
+            try:
+                unit = _itertools.dropwhile(lambda x: not x.is_available(), self).next()
+            except StopIteration:
+                raise RuntimeError("no free texture units available")
+            setattr(unit, texture._binding, texture)
+            self._bound_textures[texture] = unit
+            unit._use_count = 1
         return unit._id - _gl.GL_TEXTURE0
 
     def release(self, texture):
         """Unbind `texture`."""
-        unit, refcount = self._bound_textures[texture]
-        if refcount == 1:
+        unit = self._bound_textures[texture]
+        if unit._use_count  == 1:
             setattr(unit, texture._binding, None)
             del self._bound_textures[texture]
+            unit._use_count = 0
         else:
-            self._bound_textures[texture] = (unit, refcount - 1)
+            unit._use_count -= 1
 

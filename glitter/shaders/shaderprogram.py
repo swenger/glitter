@@ -59,7 +59,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         shaders += [x if isinstance(x, FragmentShader) else FragmentShader(x)
                 for x in (fragment if hasattr(fragment, "__iter__") else [fragment])]
         self.shaders.extend(shaders)
-        
+
         if link is None:
             link = bool(shaders)
         if link:
@@ -128,7 +128,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         return self._group_structs((self._get_active_uniform(i) for i in range(self._active_uniforms)),
                 Uniform, UniformStruct, UniformStructArray)
 
-    def _group_structs(self, lst, make_variable, make_struct, make_array):
+    def _group_structs(self, lst, make_variable, make_struct, coerce_array):
         array_of_structs_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\[([0-9]+)\]\.([a-zA-Z_][a-zA-Z_0-9]*)$")
         struct_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\.([a-zA-Z_][a-zA-Z_0-9]*)$")
         basic_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)$")
@@ -138,7 +138,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
             if m is not None:
                 name, index, field = m.groups()
                 index = int(index)
-                array = names.setdefault(name, make_array(name, parent=self))
+                array = names.setdefault(name, coerce_array(name, parent=self))
                 array[index, field] = make_variable(field, location, dtype, size, parent=self)
                 continue
             m = struct_re.match(name)
@@ -178,6 +178,24 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
             raise ShaderValidateError(self._log)
         return self._log or None
 
+    def has_attribute_location(self, name):
+        return _gl.glGetAttribLocation(self._id, name) >= 0
+
+    def get_attribute_location(self, name):
+        loc = _gl.glGetAttribLocation(self._id, name)
+        if loc == -1:
+            raise NameError("shader has no attribute '%s'" % name)
+        return loc
+
+    def has_frag_data_location(self, name):
+        return _gl.glGetFragDataLocation(self._id, name) >= 0
+
+    def get_frag_data_location(self, name):
+        loc = _gl.glGetFragDataLocation(self._id, name)
+        if loc == -1:
+            raise NameError("shader has no frag data '%s'" % name)
+        return loc
+
     @property
     def _log(self):
         """The current shader info log.
@@ -189,7 +207,6 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
 
-    # TODO glGetFragDataLocation / glGetFragDataIndex
     # TODO glGetProgramStage, glGetActiveSubroutineName, glGetActiveSubroutineUniform, glGetActiveSubroutineUniformName, glGetSubroutineIndex, glGetSubroutineUniformLocation
     # TODO glGetTransformFeedbackVarying, glTransformFeedbackVaryings
     # TODO glGetUniformBlockIndex, glGetUniformIndices, glGetActiveUniformBlock, glGetActiveUniformBlockName, glUniformBlockBinding, glUniformSubroutines

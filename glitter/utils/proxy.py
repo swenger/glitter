@@ -7,7 +7,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils.dtypes import make_array
+from glitter.utils.dtypes import coerce_array
 
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None, enum=None):
@@ -19,7 +19,7 @@ class Proxy(object):
         self._shape = None if shape is None else tuple(shape) if hasattr(shape, "__iter__") else (shape,)
         self._enum = enum
 
-    def __get__(self, obj, cls=None):
+    def __get__(self, obj, cls):
         _value = _np.empty(self._shape, dtype=self._dtype.as_numpy())
         args = list(self._get_args) + [_gl.cast(_value.ctypes, self._getter.argtypes[-1])]
         with obj:
@@ -37,7 +37,7 @@ class Proxy(object):
             raise AttributeError("can't set attribute")
         if self._enum is not None:
             value = [x._value for x in value]
-        _value = make_array(value, dtype=self._dtype)
+        _value = coerce_array(value, dtype=self._dtype)
         if len(self._set_args) + len(_value) == len(self._setter.argtypes):
             args = list(self._set_args) + (list(_value) if _value.ndim == 1 else [x.ctypes for x in _value])
         elif len(self._set_args) + 1 == len(self._setter.argtypes):
@@ -91,5 +91,27 @@ class InstanceDescriptorMixin(object):
         except AttributeError:
             return super(InstanceDescriptorMixin, self).__setattr__(name, value)
 
-__all__ = ["Proxy", "ListProxy", "InstanceDescriptorMixin"]
+class PropertyProxy(object):
+    def __init__(self, obj, name):
+        self._obj = obj
+        self._name = name
+
+    def __get__(self, obj, cls):
+        return getattr(self._obj, self._name)
+
+    def __set__(self, obj, value):
+        setattr(obj, self._name, value)
+
+class ItemProxy(object):
+    def __init__(self, obj, idx):
+        self._obj = obj
+        self._idx = idx
+
+    def __get__(self, obj, cls):
+        return self._obj[self._idx]
+
+    def __set__(self, obj, value):
+        obj[self._idx] = value
+
+__all__ = ["Proxy", "ListProxy", "InstanceDescriptorMixin", "PropertyProxy", "ItemProxy"]
 

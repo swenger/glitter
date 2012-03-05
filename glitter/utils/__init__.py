@@ -1,4 +1,4 @@
-"""Helper classes and functions.
+"""Internal helper classes and functions.
 
 @author: Stephan Wenger
 @date: 2012-02-29
