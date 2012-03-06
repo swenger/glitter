@@ -47,7 +47,7 @@ Build instructions:
 @todo: maybe add named vertex shader in variables (buffer bindings) and fragment shader out variables (draw buffers)
 @todo: rethink vertex array drawing: e.g., differing number of elements in vertex and color buffer
 @todo: implement NeHe tutorials as examples
-@todo: define __call__(self, **kwargs): return State(self, **kwargs) on all objects with meaningful attributes as in L{Pipeline}
+@todo: derive all objects with meaningful attributes from StateMixin
 
 @author: Stephan Wenger
 @date: 2012-02-29
