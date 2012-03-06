@@ -173,6 +173,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         """Bind framebuffer and shader."""
         self._fbo.__enter__()
         self._shader.__enter__()
+        return self
 
     def __exit__(self, type, value, traceback):
         """Unbind framebuffer and shader."""
