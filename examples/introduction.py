@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Basic example using L{VertexArray}s, L{ShaderProgram}s, L{Framebuffer}s, L{Texture}s and logging.
+"""Basic example using L{VertexArray}s, L{ShaderProgram}s, L{Pipeline}s, L{Texture}s and logging.
 
 @author: Stephan Wenger
 @date: 2012-02-29
