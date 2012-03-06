@@ -198,7 +198,10 @@ class BindableObject(GLObject):
         @return: The previous value of the property.
         """
 
-        old_binding = getattr(self._context, self._binding)
+        try:
+            old_binding = getattr(self._context, self._binding)
+        except AttributeError:
+            old_binding = None
         setattr(self._context, self._binding, self if self._bind_value is NotImplemented else self._bind_value)
         return old_binding
 
@@ -266,7 +269,10 @@ class State(GLObject):
         if self._do_enter_exit and hasattr(self._context, "__enter__"):
             self._context.__enter__()
         for key, value in self._properties.items():
-            self._stack.append(getattr(self._context, key))
+            try:
+                self._stack.append(getattr(self._context, key))
+            except AttributeError:
+                self._stack.append(None)
             setattr(self._context, key, value)
 
     def __exit__(self, type, value, traceback):
