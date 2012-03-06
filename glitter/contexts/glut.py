@@ -3,6 +3,7 @@
 @bug: Closing a GLUT window via the window system (not the API) causes bogus error messages.
 @todo: Implement subwindows using C{glutCreateSubWindow} and C{glutGet(GLUT_WINDOW_PARENT)}.
 @todo: Implement menus, font rendering, and geometric object rendering,
+@todo: Fail gracefully (better error message) when context cannot be created, e.g. when opengl 4.0 not available
 
 @author: Stephan Wenger
 @date: 2012-02-29
