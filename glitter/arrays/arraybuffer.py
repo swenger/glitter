@@ -1,5 +1,7 @@
 """Array buffer class.
 
+@todo: Implement slicing to allow for C{glVertexAttribPointer} with C{size}, C{stride}, and C{pointer} parameters.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -47,8 +49,6 @@ class ArrayBuffer(BaseBuffer):
         else:
             with self:
                 _gl.glDrawArraysInstances(mode._value, first, count, instances)
-
-    # TODO slicing to allow for glVertexAttribPointer with size, stride, and pointer
 
 __all__ = ["ArrayBuffer"]
 

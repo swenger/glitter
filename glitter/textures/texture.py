@@ -1,5 +1,10 @@
 """Texture classes.
 
+@todo: Check OpenGL memory layout; do shaders use the same coordinates as C{numpy} does?
+@todo: Implement depth textures.
+@todo: Implement C{__getitem__} and C{__setitem__} for subimages (C{glTexSubImage3D}, C{glGetTexImage} with C{format=GL_RED} etc.).
+@todo: Implement image textures.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -8,11 +13,6 @@ import numpy as _np
 from rawgl import gl as _gl
 
 from glitter.utils import constants, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
-
-# TODO check memory layout: do shaders use the same coordinates as _np?
-# TODO support depth textures
-# TODO __getitem__/__setitem__ for subimages (glTexSubImage3D, glGetTexImage with format = GL_RED etc.)
-# TODO image textures
 
 class Texture(ManagedObject, BindReleaseObject):
     _generate_id = _gl.glGenTextures
@@ -417,7 +417,12 @@ class RectangleTexture(Texture):
     _ndim = 3
     _set = _gl.glTexImage2D
 
-class BufferTexture(Texture): # TODO override constructor, set_data and get_data: glTexBuffer
+class BufferTexture(Texture):
+    """Texture that stores its data in a buffer.
+    
+    @todo: Override constructor, C{set_data} and C{get_data}; use C{glTexBuffer}
+    """
+
     _target = _gl.GL_TEXTURE_BUFFER
     _binding = "texture_binding_buffer"
     _ndim = 3

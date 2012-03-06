@@ -2,6 +2,31 @@
 
 This module wraps large parts of per-context state.
 
+@todo: Unify binding and unbinding of context as well as the L{current_context}
+proxy with binding and unbinding of other targets using the L{Context._current_context}
+pseudotarget. XXX
+@todo: Add listing of all bound textures, buffers, etc.
+@todo: Do we need indexed variants for C{glEnable}?
+@todo: Wrap C{glPatchParameter}.
+@todo: Implement multiple viewports using C{glViewportIndexed}, C{glViewportArray}, C{glScissorIndexed}, and C{glScissorArray}.
+@todo: Wrap C{glSampleCoverage}, C{glSampleMaski}, C{glMinSampleShading}, C{GL_SAMPLE_COVERAGE_VALUE}, and C{GL_SAMPLE_COVERAGE_INVERT}.
+@todo: Wrap C{glReadPixels} and related framebuffer copy functions.
+@todo: Add indexed getters for C{GL_TRANSFORM_FEEDBACK_BUFFER_START},
+C{GL_TRANSFORM_FEEDBACK_BUFFER_SIZE}, C{GL_UNIFORM_BUFFER_SIZE} and
+C{GL_UNIFORM_BUFFER_START}.
+@todo: Add getters for C{GL_CLIP_DISTANCEi}, C{GL_DEPTH_CLAMP},
+C{GL_FRAMEBUFFER_SRGB}, C{GL_MULTISAMPLE}, C{GL_PRIMITIVE_RESTART}, 
+C{GL_TEXTURE_CUBE_MAP_SEAMLESS}, C{GL_SAMPLE_ALPHA_TO_ONE},
+C{GL_SAMPLE_ALPHA_TO_COVERAGE}, C{GL_SAMPLE_COVERAGE}, C{GL_SAMPLE_SHADING},
+and C{GL_SAMPLE_MASK}.
+@todo: Implement stencil buffers using C{GL_STENCIL_BACK_FUNC},
+C{GL_STENCIL_FUNC}, C{GL_STENCIL_BACK_REF}, C{GL_STENCIL_REF},
+C{GL_STENCIL_BACK_VALUE_MASK}, C{GL_STENCIL_BACK_WRITEMASK},
+C{GL_STENCIL_VALUE_MASK}, C{GL_STENCIL_WRITEMASK}, C{GL_STENCIL_BACK_FAIL},
+C{GL_STENCIL_BACK_PASS_DEPTH_FAIL}, C{GL_STENCIL_BACK_PASS_DEPTH_PASS},
+C{GL_STENCIL_FAIL}, C{GL_STENCIL_PASS_DEPTH_FAIL},
+C{GL_STENCIL_PASS_DEPTH_PASS}, etc.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -14,19 +39,6 @@ from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Int
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
 from glitter.contexts.multiproxies import BlendFuncProxy, BlendEquationProxy, PolygonOffsetProxy
-
-# TODO indexed variants for glEnable?
-# TODO glPatchParameter
-# TODO multiple viewports with glViewportIndexed / glViewportArray, glScissorIndexed / glScissorArray
-
-# TODO GL_SAMPLE_COVERAGE_VALUE, GL_SAMPLE_COVERAGE_INVERT (glSampleCoverage)
-# TODO indexed GL_TRANSFORM_FEEDBACK_BUFFER_START, GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
-# TODO indexed GL_UNIFORM_BUFFER_SIZE, GL_UNIFORM_BUFFER_START
-
-# TODO stencil:
-# GL_STENCIL_BACK_FAIL, GL_STENCIL_BACK_PASS_DEPTH_FAIL, GL_STENCIL_BACK_PASS_DEPTH_PASS, GL_STENCIL_FAIL, GL_STENCIL_PASS_DEPTH_FAIL, GL_STENCIL_PASS_DEPTH_PASS...
-# GL_STENCIL_BACK_FUNC, GL_STENCIL_FUNC
-# GL_STENCIL_BACK_REF, GL_STENCIL_REF, GL_STENCIL_BACK_VALUE_MASK, GL_STENCIL_BACK_WRITEMASK, GL_STENCIL_VALUE_MASK, GL_STENCIL_WRITEMASK
 
 class GLObjectLibrary(object):
     def __init__(self, _context):
@@ -44,16 +56,12 @@ class GLObjectLibrary(object):
 
 class Context(InstanceDescriptorMixin):
     _stack = []
+    """@todo: The stack should not be necessary here once binding reorganized."""
+
     _current_context = None
+    """The currently active context."""
+
     _frozen = False
-
-    def __enter__(self):
-        Context._stack.append(Context._current_context)
-        Context._current_context = self
-        return self
-
-    def __exit__(self, type, value, traceback):
-        Context._current_context = Context._stack.pop()
 
     def __init__(self):
         self.texture_units = TextureUnitList(self)
@@ -77,6 +85,24 @@ class Context(InstanceDescriptorMixin):
         if self._frozen and not name.startswith("_") and not hasattr(self, name):
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
         return super(Context, self).__setattr__(name, value)
+
+    def bind(self):
+        """Make the context active.
+
+        This should be overwritten appropriately by window system dependent subclasses.
+        """
+
+        raise NotImplementedError
+
+    def __enter__(self):
+        Context._stack.append(Context._current_context)
+        Context._current_context = self
+        Context._current_context.bind()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        Context._current_context = Context._stack.pop()
+        Context._current_context.bind()
 
     #{ Enums
     blend_functions = constants.blend_functions
@@ -160,9 +186,6 @@ class Context(InstanceDescriptorMixin):
     scissor_test = EnableDisableProxy(_gl.GL_SCISSOR_TEST)
     stencil_test = EnableDisableProxy(_gl.GL_STENCIL_TEST)
     vertex_program_point_size = EnableDisableProxy(_gl.GL_VERTEX_PROGRAM_POINT_SIZE)
-    # TODO GL_CLIP_DISTANCEi, GL_DEPTH_CLAMP, GL_FRAMEBUFFER_SRGB, GL_MULTISAMPLE, GL_PRIMITIVE_RESTART, GL_TEXTURE_CUBE_MAP_SEAMLESS
-    # TODO GL_SAMPLE_ALPHA_TO_ONE, GL_SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_COVERAGE, GL_SAMPLE_SHADING, GL_SAMPLE_MASK
-    # TODO glSampleCoverage, glSampleMaski, glMinSampleShading
 
     #{ Boolean values
     color_writemask = BooleanProxy([_gl.GL_COLOR_WRITEMASK], _gl.glColorMask, shape=4)
@@ -276,9 +299,26 @@ class Context(InstanceDescriptorMixin):
     #{ Global actions
 
     def _perform_gl_clear(self, color=None, depth=None, stencil=None):
+        """Call C{glClear} with appropriate arguments.
+
+        @param color: Whether to clear the color buffer, and optionally, to which value.
+        @type color: C{bool} or C{numpy.ndarray}.
+        @param depth: Whether to clear the depth buffer, and optionally, to which value.
+        @type depth: C{bool} or C{numpy.ndarray}.
+        @param stencil: Whether to clear the stencil buffer, and optionally, to which value.
+        @type stencil: C{bool} or C{numpy.ndarray}.
+
+        If no parameters are given, color, depth and stencil are cleared with
+        the current clear values.
+
+        @todo: Wrap the C{glClear} call in C{with State()} to set and reset
+        L{color_clear_value}, C{depth_clear_value} and C{stencil_clear_value}
+        if these are given as C{numpy} arrays in C{color}, C{depth}, and
+        C{stencil}, respectively.
+        """
+
         if color is None and depth is None and stencil is None:
             color = depth = stencil = True
-        # TODO set and reset clear color/depth/stencil if given as arrays
         _gl.glClear(
                 (_gl.GL_COLOR_BUFFER_BIT if color else 0) |
                 (_gl.GL_DEPTH_BUFFER_BIT if depth else 0) |
@@ -286,24 +326,70 @@ class Context(InstanceDescriptorMixin):
                 )
 
     def clear(self, color=None, depth=None, stencil=None):
+        """Clear the default framebuffer.
+
+        @param color: Whether to clear the color buffer, and optionally, to which value.
+        @type color: C{bool} or C{numpy.ndarray}.
+        @param depth: Whether to clear the depth buffer, and optionally, to which value.
+        @type depth: C{bool} or C{numpy.ndarray}.
+        @param stencil: Whether to clear the stencil buffer, and optionally, to which value.
+        @type stencil: C{bool} or C{numpy.ndarray}.
+
+        If no parameters are given, color, depth and stencil are cleared with
+        the current clear values.
+        """
+
         with self:
             with State(self, draw_framebuffer_binding=None):
                 self._perform_gl_clear(color, depth, stencil)
 
     def finish(self):
+        """Block until all GL execution is complete.
+
+        C{finish} does not return until the effects of all previously called GL
+        commands are complete. Such effects include all changes to GL state,
+        all changes to connection state, and all changes to the frame buffer
+        contents.
+        """
+
         with self:
             _gl.glFinish()
 
     def flush(self):
+        """Force execution of GL commands in finite time.
+
+        Different GL implementations buffer commands in several different
+        locations, including network buffers and the graphics accelerator
+        itself. C{flush} empties all of these buffers, causing all issued
+        commands to be executed as quickly as they are accepted by the actual
+        rendering engine. Though this execution may not be completed in any
+        particular time period, it does complete in finite time.
+
+        Because any GL program might be executed over a network, or on an
+        accelerator that buffers commands, all programs should call C{flush}
+        whenever they count on having all of their previously issued commands
+        completed. For example, call C{flush} before waiting for user input
+        that depends on the generated image.
+
+        C{flush} can return at any time. It does not wait until the execution
+        of all previously issued GL commands is complete.
+        """
+
         with self:
             _gl.glFlush()
 
     #}
 
-def get_current_context(): # TODO actually get the current context from the OS
+def get_current_context():
+    """Get the currently active context from the window system.
+
+    @todo: When no context exists, create a raw offscreen context instead of a
+    hidden GLUT window so that rendering is possible without an X connection.
+    """
+
     if Context._current_context is None:
         from glitter.contexts.glut import GlutWindow
-        return GlutWindow(shape=(1, 1), hide=True) # TODO use raw GLX context instead
+        Context._current_context = GlutWindow(shape=(1, 1), hide=True)
     return Context._current_context
 
 class ContextProxy(object):

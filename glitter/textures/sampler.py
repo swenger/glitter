@@ -1,5 +1,10 @@
 """Sampler class.
 
+@todo: Implement getters and setters for C{Sampler.unit}, but take care not to
+confuse any existing bindings on the stack. This problem is very similar to
+rebinding L{buffers<BaseBuffer>} to different targets and should probably be
+handled in a similar way.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -20,11 +25,11 @@ class Sampler(BindableObject, ManagedObject):
     mag_filters = constants.texture_mag_filters
     wrapmodes = constants.texture_wrapmodes
 
-    def __init__(self, unit):
-        self._target = unit # TODO check for 0 <= unit < GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS
-        super(Sampler, self).__init__()
-
-    # TODO getters and setters for unit (mind the stack!), binding to several units
+    def __init__(self, unit, context=None):
+        super(Sampler, self).__init__(context)
+        if not 0 <= unit < self._context.max_combined_texture_image_units:
+            raise ValueError("invalid unit: %s" % unit)
+        self._target = unit
 
     @property
     def compare_func(self):

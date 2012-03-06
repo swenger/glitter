@@ -1,5 +1,8 @@
 """Program pipeline class.
 
+@bug: This is currently unimplemented.
+@todo: Use C{glUseProgramStages}, C{glValidateProgramPipeline} etc.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -8,7 +11,7 @@ from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject
 
-class ProgramPipeline(BindableObject, ManagedObject): # TODO glUseProgramStages, glValidateProgramPipeline etc.
+class ProgramPipeline(BindableObject, ManagedObject):
     _generate_id = _gl.glGenProgramPipelines
     _delete_id = _gl.glDeleteProgramPipelines
     _db = "program_pipelines"

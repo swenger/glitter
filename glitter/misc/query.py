@@ -1,5 +1,7 @@
 """Query classes.
 
+@warning: The C{Query} class is currently untested.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -54,10 +56,12 @@ class Query(ManagedObject, BindReleaseObject):
             _gl.glGetQueryObjectui64v(self._id, _gl.GL_QUERY_RESULT_AVAILABLE, _gl.pointer(_result))
         return _result.value
 
-class SamplesPassedQuery(Query): # TODO glBeginConditionalRender / glEndConditionalRender
+class SamplesPassedQuery(Query):
+    """@todo: Wrap C{glBeginConditionalRender} and C{glEndConditionalRender}."""
     _target = _gl.GL_SAMPLES_PASSED
 
-class AnySamplesPassedQuery(Query): # TODO glBeginConditionalRender / glEndConditionalRender
+class AnySamplesPassedQuery(Query):
+    """@todo: Wrap C{glBeginConditionalRender} and C{glEndConditionalRender}."""
     _target = _gl.GL_ANY_SAMPLES_PASSED
     result = property(lambda self: bool(Query.result.fget(self)))
 

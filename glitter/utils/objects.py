@@ -1,5 +1,7 @@
 """Base classes for OpenGL objects.
 
+@todo: Rethink what C{__del__} and C{__exit__} methods should do when the interpreter exits (e.g. restoring to a deleted object will not work).
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """

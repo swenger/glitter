@@ -19,7 +19,7 @@ class DrawBufferList(object):
         """Set all draw buffers.
 
         @param obj: Ignored.
-        @type index: any type
+        @type obj: any type
         @param value: The enum of the draw buffer to bind, a number if it is a color attachment.
         @type value: L{constants.draw_buffers} or C{int}
         """

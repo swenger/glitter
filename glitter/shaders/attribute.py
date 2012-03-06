@@ -1,5 +1,7 @@
 """Descriptors for L{ShaderProgram} attributes.
 
+@bug: Attributes are currently unimplemented.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -27,16 +29,20 @@ class Attribute(BaseAttribute):
         return "in %r" % self
 
     def __get__(self, obj, cls=None):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def __set__(self, obj, value):
-        pass # TODO if the shader is currently bound, set the attribute at once, else store only
+        """@todo: Implement this: if the shader is currently bound, set the attribute at once, else store only."""
+        raise NotImplementedError
 
     def _on_bind(self):
-        pass # TODO call glVertexAttrib with index=self._location
+        """@todo: Implement this: call C{glVertexAttrib} with C{index=self._location}."""
+        pass
 
     def _on_release(self):
-        pass # TODO restore old vertex attrib values if possible
+        """@todo: Implement this: restore old vertex attrib values if possible."""
+        pass
 
 class AttributeStruct(_odict, BaseAttribute):
     def __init__(self, name, parent):
@@ -51,16 +57,20 @@ class AttributeStruct(_odict, BaseAttribute):
         return "in %r" % self
 
     def __get__(self, obj, cls=None):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def __set__(self, obj, value):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def _on_bind(self):
-        pass # TODO call glVertexAttrib with index=self._location
+        """@todo: Implement this: call C{glVertexAttrib} with C{index=self._location}."""
+        pass
 
     def _on_release(self):
-        pass # TODO restore old vertex attrib values if possible
+        """@todo: Implement this: restore old vertex attrib values if possible."""
+        pass
 
 class AttributeStructArray(_odict, BaseAttribute):
     def __init__(self, name, parent):
@@ -80,14 +90,18 @@ class AttributeStructArray(_odict, BaseAttribute):
         return "in %r" % self
 
     def __get__(self, obj, cls=None):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def __set__(self, obj, value):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def _on_bind(self):
-        pass # TODO call glVertexAttrib with index=self._location
+        """@todo: Implement this: call C{glVertexAttrib} with C{index=self._location}."""
+        pass
 
     def _on_release(self):
-        pass # TODO restore old vertex attrib values if possible
+        """@todo: Implement this: restore old vertex attrib values if possible."""
+        pass
 

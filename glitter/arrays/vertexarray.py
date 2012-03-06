@@ -1,5 +1,7 @@
 """Vertex array class.
 
+@todo: Rethink vertex array drawing: e.g., differing number of elements in vertex and color buffer, allow for use of C{glVertexAttribDivisor}.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -8,8 +10,6 @@ from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject
 from glitter.arrays import ArrayBuffer, ElementArrayBuffer
-
-# TODO glVertexAttribDivisor
 
 class VertexArray(BindableObject, ManagedObject):
     _generate_id = _gl.glGenVertexArrays

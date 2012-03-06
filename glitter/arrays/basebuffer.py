@@ -1,5 +1,11 @@
 """Base class for buffer objects.
 
+@todo: Implement binding as separate object to allow binding buffers to
+different targets. This problem is very similar to rebinding L{Sampler}s to
+different units and should probably be handled in a similar way.
+@todo: Implement slicing with C{glGetBufferSubData}.
+@todo: Remember that C{glBindBuffer} and C{glBindBufferRange}/C{glBindBufferBase} interfer with each other!
+
 @author: Stephan Wenger
 @date: 2012-02-29
 
@@ -10,10 +16,6 @@ import numpy as _np
 from rawgl import gl as _gl
 
 from glitter.utils import constants, Datatype, coerce_array, BindableObject, ManagedObject
-
-# TODO slicing with glGetBufferSubData
-# TODO binding as separate object to allow binding buffers to different targets
-# TODO remember that glBindBuffer and glBindBufferRange/glBindBufferBase interfer with each other!
 
 class BaseBuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenBuffers

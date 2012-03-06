@@ -59,8 +59,12 @@ class Shader(ManagedObject):
         _gl.glShaderSource(self._id, 1, _gl.pointer(_gl.c_char_p(source)), _gl.POINTER(_gl.GLint)())
 
 class VertexShader(Shader):
+    """Vertes shader.
+
+    @todo: wrap C{glGetShaderPrecisionFormat}.
+    """
+
     _type = _gl.GL_VERTEX_SHADER
-    # TODO glGetShaderPrecisionFormat
 
 class TesselationControlShader(Shader):
     _type = _gl.GL_TESS_CONTROL_SHADER
@@ -72,8 +76,12 @@ class GeometryShader(Shader):
     _type = _gl.GL_GEOMETRY_SHADER
 
 class FragmentShader(Shader):
+    """Fragment shader.
+    
+    @todo: wrap C{glGetShaderPrecisionFormat}.
+    """
+    
     _type = _gl.GL_FRAGMENT_SHADER
-    # TODO glGetShaderPrecisionFormat
 
 __all__ = [
     "Shader",

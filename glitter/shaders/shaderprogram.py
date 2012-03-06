@@ -1,5 +1,13 @@
 """Shader program class.
 
+@todo: wrap C{glGetProgramStage}, C{glGetActiveSubroutineName},
+C{glGetActiveSubroutineUniform}, C{glGetActiveSubroutineUniformName},
+C{glGetSubroutineIndex}, C{glGetSubroutineUniformLocation},
+C{glGetTransformFeedbackVarying}, C{glTransformFeedbackVarying},
+C{glGetUniformBlockIndex}, C{glGetUniformIndices}, C{glGetActiveUniformBlock},
+C{glGetActiveUniformBlockName}, C{glUniformBlockBinding}, and
+C{glUniformSubroutine}.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -206,10 +214,6 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
         _info_log = _gl.create_string_buffer(self._info_log_length)
         _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
-
-    # TODO glGetProgramStage, glGetActiveSubroutineName, glGetActiveSubroutineUniform, glGetActiveSubroutineUniformName, glGetSubroutineIndex, glGetSubroutineUniformLocation
-    # TODO glGetTransformFeedbackVarying, glTransformFeedbackVaryings
-    # TODO glGetUniformBlockIndex, glGetUniformIndices, glGetActiveUniformBlock, glGetActiveUniformBlockName, glUniformBlockBinding, glUniformSubroutines
 
 __all__ = ["ShaderProgram"]
 

@@ -1,5 +1,7 @@
 """Descriptors for L{ShaderProgram} uniforms.
 
+@bug: Structs and arrays of structs are currently unimplemented.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -66,16 +68,20 @@ class UniformStruct(_odict, BaseUniform):
         return "uniform struct { %s } %s;" % (" ".join(str(value) for value in self.values()), self.name)
 
     def __get__(self, obj, cls=None):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def __set__(self, obj, value):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def _on_bind(self):
-        pass # TODO bind textures
+        """@todo: Implement this: bind textures."""
+        pass
 
     def _on_release(self):
-        pass # TODO restore old texture bindings
+        """@todo: Implement this: restore old texture bindings."""
+        pass
 
 class UniformStructArray(_odict, BaseUniform):
     def __init__(self, name, parent):
@@ -92,14 +98,18 @@ class UniformStructArray(_odict, BaseUniform):
         return "uniform struct { %s } %s[%d];" % (" ".join(str(value) for value in unique_values.values()), self.name, self.size)
 
     def __get__(self, obj, cls=None):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def __set__(self, obj, value):
-        pass # TODO
+        """@todo: Implement this."""
+        raise NotImplementedError
 
     def _on_bind(self):
-        pass # TODO bind textures
+        """@todo: Implement this: bind textures."""
+        pass
 
     def _on_release(self):
-        pass # TODO restore old texture bindings
+        """@todo: Implement this: restore old texture bindings."""
+        pass
 

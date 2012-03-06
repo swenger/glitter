@@ -1,5 +1,9 @@
 """GLUT context creation and management.
 
+@bug: Closing a GLUT window via the window system (not the API) causes bogus error messages.
+@todo: Implement subwindows using C{glutCreateSubWindow} and C{glutGet(GLUT_WINDOW_PARENT)}.
+@todo: Implement menus, font rendering, and geometric object rendering,
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -9,10 +13,6 @@ from rawgl import glut as _glut
 
 from glitter.utils import Enum
 from glitter.contexts.context import Context
-
-# TODO catch window closing (causes strange error messages)
-# TODO glutCreateSubWindow and glutGet(GLUT_WINDOW_PARENT)
-# TODO Menus, Font Rendering, Geometric Object Rendering
 
 _cursors = Enum(
     right_arrow=_glut.GLUT_CURSOR_RIGHT_ARROW,
@@ -74,9 +74,11 @@ def initialize(argv=None):
     argv[:] = [_argv[i] for i in range(_argc.value)]
 
 def main_loop():
-    """Enter the GLUT main loop."""
+    """Enter the GLUT main loop.
+    
+    @todo: Avoid destroying a window in C{__del__} that has already been destroyed by closing it; can C{glutCloseFunc} help?
+    """
     _glut.glutMainLoop()
-    # TODO avoid destroying a window in __del__ that has already been destroyed by closing it; glutCloseFunc?
     initialize()
 
 def main_loop_event():
@@ -207,20 +209,7 @@ class GlutWindow(Context):
     def bind(self):
         if self._id == 0:
             raise RuntimeError("window has already been destroyed")
-        old_binding = _glut.glutGetWindow()
         _glut.glutSetWindow(self._id)
-        return old_binding
-
-    def __enter__(self):
-        if self._id == 0:
-            raise RuntimeError("window has already been destroyed")
-        super(GlutWindow, self).__enter__()
-        self._stack.append(self.bind())
-        return self
-
-    def __exit__(self, type, value, traceback):
-        _glut.glutSetWindow(self._stack.pop())
-        super(GlutWindow, self).__exit__(type, value, traceback)
 
     def swap_buffers(self):
         with self:

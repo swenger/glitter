@@ -1,5 +1,11 @@
 """Framebuffer object class.
 
+@warn: Framebuffers are currently bound for drawing only (C{GL_DRAW_FRAMEBUFFER}, not C{GL_READ_FRAMEBUFFER}).
+@todo: Implement binding for reading; wrap C{glReadPixels}, C{glBlitFramebuffer}, C{glCopyTexSubImage} and related framebuffer copy functions.
+@todo: Add properties for C{viewport}, C{color_writemask}, C{depth_writemask},
+C{blend_func}, C{blend_equation}, and C{depth_range} (using
+C{glDepthRangeArray} and C{glDepthRangeIndexed}).
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -7,8 +13,6 @@
 from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject, constants
-
-# TODO binding as read_framebuffer_binding, glBlitFramebuffer, glCopyTexSubImage
 
 class Framebuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenFramebuffers
@@ -47,6 +51,11 @@ class Framebuffer(BindableObject, ManagedObject):
         self.attach(index, None)
 
     def _on_bind(self):
+        """Setup global framebuffer related state.
+
+        @todo: Setup C{color_writemasks}, C{depth_writemasks}, C{blend_funcs}, C{blend_equations}, and C{depth_ranges} after C{viewport}.
+        """
+
         if self._initialized:
             self._stack.append(self._context.draw_buffers)
             self._context.draw_buffers = [i if self[i] is not None else None for i in range(self._context.max_color_attachments)]
@@ -55,20 +64,13 @@ class Framebuffer(BindableObject, ManagedObject):
             if self.shape is not None:
                 self._context.viewport = (0, 0) + self.shape
 
-            # TODO set color_writemasks
-            # TODO set depth_writemasks
-            # TODO set blend_funcs
-            # TODO set blend_equations
-            # TODO set depth_ranges
-
     def _on_release(self):
-        if self._initialized:
-            # TODO reset depth_ranges
-            # TODO reset blend_equations
-            # TODO reset blend_funcs
-            # TODO reset depth_writemasks
-            # TODO reset color_writemasks
+        """Restore global framebuffer related state.
 
+        @todo: Restore C{depth_ranges}, C{blend_equations}, C{blend_funcs}, C{depth_writemasks}, and C{color_writemasks} before C{viewport}.
+        """
+
+        if self._initialized:
             self._context.viewport = self._stack.pop()
             self._context.draw_buffers = self._stack.pop()
 
@@ -109,8 +111,6 @@ class Framebuffer(BindableObject, ManagedObject):
 
         self._attach(_gl.GL_COLOR_ATTACHMENT0 + index, texture, layer, level)
         self._attachments[index] = texture
-
-    # TODO properties for viewport, color_writemask, depth_writemask, blend_func, blend_equation, depth_range (glDepthRangeArray, glDepthRangeIndexed)
 
     @property
     def depth(self):
@@ -200,7 +200,22 @@ class Framebuffer(BindableObject, ManagedObject):
             shape = (min(shape[0], self.stencil.shape[0]), min(shape[1], self.stencil.shape[1])) if shape else self.stencil.shape[:2]
         return shape
 
-    def clear(self, color=None, depth=None, stencil=None): # TODO glClearBuffer for clearing selected attachments
+    def clear(self, color=None, depth=None, stencil=None):
+        """Clear the framebuffer.
+
+        @param color: Whether to clear the color buffer, and optionally, to which value.
+        @type color: C{bool} or C{numpy.ndarray}.
+        @param depth: Whether to clear the depth buffer, and optionally, to which value.
+        @type depth: C{bool} or C{numpy.ndarray}.
+        @param stencil: Whether to clear the stencil buffer, and optionally, to which value.
+        @type stencil: C{bool} or C{numpy.ndarray}.
+
+        If no parameters are given, color, depth and stencil are cleared with
+        the current clear values.
+
+        @todo: Use C{glClearBuffer} to clear selected attachments only.
+        """
+
         with self:
             self._context._perform_gl_clear(color, depth, stencil)
 

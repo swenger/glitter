@@ -42,7 +42,9 @@ When extending the library:
     through the rawgl wrapper. If your raw GL invocations are generic enough,
     think about extending the L{Context} instead. Make sure to derive from
     L{GLObject} and use C{with self._context:} where necessary if your class
-    does in any way interact directly with OpenGL.
+    does in any way interact directly with OpenGL. If you derive from
+    L{GLObject}, your constructor should take an optional C{context=None}
+    parameter and pass it to L{GLObject.__init__}.
   - If your classes can be bound and unbound or change global state in some
     other way, they should act as context managers. Base classes are defined in
     the L{objects} module to help you doing it right.
@@ -59,20 +61,15 @@ When extending the library:
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
-@todo: Create a raw offscreen GLX context class with context generation and switching.
-@todo: Qt GL widgets and contexts.
-@todo: Make C{rawgl} replaceable.
-
+@todo: Mark unimplemented functionality as C{@bug}.
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as examples and tests.
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
 
-@todo: Add listing of all bound textures, buffers, etc.
 @todo: Derive all objects with meaningful attributes from L{StateMixin}.
 @todo: Maybe use C{abc} module for abstract classes.
+@todo: Make C{rawgl} replaceable.
 @todo: Transparent CUDA and OpenCL interoperability.
-@todo: Rethink what C{__del__} and C{__exit__} methods should do when the interpreter exits (e.g. restoring to a deleted object will not work).
-@todo: Rethink vertex array drawing: e.g., differing number of elements in vertex and color buffer.
 
 @author: Stephan Wenger
 @date: 2012-02-29
