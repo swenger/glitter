@@ -3,7 +3,7 @@
 Design principles:
   - Choose inituitive use over performance (no premature optimization; make it
     run, then make it fast).
-      - The user should not (need to) use the raw GL/GLUT wrappers at any time.
+      - Users should not (need to) use the raw GL/GLUT wrappers at any time.
       - Objects should accept convenience constructor parameters (e.g.
         L{VertexArray<VertexArray.__init__>},
         L{ShaderProgram<ShaderProgram.__init__>}) where it makes sense.
@@ -19,9 +19,11 @@ Design principles:
   - Array data is represented in numpy, but objects should convert as
     appropriate.
       - No loss of precision should occur when copying data to and from the
-        GPU.
+        GPU. Exceptions are made where iterables are accepted; C{numpy}
+        converts these to 64 bit datatypes, which are silently converted to 32
+        bit in some places.
   - Binding and unbinding of objects should be possible automatically (via with
-    statements) as well as manually.
+    statements) as well as manually (through properties of the L{Context}).
   - The library has a focus on GPGPU computing, but typical use for rendering
     should be as easy.
   - Platform independence should be sought for, although Linux/GLX is the
@@ -49,9 +51,9 @@ When extending the library:
     L{coerce_array}), failing gracefully with descriptive error messages, and
     adhering to conventions set by similar classes (e.g. returning C{self} from
     C{__enter__} methods).
-  - Write documentation (use C{@todo}, C{@note}, C{@attention}, C{@bug},
-    C{@warning} as appropriate).
-  - Write tests (for nosetests, in the C{tests} directory).
+  - Write docstrings for epydoc (use C{@todo}, C{@note}, C{@attention},
+    C{@bug}, C{@warning} as appropriate).
+  - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
 @todo: Create a raw offscreen GLX context class with context generation and switching.

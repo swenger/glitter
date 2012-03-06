@@ -9,7 +9,7 @@
 from glitter import VertexArray, TextureArray2D, uint32, Framebuffer, State, ShaderProgram
 
 vertex_code = """
-#version 410 core
+#version 400 core
 
 layout(location=0) in vec4 in_position;
 out vec4 ex_position;
@@ -21,7 +21,7 @@ void main() {
 """Vertex shader for solid or boundary voxelization."""
 
 fragment_code = """
-#version 410 core
+#version 400 core
 
 in vec4 ex_position;
 uniform bool solid;

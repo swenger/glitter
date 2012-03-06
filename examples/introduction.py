@@ -25,7 +25,7 @@ from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, Vertex
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
-#version 410 core
+#version 400 core
 
 layout(location=0) in vec4 in_position;
 layout(location=1) in vec4 in_color;
@@ -42,7 +42,7 @@ void main() {
 """Vertex shader for rendering animated geometry."""
 
 fragment_shader = """
-#version 410 core
+#version 400 core
 #extension GL_ARB_texture_rectangle : enable
 
 in vec4 ex_color;
@@ -61,7 +61,7 @@ void main() {
 """Fragment shader for rendering animated geometry."""
 
 copy_vertex_shader = """
-#version 410 core
+#version 400 core
 
 layout(location=0) in vec4 in_position;
 
@@ -72,7 +72,7 @@ void main() {
 """Vertex shader for copying a texture onto the screen."""
 
 copy_fragment_shader = """
-#version 410 core
+#version 400 core
 #extension GL_ARB_texture_rectangle : enable
 
 uniform sampler2DRect texture;

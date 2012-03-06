@@ -15,7 +15,7 @@ from glitter import ShaderProgram, VertexArray, State
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
-#version 410 core
+#version 400 core
 
 layout(location=0) in vec4 in_position;
 layout(location=1) in vec3 in_color;
@@ -30,7 +30,7 @@ void main() {
 """Vertex shader for rendering animated geometry."""
 
 fragment_shader = """
-#version 410 core
+#version 400 core
 
 in vec3 ex_color;
 layout(location=0) out vec4 out_color;

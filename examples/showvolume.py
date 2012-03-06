@@ -14,7 +14,7 @@ from glitter import ShaderProgram, Texture2D, VertexArray
 from glitter.contexts.glut import GlutWindow, main_loop
 
 copy_vertex_shader = """
-#version 410 core
+#version 400 core
 
 layout(location=0) in vec4 in_position;
 out vec2 ex_texcoord;
@@ -27,7 +27,7 @@ void main() {
 """Vertex shader for displaying the binary volume."""
 
 copy_fragment_shader = """
-#version 410 core
+#version 400 core
 
 in vec2 ex_texcoord;
 uniform usampler2D texture;
