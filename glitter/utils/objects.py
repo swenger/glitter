@@ -232,7 +232,7 @@ class State(GLObject):
     value later, use a C{with} statement with a C{State} object.
     """
 
-    def __init__(self, context=None, do_enter_exit=True, **kwargs):
+    def __init__(self, context=None, do_enter_exit=False, **kwargs):
         """Create a C{State} object for use in C{with} statements.
 
         When entering the C{with} statement, the properties of C{context} given
@@ -276,9 +276,13 @@ class State(GLObject):
             self._context.__exit__(type, value, traceback)
 
     def __getattr__(self, key):
+        if not hasattr(self, "_stack"): # constructor not done yet
+            return super(State, self).__getattr__(key)
         return getattr(self._context, key)
 
     def __setattr__(self, key, value):
+        if not hasattr(self, "_stack"): # constructor not done yet
+            return super(State, self).__setattr__(key, value)
         setattr(self._context, key, value)
 
 class BindReleaseObject(GLObject):
