@@ -1,17 +1,17 @@
 """Constants and enums.
 
+@todo: add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL to C{texture_formats}
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
-
-# TODO when using enums, import them into the corresponding class
 
 from rawgl import gl as _gl
 
 from glitter.utils.dtypes import uint8, uint16, uint32, int8, int16, int32, float32
 from glitter.utils.enum import Enum
 
-texture_formats = [ # (_np dtype, number of color channels), OpenGL internal format, (OpenGL type, OpenGL format)
+texture_formats = [
         ((uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
         ((uint16,  1), _gl.GL_R16UI,    (_gl.GL_UNSIGNED_SHORT, _gl.GL_RED_INTEGER )),
@@ -40,8 +40,14 @@ texture_formats = [ # (_np dtype, number of color channels), OpenGL internal for
         ((uint32,  4), _gl.GL_RGBA32UI, (_gl.GL_UNSIGNED_INT,   _gl.GL_RGBA_INTEGER)),
         ((int32,   4), _gl.GL_RGBA32I,  (_gl.GL_INT,            _gl.GL_RGBA_INTEGER)),
         ((float32, 4), _gl.GL_RGBA32F,  (_gl.GL_FLOAT,          _gl.GL_RGBA        )),
-        # TODO add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL
         ]
+"""Mapping between C{numpy} types and OpenGL types.
+
+First column: C{numpy} datatype, number of color channels
+Second column: OpenGL internal format
+Third column: OpenGL type, OpenGL format
+"""
+
 dtype_to_gl_iformat =   dict((x[0],    x[1]   ) for x in texture_formats)
 gl_iformat_to_dtype =   dict((x[1],    x[0]   ) for x in texture_formats)
 dtype_to_gl_format =    dict((x[0],    x[2][1]) for x in texture_formats)

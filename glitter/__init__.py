@@ -51,6 +51,9 @@ When extending the library:
     L{coerce_array}), failing gracefully with descriptive error messages, and
     adhering to conventions set by similar classes (e.g. returning C{self} from
     C{__enter__} methods).
+  - If your class uses enums from the L{constants} module in a public
+    interface, point a class variable of the same name to the enum so users do
+    not need to import any constants manually.
   - Write docstrings for epydoc (use C{@todo}, C{@note}, C{@attention},
     C{@bug}, C{@warning} as appropriate).
   - Write tests for nosetests (in the C{tests} directory).
