@@ -16,31 +16,58 @@ class DrawBufferList(object):
         self._num_buffers = _context.max_draw_buffers
 
     def __set__(self, obj, value):
+        """Set all draw buffers.
+
+        @param obj: Ignored.
+        @type index: any type
+        @param value: The enum of the draw buffer to bind, a number if it is a color attachment.
+        @type value: L{constants.draw_buffers} or C{int}
+        """
+
         _buffers = (_gl.GLenum * self._num_buffers)()
         for i, o in _itertools.islice(_itertools.izip_longest(range(self._num_buffers), value, fillvalue=None), self._num_buffers):
             _buffers[i] = _gl.GL_NONE if o is None else o._value if isinstance(o, EnumConstant) else _gl.GL_COLOR_ATTACHMENT0 + o
         with self._context:
             _gl.glDrawBuffers(self._num_buffers, _buffers)
 
-    def __getitem__(self, index): # TODO return color attachments as integers
+    def __getitem__(self, index):
+        """Get the draw buffer attached to this target.
+        
+        @param index: Index of the draw buffer to query.
+        @type index: C{int}
+        @return: The enum of the currently bound draw buffer enum, a number if it is a color attachment.
+        @rtype: L{constants.draw_buffers} or C{int}
+        """
+
         if not 0 <= index < self._num_buffers:
             raise IndexError
         _buffer = _gl.GLint()
         with self._context:
             _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + index, _buffer)
-        return constants.read_buffers[_buffer.value]
+        attachment = constants.draw_buffers[_buffer.value]
+        if attachment.name.startswith("COLOR_ATTACHMENT"):
+            return int(attachment.lstrip("COLOR_ATTACHMENT", 1))
+        else:
+            return attachment
 
-    def __setitem__(self, index, value): # TODO set color attachments as integers
-        _buffers = (_gl.GLenum * self._num_buffers)()
-        for i in range(self._num_buffers):
-            if i == index:
-                _buffers[i] = value._value if value is not None else _gl.GL_NONE
-            else:
-                _buffers[i] = self[i]._value
-        with self._context:
-            _gl.glDrawBuffers(self._num_buffers, _buffers)
+    def __setitem__(self, index, value):
+        """Set a draw buffer.
+
+        @param index: Index of the draw buffer to set.
+        @type index: C{int}
+        @param value: The enum of the draw buffer to bind, a number if it is a color attachment.
+        @type value: L{constants.draw_buffers} or C{int}
+        """
+
+        self.__set__(None, [value if i == index else self[i] for i in range(self._num_buffers)])
 
     def __delitem__(self, index):
+        """Unbind a draw buffer.
+
+        @param index: Index of the draw buffer to unbind.
+        @type index: C{int}
+        """
+
         self[index] = None
 
     def __len__(self):

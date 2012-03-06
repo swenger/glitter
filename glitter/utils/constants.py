@@ -173,6 +173,9 @@ draw_buffers = Enum(
         RIGHT=_gl.GL_RIGHT,
         FRONT_AND_BACK=_gl.GL_FRONT_AND_BACK,
 )
+for key, value in _gl.__dict__.items():
+    if key.startswith("GL_COLOR_ATTACHMENT"):
+        draw_buffers._add(key[3:], value)
 
 hints = Enum(
         FASTEST=_gl.GL_FASTEST,
