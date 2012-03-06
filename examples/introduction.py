@@ -21,7 +21,7 @@ from numpy import array, sin, cos, pi
 from numpy.random import random
 
 # Import glitter; this imports rawgl.
-from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline
+from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
@@ -118,21 +118,27 @@ def display():
     During the first call, all OpenGL commands will be logged to the console.
     """
 
-    logger.info("enter display()")
+    try:
+        logger.info("enter display()")
 
-    # Render the geometry to a texture.
-    render_pipeline.clear()
-    render_pipeline.draw()
+        # Render the geometry to a texture.
+        render_pipeline.clear()
+        render_pipeline.draw()
 
-    # Display the texture.
-    copy_pipeline.clear()
-    copy_pipeline.draw()
-    window.swap_buffers()
+        # Display the texture.
+        copy_pipeline.clear()
+        with copy_pipeline:
+            vao.draw()
+        window.swap_buffers()
 
-    logger.info("leave display()")
+        logger.info("leave display()")
 
-    # Disable logging for all subsequent calls.
-    logger.disabled = True
+        # Disable logging for all subsequent calls.
+        logger.disabled = True
+    except:
+        import traceback
+        traceback.print_exc()
+        raise SystemExit
 
 def keyboard(key, x, y):
     """Keyboard handler.
@@ -168,20 +174,19 @@ if __name__ == "__main__":
     window.display_callback = display
     window.keyboard_callback = keyboard
 
-    # Create objects that are automatically placed inside the current context.
+    # Create render pipeline.
     shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader) #: The shader program for rendering the geometry.
     render_pipeline = Pipeline(shader, in_position=vertices, elements=indices, in_color=colors, out_color=RectangleTexture(shape=(300, 300, 3)))
-    copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader) #: The shader program for copying a texture to screen.
-    quad_vertices = ((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))
-    quad_indices = ((0, 1, 2), (0, 2, 3))
-    copy_pipeline = Pipeline(copy_shader, in_position=quad_vertices, elements=quad_indices, use_framebuffer=False)
-
-    # Set uniform variables on shader programs.
     shader.texture_0 = Texture2D(random((30, 30, 4)))
     shader.texture_0.min_filter = Texture2D.min_filters.NEAREST
     shader.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
     shader.texture_1 = RectangleTexture(random((30, 30, 4)))
+
+    # Create copy pipeline.
+    copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader) #: The shader program for copying a texture to screen.
     copy_shader.texture = render_pipeline.out_color
+    copy_pipeline = Pipeline(copy_shader, use_framebuffer=False)
+    vao = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], elements=((0, 1, 2), (0, 2, 3)))
 
     # Call the timer once; it will trigger the subsequent calls itself.
     timer()
