@@ -274,6 +274,7 @@ class State(GLObject):
             except AttributeError:
                 self._stack.append(None)
             setattr(self._context, key, value)
+        return self
 
     def __exit__(self, type, value, traceback):
         for key in reversed(self._properties.keys()):
