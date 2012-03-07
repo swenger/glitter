@@ -26,7 +26,31 @@ def spreadbits(data):
     assert data.ndim == 4 and data.shape[-1] == 4, "expected shape (n_slices, height, width, 4), got shape %s" % data.shape
     assert data.dtype == numpy.uint32, "expected dtype uint32, got dtype %s" % data.dtype.name
 
-    # TODO use numpy.unpackbits(data.view(numpy.uint8))
+    data = data.swapaxes(0, 1).swapaxes(1, 2) # shift slices right in front of color channels
+    data = numpy.ascontiguousarray(data[:, :, :, ::-1], dtype=numpy.uint32) # reverse color channels, why?
+    data = data.reshape(data.shape[:2] + (-1,)) # unify slices and color channels
+    data = data.view(numpy.uint8) # split each uint32 into four bytes
+    data = data[:, :, ::-1] # reverse byte order, why?
+    data = numpy.unpackbits(data, axis=2) # split each byte into eight bits
+    data = data.swapaxes(2, 1).swapaxes(1, 0) # shift z axis to front
+    data = data.astype(numpy.float32) # convert booleans into float
+    return numpy.concatenate((data[:, :, :, None],) * 3, axis=-1)
+
+def old_spreadbits(data):
+    """Read bits from an array of RGBA images and convert each bit into a float.
+
+    @param data: Array of shape M{(n_slices, height, width, 4)} or M{(height, width, 4)} and dtype uint32.
+    @type data: C{numpy.ndarray}
+    @return: Array of shape M{(n_slices * 128, height, width)} and dtype float32.
+    @rtype: C{numpy.ndarray}
+    @raise AssertionError: When the array shape or type are incorrect.
+    """
+
+    if data.ndim == 3:
+        data = data.reshape((1,) + data.shape)
+
+    assert data.ndim == 4 and data.shape[-1] == 4, "expected shape (n_slices, height, width, 4), got shape %s" % data.shape
+    assert data.dtype == numpy.uint32, "expected dtype uint32, got dtype %s" % data.dtype.name
 
     data = data.swapaxes(3, 2).swapaxes(2, 1) # swap color channels to second axis
     data = data[:, ::-1] # reverse color channels, why?
@@ -51,6 +75,8 @@ if __name__ == "__main__":
         data = f["data"].value
 
     volume = spreadbits(data)
+    old_volume = old_spreadbits(data)[::-1]
+    assert (volume == old_volume).all(), "spreadbits is broken"
 
     with h5py.File(outfilename, "w") as f:
         f.create_dataset("data", data=volume, compression="lzf")

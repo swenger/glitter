@@ -66,7 +66,7 @@ def voxelize(mesh, size, solid=True):
     with Framebuffer([volume[i] for i in range(len(volume))]) as fbo:
         fbo.clear()
         with State(logic_op_mode="XOR" if solid else "OR", color_logic_op=True):
-            with ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), variables=dict(solid=solid)):
+            with ShaderProgram(vertex=vertex_code, fragment=fragment_code % len(volume), solid=solid):
                 mesh.draw()
     return volume
 

@@ -109,8 +109,11 @@ if __name__ == "__main__":
         volume = Texture3D(f["data"])
         absorption = f["data"].attrs.get("absorption", False)
     renderer = VolumeRenderer(volume, absorption=absorption, intensity_scale=0.1, modelview_matrix=numpy.eye(4))
+    maxval = None
     for idx, angle in enumerate(numpy.mgrid[0:2*numpy.pi:100j]):
         renderer.modelview_matrix[::2, ::2] = numpy.array(((numpy.cos(angle), numpy.sin(angle)), (-numpy.sin(angle), numpy.cos(angle))))
         image = renderer.render().data[::-1, :, :3]
-        imsave(sys.argv[2] % idx, image / image.max())
+        if maxval is None:
+            maxval = image.max()
+        imsave(sys.argv[2] % idx, image / maxval)
 
