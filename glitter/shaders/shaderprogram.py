@@ -34,7 +34,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     transform_feedback_buffer_modes = constants.transform_feedback_buffer_modes
     _frozen = False
 
-    def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], variables={}, link=None):
+    def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None, **variables):
         super(ShaderProgram, self).__init__()
         self._shaders = []
         self._variable_proxies = []

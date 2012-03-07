@@ -53,8 +53,8 @@ layout(location=0) out vec4 out_color;
 
 void main() {
     out_color = 0.5 * ex_color
-    + texture2D(texture_0, texcoord)
-    * texture2DRect(texture_1, gl_FragCoord.xy / 10.0)
+    + texture(texture_0, texcoord)
+    * texture(texture_1, gl_FragCoord.xy / 10.0)
     ;
 }
 """
@@ -75,11 +75,11 @@ copy_fragment_shader = """
 #version 400 core
 #extension GL_ARB_texture_rectangle : enable
 
-uniform sampler2DRect texture;
+uniform sampler2DRect image;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = texture2DRect(texture, gl_FragCoord.xy);
+    out_color = texture(image, gl_FragCoord.xy);
 }
 """
 """Fragment shader for copying a texture onto the screen."""
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 
     # Create copy pipeline.
     copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader) #: The shader program for copying a texture to screen.
-    copy_shader.texture = render_pipeline.out_color
+    copy_shader.image = render_pipeline.out_color
     copy_pipeline = Pipeline(copy_shader, use_framebuffer=False)
     vao = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], elements=((0, 1, 2), (0, 2, 3)))
 

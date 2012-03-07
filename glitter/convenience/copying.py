@@ -29,11 +29,11 @@ fragment_code_rectangle = """
 #version 400 core
 #extension GL_ARB_texture_rectangle : enable
 
-uniform sampler2DRect texture;
+uniform sampler2DRect image;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = texture2DRect(texture, gl_FragCoord.xy);
+    out_color = texture(image, gl_FragCoord.xy);
 }
 """
 """Fragment shader for copying a rectangle texture onto the screen."""
@@ -42,11 +42,11 @@ fragment_code_2d = """
 #version 400 core
 
 in vec2 ex_texcoord;
-uniform sampler2D texture;
+uniform sampler2D image;
 layout(location=0) out vec4 out_color;
 
 void main() {
-    out_color = texture2D(texture, ex_texcoord);
+    out_color = texture(image, ex_texcoord);
 }
 """
 """Fragment shader for copying a 2D texture onto the screen."""
