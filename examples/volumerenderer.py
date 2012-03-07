@@ -14,7 +14,7 @@ out vec4 ex_front;
 
 void main() {
 	ex_front = in_position;
-	gl_Position = modelview_matrix * 2.0 * (in_position - 0.5);
+	gl_Position = modelview_matrix * 2.0 * (in_position - 0.5) * vec4(1.0, 1.0, 0.5, 1.0);
 }
 """
 
@@ -108,7 +108,9 @@ if __name__ == "__main__":
     with h5py.File(sys.argv[1]) as f:
         volume = Texture3D(f["data"])
         absorption = f["data"].attrs.get("absorption", False)
-    renderer = VolumeRenderer(volume, absorption=absorption, intensity_scale=0.1) # TODO CLI for intensity_scale and modelview_matrix
-    image = renderer.render().data[::-1, :, :3]
-    imsave(sys.argv[2], image / image.max())
+    renderer = VolumeRenderer(volume, absorption=absorption, intensity_scale=0.1, modelview_matrix=numpy.eye(4))
+    for idx, angle in enumerate(numpy.mgrid[0:2*numpy.pi:100j]):
+        renderer.modelview_matrix[::2, ::2] = numpy.array(((numpy.cos(angle), numpy.sin(angle)), (-numpy.sin(angle), numpy.cos(angle))))
+        image = renderer.render().data[::-1, :, :3]
+        imsave(sys.argv[2] % idx, image / image.max())
 
