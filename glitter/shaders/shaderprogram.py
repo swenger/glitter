@@ -16,7 +16,7 @@ from collections import OrderedDict as _odict
 import re as _re
 from rawgl import gl as _gl
 
-from glitter.utils import constants, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy
+from glitter.utils import constants, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy, StateMixin
 from glitter.shaders.shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 from glitter.shaders.attribute import Attribute, AttributeStruct, AttributeStructArray
 from glitter.shaders.uniform import Uniform, UniformStruct, UniformStructArray
@@ -25,7 +25,7 @@ class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
-class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
+class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin, StateMixin):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
     _db = "shader_programs"

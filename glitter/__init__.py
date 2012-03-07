@@ -56,6 +56,7 @@ When extending the library:
   - If your class uses enums from the L{constants} module in a public
     interface, point a class variable of the same name to the enum so users do
     not need to import any constants manually.
+  - Use absolute, fully qualified names when importing other glitter modules.
   - Write docstrings for epydoc (use C{@todo}, C{@note}, C{@attention},
     C{@bug}, C{@warning} as appropriate).
   - Write tests for nosetests (in the C{tests} directory).
@@ -67,6 +68,7 @@ When extending the library:
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
 
 @todo: Derive all objects with meaningful attributes from L{StateMixin}.
+@todo: Use absolute, fully qualified names when importing other glitter modules.
 @todo: Maybe use C{abc} module for abstract classes.
 @todo: Make C{rawgl} replaceable.
 @todo: Transparent CUDA and OpenCL interoperability.

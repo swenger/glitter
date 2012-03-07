@@ -352,8 +352,8 @@ class BindReleaseObject(GLObject):
 class StateMixin(object):
     """Mixin for objects with properties.
 
-    Calling these objects with properties will generate an appropriate L{State}
-    wrapper for use in C{with} statements.
+    Calling these objects will generate an appropriate L{State} wrapper for use
+    in C{with} statements.
     """
 
     def __call__(self, **kwargs):
