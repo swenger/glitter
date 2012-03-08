@@ -32,6 +32,7 @@ from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 
 from glitter.utils import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers, cull_face_modes, front_face_modes, polygon_modes, InstanceDescriptorMixin, State, StateMixin
+from glitter.contexts.contextmanager import ContextManager
 from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
@@ -50,39 +51,6 @@ class GLObjectLibrary(object):
 
     def __repr__(self):
         return str(self)
-
-class ContextBindingProxy(object):
-    _bound_context = None
-
-    def __get__(self, obj, cls=None):
-        return self._bound_context
-
-    def __set__(self, obj, context=None):
-        with obj:
-            old_value, self._bound_context = self._bound_context, context
-            context._bind()
-
-    def __repr__(self):
-        return "proxy for context binding"
-
-class ContextManager(object):
-    _stack = []
-
-    current_context = ContextBindingProxy()
-    """The currently active context."""
-
-    @staticmethod
-    def create_default_context():
-        """Create a default offscreen rendering context.
-
-        @todo: This is window system dependent; create an appropriate context
-        dynamically.
-        @todo: When no context exists, create a raw offscreen context instead of a
-        hidden GLUT window so that rendering is possible without an X connection.
-        """
-
-        from glitter.contexts.glut import GlutWindow
-        return GlutWindow(shape=(1, 1), hide=True)
 
 class Context(InstanceDescriptorMixin, StateMixin):
     _frozen = False
@@ -406,5 +374,5 @@ class Context(InstanceDescriptorMixin, StateMixin):
 
     #}
 
-__all__ = ["Context", "ContextManager"]
+__all__ = ["Context"]
 

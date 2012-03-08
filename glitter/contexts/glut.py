@@ -13,7 +13,8 @@ import random as _random
 from rawgl import glut as _glut
 
 from glitter.utils import Enum
-from glitter.contexts.context import Context, ContextManager
+from glitter.contexts.context import Context
+from glitter.contexts.contextmanager import ContextManager
 
 _cursors = Enum(
     right_arrow=_glut.GLUT_CURSOR_RIGHT_ARROW,
