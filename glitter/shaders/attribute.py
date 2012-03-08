@@ -1,5 +1,7 @@
 """Descriptors for L{ShaderProgram} attributes.
 
+End users should typically not need to use this module directly.
+
 @bug: Attributes are currently unimplemented.
 
 @author: Stephan Wenger

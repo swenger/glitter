@@ -1,5 +1,7 @@
 """Descriptors for L{ShaderProgram} uniforms.
 
+End users should typically not need to use this module directly.
+
 @bug: Structs and arrays of structs are currently unimplemented.
 
 @author: Stephan Wenger

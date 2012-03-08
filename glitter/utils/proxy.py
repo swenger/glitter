@@ -4,10 +4,12 @@
 @date: 2012-02-29
 """
 
+from inspect import getmembers
 import numpy as _np
 from rawgl import gl as _gl
 
 from glitter.utils.dtypes import coerce_array
+from glitter.utils.objects import with_obj
 
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None, enum=None):
@@ -119,5 +121,29 @@ class ItemProxy(object):
     def __delete__(self, obj):
         del self._obj[self._idx]
 
-__all__ = ["Proxy", "ListProxy", "InstanceDescriptorMixin", "PropertyProxy", "ItemProxy"]
+def add_proxies(parent, obj):
+    """Add proxies for methods and properties of C{obj} to C{parent}."""
+
+    # add methods (all callable members, e.g. bound methods)
+    for key, value in getmembers(obj, callable):
+        if key.startswith("_"):
+            continue
+        setattr(parent, key, with_obj(parent, value))
+
+    # add properties and other descriptors (can be accessed via the class only)
+    for key, value in getmembers(type(obj)):
+        if key.startswith("_"):
+            continue
+        if hasattr(value, "__get__") and not callable(value): # exclude member functions
+            setattr(parent, key, PropertyProxy(obj, key))
+
+    # add instance descriptors if applicable
+    if isinstance(obj, InstanceDescriptorMixin):
+        for key, value in obj.__dict__.items():
+            if key.startswith("_"):
+                continue
+            if hasattr(value, "__get__"):
+                setattr(parent, key, PropertyProxy(obj, key))
+        
+__all__ = ["Proxy", "ListProxy", "InstanceDescriptorMixin", "PropertyProxy", "ItemProxy", "add_proxies"]
 

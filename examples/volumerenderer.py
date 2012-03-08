@@ -3,7 +3,7 @@
 import itertools
 import numpy
 
-from glitter import Framebuffer, ShaderProgram, RectangleTexture, VertexArray, float32, constants, State, Texture3D
+from glitter import Framebuffer, ShaderProgram, RectangleTexture, VertexArray, float32, State, Texture3D
 
 vertex_code = """
 #version 400 core
@@ -88,14 +88,14 @@ class VolumeRenderer(object):
     def render(self):
         # draw back faces, store coordinates into texture
         self.back_fbo.clear()
-        with State(cull_face=True, cull_face_mode=constants.cull_face_modes.FRONT):
+        with State(cull_face=True, cull_face_mode="FRONT"):
             with self.back_shader(modelview_matrix=self.modelview_matrix):
                 with self.back_fbo:
                     self.vao.draw()
 
         # draw front faces, accumulate intensity between front and back face
         self.front_fbo.clear()
-        with State(cull_face=True, cull_face_mode=constants.cull_face_modes.BACK):
+        with State(cull_face=True, cull_face_mode="BACK"):
             with self.front_shader(modelview_matrix=self.modelview_matrix, intensity_scale=self.intensity_scale, absorption=self.absorption):
                 with self.front_fbo:
                     self.vao.draw()

@@ -1,6 +1,7 @@
 """Constants and enums.
 
-@todo: add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL to C{texture_formats}
+@todo: Add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL to C{texture_formats}.
+@todo: Add C{__all__} and change imports accordingly. XXX
 
 @author: Stephan Wenger
 @date: 2012-02-29

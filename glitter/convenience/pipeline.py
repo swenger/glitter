@@ -6,7 +6,7 @@
 
 from glitter.framebuffers import Framebuffer
 from glitter.arrays import VertexArray
-from glitter.utils import ItemProxy, PropertyProxy, InstanceDescriptorMixin, State, StateMixin, with_obj
+from glitter.utils import ItemProxy, InstanceDescriptorMixin, State, StateMixin, add_proxies
 from glitter.shaders.uniform import BaseUniform # BaseUniform is an implementation detail of the shaders package
 
 class Pipeline(InstanceDescriptorMixin, StateMixin):
@@ -75,49 +75,20 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
             if isinstance(proxy, BaseUniform):
                 setattr(self, name, proxy)
 
-
         # create vertex array
         self._vao = VertexArray()
-
-        # add vertex array methods
-        for key, value in self._vao.__class__.__dict__.items():
-            if key.startswith("_"):
-                continue
-            if callable(value):
-                setattr(self, key, with_obj(self, getattr(self._vao, key)))
-
-        # add vertex array properties
-        for key, value in self._vao.__class__.__dict__.items():
-            if key.startswith("_"):
-                continue
-            if hasattr(value, "__get__") and not callable(value):
-                setattr(self, key, PropertyProxy(self._vao, key))
-
+        add_proxies(self, self._vao)
         
         # create framebuffer
         if use_framebuffer:
             self._fbo = Framebuffer()
-
-            # add framebuffer methods
-            for key, value in self._fbo.__class__.__dict__.items():
-                if key.startswith("_"):
-                    continue
-                if callable(value):
-                    setattr(self, key, with_obj(self, getattr(self._fbo, key)))
-
-            # add framebuffer properties
-            for key, value in self._fbo.__class__.__dict__.items():
-                if key.startswith("_"):
-                    continue
-                if hasattr(value, "__get__") and not callable(value):
-                    setattr(self, key, PropertyProxy(self._fbo, key))
+            add_proxies(self, self._fbo)
         else:
             # binding self._fbo binds the default framebuffer
             self._fbo = State(draw_framebuffer_binding=None)
 
             # add clear method for default framebuffer
             self.clear = self._shader._context.clear
-
 
         self._frozen = True
         
