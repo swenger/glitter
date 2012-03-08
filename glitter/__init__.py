@@ -52,7 +52,8 @@ When extending the library:
     values into the right types (e.g. to an appropriate array type using
     L{coerce_array}), failing gracefully with descriptive error messages, and
     adhering to conventions set by similar classes (e.g. returning C{self} from
-    C{__enter__} methods).
+    C{__enter__} methods, providing a C{__call__} method to set attributes by
+    inheriting from L{StateMixin}).
   - If your class uses enums from the L{constants} module in a public
     interface, point a class variable of the same name to the enum so users do
     not need to import any constants manually.
@@ -77,7 +78,7 @@ When extending the library:
 @todo: Implement NeHe tutorials as examples and tests.
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
 
-@todo: Derive all objects with meaningful attributes from L{StateMixin}. XXX
+@todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Maybe use C{abc} module for abstract classes.
 @todo: Make C{rawgl} replaceable.
 @todo: Transparent CUDA and OpenCL interoperability.

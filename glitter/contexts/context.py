@@ -4,7 +4,7 @@ This module wraps large parts of per-context state.
 
 @todo: Unify binding and unbinding of context as well as the L{current_context}
 proxy with binding and unbinding of other targets using the L{Context._current_context}
-pseudotarget. XXX
+pseudotarget, inherit from L{StateMixin} if not obtained automatically. XXX
 @todo: Add listing of all bound textures, buffers, etc.
 @todo: Do we need indexed variants for C{glEnable}?
 @todo: Wrap C{glPatchParameter}.

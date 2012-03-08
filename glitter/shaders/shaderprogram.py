@@ -16,7 +16,7 @@ from collections import OrderedDict as _odict
 import re as _re
 from rawgl import gl as _gl
 
-from glitter.utils import transform_feedback_buffer_modes, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy, StateMixin
+from glitter.utils import transform_feedback_buffer_modes, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy
 from glitter.shaders.shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 from glitter.shaders.attribute import Attribute, AttributeStruct, AttributeStructArray
 from glitter.shaders.uniform import Uniform, UniformStruct, UniformStructArray
@@ -25,7 +25,7 @@ class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
-class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin, StateMixin):
+class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin):
     _generate_id = _gl.glCreateProgram
     _delete_id = _gl.glDeleteProgram
     _db = "shader_programs"
@@ -71,9 +71,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin, Stat
         if link is None:
             link = bool(shaders)
         if link:
-            old_program = self._context.current_program
-            self.link() # linking binds the program
-            self._context.current_program = old_program
+            self.link()
 
         for name, proxy in self._get_active_attributes().items():
             setattr(self, name, proxy)
@@ -173,9 +171,17 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin, Stat
         return ListProxy(self._shaders, self._attach, self._detach)
 
     def link(self):
-        _gl.glLinkProgram(self._id)
+        old_program = self._context.current_program
+        _gl.glLinkProgram(self._id) # linking binds the program without the context's knowledge
         if self._link_status != _gl.GL_TRUE:
             raise ShaderLinkError(self._log)
+
+        # rebind the previous program circumventing any caching performed by the context
+        if old_program is None:
+            _gl.glUseProgram(0)
+        elif old_program._id != self._id:
+            _gl.glUseProgram(old_program._id)
+
         return self._log or None
 
     def validate(self):

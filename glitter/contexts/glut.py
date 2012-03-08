@@ -190,11 +190,11 @@ class GlutWindow(Context):
             raise RuntimeError("display mode not possible")
 
         old_binding = _glut.glutGetWindow()
-        self._id = _glut.glutCreateWindow(self._name)
+        self._id = _glut.glutCreateWindow(self._name) # creating a window changes the current context without the context manager's knowledge
         if old_binding:
-            _glut.glutSetWindow(old_binding)
+            _glut.glutSetWindow(old_binding) # rebind the previous context circumventing any caching performed by the context
         else:
-            Context._current_context = self
+            Context._current_context = self # tell the context about the changed binding
 
         super(GlutWindow, self).__init__()
 

@@ -126,7 +126,18 @@ class ManagedObject(GLObject):
         except:
             pass
 
-class BindableObject(GLObject):
+class StateMixin(object):
+    """Mixin for objects with properties.
+
+    Calling these objects will generate an appropriate L{State} wrapper for use
+    in C{with} statements.
+    """
+
+    def __call__(self, **kwargs):
+        """Return a L{State} wrapper around C{self}."""
+        return State(self, do_enter_exit=True, **kwargs)
+
+class BindableObject(GLObject, StateMixin):
     """Base class for objects that can be bound.
 
     When the object is bound, it returns the object that was previously bound
@@ -230,7 +241,7 @@ class BindableObject(GLObject):
         setattr(self._context, self._binding, old_binding)
         self._context.__exit__(type, value, traceback)
 
-class State(GLObject):
+class State(GLObject, StateMixin):
     """Context manager to add binding semantics to context property changes.
 
     To set properties of the context and automatically reset it to its old
@@ -294,7 +305,7 @@ class State(GLObject):
             return super(State, self).__setattr__(key, value)
         setattr(self._context, key, value)
 
-class BindReleaseObject(GLObject):
+class BindReleaseObject(GLObject, StateMixin):
     """Base class for objects that can be bound and released.
 
     C{BindReleaseObject} should be used instead of L{BindableObject} when binding
@@ -348,17 +359,6 @@ class BindReleaseObject(GLObject):
 
         self.release()
         self._context.__exit__(type, value, traceback)
-
-class StateMixin(object):
-    """Mixin for objects with properties.
-
-    Calling these objects will generate an appropriate L{State} wrapper for use
-    in C{with} statements.
-    """
-
-    def __call__(self, **kwargs):
-        """Return a L{State} wrapper around C{self}."""
-        return State(self, do_enter_exit=True, **kwargs)
 
 def with_obj(obj, f):
     """Create a wrapper that executes C{f} in a C{with obj:} block."""
