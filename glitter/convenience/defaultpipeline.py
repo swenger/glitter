@@ -2,8 +2,6 @@
 
 @author: Stephan Wenger
 @date: 2012-03-06
-
-@todo: Write tests.
 """
 
 from glitter.shaders import ShaderProgram

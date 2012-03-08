@@ -1,6 +1,6 @@
 """Program pipeline class.
 
-@bug: This is currently unimplemented.
+@bug: Program pipelines are currently unimplemented.
 @todo: Use C{glUseProgramStages}, C{glValidateProgramPipeline} etc.
 
 @author: Stephan Wenger

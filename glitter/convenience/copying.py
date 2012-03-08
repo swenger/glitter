@@ -4,8 +4,6 @@ This is useful for GPGPU.
 
 @author: Stephan Wenger
 @date: 2012-03-06
-
-@todo: Write tests.
 """
 
 from glitter.arrays import VertexArray
