@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""Volume renderer that creates a set of image files from different perspectives.
+
+@author: Stephan Wenger
+@date: 2012-03-07
+"""
+
 import itertools
 import numpy
 
@@ -45,7 +51,7 @@ uniform bool absorption;
 layout(location=0) out vec4 out_color;
 
 void main() {
-	vec3 p0 = texture2DRect(back, gl_FragCoord.st).xyz; // TODO texture()
+	vec3 p0 = texture(back, gl_FragCoord.st).xyz;
 	vec3 p1 = ex_front.xyz;
 	vec4 intensity = vec4(0.0);
 
