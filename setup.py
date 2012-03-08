@@ -5,15 +5,39 @@ setup( # TODO build docs and rawgl automatically, add test target
     version = "0.1.0",
     author = "Stephan Wenger",
     author_email = "wenger@cg.cs.tu-bs.de",
-    description = "GL InTuiTive Extensions Repository",
+    description = "Intuitive OpenGL wrappers",
     license = "MIT",
     keywords = "opengl,graphics",
     download_url = "", # TODO
     url = "", # TODO
-    long_description = """Intuitive OpenGL wrapper.
+    long_description = """Intuitive OpenGL wrappers.
 
-    """, # TODO
-    requires = ["rawgl"], # TODO package rawgl with glitter
+    Design principles:
+      - Choose inituitive use over performance (no premature optimization; make it
+        run, then make it fast). Users should not (need to) use the raw GL/GLUT
+        wrappers at any time.
+      - All GL state changes that are independent of objects should go through a
+        Context object. Other changes go through the corresponding objects:
+          - Vertex attribute pointer bindings are performed by vertex array objects
+            only.
+          - Settings for draw buffers other than the screen are performed by
+            framebuffer objects only.
+          - Texture bindings are performed by shader programs only.
+          - If possible, changes in the GL should be reflected in the wrapper, but
+            unchecked caching is okay to keep references to bound objects.
+      - Array data is represented in numpy, but objects should convert as
+        appropriate.
+          - No loss of precision should occur when copying data to and from the
+            GPU. Exceptions are made where iterables are accepted; numpy
+            converts these to 64 bit datatypes, which are silently converted to 32
+            bit in some places.
+      - Binding and unbinding of objects should be possible automatically (via with
+        statements) as well as manually (through properties of the context).
+      - The library has a focus on GPGPU computing, but typical use for rendering
+        should be as easy.
+      - Platform independence should be sought for, although Linux/GLX is the
+        primary target.
+    """,
     packages = find_packages(),
     classifiers = [
         "Programming Language :: Python",

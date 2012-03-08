@@ -1,12 +1,9 @@
-"""Intuitive OpenGL wrapper.
+"""Intuitive OpenGL wrappers.
 
 Design principles:
   - Choose inituitive use over performance (no premature optimization; make it
-    run, then make it fast).
-      - Users should not (need to) use the raw GL/GLUT wrappers at any time.
-      - Objects should accept convenience constructor parameters (e.g.
-        L{VertexArray<VertexArray.__init__>},
-        L{ShaderProgram<ShaderProgram.__init__>}) where it makes sense.
+    run, then make it fast). Users should not (need to) use the raw GL/GLUT
+    wrappers at any time.
   - All GL state changes that are independent of objects should go through a
     Context object. Other changes go through the corresponding objects:
       - Vertex attribute pointer bindings are performed by vertex array objects
@@ -19,11 +16,11 @@ Design principles:
   - Array data is represented in numpy, but objects should convert as
     appropriate.
       - No loss of precision should occur when copying data to and from the
-        GPU. Exceptions are made where iterables are accepted; C{numpy}
+        GPU. Exceptions are made where iterables are accepted; numpy
         converts these to 64 bit datatypes, which are silently converted to 32
         bit in some places.
   - Binding and unbinding of objects should be possible automatically (via with
-    statements) as well as manually (through properties of the L{Context}).
+    statements) as well as manually (through properties of the context).
   - The library has a focus on GPGPU computing, but typical use for rendering
     should be as easy.
   - Platform independence should be sought for, although Linux/GLX is the
@@ -78,6 +75,7 @@ When extending the library:
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as examples and tests.
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
+@todo: Keep this file, C{README.txt} and C{long_description} in C{setup.py} in sync.
 
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Maybe use C{abc} module for abstract classes.
