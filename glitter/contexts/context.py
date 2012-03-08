@@ -2,9 +2,6 @@
 
 This module wraps large parts of per-context state.
 
-@todo: Unify binding and unbinding of context as well as the L{current_context}
-proxy with binding and unbinding of other targets using the L{Context._current_context}
-pseudotarget, inherit from L{StateMixin} if not obtained automatically. XXX
 @todo: Add listing of all bound textures, buffers, etc.
 @todo: Do we need indexed variants for C{glEnable}?
 @todo: Wrap C{glPatchParameter}.
@@ -34,7 +31,7 @@ C{GL_STENCIL_PASS_DEPTH_PASS}, etc.
 from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 
-from glitter.utils import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers, cull_face_modes, front_face_modes, polygon_modes, InstanceDescriptorMixin, State
+from glitter.utils import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers, cull_face_modes, front_face_modes, polygon_modes, InstanceDescriptorMixin, State, StateMixin
 from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
@@ -54,13 +51,40 @@ class GLObjectLibrary(object):
     def __repr__(self):
         return str(self)
 
-class Context(InstanceDescriptorMixin):
-    _stack = []
-    """@todo: The stack should not be necessary here once binding reorganized."""
+class ContextBindingProxy(object):
+    _bound_context = None
 
-    _current_context = None
+    def __get__(self, obj, cls=None):
+        return self._bound_context
+
+    def __set__(self, obj, context=None):
+        with obj:
+            old_value, self._bound_context = self._bound_context, context
+            context._bind()
+
+    def __repr__(self):
+        return "proxy for context binding"
+
+class ContextManager(object):
+    _stack = []
+
+    current_context = ContextBindingProxy()
     """The currently active context."""
 
+    @staticmethod
+    def create_default_context():
+        """Create a default offscreen rendering context.
+
+        @todo: This is window system dependent; create an appropriate context
+        dynamically.
+        @todo: When no context exists, create a raw offscreen context instead of a
+        hidden GLUT window so that rendering is possible without an X connection.
+        """
+
+        from glitter.contexts.glut import GlutWindow
+        return GlutWindow(shape=(1, 1), hide=True)
+
+class Context(InstanceDescriptorMixin, StateMixin):
     _frozen = False
 
     def __init__(self):
@@ -86,7 +110,7 @@ class Context(InstanceDescriptorMixin):
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
         return super(Context, self).__setattr__(name, value)
 
-    def bind(self):
+    def _bind(self):
         """Make the context active.
 
         This should be overwritten appropriately by window system dependent subclasses.
@@ -94,15 +118,17 @@ class Context(InstanceDescriptorMixin):
 
         raise NotImplementedError
 
+    def bind(self):
+        old_binding = ContextManager.current_context
+        ContextManager.current_context = self
+        return old_binding
+
     def __enter__(self):
-        Context._stack.append(Context._current_context)
-        Context._current_context = self
-        Context._current_context.bind()
+        ContextManager._stack.append(self.bind())
         return self
 
     def __exit__(self, type, value, traceback):
-        Context._current_context = Context._stack.pop()
-        Context._current_context.bind()
+        ContextManager.current_context = ContextManager._stack.pop()
 
     #{ Enums
     blend_functions = blend_functions
@@ -380,32 +406,5 @@ class Context(InstanceDescriptorMixin):
 
     #}
 
-def get_current_context():
-    """Get the currently active context from the window system.
-
-    @todo: When no context exists, create a raw offscreen context instead of a
-    hidden GLUT window so that rendering is possible without an X connection.
-    """
-
-    if Context._current_context is None:
-        from glitter.contexts.glut import GlutWindow
-        Context._current_context = GlutWindow(shape=(1, 1), hide=True)
-    return Context._current_context
-
-class ContextProxy(object):
-    def __getattr__(self, name):
-        return getattr(get_current_context(), name)
-
-    def __setattr__(self, name, value):
-        return setattr(get_current_context(), name, value)
-
-    def __eq__(self, other):
-        return get_current_context() == other
-
-    def __ne__(self, other):
-        return get_current_context() != other
-
-current_context = ContextProxy()
-
-__all__ = ["Context", "get_current_context", "current_context"]
+__all__ = ["Context", "ContextManager"]
 

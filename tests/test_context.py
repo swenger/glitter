@@ -1,7 +1,7 @@
 import numpy
 
 from glitter import EnumConstant
-from glitter.contexts import get_current_context
+from glitter.contexts import ContextManager
 
 def check_property(context, name):
     value = getattr(context, name)
@@ -25,7 +25,7 @@ def check_property(context, name):
         pass # "AttributeError: can't set attribute" is okay for read-only attributes
 
 def test_property_generator():
-    context = get_current_context()
+    context = ContextManager.current_context or ContextManager.create_default_context()
     properties = [x for x in dir(context) if not x.startswith("_")]
 
     for p in properties:

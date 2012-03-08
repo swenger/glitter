@@ -13,7 +13,7 @@ import random as _random
 from rawgl import glut as _glut
 
 from glitter.utils import Enum
-from glitter.contexts.context import Context
+from glitter.contexts.context import Context, ContextManager
 
 _cursors = Enum(
     right_arrow=_glut.GLUT_CURSOR_RIGHT_ARROW,
@@ -189,12 +189,12 @@ class GlutWindow(Context):
         if not _glut.glutGet(_glut.GLUT_DISPLAY_MODE_POSSIBLE):
             raise RuntimeError("display mode not possible")
 
-        old_binding = _glut.glutGetWindow()
+        old_binding = ContextManager.current_context
         self._id = _glut.glutCreateWindow(self._name) # creating a window changes the current context without the context manager's knowledge
         if old_binding:
-            _glut.glutSetWindow(old_binding) # rebind the previous context circumventing any caching performed by the context
+            old_binding._bind() # rebind the previous context circumventing any caching performed by the context
         else:
-            Context._current_context = self # tell the context about the changed binding
+            ContextManager.current_context = self # tell the context manager about the changed binding
 
         super(GlutWindow, self).__init__()
 
@@ -207,7 +207,7 @@ class GlutWindow(Context):
         _glut.glutDestroyWindow(self._id)
         self._id = 0
 
-    def bind(self):
+    def _bind(self):
         if self._id == 0:
             raise RuntimeError("window has already been destroyed")
         _glut.glutSetWindow(self._id)

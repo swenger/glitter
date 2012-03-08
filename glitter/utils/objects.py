@@ -9,15 +9,18 @@
 from functools import wraps as _wraps
 from rawgl import gl as _gl
 
-def _get_current_context():
+def _get_context():
     """Grab the current context from the L{context} module.
 
-    The import is wrapped in a function definition to avoid infinite recursion
-    on import because the L{context} module imports this module.
+    If no current context exists, a new one is created in a window system
+    dependent way.
+
+    @note: The import is wrapped in a function definition to avoid infinite
+    recursion on import because the L{context} module imports this module.
     """
 
-    from glitter.contexts.context import get_current_context
-    return get_current_context()
+    from glitter.contexts import ContextManager
+    return ContextManager.current_context or ContextManager.create_default_context()
 
 class GLObject(object):
     """Base class for objects that belong to an OpenGL context.
@@ -32,7 +35,7 @@ class GLObject(object):
         @type context: L{Context}.
         """
 
-        self._context = context or _get_current_context()
+        self._context = context or _get_context()
 
 class ManagedObject(GLObject):
     """Base class for objects that can be created and deleted in OpenGL.
@@ -229,8 +232,7 @@ class BindableObject(GLObject, StateMixin):
         the parent L{Context}.
         """
 
-        old_binding = self._stack.pop()
-        setattr(self._context, self._binding, old_binding)
+        setattr(self._context, self._binding, self._stack.pop())
         self._context.__exit__(type, value, traceback)
 
 class State(GLObject, StateMixin):
