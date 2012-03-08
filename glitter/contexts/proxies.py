@@ -7,7 +7,7 @@
 from weakref import WeakKeyDictionary
 from rawgl import gl as _gl
 
-from glitter.utils import constants, bool8, int32, int64, float32, Proxy, EnumConstant
+from glitter.utils import hints, bool8, int32, int64, float32, Proxy, EnumConstant
 
 class BooleanProxy(Proxy):
     def __init__(self, get_args=(), setter=None, set_args=(), shape=None):
@@ -83,7 +83,7 @@ class EnumProxy(object):
 
 class HintProxy(EnumProxy):
     def __init__(self, hint):
-        super(HintProxy, self).__init__(constants.hints, hint, _gl.glHint, [hint])
+        super(HintProxy, self).__init__(hints, hint, _gl.glHint, [hint])
 
     def __repr__(self):
         return "proxy for %s" % self._arg

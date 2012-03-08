@@ -6,7 +6,7 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils import constants
+from glitter.utils import blend_functions, blend_equations
 
 class BlendFuncProxy(object):
     def __init__(self, arg):
@@ -16,7 +16,7 @@ class BlendFuncProxy(object):
         _value = _gl.GLint()
         with obj:
             _gl.glGetIntegerv(self._arg, _gl.pointer(_value))
-        return constants.blend_functions[_value.value]
+        return blend_functions[_value.value]
 
     def __set__(self, obj, value):
         src_rgb = value if self._arg == _gl.GL_BLEND_SRC_RGB else obj.blend_src_rgb
@@ -37,7 +37,7 @@ class BlendEquationProxy(object):
         _value = _gl.GLint()
         with obj:
             _gl.glGetIntegerv(self._arg, _gl.pointer(_value))
-        return constants.blend_equations[_value.value]
+        return blend_equations[_value.value]
 
     def __set__(self, obj, value):
         mode_rgb = value if self._arg == _gl.GL_BLEND_EQUATION_RGB else obj.blend_equation_rgb

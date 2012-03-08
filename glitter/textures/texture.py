@@ -12,7 +12,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
+from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_swizzles, texture_wrapmodes, dtype_to_gl_iformat, dtype_to_gl_format, gl_iformat_to_dtype, gl_iformat_to_dtype, dtype_to_gl_format, gl_iformat_to_gl_type, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
 
 class Texture(ManagedObject, BindReleaseObject):
     _generate_id = _gl.glGenTextures
@@ -22,12 +22,12 @@ class Texture(ManagedObject, BindReleaseObject):
     _ndim = NotImplemented
     _set = NotImplemented
 
-    compare_funcs = constants.texture_compare_funcs
-    compare_modes = constants.texture_compare_modes
-    min_filters = constants.texture_min_filters
-    mag_filters = constants.texture_mag_filters
-    swizzles = constants.texture_swizzles
-    wrapmodes = constants.texture_wrapmodes
+    compare_funcs = texture_compare_funcs
+    compare_modes = texture_compare_modes
+    min_filters = texture_min_filters
+    mag_filters = texture_mag_filters
+    swizzles = texture_swizzles
+    wrapmodes = texture_wrapmodes
 
     def bind(self):
         return self._context.texture_units.bind(self)
@@ -69,8 +69,8 @@ class Texture(ManagedObject, BindReleaseObject):
         if len(shape) != self._ndim:
             raise TypeError("shape must be %d-dimensional" % self._ndim)
 
-        _iformat = constants.dtype_to_gl_iformat[dtype, shape[-1]]
-        _format = constants.dtype_to_gl_format[dtype, shape[-1]]
+        _iformat = dtype_to_gl_iformat[dtype, shape[-1]]
+        _format = dtype_to_gl_format[dtype, shape[-1]]
         _type = dtype._as_gl()
         _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
@@ -109,7 +109,7 @@ class Texture(ManagedObject, BindReleaseObject):
     @property
     def shape(self):
         with self:
-            colors = constants.gl_iformat_to_dtype[self._iformat][1]        
+            colors = gl_iformat_to_dtype[self._iformat][1]        
             _width = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
             if self._ndim == 2:
@@ -125,7 +125,7 @@ class Texture(ManagedObject, BindReleaseObject):
 
     @property
     def dtype(self):
-        return constants.gl_iformat_to_dtype[self._iformat][0]
+        return gl_iformat_to_dtype[self._iformat][0]
 
     @property
     def _iformat(self):
@@ -136,11 +136,11 @@ class Texture(ManagedObject, BindReleaseObject):
 
     @property
     def _format(self):
-        return constants.dtype_to_gl_format[self.dtype, self.shape[-1]]
+        return dtype_to_gl_format[self.dtype, self.shape[-1]]
 
     @property
     def _type(self):
-        return constants.gl_iformat_to_gl_type[self._iformat]
+        return gl_iformat_to_gl_type[self._iformat]
 
     @property
     def base_level(self):

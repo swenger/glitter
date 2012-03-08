@@ -6,7 +6,7 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils import ManagedObject, constants
+from glitter.utils import ManagedObject, client_wait_sync_returns
 
 class Sync(ManagedObject):
     """@todo: Implement properties using C{glGetSynciv}."""
@@ -15,7 +15,7 @@ class Sync(ManagedObject):
 class FenceSync(Sync):
     _generate_id = lambda: _gl.glFenceSync(_gl.GL_SYNC_GPU_COMMANDS_COMPLETE, 0)
 
-    client_wait_sync_returns = constants.client_wait_sync_returns
+    client_wait_sync_returns = client_wait_sync_returns
 
     def wait(self):
         _gl.glWaitSync(self._id, 0, _gl.GL_TIMEOUT_IGNORED)

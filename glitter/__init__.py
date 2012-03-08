@@ -77,7 +77,6 @@ When extending the library:
 @todo: Implement NeHe tutorials as examples and tests.
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
 
-@todo: Use C{inspect.getmembers} instead of C{__dict__} or C{dir()} for reflection. XXX
 @todo: Derive all objects with meaningful attributes from L{StateMixin}. XXX
 @todo: Maybe use C{abc} module for abstract classes.
 @todo: Make C{rawgl} replaceable.

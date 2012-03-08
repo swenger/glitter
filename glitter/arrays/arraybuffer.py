@@ -8,7 +8,7 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils import constants
+from glitter.utils import buffer_dimensions_to_primitive, primitive_to_buffer_dimensions
 from glitter.arrays.basebuffer import BaseBuffer
 
 class ArrayBuffer(BaseBuffer):
@@ -33,14 +33,14 @@ class ArrayBuffer(BaseBuffer):
     def draw(self, mode=None, count=None, first=0, instances=None):
         if mode is None:
             if len(self.shape) > 2:
-                mode = constants.buffer_dimensions_to_primitive.get(self.shape[1], None)
+                mode = buffer_dimensions_to_primitive.get(self.shape[1], None)
             else:
-                mode = constants.buffer_dimensions_to_primitive.get(1, None)
+                mode = buffer_dimensions_to_primitive.get(1, None)
         if mode is None:
             raise ValueError("must specify mode")
         if count is None:
             try:
-                count = self.shape[0] * constants.primitive_to_buffer_dimensions[mode]
+                count = self.shape[0] * primitive_to_buffer_dimensions[mode]
             except KeyError:
                 raise ValueError("must specify count")
         if instances is None:

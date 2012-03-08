@@ -15,15 +15,15 @@ different units and should probably be handled in a similar way.
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, Datatype, coerce_array, BindableObject, ManagedObject
+from glitter.utils import primitive_types, buffer_usages, Datatype, coerce_array, BindableObject, ManagedObject
 
 class BaseBuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "buffers"
 
-    drawmodes = constants.primitive_types
-    usages = constants.buffer_usages
+    drawmodes = primitive_types
+    usages = buffer_usages
 
     def __init__(self, data=None, shape=None, dtype=None, usage=None):
         if any(x is NotImplemented for x in (self._target,)):

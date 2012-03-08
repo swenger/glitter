@@ -12,7 +12,7 @@ C{glDepthRangeArray} and C{glDepthRangeIndexed}).
 
 from rawgl import gl as _gl
 
-from glitter.utils import BindableObject, ManagedObject, constants
+from glitter.utils import BindableObject, ManagedObject, framebuffer_status
 
 class Framebuffer(BindableObject, ManagedObject):
     _generate_id = _gl.glGenFramebuffers
@@ -21,7 +21,7 @@ class Framebuffer(BindableObject, ManagedObject):
     _binding = "draw_framebuffer_binding"
     _target = _gl.GL_DRAW_FRAMEBUFFER
 
-    framebuffer_status = constants.framebuffer_status
+    framebuffer_status = framebuffer_status
     _initialized = False
 
     def __init__(self, attachments=[], depth=None, stencil=None):

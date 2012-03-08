@@ -11,7 +11,7 @@ handled in a similar way.
 
 from rawgl import gl as _gl
 
-from glitter.utils import constants, BindableObject, ManagedObject
+from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_wrapmodes, BindableObject, ManagedObject
 
 class Sampler(BindableObject, ManagedObject):
     _generate_id = _gl.glGenSamplers
@@ -19,11 +19,11 @@ class Sampler(BindableObject, ManagedObject):
     _db = "samplers"
     _binding = "sampler_binding"
 
-    compare_funcs = constants.texture_compare_funcs
-    compare_modes = constants.texture_compare_modes
-    min_filters = constants.texture_min_filters
-    mag_filters = constants.texture_mag_filters
-    wrapmodes = constants.texture_wrapmodes
+    compare_funcs = texture_compare_funcs
+    compare_modes = texture_compare_modes
+    min_filters = texture_min_filters
+    mag_filters = texture_mag_filters
+    wrapmodes = texture_wrapmodes
 
     def __init__(self, unit, context=None):
         super(Sampler, self).__init__(context)

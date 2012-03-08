@@ -34,7 +34,7 @@ C{GL_STENCIL_PASS_DEPTH_PASS}, etc.
 from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 
-from glitter.utils import constants, InstanceDescriptorMixin, State
+from glitter.utils import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers, cull_face_modes, front_face_modes, polygon_modes, InstanceDescriptorMixin, State
 from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
@@ -105,20 +105,20 @@ class Context(InstanceDescriptorMixin):
         Context._current_context.bind()
 
     #{ Enums
-    blend_functions = constants.blend_functions
-    blend_equations = constants.blend_equations
-    depth_functions = constants.depth_functions
-    draw_buffers = constants.draw_buffers
-    hints = constants.hints
-    provoking_vertices = constants.provoking_vertices
-    logic_op_modes = constants.logic_op_modes
-    provoke_modes = constants.provoke_modes
-    color_read_formats = constants.color_read_formats
-    color_read_types = constants.color_read_types
-    read_buffers = constants.read_buffers
-    cull_face_modes = constants.cull_face_modes
-    front_face_modes = constants.front_face_modes
-    polygon_modes = constants.polygon_modes
+    blend_functions = blend_functions
+    blend_equations = blend_equations
+    depth_functions = depth_functions
+    draw_buffers = draw_buffers
+    hints = hints
+    provoking_vertices = provoking_vertices
+    logic_op_modes = logic_op_modes
+    provoke_modes = provoke_modes
+    color_read_formats = color_read_formats
+    color_read_types = color_read_types
+    read_buffers = read_buffers
+    cull_face_modes = cull_face_modes
+    front_face_modes = front_face_modes
+    polygon_modes = polygon_modes
 
     #{ Buffer bindings
     array_buffer_binding                 = BindingProxy(_gl.glBindBuffer,          [_gl.GL_ARRAY_BUFFER                ])

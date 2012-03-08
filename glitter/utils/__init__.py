@@ -4,6 +4,7 @@
 @date: 2012-02-29
 """
 
+from glitter.utils.constants import *
 from glitter.utils.dtypes import *
 from glitter.utils.enum import *
 from glitter.utils.errors import *

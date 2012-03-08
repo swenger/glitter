@@ -16,7 +16,7 @@ from collections import OrderedDict as _odict
 import re as _re
 from rawgl import gl as _gl
 
-from glitter.utils import constants, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy, StateMixin
+from glitter.utils import transform_feedback_buffer_modes, int32, ShaderDatatype, BindableObject, ManagedObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy, StateMixin
 from glitter.shaders.shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 from glitter.shaders.attribute import Attribute, AttributeStruct, AttributeStructArray
 from glitter.shaders.uniform import Uniform, UniformStruct, UniformStructArray
@@ -31,7 +31,7 @@ class ShaderProgram(BindableObject, ManagedObject, InstanceDescriptorMixin, Stat
     _db = "shader_programs"
     _binding = "current_program"
 
-    transform_feedback_buffer_modes = constants.transform_feedback_buffer_modes
+    transform_feedback_buffer_modes = transform_feedback_buffer_modes
     _frozen = False
 
     def __init__(self, shaders=[], vertex=[], tess_control=[], tess_evaluation=[], geometry=[], fragment=[], link=None, **variables):

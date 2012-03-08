@@ -8,7 +8,7 @@ import itertools as _itertools
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, EnumConstant, bool8
+from glitter.utils import draw_buffers, EnumConstant, bool8
 
 class DrawBufferList(object):
     def __init__(self, _context):
@@ -21,7 +21,7 @@ class DrawBufferList(object):
         @param obj: Ignored.
         @type obj: any type
         @param value: The enum of the draw buffer to bind, a number if it is a color attachment.
-        @type value: L{constants.draw_buffers} or C{int}
+        @type value: L{draw_buffers} or C{int}
         """
 
         _buffers = (_gl.GLenum * self._num_buffers)()
@@ -36,7 +36,7 @@ class DrawBufferList(object):
         @param index: Index of the draw buffer to query.
         @type index: C{int}
         @return: The enum of the currently bound draw buffer enum, a number if it is a color attachment.
-        @rtype: L{constants.draw_buffers} or C{int}
+        @rtype: L{draw_buffers} or C{int}
         """
 
         if not 0 <= index < self._num_buffers:
@@ -44,7 +44,7 @@ class DrawBufferList(object):
         _buffer = _gl.GLint()
         with self._context:
             _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + index, _buffer)
-        attachment = constants.draw_buffers[_buffer.value]
+        attachment = draw_buffers[_buffer.value]
         if attachment.name.startswith("COLOR_ATTACHMENT"):
             return int(attachment.lstrip("COLOR_ATTACHMENT", 1))
         else:
@@ -56,7 +56,7 @@ class DrawBufferList(object):
         @param index: Index of the draw buffer to set.
         @type index: C{int}
         @param value: The enum of the draw buffer to bind, a number if it is a color attachment.
-        @type value: L{constants.draw_buffers} or C{int}
+        @type value: L{draw_buffers} or C{int}
         """
 
         self.__set__(None, [value if i == index else self[i] for i in range(self._num_buffers)])

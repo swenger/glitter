@@ -7,7 +7,7 @@
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import constants, Datatype, coerce_array
+from glitter.utils import buffer_dimensions_to_primitive, Datatype, coerce_array
 from glitter.arrays.basebuffer import BaseBuffer
 
 class ElementArrayBuffer(BaseBuffer):
@@ -25,7 +25,7 @@ class ElementArrayBuffer(BaseBuffer):
     def draw(self, mode=None, count=None, first=0, instances=None):
         if mode is None:
             if len(self.shape) >= 2:
-                mode = constants.buffer_dimensions_to_primitive.get(self.shape[-1], None)
+                mode = buffer_dimensions_to_primitive.get(self.shape[-1], None)
         if mode is None:
             raise ValueError("must specify mode")
         if count is None:
