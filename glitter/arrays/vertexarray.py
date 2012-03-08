@@ -9,7 +9,8 @@
 from rawgl import gl as _gl
 
 from glitter.utils import BindableObject, ManagedObject
-from glitter.arrays import ArrayBuffer, ElementArrayBuffer
+from glitter.arrays.arraybuffer import ArrayBuffer
+from glitter.arrays.elementarray import ElementArrayBuffer
 
 class VertexArray(BindableObject, ManagedObject):
     _generate_id = _gl.glGenVertexArrays

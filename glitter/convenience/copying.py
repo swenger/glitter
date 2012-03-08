@@ -8,9 +8,9 @@ This is useful for GPGPU.
 @todo: Write tests.
 """
 
-from glitter.arrays.vertexarray import VertexArray
-from glitter.shaders.shaderprogram import ShaderProgram
-from glitter.convenience.pipeline import Pipeline
+from glitter.arrays import VertexArray
+from glitter.shaders import ShaderProgram
+from glitter.convenience import Pipeline
 
 vertex_code = """
 #version 400 core

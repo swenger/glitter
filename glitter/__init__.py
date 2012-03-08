@@ -56,20 +56,29 @@ When extending the library:
   - If your class uses enums from the L{constants} module in a public
     interface, point a class variable of the same name to the enum so users do
     not need to import any constants manually.
-  - Use absolute, fully qualified names when importing other glitter modules.
+  - Use absolute module names when importing other glitter modules. When
+    importing from the same subpackage, use fully qualified names for the
+    module (e.g. C{from glitter.utils.objects import GLObject}); otherwise,
+    rely on the public interface of the subpackage defined in its
+    C{__init__.py} and import from the subpackage directly (e.g. C{from
+    glitter.utils import GLObject}). Do not import from the global C{glitter}
+    module directly as visibility of subpackages may change.
+  - Define the public interface of your module in C{__all__} and, if your
+    module is meant for external use, C{import *} from your module in the
+    C{__init__.py} of its parent. However, if your module is
+    platform-dependent, do not C{import *} but have the user import your
+    submodule manually.
   - Write docstrings for epydoc (use C{@todo}, C{@note}, C{@attention},
     C{@bug}, C{@warning} as appropriate).
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
-@todo: Mark unimplemented functionality as C{@bug}.
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as examples and tests.
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
 
-@todo: Use C{inspect.getmembers} instead of C{__dict__} or C{dir()} for reflection.
-@todo: Derive all objects with meaningful attributes from L{StateMixin}.
-@todo: Use absolute, fully qualified names when importing other glitter modules.
+@todo: Use C{inspect.getmembers} instead of C{__dict__} or C{dir()} for reflection. XXX
+@todo: Derive all objects with meaningful attributes from L{StateMixin}. XXX
 @todo: Maybe use C{abc} module for abstract classes.
 @todo: Make C{rawgl} replaceable.
 @todo: Transparent CUDA and OpenCL interoperability.

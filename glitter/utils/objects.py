@@ -16,7 +16,7 @@ def _get_current_context():
     on import because the L{context} module imports this module.
     """
 
-    from glitter.contexts import get_current_context
+    from glitter.contexts.context import get_current_context
     return get_current_context()
 
 class GLObject(object):

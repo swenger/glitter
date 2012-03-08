@@ -4,11 +4,10 @@
 @date: 2012-03-05
 """
 
-from glitter.framebuffers.framebuffer import Framebuffer
-from glitter.arrays.vertexarray import VertexArray
-from glitter.utils.proxy import ItemProxy, PropertyProxy, InstanceDescriptorMixin
-from glitter.shaders.uniform import BaseUniform
-from glitter.utils.objects import State, StateMixin, with_obj
+from glitter.framebuffers import Framebuffer
+from glitter.arrays import VertexArray
+from glitter.utils import ItemProxy, PropertyProxy, InstanceDescriptorMixin, State, StateMixin, with_obj
+from glitter.shaders.uniform import BaseUniform # BaseUniform is an implementation detail of the shaders package
 
 class Pipeline(InstanceDescriptorMixin, StateMixin):
     """Convenience class for rendering pipelines.

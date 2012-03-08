@@ -6,7 +6,7 @@
 @todo: Write tests.
 """
 
-from glitter.shaders.shaderprogram import ShaderProgram
+from glitter.shaders import ShaderProgram
 
 vertex_code = """
 #version 400 core

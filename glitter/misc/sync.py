@@ -6,8 +6,7 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils.objects import ManagedObject
-from glitter.utils import constants
+from glitter.utils import ManagedObject, constants
 
 class Sync(ManagedObject):
     """@todo: Implement properties using C{glGetSynciv}."""
