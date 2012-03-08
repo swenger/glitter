@@ -9,9 +9,9 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils import BindableObject, ManagedObject
+from glitter.utils import ManagedObject, BindableObject
 
-class ProgramPipeline(BindableObject, ManagedObject):
+class ProgramPipeline(ManagedObject, BindableObject):
     _generate_id = _gl.glGenProgramPipelines
     _delete_id = _gl.glDeleteProgramPipelines
     _db = "program_pipelines"

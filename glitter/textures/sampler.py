@@ -11,9 +11,9 @@ handled in a similar way.
 
 from rawgl import gl as _gl
 
-from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_wrapmodes, BindableObject, ManagedObject
+from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_wrapmodes, ManagedObject, BindableObject
 
-class Sampler(BindableObject, ManagedObject):
+class Sampler(ManagedObject, BindableObject):
     _generate_id = _gl.glGenSamplers
     _delete_id = _gl.glDeleteSamplers
     _db = "samplers"

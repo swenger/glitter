@@ -8,11 +8,11 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils import BindableObject, ManagedObject
+from glitter.utils import ManagedObject, BindableObject
 from glitter.arrays.arraybuffer import ArrayBuffer
 from glitter.arrays.elementarray import ElementArrayBuffer
 
-class VertexArray(BindableObject, ManagedObject):
+class VertexArray(ManagedObject, BindableObject):
     _generate_id = _gl.glGenVertexArrays
     _delete_id = _gl.glDeleteVertexArrays
     _db = "vertex_arrays"

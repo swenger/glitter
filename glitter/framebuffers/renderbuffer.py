@@ -8,9 +8,9 @@
 
 from rawgl import gl as _gl
 
-from glitter.utils import BindableObject, ManagedObject
+from glitter.utils import ManagedObject, BindableObject
 
-class Renderbuffer(BindableObject, ManagedObject):
+class Renderbuffer(ManagedObject, BindableObject):
     """Renderbuffer class.
     
     @todo: Use C{glFramebufferRenderbuffer} instead of L{_binding}; returns C{GLsync}!

@@ -13,9 +13,9 @@ C{glDrawTransformFeedbackStreamInstanced}.
 
 from rawgl import gl as _gl
 
-from glitter.utils import BindableObject, ManagedObject
+from glitter.utils import ManagedObject, BindableObject
 
-class TransformFeedback(BindableObject, ManagedObject):
+class TransformFeedback(ManagedObject, BindableObject):
     _generate_id = _gl.glGenTransformFeedbacks
     _delete_id = _gl.glDeleteTransformFeedbacks
     _db = "transform_feedbacks"

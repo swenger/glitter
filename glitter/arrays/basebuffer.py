@@ -15,9 +15,9 @@ different units and should probably be handled in a similar way.
 import numpy as _np
 from rawgl import gl as _gl
 
-from glitter.utils import primitive_types, buffer_usages, Datatype, coerce_array, BindableObject, ManagedObject
+from glitter.utils import primitive_types, buffer_usages, Datatype, coerce_array, ManagedObject, BindableObject
 
-class BaseBuffer(BindableObject, ManagedObject):
+class BaseBuffer(ManagedObject, BindableObject):
     _generate_id = _gl.glGenBuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "buffers"

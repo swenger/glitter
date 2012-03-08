@@ -12,9 +12,9 @@ C{glDepthRangeArray} and C{glDepthRangeIndexed}).
 
 from rawgl import gl as _gl
 
-from glitter.utils import BindableObject, ManagedObject, framebuffer_status
+from glitter.utils import ManagedObject, BindableObject, framebuffer_status
 
-class Framebuffer(BindableObject, ManagedObject):
+class Framebuffer(ManagedObject, BindableObject):
     _generate_id = _gl.glGenFramebuffers
     _delete_id = _gl.glDeleteBuffers
     _db = "framebuffers"
