@@ -1,0 +1,3 @@
+include COPYING.txt
+recursive-include docs *.html *.js *.css *.png *.txt
+

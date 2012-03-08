@@ -31,7 +31,7 @@ Design principles:
 
 Build instructions:
   - installing: C{sudo python setup.py install}
-  - docs: C{epydoc --html -v glitter examples tests}
+  - docs: C{epydoc --html -v -o docs glitter examples tests}
   - tests: C{nosetests tests}
 
 When extending the library:
@@ -74,6 +74,7 @@ When extending the library:
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
+@todo: Move examples and tests into glitter tree to simplify packaging?
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as examples and tests.
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
@@ -87,12 +88,12 @@ When extending the library:
 @date: 2012-02-29
 """
 
-from arrays import *
-from contexts import *
-from convenience import *
-from framebuffers import *
-from misc import *
-from shaders import *
-from textures import *
-from utils import *
+from glitter.arrays import *
+from glitter.contexts import *
+from glitter.convenience import *
+from glitter.framebuffers import *
+from glitter.misc import *
+from glitter.shaders import *
+from glitter.textures import *
+from glitter.utils import *
 
