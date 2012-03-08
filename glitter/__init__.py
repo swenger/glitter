@@ -80,7 +80,7 @@ When extending the library:
 
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Maybe use C{abc} module for abstract classes.
-@todo: Make C{rawgl} replaceable.
+@todo: Make C{rawgl} replaceable, but include it in the package.
 @todo: Transparent CUDA and OpenCL interoperability.
 
 @author: Stephan Wenger
