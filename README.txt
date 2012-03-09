@@ -29,5 +29,5 @@ Design principles:
 Build instructions:
   - installing: sudo python setup.py install
   - docs: epydoc --html -v -o docs glitter examples tests
-  - tests: nosetests tests
+  - tests: nosetests tests or python setup.py test
 

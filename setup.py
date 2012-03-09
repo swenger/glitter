@@ -1,15 +1,17 @@
 from setuptools import setup, find_packages
 
-setup( # TODO build docs and rawgl automatically, add test target
+setup(
     name = "glitter",
     version = "0.1.0",
     author = "Stephan Wenger",
     author_email = "wenger@cg.cs.tu-bs.de",
     description = "Intuitive OpenGL wrappers",
+    install_requires = ["rawgl"],
+    setup_requires=["nose>=1.0"],
     license = "MIT",
     keywords = "opengl,graphics",
-    download_url = "", # TODO
-    url = "", # TODO
+    # TODO download_url = "",
+    # TODO url = "",
     long_description = """Intuitive OpenGL wrappers.
 
     Design principles:
@@ -52,5 +54,6 @@ setup( # TODO build docs and rawgl automatically, add test target
         "Topic :: Multimedia :: Graphics :: 3D Rendering",
         "Topic :: Software Development :: Libraries",
         ],
+    test_suite = 'nose.collector',
 )
 

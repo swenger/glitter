@@ -29,7 +29,7 @@ Design principles:
 Build instructions:
   - installing: C{sudo python setup.py install}
   - docs: C{epydoc --html -v -o docs glitter examples tests}
-  - tests: C{nosetests tests}
+  - tests: C{nosetests tests} or C{python setup.py test}
 
 When extending the library:
   - Make sure your class uses methods and properties of its L{Context} where
