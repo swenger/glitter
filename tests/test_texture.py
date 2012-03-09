@@ -32,7 +32,7 @@ def check_property(texture, name):
 
 def test_property_generator():
     texture = Texture3D(numpy.random.random((1, 1, 1, 4)).astype(numpy.float32))
-    properties = [x for x in dir(texture) if not x.startswith("_") and type(getattr(Texture, x)) == property]
+    properties = [x for x in dir(texture) if x != "sampler" and not x.startswith("_") and type(getattr(Texture, x)) == property]
 
     for p in properties:
         if p in ("data", "shape", "dtype"):

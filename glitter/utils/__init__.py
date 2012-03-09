@@ -4,6 +4,8 @@
 @date: 2012-02-29
 """
 
+from contextlib import nested
+
 from glitter.utils.constants import *
 from glitter.utils.dtypes import *
 from glitter.utils.enum import *

@@ -77,6 +77,7 @@ When extending the library:
 @todo: Use a nicer stylesheet than C{epydoc.css} (maybe something more similar to Sphinx?).
 @todo: Keep this file, C{README.txt} and C{long_description} in C{setup.py} in sync.
 
+@todo: Use context property instead of C{_context} where appropriate.
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Maybe use C{abc} module for abstract classes.
 @todo: Make C{rawgl} replaceable, but include it in the package.

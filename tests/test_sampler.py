@@ -13,7 +13,7 @@ def check_property(sampler, name):
 
 def test_property_generator():
     sampler = Sampler(0)
-    properties = [x for x in dir(sampler) if not x.startswith("_") and type(getattr(Sampler, x)) == property]
+    properties = [x for x in dir(sampler) if x != "context" and not x.startswith("_") and type(getattr(Sampler, x)) == property]
 
     for p in properties:
         yield check_property, sampler, p

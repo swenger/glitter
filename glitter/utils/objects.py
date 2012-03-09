@@ -37,6 +37,10 @@ class GLObject(object):
 
         self._context = context or _get_context()
 
+    @property
+    def context(self):
+        return self._context
+
 class ManagedObject(GLObject):
     """Base class for objects that can be created and deleted in OpenGL.
 

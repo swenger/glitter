@@ -13,10 +13,6 @@ class Shader(ManagedObject):
     _delete_id = _gl.glDeleteShader
     _db = "shaders"
 
-    def release_compiler(self):
-        with self._context:
-            _gl.glReleaseShaderCompiler()
-
     def __init__(self, source=None, compile=None):
         if any(x is NotImplemented for x in (self._type,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)

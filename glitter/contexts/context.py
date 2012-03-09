@@ -372,6 +372,10 @@ class Context(InstanceDescriptorMixin, StateMixin):
         with self:
             _gl.glFlush()
 
+    def release_shader_compiler(self):
+        with self:
+            _gl.glReleaseShaderCompiler()
+
     #}
 
 __all__ = ["Context"]
