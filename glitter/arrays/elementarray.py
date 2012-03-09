@@ -5,8 +5,8 @@
 """
 
 import numpy as _np
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import buffer_dimensions_to_primitive, Datatype, coerce_array
 from glitter.arrays.basebuffer import BaseBuffer
 

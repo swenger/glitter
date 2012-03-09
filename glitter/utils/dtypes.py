@@ -5,7 +5,8 @@
 """
 
 import numpy as _np
-from rawgl import gl as _gl
+
+import glitter.raw as _gl
 
 class Datatype(object):
     _nptype_db = {}

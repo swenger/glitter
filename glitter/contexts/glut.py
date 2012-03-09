@@ -10,36 +10,36 @@
 """
 
 import random as _random
-from rawgl import glut as _glut
 
+import glitter.raw as _gl
 from glitter.utils import Enum
 from glitter.contexts.context import Context
 from glitter.contexts.contextmanager import ContextManager
 
 _cursors = Enum(
-    right_arrow=_glut.GLUT_CURSOR_RIGHT_ARROW,
-    left_arrow=_glut.GLUT_CURSOR_LEFT_ARROW,
-    info=_glut.GLUT_CURSOR_INFO,
-    destroy=_glut.GLUT_CURSOR_DESTROY,
-    help=_glut.GLUT_CURSOR_HELP,
-    cycle=_glut.GLUT_CURSOR_CYCLE,
-    spray=_glut.GLUT_CURSOR_SPRAY,
-    wait=_glut.GLUT_CURSOR_WAIT,
-    text=_glut.GLUT_CURSOR_TEXT,
-    crosshair=_glut.GLUT_CURSOR_CROSSHAIR,
-    up_down=_glut.GLUT_CURSOR_UP_DOWN,
-    left_right=_glut.GLUT_CURSOR_LEFT_RIGHT,
-    top_side=_glut.GLUT_CURSOR_TOP_SIDE,
-    bottom_side=_glut.GLUT_CURSOR_BOTTOM_SIDE,
-    left_side=_glut.GLUT_CURSOR_LEFT_SIDE,
-    right_side=_glut.GLUT_CURSOR_RIGHT_SIDE,
-    top_left_corner=_glut.GLUT_CURSOR_TOP_LEFT_CORNER,
-    top_right_corner=_glut.GLUT_CURSOR_TOP_RIGHT_CORNER,
-    bottom_right_corner=_glut.GLUT_CURSOR_BOTTOM_RIGHT_CORNER,
-    bottom_left_corner=_glut.GLUT_CURSOR_BOTTOM_LEFT_CORNER,
-    full_crosshair=_glut.GLUT_CURSOR_FULL_CROSSHAIR,
-    none=_glut.GLUT_CURSOR_NONE,
-    inherit=_glut.GLUT_CURSOR_INHERIT,
+    right_arrow=_gl.GLUT_CURSOR_RIGHT_ARROW,
+    left_arrow=_gl.GLUT_CURSOR_LEFT_ARROW,
+    info=_gl.GLUT_CURSOR_INFO,
+    destroy=_gl.GLUT_CURSOR_DESTROY,
+    help=_gl.GLUT_CURSOR_HELP,
+    cycle=_gl.GLUT_CURSOR_CYCLE,
+    spray=_gl.GLUT_CURSOR_SPRAY,
+    wait=_gl.GLUT_CURSOR_WAIT,
+    text=_gl.GLUT_CURSOR_TEXT,
+    crosshair=_gl.GLUT_CURSOR_CROSSHAIR,
+    up_down=_gl.GLUT_CURSOR_UP_DOWN,
+    left_right=_gl.GLUT_CURSOR_LEFT_RIGHT,
+    top_side=_gl.GLUT_CURSOR_TOP_SIDE,
+    bottom_side=_gl.GLUT_CURSOR_BOTTOM_SIDE,
+    left_side=_gl.GLUT_CURSOR_LEFT_SIDE,
+    right_side=_gl.GLUT_CURSOR_RIGHT_SIDE,
+    top_left_corner=_gl.GLUT_CURSOR_TOP_LEFT_CORNER,
+    top_right_corner=_gl.GLUT_CURSOR_TOP_RIGHT_CORNER,
+    bottom_right_corner=_gl.GLUT_CURSOR_BOTTOM_RIGHT_CORNER,
+    bottom_left_corner=_gl.GLUT_CURSOR_BOTTOM_LEFT_CORNER,
+    full_crosshair=_gl.GLUT_CURSOR_FULL_CROSSHAIR,
+    none=_gl.GLUT_CURSOR_NONE,
+    inherit=_gl.GLUT_CURSOR_INHERIT,
 )
 
 def _func_property(glut_func):
@@ -68,11 +68,11 @@ def initialize(argv=None):
     if argv is None:
         import sys
         argv = sys.argv
-    _argc = _glut.c_int(len(argv))
-    _argv = (_glut.c_char_p * _argc.value)()
+    _argc = _gl.c_int(len(argv))
+    _argv = (_gl.c_char_p * _argc.value)()
     for i, a in enumerate(argv):
         _argv[i] = a
-    _glut.glutInit(_glut.pointer(_argc), _argv)
+    _gl.glutInit(_gl.pointer(_argc), _argv)
     argv[:] = [_argv[i] for i in range(_argc.value)]
 
 def main_loop():
@@ -80,40 +80,40 @@ def main_loop():
     
     @todo: Avoid destroying a window in C{__del__} that has already been destroyed by closing it; can C{glutCloseFunc} help?
     """
-    _glut.glutMainLoop()
+    _gl.glutMainLoop()
     initialize()
 
 def main_loop_event():
     """Allow GLUT to process events."""
-    _glut.glutMainLoopEvent()
+    _gl.glutMainLoopEvent()
 
 def leave_main_loop():
     """Leave the GLUT main loop."""
-    _glut.glutLeaveMainLoop()
+    _gl.glutLeaveMainLoop()
 
 def get_screen_shape():
     """Screen height and width in pixels."""
-    return _glut.glutGet(_glut.GLUT_SCREEN_HEIGHT, _glut.GLUT_SCREEN_WIDTH)
+    return _gl.glutGet(_gl.GLUT_SCREEN_HEIGHT, _gl.GLUT_SCREEN_WIDTH)
 
 def get_screen_shape_mm():
     """Screen height and width in millimeters."""
-    return _glut.glutGet(_glut.GLUT_SCREEN_HEIGHT_MM, _glut.GLUT_SCREEN_WIDTH_MM)
+    return _gl.glutGet(_gl.GLUT_SCREEN_HEIGHT_MM, _gl.GLUT_SCREEN_WIDTH_MM)
 
 def get_elapsed_time():
     """Time in seconds since GLUT was initialized."""
-    return _glut.glutGet(_glut.GLUT_ELAPSED_TIME) / 1000.0
+    return _gl.glutGet(_gl.GLUT_ELAPSED_TIME) / 1000.0
 
 def get_shift_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_SHIFT)
+    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_SHIFT)
 
 def get_ctrl_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_CTRL)
+    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_CTRL)
 
 def get_alt_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _glut.glutGetModifiers(_glut.GLUT_ACTIVE_ALT)
+    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_ALT)
 
 class GlutWindow(Context):
     cursors = _cursors
@@ -151,47 +151,47 @@ class GlutWindow(Context):
         self._timer_funcs = {}
         def timer_func(value):
             self._timer_funcs.pop(value)()
-        self._timer_func = _glut.glutTimerFunc.argtypes[1](timer_func)
+        self._timer_func = _gl.glutTimerFunc.argtypes[1](timer_func)
 
         self._name = self._window_title = self._icon_title = name
 
         if hasattr(version, "__iter__"):
-            _glut.glutInitContextVersion(*version)
+            _gl.glutInitContextVersion(*version)
         else:
-            _glut.glutInitContextVersion(version, 0)
+            _gl.glutInitContextVersion(version, 0)
 
-        _glut.glutInitContextProfile(_glut.GLUT_COMPATIBILITY_PROFILE if compatibility_profile else _glut.GLUT_CORE_PROFILE)
+        _gl.glutInitContextProfile(_gl.GLUT_COMPATIBILITY_PROFILE if compatibility_profile else _gl.GLUT_CORE_PROFILE)
 
-        _glut.glutInitContextFlags(
-                (_glut.GLUT_DEBUG if debug else 0) |
-                (_glut.GLUT_FORWARD_COMPATIBLE if forward_compatible else 0)
+        _gl.glutInitContextFlags(
+                (_gl.GLUT_DEBUG if debug else 0) |
+                (_gl.GLUT_FORWARD_COMPATIBLE if forward_compatible else 0)
                 )
 
         height, width = shape
-        _glut.glutInitWindowSize(width, height)
+        _gl.glutInitWindowSize(width, height)
 
         y, x = position
-        _glut.glutInitWindowPosition(x, y)
+        _gl.glutInitWindowPosition(x, y)
 
-        _glut.glutInitDisplayMode(
-                (_glut.GLUT_INDEX if index else _glut.GLUT_RGBA) |
-                (_glut.GLUT_DOUBLE if double else _glut.GLUT_SINGLE) |
-                (_glut.GLUT_ACCUM if accum else 0) |
-                (_glut.GLUT_ALPHA if alpha else 0) |
-                (_glut.GLUT_DEPTH if depth else 0) |
-                (_glut.GLUT_STENCIL if stencil else 0) |
-                (_glut.GLUT_MULTISAMPLE if multisample else 0) |
-                (_glut.GLUT_STEREO if stereo else 0) |
-                (_glut.GLUT_LUMINANCE if luminance else 0)
+        _gl.glutInitDisplayMode(
+                (_gl.GLUT_INDEX if index else _gl.GLUT_RGBA) |
+                (_gl.GLUT_DOUBLE if double else _gl.GLUT_SINGLE) |
+                (_gl.GLUT_ACCUM if accum else 0) |
+                (_gl.GLUT_ALPHA if alpha else 0) |
+                (_gl.GLUT_DEPTH if depth else 0) |
+                (_gl.GLUT_STENCIL if stencil else 0) |
+                (_gl.GLUT_MULTISAMPLE if multisample else 0) |
+                (_gl.GLUT_STEREO if stereo else 0) |
+                (_gl.GLUT_LUMINANCE if luminance else 0)
                 )
 
-        _glut.glutSetOption(_glut.GLUT_ACTION_ON_WINDOW_CLOSE, _glut.GLUT_ACTION_CONTINUE_EXECUTION)
+        _gl.glutSetOption(_gl.GLUT_ACTION_ON_WINDOW_CLOSE, _gl.GLUT_ACTION_CONTINUE_EXECUTION)
 
-        if not _glut.glutGet(_glut.GLUT_DISPLAY_MODE_POSSIBLE):
+        if not _gl.glutGet(_gl.GLUT_DISPLAY_MODE_POSSIBLE):
             raise RuntimeError("display mode not possible")
 
         old_binding = ContextManager.current_context
-        self._id = _glut.glutCreateWindow(self._name) # creating a window changes the current context without the context manager's knowledge
+        self._id = _gl.glutCreateWindow(self._name) # creating a window changes the current context without the context manager's knowledge
         if old_binding:
             old_binding._bind() # rebind the previous context circumventing any caching performed by the context
         else:
@@ -205,90 +205,90 @@ class GlutWindow(Context):
             self.show()
 
     def destroy(self):
-        _glut.glutDestroyWindow(self._id)
+        _gl.glutDestroyWindow(self._id)
         self._id = 0
 
     def _bind(self):
         if self._id == 0:
             raise RuntimeError("window has already been destroyed")
-        _glut.glutSetWindow(self._id)
+        _gl.glutSetWindow(self._id)
 
     def swap_buffers(self):
         with self:
-            _glut.glutSwapBuffers()
+            _gl.glutSwapBuffers()
 
     def post_redisplay(self):
         with self:
-            _glut.glutPostRedisplay()
+            _gl.glutPostRedisplay()
 
     def full_screen(self):
         with self:
-            _glut.glutFullScreen()
+            _gl.glutFullScreen()
 
     def leave_full_screen(self):
         with self:
-            _glut.glutLeaveFullScreen()
+            _gl.glutLeaveFullScreen()
 
     def toggle_full_screen(self):
         with self:
-            _glut.glutFullScreenToggle()
+            _gl.glutFullScreenToggle()
 
     def push(self):
         with self:
-            _glut.glutPushWindow()
+            _gl.glutPushWindow()
 
     def pop(self):
         with self:
-            _glut.glutPopWindow()
+            _gl.glutPopWindow()
 
     def show(self):
         with self:
-            _glut.glutShowWindow()
+            _gl.glutShowWindow()
 
     def hide(self):
         with self:
-            _glut.glutHideWindow()
+            _gl.glutHideWindow()
 
     def iconify(self):
         with self:
-            _glut.glutIconifyWindow()
+            _gl.glutIconifyWindow()
 
     @property
     def cursor(self):
         with self:
-            return GlutWindow.cursors[_glut.glutGet(_glut.GLUT_WINDOW_CURSOR)]
+            return GlutWindow.cursors[_gl.glutGet(_gl.GLUT_WINDOW_CURSOR)]
 
     @cursor.setter
     def cursor(self, cursor):
         with self:
-            _glut.glutSetCursor(cursor._value)
+            _gl.glutSetCursor(cursor._value)
 
     @property
     def num_children(self):
         with self:
-            return _glut.glutGet(_glut.GLUT_WINDOW_NUM_CHILDREN)
+            return _gl.glutGet(_gl.GLUT_WINDOW_NUM_CHILDREN)
 
     @property
     def shape(self):
         with self:
-            return _glut.glutGet(_glut.GLUT_WINDOW_HEIGHT), _glut.glutGet(_glut.GLUT_WINDOW_WIDTH)
+            return _gl.glutGet(_gl.GLUT_WINDOW_HEIGHT), _gl.glutGet(_gl.GLUT_WINDOW_WIDTH)
 
     @shape.setter
     def shape(self, shape):
         height, width = shape
         with self:
-            _glut.glutReshapeWindow(width, height)
+            _gl.glutReshapeWindow(width, height)
 
     @property
     def position(self):
         with self:
-            return _glut.glutGet(_glut.GLUT_WINDOW_Y), _glut.glutGet(_glut.GLUT_WINDOW_X)
+            return _gl.glutGet(_gl.GLUT_WINDOW_Y), _gl.glutGet(_gl.GLUT_WINDOW_X)
 
     @position.setter
     def position(self, position):
         y, x = position
         with self:
-            _glut.glutPositionWindow(x, y)
+            _gl.glutPositionWindow(x, y)
 
     @property
     def name(self):
@@ -302,7 +302,7 @@ class GlutWindow(Context):
     def window_title(self, window_title):
         self._window_title = window_title
         with self:
-            _glut.glutSetWindowTitle(window_title)
+            _gl.glutSetWindowTitle(window_title)
 
     @property
     def icon_title(self):
@@ -312,35 +312,35 @@ class GlutWindow(Context):
     def icon_title(self, icon_title):
         self._icon_title = icon_title
         with self:
-            _glut.glutSetIconTitle(icon_title)
+            _gl.glutSetIconTitle(icon_title)
 
     def add_timer(self, msecs, func):
         timer_id = _random.randint(0, 1 << 30)
         while timer_id in self._timer_funcs:
             timer_id = _random.randint(0, 1 << 30)
         self._timer_funcs[timer_id] = func
-        _glut.glutTimerFunc(msecs, self._timer_func, timer_id)
+        _gl.glutTimerFunc(msecs, self._timer_func, timer_id)
 
-    close_callback = _func_property(_glut.glutCloseFunc)
-    display_callback = _func_property(_glut.glutDisplayFunc)
-    entry_callback = _func_property(_glut.glutEntryFunc)
-    idle_callback = _func_property(_glut.glutIdleFunc) # within the callback, current window is not necessarily this window
-    joystick_callback = _func_property(_glut.glutJoystickFunc)
-    keyboard_callback = _func_property(_glut.glutKeyboardFunc)
-    keyboard_up_callback = _func_property(_glut.glutKeyboardUpFunc)
-    menu_destroy_callback = _func_property(_glut.glutMenuDestroyFunc)
-    menu_state_callback = _func_property(_glut.glutMenuStateFunc)
-    menu_status_callback = _func_property(_glut.glutMenuStatusFunc)
-    motion_callback = _func_property(_glut.glutMotionFunc)
-    mouse_callback = _func_property(_glut.glutMouseFunc)
-    mouse_wheel_callback = _func_property(_glut.glutMouseWheelFunc)
-    passive_motion_callback = _func_property(_glut.glutPassiveMotionFunc)
-    reshape_callback = _func_property(_glut.glutReshapeFunc)
-    special_callback = _func_property(_glut.glutSpecialFunc)
-    special_up_callback = _func_property(_glut.glutSpecialUpFunc)
-    visibility_callback = _func_property(_glut.glutVisibilityFunc)
-    window_status_callback = _func_property(_glut.glutWindowStatusFunc)
-    wm_close_callback = _func_property(_glut.glutWMCloseFunc)
+    close_callback = _func_property(_gl.glutCloseFunc)
+    display_callback = _func_property(_gl.glutDisplayFunc)
+    entry_callback = _func_property(_gl.glutEntryFunc)
+    idle_callback = _func_property(_gl.glutIdleFunc) # within the callback, current window is not necessarily this window
+    joystick_callback = _func_property(_gl.glutJoystickFunc)
+    keyboard_callback = _func_property(_gl.glutKeyboardFunc)
+    keyboard_up_callback = _func_property(_gl.glutKeyboardUpFunc)
+    menu_destroy_callback = _func_property(_gl.glutMenuDestroyFunc)
+    menu_state_callback = _func_property(_gl.glutMenuStateFunc)
+    menu_status_callback = _func_property(_gl.glutMenuStatusFunc)
+    motion_callback = _func_property(_gl.glutMotionFunc)
+    mouse_callback = _func_property(_gl.glutMouseFunc)
+    mouse_wheel_callback = _func_property(_gl.glutMouseWheelFunc)
+    passive_motion_callback = _func_property(_gl.glutPassiveMotionFunc)
+    reshape_callback = _func_property(_gl.glutReshapeFunc)
+    special_callback = _func_property(_gl.glutSpecialFunc)
+    special_up_callback = _func_property(_gl.glutSpecialUpFunc)
+    visibility_callback = _func_property(_gl.glutVisibilityFunc)
+    window_status_callback = _func_property(_gl.glutWindowStatusFunc)
+    wm_close_callback = _func_property(_gl.glutWMCloseFunc)
 
 initialize()
 

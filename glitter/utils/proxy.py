@@ -4,10 +4,11 @@
 @date: 2012-02-29
 """
 
-from inspect import getmembers
+from inspect import getmembers as _getmembers
+import types as _types
 import numpy as _np
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils.dtypes import coerce_array
 from glitter.utils.objects import with_obj
 
@@ -124,14 +125,15 @@ class ItemProxy(object):
 def add_proxies(parent, obj):
     """Add proxies for methods and properties of C{obj} to C{parent}."""
 
-    # add methods (all callable members, e.g. bound methods)
-    for key, value in getmembers(obj, callable):
+    # add functions and methods
+    for key, value in _getmembers(obj):
         if key.startswith("_"):
             continue
-        setattr(parent, key, with_obj(parent, value))
+        if isinstance(value, (_types.FunctionType, _types.MethodType)):
+            setattr(parent, key, with_obj(parent, value))
 
     # add properties and other descriptors (can be accessed via the class only)
-    for key, value in getmembers(type(obj)):
+    for key, value in _getmembers(type(obj)):
         if key.startswith("_"):
             continue
         if hasattr(value, "__get__") and not callable(value): # exclude member functions

@@ -5,8 +5,8 @@
 """
 
 import itertools as _itertools
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import BindableObject
 from glitter.contexts.proxies import BindingProxy
 

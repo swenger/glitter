@@ -6,11 +6,9 @@
 @date: 2012-02-29
 """
 
-# Import math utilities from numpy.
 from numpy import array, sin, cos, pi
 from numpy.random import random
 
-# Import glitter; this imports rawgl.
 from glitter import ShaderProgram, VertexArray, State
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 

@@ -1,26 +1,14 @@
 #!/usr/bin/env python
 
-"""Basic example using L{VertexArray}s, L{ShaderProgram}s, L{Pipeline}s, L{Texture}s and logging.
+"""Basic example using L{VertexArray}s, L{ShaderProgram}s, L{Pipeline}s, and L{Texture}s.
 
 @author: Stephan Wenger
 @date: 2012-02-29
 """
 
-# Setup logging before importing rawgl.
-import logging
-logger = logging.getLogger("rawgl")
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s: %(message)s")
-ch.setFormatter(formatter)
-logger.addHandler(ch)
-
-# Import math utilities from numpy.
 from numpy import array, sin, cos, pi
 from numpy.random import random
 
-# Import glitter; this imports rawgl.
 from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
@@ -114,13 +102,9 @@ def display():
     """Display function.
 
     Renders the geometry into a framebuffer, then copies the texture to the screen.
-
-    During the first call, all OpenGL commands will be logged to the console.
     """
 
     try:
-        logger.info("enter display()")
-
         # Render the geometry to a texture.
         render_pipeline.clear()
         render_pipeline.draw()
@@ -130,11 +114,6 @@ def display():
         with copy_pipeline:
             vao.draw()
         window.swap_buffers()
-
-        logger.info("leave display()")
-
-        # Disable logging for all subsequent calls.
-        logger.disabled = True
     except:
         import traceback
         traceback.print_exc()
@@ -166,9 +145,6 @@ def timer():
     window.post_redisplay()
 
 if __name__ == "__main__":
-    # Disable logging during setup.
-    logger.disabled = True
-
     # Create a window; this creates an OpenGL context.
     window = GlutWindow(double=True, multisample=True) #: The main window.
     window.display_callback = display
@@ -190,9 +166,6 @@ if __name__ == "__main__":
 
     # Call the timer once; it will trigger the subsequent calls itself.
     timer()
-
-    # Enable logging of OpenGL commands.
-    logger.disabled = False
 
     # Enter the GLUT main loop.
     main_loop()

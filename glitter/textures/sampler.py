@@ -9,8 +9,7 @@ handled in a similar way.
 @date: 2012-02-29
 """
 
-from rawgl import gl as _gl
-
+import glitter.raw as _gl
 from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_wrapmodes, ManagedObject, BindableObject
 
 class Sampler(ManagedObject, BindableObject):

@@ -5,8 +5,8 @@
 """
 
 from weakref import WeakKeyDictionary
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import hints, bool8, int32, int64, float32, Proxy, EnumConstant
 
 class BooleanProxy(Proxy):

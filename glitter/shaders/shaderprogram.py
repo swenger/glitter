@@ -14,8 +14,8 @@ C{glUniformSubroutine}.
 
 from collections import OrderedDict as _odict
 import re as _re
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import transform_feedback_buffer_modes, int32, ShaderDatatype, ManagedObject, BindableObject, ShaderLinkError, ShaderValidateError, ListProxy, InstanceDescriptorMixin, Proxy
 from glitter.shaders.shader import Shader, VertexShader, TesselationControlShader, TesselationEvaluationShader, GeometryShader, FragmentShader
 from glitter.shaders.attribute import Attribute, AttributeStruct, AttributeStructArray

@@ -13,8 +13,8 @@ different units and should probably be handled in a similar way.
 """
 
 import numpy as _np
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import primitive_types, buffer_usages, Datatype, coerce_array, ManagedObject, BindableObject
 
 class BaseBuffer(ManagedObject, BindableObject):

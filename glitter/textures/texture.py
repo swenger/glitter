@@ -10,8 +10,8 @@
 """
 
 import numpy as _np
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_swizzles, texture_wrapmodes, dtype_to_gl_iformat, dtype_to_gl_format, gl_iformat_to_dtype, gl_iformat_to_dtype, dtype_to_gl_format, gl_iformat_to_gl_type, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
 
 class Texture(ManagedObject, BindReleaseObject):

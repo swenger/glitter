@@ -10,8 +10,7 @@ C{glDepthRangeArray} and C{glDepthRangeIndexed}).
 @date: 2012-02-29
 """
 
-from rawgl import gl as _gl
-
+import glitter.raw as _gl
 from glitter.utils import ManagedObject, BindableObject, framebuffer_status
 
 class Framebuffer(ManagedObject, BindableObject):

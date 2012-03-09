@@ -28,9 +28,9 @@ C{GL_STENCIL_PASS_DEPTH_PASS}, etc.
 @date: 2012-02-29
 """
 
-from rawgl import gl as _gl
 from weakref import WeakValueDictionary
 
+import glitter.raw as _gl
 from glitter.utils import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers, cull_face_modes, front_face_modes, polygon_modes, InstanceDescriptorMixin, State, StateMixin
 from glitter.contexts.contextmanager import ContextManager
 from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy

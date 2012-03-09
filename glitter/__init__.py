@@ -36,10 +36,10 @@ When extending the library:
     possible instead of raw OpenGL calls; the context may cache some values or
     trigger callbacks, and calling OpenGL directly may break functionality in
     weird and unexpected ways. If you need to call raw GL functions, do so
-    through the rawgl wrapper. If your raw GL invocations are generic enough,
-    think about extending the L{Context} instead. Make sure to derive from
-    L{GLObject} and use C{with self._context:} where necessary if your class
-    does in any way interact directly with OpenGL. If you derive from
+    through the {glitter.raw} wrapper. If your raw GL invocations are generic
+    enough, think about extending the L{Context} instead. Make sure to derive
+    from L{GLObject} and use C{with self._context:} where necessary if your
+    class does in any way interact directly with OpenGL. If you derive from
     L{GLObject}, your constructor should take an optional C{context=None}
     parameter and pass it to L{GLObject.__init__}.
   - If your classes can be bound and unbound or change global state in some
@@ -79,8 +79,6 @@ When extending the library:
 
 @todo: Use context property instead of C{_context} where appropriate.
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
-@todo: Maybe use C{abc} module for abstract classes.
-@todo: Make C{rawgl} replaceable, but include it in the package.
 @todo: Transparent CUDA and OpenCL interoperability.
 
 @author: Stephan Wenger

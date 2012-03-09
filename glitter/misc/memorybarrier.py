@@ -4,7 +4,7 @@
 @date: 2012-02-29
 """
 
-from rawgl import gl as _gl
+import glitter.raw as _gl
 
 def memory_barrier(
     vertex_attrib_array=False, element_array=False, uniform=False,

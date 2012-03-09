@@ -10,7 +10,8 @@ End users should typically not need to use this module directly.
 
 from collections import OrderedDict as _odict
 import numpy as _np
-from rawgl import gl as _gl
+
+import glitter.raw as _gl
 
 class BaseUniform(object):
     pass

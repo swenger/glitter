@@ -5,8 +5,8 @@
 """
 
 import numpy as _np
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils.dtypes import Datatype, bool8, int32, uint32, float32, float64
 
 class ShaderDatatype(object):

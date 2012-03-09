@@ -11,8 +11,7 @@ C{glDrawTransformFeedbackStreamInstanced}.
 @date: 2012-02-29
 """
 
-from rawgl import gl as _gl
-
+import glitter.raw as _gl
 from glitter.utils import ManagedObject, BindableObject
 
 class TransformFeedback(ManagedObject, BindableObject):

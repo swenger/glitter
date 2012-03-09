@@ -7,7 +7,8 @@
 """
 
 from functools import wraps as _wraps
-from rawgl import gl as _gl
+
+import glitter.raw as _gl
 
 def _get_context():
     """Grab the current context from the L{context} module.

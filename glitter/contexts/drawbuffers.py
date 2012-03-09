@@ -6,8 +6,8 @@
 
 import itertools as _itertools
 import numpy as _np
-from rawgl import gl as _gl
 
+import glitter.raw as _gl
 from glitter.utils import draw_buffers, EnumConstant, bool8
 
 class DrawBufferList(object):
