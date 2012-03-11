@@ -118,7 +118,7 @@ def get_alt_state():
 class GlutWindow(Context):
     cursors = _cursors
 
-    def __init__(self, version=(4, 0), compatibility_profile=False,
+    def __init__(self, version=(3, 2), compatibility_profile=False,
             debug=False, forward_compatible=True, shape=(300, 300),
             position=(-1, -1), index=False, double=False, accum=False,
             alpha=False, depth=False, stencil=False, multisample=False,
