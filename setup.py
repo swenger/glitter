@@ -26,7 +26,7 @@ class generate_py_base(Command):
         commandline = ["xml2py.py", "-kamdefst", "-o", pythonname, xml] + ["-l%s" % x for x in libs] + ["-r%s" % x for x in patterns]
         log.debug(" ".join(commandline))
         from ctypeslib import xml2py
-        xml2py.main(commandline) # TODO generate portable code, e.g. WinDLL instead of CDLL on Windows
+        xml2py.main(commandline)
 
     def initialize_options(self):
         self.header = None
@@ -119,7 +119,7 @@ class generate_py(Command):
         self.set_undefined_options("build", ("force", "force"))
 
     def run(self):
-        for command in self.commands: # TODO only run commands that make sense for this platform
+        for command in self.commands:
             self.run_command(command)
 
 class build_py(_build_py):
