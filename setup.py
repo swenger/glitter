@@ -149,9 +149,8 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering",
         "Topic :: Software Development :: Libraries",
         ],
-    # TODO download_url = "",
-    # TODO url = "",
-
+    download_url = "http://pypi.python.org/pypi/glitter",
+    url = "http://packages.python.org/glitter",
     setup_requires=["ctypeslib", "nose"],
     packages = find_packages(),
     test_suite = "nose.collector",
