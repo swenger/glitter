@@ -74,7 +74,7 @@ Hacking glitter:
 @todo: Move examples and tests into glitter tree to simplify packaging?
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as examples and tests.
-@todo: Keep this file, C{README.txt} and C{long_description} in C{setup.py} in sync.
+@todo: Keep this file and C{README.txt} in sync.
 @todo: Write tutorials and examples using literate programming (Sphinx?)
 
 @todo: Use context property instead of C{_context} where appropriate.
