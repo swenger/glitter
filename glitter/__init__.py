@@ -1,36 +1,5 @@
 """Intuitive OpenGL wrappers.
 
-Design principles:
-  - Choose inituitive use over performance (no premature optimization; make it
-    run, then make it fast). Users should not (need to) use the raw GL/GLUT
-    wrappers at any time.
-  - All GL state changes that are independent of objects should go through a
-    Context object. Other changes go through the corresponding objects:
-      - Vertex attribute pointer bindings are performed by vertex array objects
-        only.
-      - Settings for draw buffers other than the screen are performed by
-        framebuffer objects only.
-      - Texture bindings are performed by shader programs only.
-      - If possible, changes in the GL should be reflected in the wrapper, but
-        unchecked caching is okay to keep references to bound objects.
-  - Array data is represented in numpy, but objects should convert as
-    appropriate.
-      - No loss of precision should occur when copying data to and from the
-        GPU. Exceptions are made where iterables are accepted; numpy
-        converts these to 64 bit datatypes, which are silently converted to 32
-        bit in some places.
-  - Binding and unbinding of objects should be possible automatically (via with
-    statements) as well as manually (through properties of the context).
-  - The library has a focus on GPGPU computing, but typical use for rendering
-    should be as easy.
-  - Platform independence should be sought for, although Linux/GLX is the
-    primary target.
-
-Build instructions:
-  - installing: C{sudo python setup.py install}
-  - docs: C{epydoc --html -v -o docs glitter examples tests}
-  - tests: C{nosetests tests}
-
 Hacking glitter:
   - Make sure your class uses methods and properties of its L{Context} where
     possible instead of raw OpenGL calls; the context may cache some values or
@@ -73,9 +42,7 @@ Hacking glitter:
 
 @todo: Move examples and tests into glitter tree to simplify packaging?
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
-@todo: Implement NeHe tutorials as examples and tests.
-@todo: Keep this file and C{README.txt} in sync.
-@todo: Write tutorials and examples using literate programming (Sphinx?)
+@todo: Implement NeHe tutorials as tutorials, examples and tests.
 
 @todo: Use context property instead of C{_context} where appropriate.
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
