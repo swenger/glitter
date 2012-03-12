@@ -40,6 +40,7 @@ Hacking glitter:
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
+@todo: Include a usage example in the README.
 @todo: Move examples and tests into glitter tree to simplify packaging?
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as tutorials, examples and tests.
