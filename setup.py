@@ -1,71 +1,130 @@
-from collections import namedtuple
 import os
+import re
 
-from setuptools.command.build_py import build_py as _build_py
+from setuptools import Command
 from setuptools import setup, find_packages
+from setuptools.command.build_py import build_py as _build_py
 from distutils import log
 
-LibConfig = namedtuple("LibConfig", ["header", "defines", "include_dirs", "libs", "patterns"])
-
-generated_modules = { # TODO this belongs into the setup() call and should be changeable through the command line interface
-    "glitter.raw.gl": LibConfig("gl3.h", {"GL3_PROTOTYPES": 1}, [os.path.dirname(os.path.join(os.getcwd(), __file__)), "/usr/include/GL"], ["GL"], ['gl[A-Z].*', 'GL_[A-Z].*', 'GL[a-z].*']),
-    "glitter.raw.glu": LibConfig("glu.h", {}, ["/usr/include/GL"], ["GLU"], ['glu[A-Z].*', 'GLU_[A-Z].*', 'GLU[a-z].*']),
-    "glitter.raw.glut": LibConfig("freeglut.h", {}, ["/usr/include/GL"], ["glut"], ['glut[A-Z].*', 'GLUT_[A-Z].*', 'GLUT[a-z].*']),
-    "glitter.raw.glx": LibConfig("glx.h", {}, ["/usr/include/GL"], ["GL", "X11"], ['glX[A-Z].*', 'GLX_[A-Z].*', 'GLX[a-z].*']),
-}
-
-class build_py(_build_py):
-    def generate_xml(self, header, xml, defines={}, include_dirs=[]):
-        commandline = ["h2xml.py", "-q", "-c", "-o", xml, header] + ["-D%s=%s" % x for x in defines.items()] + ["-I%s" % x for x in include_dirs]
-        log.info(" ".join(commandline))
+class generate_py_base(Command):
+    user_options = [
+        ("header=", None, "header file"),
+        ("defines=", None, "C preprocessor variables to define"),
+        ("include-dirs=", None, "C include directories (separated by %s)" % os.pathsep),
+        ("libs=", None, "names of libraries to link against (separated by %s)" % os.pathsep),
+        ("patterns=", None, "regular expressions for symbols to include (separated by whitespace)"),
+        ("force", None, "rebuild even if target files exist"),
+    ]
+    
+    def generate_xml(self, header, xml, defines=[], include_dirs=[]):
+        commandline = ["h2xml.py", "-q", "-c", "-o", xml, header] + ["-D%s" % x for x in defines] + ["-I%s" % x for x in include_dirs]
+        log.debug(" ".join(commandline))
         from ctypeslib import h2xml
         h2xml.compile_to_xml(commandline)
 
     def generate_python(self, xml, pythonname, libs=[], patterns=[]):
         commandline = ["xml2py.py", "-kamdefst", "-o", pythonname, xml] + ["-l%s" % x for x in libs] + ["-r%s" % x for x in patterns]
-        log.info(" ".join(commandline))
+        log.debug(" ".join(commandline))
         from ctypeslib import xml2py
-        xml2py.main(commandline)
+        xml2py.main(commandline) # TODO generate portable code, e.g. WinDLL instead of CDLL on Windows
 
-    def find_generated_modules(self):
-        if generated_modules is None:
-            return []
-        packages = {}
-        modules = []
-        for module, config in generated_modules.items():
-            package, module_base = module.rsplit(".", 1)
-            try:
-                package_dir = packages[package]
-            except KeyError:
-                package_dir = packages[package] = self.get_package_dir(package)
-                self.check_package(package, package_dir)
-            modules.append((package, module_base, os.path.join(package_dir, module_base + ".py"), config))
-        return modules
+    def initialize_options(self):
+        self.header = None
+        self.defines = []
+        self.include_dirs = []
+        self.libs = []
+        self.patterns = []
+        self.force = None
 
-    def build_generated_module(self, module, module_file, package, config):
-        if isinstance(package, str):
-            package = package.split('.')
-        elif not isinstance(package, (list, tuple)):
-            raise TypeError(
-                  "'package' must be a string (dot-separated), list, or tuple")
-        outfile = self.get_module_outfile(self.build_lib, package, module)
-        self.__updated_files.append(outfile)
-        self.mkpath(os.path.dirname(outfile))
-        
-        # build using config into outfile
-        if not os.path.isfile(outfile):
-            xmlname = outfile + os.path.extsep + "xml"
-            self.generate_xml(config.header, xmlname, config.defines, config.include_dirs)
-            self.generate_python(xmlname, outfile, config.libs, config.patterns)
-            os.remove(xmlname)
-
-    def build_generated_modules(self):
-        modules = self.find_generated_modules()
-        for (package, module, module_file, config) in modules:
-            self.build_generated_module(module, module_file, package, config)
+    def finalize_options(self):
+        self.set_undefined_options("generate_py", ("force", "force"))
+        if isinstance(self.defines, basestring):
+            self.defines = re.findall("[A-Za-z0-9_]+", self.defines)
+        if isinstance(self.include_dirs, basestring):
+            self.include_dirs = self.include_dirs.split(os.pathsep)
+        if isinstance(self.libs, basestring):
+            self.libs = self.libs.split(os.pathsep)
+        if isinstance(self.patterns, basestring):
+            self.patterns = self.patterns.split()
 
     def run(self):
-        self.build_generated_modules()
+        basename = os.path.join("glitter", "raw", self.name)
+        if self.distribution.package_dir is not None:
+            basename = os.path.join(self.distutils.package_dir, basename)
+        xmlname = basename + os.path.extsep + "xml"
+        pyname = basename + os.path.extsep + "py"
+        if self.force or not os.path.isfile(pyname):
+            self.generate_xml(self.header, xmlname, self.defines, self.include_dirs)
+            self.generate_python(xmlname, pyname, self.libs, self.patterns)
+            os.remove(xmlname)
+
+class generate_gl(generate_py_base):
+    description = "generate ctypes wrapper for OpenGL"
+    name = "gl"
+
+    def initialize_options(self):
+        generate_py_base.initialize_options(self)
+        self.header = os.path.join(os.path.dirname(os.path.join(os.getcwd(), __file__)), "gl3.h")
+        self.defines = ["GL3_PROTOTYPES"]
+        self.include_dirs = ["/usr/include/GL"]
+        self.libs = ["GL"]
+        self.patterns = ['gl[A-Z].*', 'GL_[A-Z].*', 'GL[a-z].*']
+
+class generate_glu(generate_py_base):
+    description = "generate ctypes wrapper for GLU"
+    name = "glu"
+
+    def initialize_options(self):
+        generate_py_base.initialize_options(self)
+        self.header = "glu.h"
+        self.include_dirs = ["/usr/include/GL"]
+        self.libs = ["GLU"]
+        self.patterns = ['glu[A-Z].*', 'GLU_[A-Z].*', 'GLU[a-z].*']
+        
+class generate_glut(generate_py_base):
+    description = "generate ctypes wrapper for GLUT"
+    name = "glut"
+
+    def initialize_options(self):
+        generate_py_base.initialize_options(self)
+        self.header = "freeglut.h"
+        self.include_dirs = ["/usr/include/GL"]
+        self.libs = ["glut"]
+        self.patterns = ['glut[A-Z].*', 'GLUT_[A-Z].*', 'GLUT[a-z].*']
+
+class generate_glx(generate_py_base):
+    description = "generate ctypes wrapper for GLX"
+    name = "glx"
+
+    def initialize_options(self):
+        generate_py_base.initialize_options(self)
+        self.header = "glx.h"
+        self.include_dirs = ["/usr/include/GL"]
+        self.libs = ["GL", "X11"]
+        self.patterns = ['glX[A-Z].*', 'GLX_[A-Z].*', 'GLX[a-z].*']
+
+class generate_py(Command):
+    description = "generate ctypes wrappers"
+    
+    user_options = [
+        ("force", None, "rebuild even if target files exist"),
+    ]
+    
+    commands = ["generate_gl", "generate_glu", "generate_glut", "generate_glx"]
+
+    def initialize_options(self):
+        self.force = None
+
+    def finalize_options(self):
+        self.set_undefined_options("build", ("force", "force"))
+
+    def run(self):
+        for command in self.commands: # TODO only run commands that make sense for this platform
+            self.run_command(command)
+
+class build_py(_build_py):
+    def run(self):
+        self.run_command("generate_py")
         _build_py.run(self)
 
 setup(
@@ -120,10 +179,16 @@ setup(
     # TODO download_url = "",
     # TODO url = "",
 
-    install_requires = ["rawgl"],
-    setup_requires=["ctypeslib"],
+    setup_requires=["ctypeslib", "nose"],
     packages = find_packages(),
-    cmdclass={"build_py": build_py},
-    # TODO test_suite = "nose.collector" (but run in build directory), add "nose" to setup_requires
+    test_suite = "nose.collector",
+    cmdclass= {
+        "generate_gl": generate_gl,
+        "generate_glu": generate_glu,
+        "generate_glut": generate_glut,
+        "generate_glx": generate_glx,
+        "generate_py": generate_py,
+        "build_py": build_py,
+    },
 )
 
