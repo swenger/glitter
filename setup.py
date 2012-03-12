@@ -1,4 +1,71 @@
+from collections import namedtuple
+import os
+
+from setuptools.command.build_py import build_py as _build_py
 from setuptools import setup, find_packages
+from distutils import log
+
+LibConfig = namedtuple("LibConfig", ["header", "defines", "include_dirs", "libs", "patterns"])
+
+generated_modules = { # TODO this belongs into the setup() call and should be changeable through the command line interface
+    "glitter.raw.gl": LibConfig("gl3.h", {"GL3_PROTOTYPES": 1}, [os.path.dirname(os.path.join(os.getcwd(), __file__)), "/usr/include/GL"], ["GL"], ['gl[A-Z].*', 'GL_[A-Z].*', 'GL[a-z].*']),
+    "glitter.raw.glu": LibConfig("glu.h", {}, ["/usr/include/GL"], ["GLU"], ['glu[A-Z].*', 'GLU_[A-Z].*', 'GLU[a-z].*']),
+    "glitter.raw.glut": LibConfig("freeglut.h", {}, ["/usr/include/GL"], ["glut"], ['glut[A-Z].*', 'GLUT_[A-Z].*', 'GLUT[a-z].*']),
+    "glitter.raw.glx": LibConfig("glx.h", {}, ["/usr/include/GL"], ["GL", "X11"], ['glX[A-Z].*', 'GLX_[A-Z].*', 'GLX[a-z].*']),
+}
+
+class build_py(_build_py):
+    def generate_xml(self, header, xml, defines={}, include_dirs=[]):
+        commandline = ["h2xml.py", "-q", "-c", "-o", xml, header] + ["-D%s=%s" % x for x in defines.items()] + ["-I%s" % x for x in include_dirs]
+        log.info(" ".join(commandline))
+        from ctypeslib import h2xml
+        h2xml.compile_to_xml(commandline)
+
+    def generate_python(self, xml, pythonname, libs=[], patterns=[]):
+        commandline = ["xml2py.py", "-kamdefst", "-o", pythonname, xml] + ["-l%s" % x for x in libs] + ["-r%s" % x for x in patterns]
+        log.info(" ".join(commandline))
+        from ctypeslib import xml2py
+        xml2py.main(commandline)
+
+    def find_generated_modules(self):
+        if generated_modules is None:
+            return []
+        packages = {}
+        modules = []
+        for module, config in generated_modules.items():
+            package, module_base = module.rsplit(".", 1)
+            try:
+                package_dir = packages[package]
+            except KeyError:
+                package_dir = packages[package] = self.get_package_dir(package)
+                self.check_package(package, package_dir)
+            modules.append((package, module_base, os.path.join(package_dir, module_base + ".py"), config))
+        return modules
+
+    def build_generated_module(self, module, module_file, package, config):
+        if isinstance(package, str):
+            package = package.split('.')
+        elif not isinstance(package, (list, tuple)):
+            raise TypeError(
+                  "'package' must be a string (dot-separated), list, or tuple")
+        outfile = self.get_module_outfile(self.build_lib, package, module)
+        self.__updated_files.append(outfile)
+        self.mkpath(os.path.dirname(outfile))
+        
+        # build using config into outfile
+        xmlname = outfile + os.path.extsep + "xml"
+        self.generate_xml(config.header, xmlname, config.defines, config.include_dirs)
+        self.generate_python(xmlname, outfile, config.libs, config.patterns)
+        os.remove(xmlname)
+
+    def build_generated_modules(self):
+        modules = self.find_generated_modules()
+        for (package, module, module_file, config) in modules:
+            self.build_generated_module(module, module_file, package, config)
+
+    def run(self):
+        self.build_generated_modules()
+        _build_py.run(self)
 
 setup(
     name = "glitter",
@@ -6,12 +73,8 @@ setup(
     author = "Stephan Wenger",
     author_email = "wenger@cg.cs.tu-bs.de",
     description = "Intuitive OpenGL wrappers",
-    install_requires = ["rawgl"],
-    setup_requires=["nose>=1.0"],
     license = "MIT",
     keywords = "opengl,graphics",
-    # TODO download_url = "",
-    # TODO url = "",
     long_description = """Intuitive OpenGL wrappers.
 
     Design principles:
@@ -40,7 +103,6 @@ setup(
       - Platform independence should be sought for, although Linux/GLX is the
         primary target.
     """,
-    packages = find_packages(),
     classifiers = [
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
@@ -54,6 +116,13 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering",
         "Topic :: Software Development :: Libraries",
         ],
-    test_suite = 'nose.collector',
+    # TODO download_url = "",
+    # TODO url = "",
+
+    install_requires = ["rawgl"],
+    setup_requires=["ctypeslib"],
+    packages = find_packages(),
+    cmdclass={"build_py": build_py},
+    # TODO test_suite = "nose.collector" (but run in build directory), add "nose" to setup_requires
 )
 

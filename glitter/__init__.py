@@ -29,7 +29,7 @@ Design principles:
 Build instructions:
   - installing: C{sudo python setup.py install}
   - docs: C{epydoc --html -v -o docs glitter examples tests}
-  - tests: C{nosetests tests} or C{python setup.py test}
+  - tests: C{nosetests tests}
 
 When extending the library:
   - Make sure your class uses methods and properties of its L{Context} where
@@ -71,6 +71,7 @@ When extending the library:
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
+@todo: Move documentation to Sphinx.
 @todo: Move examples and tests into glitter tree to simplify packaging?
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as examples and tests.
