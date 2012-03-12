@@ -1,7 +1,11 @@
-Intuitive OpenGL wrappers.
+Intuitive OpenGL 3 wrappers.
 
 Design principles
 =================
+
+- Glitter wraps the OpenGL 3 core profile only. This allows for a pythonic
+  representation of (eventually) the complete OpenGL API, while any nuts and
+  bolts are readily supplied by Python and numpy.
 
 - Inituitive use is chosen over performance (no premature optimization; make it
   run, then make it fast). Users do not need to (nor should they) use raw GL
@@ -24,7 +28,7 @@ Design principles
 - Array data (e.g. texture images or vertex buffer data) is represented in
   numpy.
 
-- The library has a focus on GPGPU computing, but typical use for rendering
+- Glitter has a focus on GPGPU computing, but typical use for rendering
   should be as easy.
 
 - Platform independence is be sought for, although Linux/GLX is currently the
