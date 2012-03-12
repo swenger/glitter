@@ -1,3 +1,5 @@
-docs/
+doc/
 build/
+dist/
+glitter.egg-info/
 
