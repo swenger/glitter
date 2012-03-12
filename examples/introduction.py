@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 
-"""Basic example using L{VertexArray}s, L{ShaderProgram}s, L{Pipeline}s, and L{Texture}s.
+"""Basic example using L{VertexArray}s, L{ShaderProgram}s, L{Pipeline}s, L{Texture}s, and logging.
 
 @author: Stephan Wenger
 @date: 2012-02-29
 """
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 from numpy import array, sin, cos, pi
 from numpy.random import random
 
-from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray
+from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray, add_logger
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 vertex_shader = """
@@ -119,6 +122,9 @@ def display():
         traceback.print_exc()
         raise SystemExit
 
+    # Disable logging.
+    add_logger(None)
+
 def keyboard(key, x, y):
     """Keyboard handler.
 
@@ -166,6 +172,9 @@ if __name__ == "__main__":
 
     # Call the timer once; it will trigger the subsequent calls itself.
     timer()
+
+    # Enable logging for the first run of the display loop.
+    add_logger()
 
     # Enter the GLUT main loop.
     main_loop()

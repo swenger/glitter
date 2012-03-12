@@ -39,20 +39,24 @@ class LoggingWrapper(object):
     def __str__(self):
         return self.__name__
 
-def add_logger(d, logger="root", name_re="^gl[A-Z].*$"): # TODO default d to module __dict__
-    """Add a logger to functions in a dictionary C{d}.
+def add_logger(logger="root", name_re="^(gl|glu|glut|glX)[A-Z].*$", d=None):
+    """Add a logger to OpenGL functions.
 
     All values in C{d} that match C{name_re} have an C{errcheck} attribute will
     be replaced by corresponding L{LoggingWrapper}s that call C{logger} before
-    each invocation.
+    each invocation. By default, C{d} is C{glitter.raw.__dict__}.
 
     C{logger} may be either a callable, a C{logging.logger} object, the name of
-    a registered C{logging.logger} object, or C{None} to remove the logger.
+    a registered C{logging.Logger} object, or C{None} to remove the logger.
 
     @attention: If you add multiple loggers to a function, you will not only
     incur a double performance penalty, but also have to remove them in the
     reverse order; there is no way to remove a specific logger.
     """
+
+    if d is None:
+        from glitter import raw
+        d = raw.__dict__
 
     if logger is None:
         for key, value in d.items():
@@ -61,7 +65,7 @@ def add_logger(d, logger="root", name_re="^gl[A-Z].*$"): # TODO default d to mod
     else:
         if not callable(logger):
             import logging
-            if isinstance(logger, logging.logger):
+            if isinstance(logger, logging.Logger):
                 logger = logger.debug
             else:
                 logger = logging.getLogger(logger).debug

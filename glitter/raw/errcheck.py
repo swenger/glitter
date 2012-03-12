@@ -30,17 +30,22 @@ class GLError(Exception):
     def __repr__(self):
         return str(self)
 
-def set_error_check(d, errcheck_func=Ellipsis, errcheck_ok=Ellipsis, name_re="^gl[A-Z].*$"): # TODO default d to module __dict__
-    """Add error handlers to functions in a dictionary C{d}.
+def set_error_check(errcheck_func=Ellipsis, errcheck_ok=Ellipsis, name_re="^gl[A-Z].*$", d=None):
+    """Add error handlers to OpenGL functions.
 
-    The C{errcheck} attribute of all items in C{d} having such an attribute and
-    matching C{name_re} will be set to a function that calls C{errcheck_func}
-    and raises L{GLError} if the return value is unequal to C{errcheck_ok}.
+    The C{errcheck} attribute of all items in a dictionary C{d} having such an
+    attribute and matching C{name_re} will be set to a function that calls
+    C{errcheck_func} and raises L{GLError} if the return value is unequal to
+    C{errcheck_ok}. By default, C{d} is C{glitter.raw.__dict__}.
 
     Defaults for C{errcheck_func} and C{errcheck_ok} are C{glGetError} and
     C{GL_NO_ERROR}, respectively. If C{errcheck_func} is C{None}, error
     checking will be disabled.
     """
+
+    if d is None:
+        from glitter import raw
+        d = raw.__dict__
 
     if errcheck_func is Ellipsis:
         from glitter.raw import gl

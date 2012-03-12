@@ -90,12 +90,17 @@ def make_constant(name, value):
 
     return globals()[cls_name](name, value)
 
-def wrap_constants(d, name_re="^(GL|GLU|GLUT|GLX)_[A-Z][A-Z0-9_]*$", types=(int, long, float)): # TODO default d to module __dict__
-    """Convert all constants in a dictionary C{d} into named constants.
+def wrap_constants(name_re="^(GL|GLU|GLUT|GLX)_[A-Z][A-Z0-9_]*$", types=(int, long, float), d=None):
+    """Convert OpenGL constants to named constants.
 
     All values in C{d} that match C{name_re} and are of one of the types in
-    C{types} will be replaced by corresponding L{NamedConstant}s.
+    C{types} will be replaced by corresponding L{NamedConstant}s. By default,
+    C{d} is C{glitter.raw.__dict__}.
     """
+
+    if d is None:
+        from glitter import raw
+        d = raw.__dict__
 
     for key, value in d.items():
         if re.match(name_re, key) and isinstance(value, tuple(types)):

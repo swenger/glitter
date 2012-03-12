@@ -53,10 +53,11 @@ class build_py(_build_py):
         self.mkpath(os.path.dirname(outfile))
         
         # build using config into outfile
-        xmlname = outfile + os.path.extsep + "xml"
-        self.generate_xml(config.header, xmlname, config.defines, config.include_dirs)
-        self.generate_python(xmlname, outfile, config.libs, config.patterns)
-        os.remove(xmlname)
+        if not os.path.isfile(outfile):
+            xmlname = outfile + os.path.extsep + "xml"
+            self.generate_xml(config.header, xmlname, config.defines, config.include_dirs)
+            self.generate_python(xmlname, outfile, config.libs, config.patterns)
+            os.remove(xmlname)
 
     def build_generated_modules(self):
         modules = self.find_generated_modules()

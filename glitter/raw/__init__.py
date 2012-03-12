@@ -34,6 +34,6 @@ from glitter.raw.errcheck import *
 from glitter.raw.logger import *
 from glitter.raw.constant import *
 
-wrap_constants(globals())
-set_error_check(globals())
+wrap_constants(d=globals()) # pass d explicitly to avoid infinite import loop
+set_error_check(d=globals()) # pass d explicitly to avoid infinite import loop
 

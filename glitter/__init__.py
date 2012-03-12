@@ -95,3 +95,5 @@ from glitter.shaders import *
 from glitter.textures import *
 from glitter.utils import *
 
+from glitter.raw import set_error_check, add_logger, GLError, LoggingWrapper, NamedConstant
+
