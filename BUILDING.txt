@@ -1,0 +1,23 @@
+# test and push
+nosetests tests
+git commit
+git push
+
+# build docs
+epydoc -v --html -o doc glitter examples tests
+cd doc
+zip doc.zip *
+upload doc.zip to pypi
+
+# build sdist
+cd /tmp
+git checkout
+cd glitter
+python setup.py sdist upload
+cd ..
+rm -r glitter
+
+# TODO add examples to docs (sphinx?), include example file in readme (with default pipeline)
+# TODO switch docs to --docformat restructuredtext
+# TODO upload to github
+
