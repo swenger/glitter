@@ -2,6 +2,7 @@
 
 This module wraps large parts of per-context state.
 
+@todo: Provide convenience setters for C{glBlendFunc} via C{blend_func=("SRC_ALPHA", "ONE_MINUS_SRC_ALPHA")}.
 @todo: Add listing of all bound textures, buffers, etc.
 @todo: Do we need indexed variants for C{glEnable}?
 @todo: Wrap C{glPatchParameter}.

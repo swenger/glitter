@@ -1,5 +1,7 @@
 """Generic descriptor classes for per-context state.
 
+@todo: Unify classes (e.g. C{__repr__} method).
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -69,12 +71,10 @@ class EnumProxy(object):
         if self._setter is None:
             raise AttributeError("can't set attribute")
         if isinstance(value, basestring):
-            value = getattr(self._enum, value)._value
-        if isinstance(value, EnumConstant):
-            if value not in self._enum.__dict__.values():
-                raise TypeError("wrong enum")
-            value = value._value
-        args = list(self._set_args) + [value]
+            value = getattr(self._enum, value)
+        if value not in self._enum.__dict__.values():
+            raise TypeError("wrong enum")
+        args = list(self._set_args) + [value._value]
         with obj:
             self._setter(*args)
 

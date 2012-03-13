@@ -44,6 +44,7 @@ Hacking glitter:
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as tutorials, examples and tests.
 
+@todo: Convert strings into enum constants where appropriate.
 @todo: Use context property instead of C{_context} where appropriate.
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Transparent CUDA and OpenCL interoperability.

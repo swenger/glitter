@@ -29,8 +29,12 @@ class BaseBuffer(ManagedObject, BindableObject):
         if any(x is NotImplemented for x in (self._target,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(BaseBuffer, self).__init__()
+        if isinstance(usage, basestring):
+            usage = getattr(buffer_usages, usage)
         if usage is None:
             usage = BaseBuffer.usages.STATIC_DRAW
+        if usage not in buffer_usages.__dict__.values():
+            raise TypeError("wrong enum")
         self.set_data(data=data, shape=shape, dtype=dtype, usage=usage)
 
     def set_data(self, data=None, shape=None, dtype=None, usage=None):
