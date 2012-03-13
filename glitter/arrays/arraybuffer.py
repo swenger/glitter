@@ -42,7 +42,7 @@ class ArrayBuffer(BaseBuffer):
 
         if count is None:
             dim = primitive_to_buffer_dimensions.get(mode, None)
-            if dim is not None and self.shape[-2] != dim:
+            if dim is not None and len(self.shape) > 2 and self.shape[-2] != dim:
                 raise ValueError("buffer shape does not match mode")
             count = _np.prod(self.shape[:-1])
         
