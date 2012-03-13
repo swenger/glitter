@@ -25,9 +25,7 @@ __kernel void animate(__global float4* positions,
     }
 
     v.z -= 9.8 * dt;
-    p.x += v.x * dt;
-    p.y += v.y * dt;
-    p.z += v.z * dt;
+    p.xyz += v.xyz * dt;
     v.w = life;
 
     positions[i] = p;
@@ -49,13 +47,13 @@ class CLCode(object):
         self.velocities = velocities
         self.dt = numpy.float32(dt)
 
-        self.cl_positions = cl.GLBuffer(self.ctx, cl.mem_flags.READ_WRITE, self.gl_positions._id)
-        self.cl_colors = cl.GLBuffer(self.ctx, cl.mem_flags.READ_WRITE, self.gl_colors._id)
+        self.cl_positions = cl.GLBuffer(self.ctx, cl.mem_flags.READ_WRITE, self.gl_positions._id) # TODO wrap this?
+        self.cl_colors = cl.GLBuffer(self.ctx, cl.mem_flags.READ_WRITE, self.gl_colors._id) # TODO wrap this?
         self.cl_velocities = cl.Buffer(self.ctx, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=velocities)
         self.cl_initial_positions = cl.Buffer(self.ctx, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=self.gl_positions.data)
         self.cl_initial_velocities = cl.Buffer(self.ctx, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=self.velocities)
 
-        self.queue.finish()
+        #self.queue.finish() # TODO is this necessary?
         
     def execute(self, sub_intervals):
         cl.enqueue_acquire_gl_objects(self.queue, [self.cl_positions, self.cl_colors])
@@ -63,11 +61,11 @@ class CLCode(object):
         for i in xrange(0, sub_intervals):
             self.program.animate(self.queue, [self.num], None, *args)
         cl.enqueue_release_gl_objects(self.queue, [self.cl_positions, self.cl_colors])
-        self.queue.finish()
+        #self.queue.finish() # TODO is this necessary?
 
 def timer(last_time=[0]):
     cle.execute(10)
-    window.flush()
+    #window.flush() # TODO is this necessary?
     window.add_timer(1, timer)
     window.post_redisplay()
 
@@ -80,7 +78,7 @@ def display():
     window.swap_buffers()
 
 if __name__ == "__main__":
-    num = 20000
+    num = 200000
 
     window = GlutWindow(double=True, alpha=True, depth=True)
     window.display_callback = display
@@ -100,10 +98,10 @@ if __name__ == "__main__":
 
     gl_positions = ArrayBuffer(data=positions, usage="DYNAMIC_DRAW")
     gl_colors = ArrayBuffer(data=colors, usage="DYNAMIC_DRAW")
-    
-    cle = CLCode(num, gl_positions, gl_colors, velocities)
     vao = VertexArray([gl_positions, gl_colors])
     shader = get_default_program()
+    
+    cle = CLCode(num, gl_positions, gl_colors, velocities)
 
     with shader(modelview_matrix=((1, 0, 0, 0), (0, 0, 1, 0), (0, 1, 0, 0), (0, 0, 0, 2))):
         timer()
