@@ -6,6 +6,8 @@
 @date: 2012-02-29
 """
 
+import numpy as _np
+
 import glitter.raw as _gl
 from glitter.utils import buffer_dimensions_to_primitive, primitive_to_buffer_dimensions
 from glitter.arrays.basebuffer import BaseBuffer
@@ -37,11 +39,13 @@ class ArrayBuffer(BaseBuffer):
                 mode = buffer_dimensions_to_primitive.get(1, None)
         if mode is None:
             raise ValueError("must specify mode")
+
         if count is None:
-            try:
-                count = self.shape[0] * primitive_to_buffer_dimensions[mode]
-            except KeyError:
-                raise ValueError("must specify count")
+            dim = primitive_to_buffer_dimensions.get(mode, None)
+            if dim is not None and self.shape[-2] != dim:
+                raise ValueError("buffer shape does not match mode")
+            count = _np.prod(self.shape[:-1])
+        
         if instances is None:
             with self:
                 _gl.glDrawArrays(mode._value, first, count)
