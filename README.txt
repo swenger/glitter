@@ -1,5 +1,13 @@
 Intuitive OpenGL 3 wrappers.
 
+Code example
+============
+
+The following code creates a window displaying a rotating quad:
+
+.. include:: examples/simple.py
+   :code: python
+
 Design principles
 =================
 
