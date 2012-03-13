@@ -1,4 +1,12 @@
-from numpy import array, cos, sin
+#!/usr/bin/env python
+
+"""Simple example displaying a rotating quad.
+
+@author: Stephan Wenger
+@date: 2012-02-29
+"""
+
+from math import cos, sin
 from glitter import VertexArray, get_default_program
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
@@ -13,7 +21,7 @@ def display():
 
 def timer():
     phi = get_elapsed_time()
-    shader.modelview_matrix = array(((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 2)))
+    shader.modelview_matrix = ((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 2))
     window.add_timer(10, timer)
     window.post_redisplay()
 
