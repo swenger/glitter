@@ -8,7 +8,7 @@ entry = '      <li><a href="examples/%s">%s</a></li>'
 with open("index.html") as f:
     data = f.read()
 
-start = data.find("\n", data.find('<ul class="examples">'))
+start = data.find("\n", data.find('<ul id="examples">'))
 end = data.rfind("\n", 0, data.find('</ul>', start))
 
 os.chdir("examples")

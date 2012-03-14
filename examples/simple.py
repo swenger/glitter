@@ -2,14 +2,16 @@
 
 #! This file is a literate Python program. You can compile the documentation
 #! using mylit (http://pypi.python.org/pypi/mylit/).
-## title = "glitter Examples: Simple"
+## title = "glitter Example: Simple"
 ## stylesheet = "pygments_style.css"
 
-# <h1><i>glitter</i> Examples: Simple</h1>
+# <h1><i>glitter</i> Example: Simple</h1>
 
 # <h2>Summary</h2>
 
 # This program will open a GLUT window and render a colored, rotating quad.
+
+# <img src="simple.png">
 
 # <h2>Front matter</h2>
 

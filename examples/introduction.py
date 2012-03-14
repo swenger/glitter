@@ -2,10 +2,10 @@
 
 #! This file is a literate Python program. You can compile the documentation
 #! using mylit (http://pypi.python.org/pypi/mylit/).
-## title = "glitter Examples: Introduction"
+## title = "glitter Example: Introduction"
 ## stylesheet = "pygments_style.css"
 
-# <h1><i>glitter</i> Examples: Introduction</h1>
+# <h1><i>glitter</i> Example: Introduction</h1>
 
 # This is a fairly complete introductory example using vertex arrays, shader
 # programs, pipelines, textures, and logging. If you are looking for something
@@ -18,6 +18,8 @@
 # overlaid with a textured background. To illustrate the use of framebuffer
 # objects, the scene will first be rendered to a texture, then displayed on
 # screen by a different shader.
+
+# <img src="introduction.png">
 
 # <h2>Front matter</h2>
 
@@ -40,14 +42,14 @@
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+# Our scene is going to rotate. The rotating modelview matrix is computed using
+# the sine and cosine functions from the math module:
+from math import sin, cos, pi
+
 # <i>glitter</i> uses <a href="http://numpy.scipy.org/">numpy</a> for
 # representation of array data. We will use numpy's <code>random()</code>
 # function to generate random textures:
 from numpy.random import random
-
-# Our scene is going to rotate. The rotating modelview matrix is computed using
-# the sine and cosine functions from the math module:
-from math import sin, cos, pi
 
 # We can usually import classes and functions contained in <i>glitter</i>
 # submodules directly from glitter:

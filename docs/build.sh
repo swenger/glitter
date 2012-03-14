@@ -1,7 +1,5 @@
 #!/bin/sh
 
-epydoc -v --html -o api ../glitter ../examples ../tests
-
 mkdir -p examples
 
 DOCDIR=`pwd`
@@ -11,8 +9,9 @@ for i in examples/*.py; do
 done
 cd -
 
-cp ../examples/pygments_style.css examples
 rm examples/__init__.html
 
 python build_index.py
+
+epydoc -v --html -o api ../glitter ../examples ../tests
 

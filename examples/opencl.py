@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+#! This file is a literate Python program. You can compile the documentation
+#! using mylit (http://pypi.python.org/pypi/mylit/).
+## title = "glitter Example: OpenCL"
+## stylesheet = "pygments_style.css"
+
+# <h1><i>glitter</i> Example: OpenCL</h1>
+
 import numpy
 import pyopencl as cl
 from pyopencl.tools import get_gl_sharing_context_properties

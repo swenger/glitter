@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+#! This file is a literate Python program. You can compile the documentation
+#! using mylit (http://pypi.python.org/pypi/mylit/).
+## title = "glitter Example: Point Cloud Renderer"
+## stylesheet = "pygments_style.css"
+
+# <h1><i>glitter</i> Example: Point Cloud Renderer</h1>
+
 """Viewer for a random point cloud.
 
 @author: Stephan Wenger

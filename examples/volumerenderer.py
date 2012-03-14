@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+#! This file is a literate Python program. You can compile the documentation
+#! using mylit (http://pypi.python.org/pypi/mylit/).
+## title = "glitter Example: Volume Renderer"
+## stylesheet = "pygments_style.css"
+
+# <h1><i>glitter</i> Example: Volume Renderer</h1>
+
 """Volume renderer that creates a set of image files from different perspectives.
 
 @author: Stephan Wenger
