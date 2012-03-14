@@ -9,7 +9,8 @@
 
 # <h2>Summary</h2>
 
-# This program will open a GLUT window and render a mesh from an <a href="www.hdfgroup.org/HDF5/">HDF5</a> data file.
+# This program will open a GLUT window and render a mesh from an <a
+# href="www.hdfgroup.org/HDF5/">HDF5</a> data file.
 
 # <img src="meshview.png">
 
