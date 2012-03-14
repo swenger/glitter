@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Draws a white quad and triangle in 2D
 

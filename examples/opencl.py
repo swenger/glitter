@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import numpy
 import pyopencl as cl
 from pyopencl.tools import get_gl_sharing_context_properties
