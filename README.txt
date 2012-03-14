@@ -1,4 +1,4 @@
-Intuitive OpenGL 3 wrappers.
+`glitter` is an intuitive wrapper around OpenGL 3 and up.
 
 Code example
 ============
