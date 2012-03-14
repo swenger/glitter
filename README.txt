@@ -84,7 +84,7 @@ Build instructions
 
 - installing: `sudo python setup.py install`
 
-- docs: `epydoc --html -v -o docs glitter examples tests`
+- docs: `cd docs; ./build.sh`
 
 - tests: `nosetests tests`
 
