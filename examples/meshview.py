@@ -7,6 +7,12 @@
 
 # <h1><i>glitter</i> Example: Mesh Viewer</h1>
 
+# <h2>Summary</h2>
+
+# This program will open a GLUT window and render a mesh from an <a href="www.hdfgroup.org/HDF5/">HDF5</a> data file.
+
+# <img src="meshview.png">
+
 # <h2>Front matter</h2>
 
 # <h3>Module docstring</h3>
@@ -84,20 +90,46 @@ if __name__ == "__main__":
     # We need to read a mesh filename from <code>sys.argv</code>, so import
     # <code>sys</code>.
     import sys
+
+    # We assume the mesh is stored in a <a
+    # href="http://www.hdfgroup.org/HDF5/">HDF5</a> file, so import <a
+    # href="h5py.alfven.org"><code>h5py</code></a>.
     import h5py
 
+    # First, wereate a window; this also creates an OpenGL context.
     window = GlutWindow(double=True, multisample=True)
+
+    # Then, we set the GLUT display callback function.
     window.display_callback = display
+
+    # In the OpenGL core profile, there is no such thing as a "standard pipeline"
+    # any more. We use the minimalistic <code>defaultpipeline</code> from the
+    # <code>glitter.convenience</code> module to create a shader program instead:
     shader = get_default_program()
 
+    # We open the HDF5 file specified on the command line for reading:
     with h5py.File(sys.argv[1], "r") as f:
+        # The vertices, colors and indices of the mesh are read from the
+        # corresponding datasets in the HDF5 file. Note that the names of the
+        # datasets are mere convention. Colors and indices are allowed to be
+        # undefined.
         vertices = f["vertices"]
         colors = f.get("colors", None)
         elements = f.get("indices", None)
+
+        # If no colors were specified, we generate random ones so we can
+        # distinguish the triangles without fancy shading.
         if colors is None:
             colors = random((len(vertices), 3))[:, None, :][:, [0] * vertices.shape[1], :]
+
+        # Here, we create a vertex array that contains buffers for two vertex array
+        # input variables as well as an index array. If <code>elements</code>
+        # is <code>None</code>, the vertex array class will draw all vertices
+        # in order.
         vao = VertexArray([vertices, colors], elements=elements)
 
+    # To start the animation, we call the timer once; all subsequent timer
+    # calls will be scheduled by the timer function itself.
     timer()
 
     # The shader program is bound by using a <code>with</code> statement:

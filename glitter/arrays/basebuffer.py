@@ -76,6 +76,9 @@ class BaseBuffer(ManagedObject, BindableObject):
     def shape(self):
         return self._shape
 
+    def __len__(self):
+        return self.shape[0]
+
     @property
     def dtype(self):
         return self._dtype

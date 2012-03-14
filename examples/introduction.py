@@ -7,17 +7,17 @@
 
 # <h1><i>glitter</i> Example: Introduction</h1>
 
-# This is a fairly complete introductory example using vertex arrays, shader
-# programs, pipelines, textures, and logging. If you are looking for something
-# simpler (but less complete) to start with, look at the <a
-# href="simple.html">simple example</a>.
-
 # <h2>Summary</h2>
 
 # This program will open a GLUT window and render a textured, rotating fan,
 # overlaid with a textured background. To illustrate the use of framebuffer
 # objects, the scene will first be rendered to a texture, then displayed on
 # screen by a different shader.
+
+# This is a fairly advanced "introductory" example using vertex arrays, shader
+# programs, pipelines, textures, and logging. If you are looking for something
+# simpler (but less complete) to start with, look at the <a
+# href="simple.html">simple example</a>.
 
 # <img src="introduction.png">
 
