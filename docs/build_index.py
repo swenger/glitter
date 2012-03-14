@@ -3,7 +3,7 @@
 import glob
 import os
 
-entry = '      <li><a href="examples/%s">%s</a></li>'
+entry = '        <li><a href="examples/%s">%s</a></li>'
 
 with open("index.html") as f:
     data = f.read()

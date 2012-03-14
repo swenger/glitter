@@ -7,7 +7,7 @@ cd ..
 for i in examples/*.py; do
 	python -m mylit $i $DOCDIR/${i%.py}.html
 done
-cd -
+cd $DOCDIR
 
 rm examples/__init__.html
 
