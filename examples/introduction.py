@@ -3,6 +3,7 @@
 #! This file is a literate Python program. You can compile the documentation
 #! using mylit (http://pypi.python.org/pypi/mylit/).
 ## title = "glitter Examples: Introduction"
+## stylesheet = "pygments_style.css"
 
 # <h1><i>glitter</i> Examples: Introduction</h1>
 
@@ -219,11 +220,11 @@ def display():
         vao.draw()
 
     # After all rendering commands have been issued, we swap the back buffer to
-    # the front, making the rendered image visible all at once.
+    # the front, making the rendered image visible all at once:
     window.swap_buffers()
 
     # Finally, we disable logging so that we only see the OpenGL calls of the
-    # first run of the display function.
+    # first run of the display function:
     add_logger(None)
 
 # <h3>Keyboard function</h3>
@@ -271,7 +272,7 @@ if __name__ == "__main__":
     # First, wereate a window; this also creates an OpenGL context.
     window = GlutWindow(double=True, multisample=True) #: The main window.
 
-    # Then, we set the GLUT display and keyboard callbacks function.
+    # Then, we set the GLUT display and keyboard callback functions.
     window.display_callback = display
     window.keyboard_callback = keyboard
 
@@ -327,4 +328,6 @@ if __name__ == "__main__":
 
     # Finally, to start rendering, we enter the GLUT main loop.
     main_loop()
+
+# When the main loop exits, control is handed back to the script, unless <code>SystemExit</code> has been raised by the keyboard handler.
 
