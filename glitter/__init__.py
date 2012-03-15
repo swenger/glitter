@@ -43,12 +43,10 @@ Hacking glitter:
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
-@todo: Move examples and tests into glitter tree to simplify packaging?
-@todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
-@todo: Implement NeHe tutorials as tutorials, examples and tests.
-
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Transparent CUDA and OpenCL interoperability.
+@todo: Implement NeHe tutorials as literate example programs.
+@todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 
 @author: Stephan Wenger
 @date: 2012-02-29
