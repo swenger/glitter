@@ -23,8 +23,8 @@ class Framebuffer(ManagedObject, BindableObject):
     framebuffer_status = framebuffer_status
     _initialized = False
 
-    def __init__(self, attachments=[], depth=None, stencil=None):
-        super(Framebuffer, self).__init__()
+    def __init__(self, attachments=[], depth=None, stencil=None, context=None):
+        super(Framebuffer, self).__init__(context=context)
         self._attachments = {}
         
         if isinstance(attachments, dict):

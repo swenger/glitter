@@ -21,5 +21,8 @@ class TransformFeedback(ManagedObject, BindableObject):
     _binding = "transform_feedback_binding"
     _target = _gl.GL_TRANSFORM_FEEDBACK
 
+    def __init__(self, context=None):
+        super(TransformFeedback, self).__init__(context=context)
+
 __all__ = ["TransformFeedback"]
 

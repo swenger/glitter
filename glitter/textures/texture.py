@@ -35,10 +35,10 @@ class Texture(ManagedObject, BindReleaseObject):
     def release(self):
         self._context.texture_units.release(self)
 
-    def __init__(self, data=None, shape=None, dtype=None, mipmap=False):
+    def __init__(self, data=None, shape=None, dtype=None, mipmap=False, context=None):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        super(Texture, self).__init__()
+        super(Texture, self).__init__(context=context)
         self.set_data(data, shape, dtype, mipmap)
 
     def __getitem__(self, key):

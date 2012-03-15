@@ -18,10 +18,19 @@ class VertexArray(ManagedObject, BindableObject):
     _binding = "vertex_array_binding"
 
     def __init__(self, *attributes, **kwargs):
-        """@todo document kwargs: elements
         """
 
-        super(VertexArray, self).__init__(kwargs.pop("context", None))
+        @param attributes: Buffers to bind to vertex attributes.
+        @type attributes: C{list} of L{ArrayBuffer}s or C{numpy.ndarray}s
+        @param kwargs: Named arguments.
+        @type kwargs: C{dict}
+        @keyword context: The context in which to create the vertex array.
+        @type context: L{Context}
+        @keyword elements: A buffer containing the element indices.
+        @type elements: L{ElementArrayBuffer} or C{numpy.ndarray}
+        """
+
+        super(VertexArray, self).__init__(context=kwargs.pop("context", None))
         self._attributes = {}
 
         if isinstance(attributes, dict):

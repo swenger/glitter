@@ -16,8 +16,8 @@ class ProgramPipeline(ManagedObject, BindableObject):
     _db = "program_pipelines"
     _binding = "program_pipeline_binding"
 
-    def __init__(self):
-        super(ProgramPipeline, self).__init__()
+    def __init__(self, context=None):
+        super(ProgramPipeline, self).__init__(context=context)
 
 __all__ = ["ProgramPipeline"]
 

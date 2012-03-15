@@ -25,10 +25,10 @@ class BaseBuffer(ManagedObject, BindableObject):
     drawmodes = primitive_types
     usages = buffer_usages
 
-    def __init__(self, data=None, shape=None, dtype=None, usage=None):
+    def __init__(self, data=None, shape=None, dtype=None, usage=None, context=None):
         if any(x is NotImplemented for x in (self._target,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        super(BaseBuffer, self).__init__()
+        super(BaseBuffer, self).__init__(context=context)
         if isinstance(usage, basestring):
             usage = getattr(buffer_usages, usage)
         if usage is None:

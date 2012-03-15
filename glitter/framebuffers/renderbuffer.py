@@ -20,5 +20,8 @@ class Renderbuffer(ManagedObject, BindableObject):
     _delete_id = _gl.glDeleteRenderbuffers
     _db = "renderbuffers"
 
+    def __init__(self, context=None):
+        super(Renderbuffer, self).__init__(context=context)
+
 __all__ = ["Renderbuffer"]
 

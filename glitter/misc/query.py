@@ -14,10 +14,10 @@ class Query(ManagedObject, BindReleaseObject):
     _delete_id = _gl.glDeleteQueries
     _db = "queries"
 
-    def __init__(self):
+    def __init__(self, context=None):
         if any(x is NotImplemented for x in (self._target,)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
-        super(Query, self).__init__()
+        super(Query, self).__init__(context=context)
         if self._counter_bits == 0:
             raise RuntimeError("%s not supported" % self.__class__.__name__)
 

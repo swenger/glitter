@@ -33,7 +33,7 @@ class GLObject(object):
         """Create a new C{GLObject}.
 
         @param context: The parent context. Uses the current context if C{context} is C{None}.
-        @type context: L{Context}.
+        @type context: L{Context}
         """
 
         self._context = context or _get_context()
@@ -93,7 +93,7 @@ class ManagedObject(GLObject):
         """Create a new C{ManagedObject} using L{_generate_id}.
 
         @param context: The parent context.
-        @type context: L{Context}.
+        @type context: L{Context}
         """
 
         if any(x is NotImplemented for x in (self._generate_id, self._delete_id)):
@@ -194,7 +194,7 @@ class BindableObject(GLObject, StateMixin):
         """Create a new C{BindableObject}.
 
         @param context: The parent context.
-        @type context: L{Context}.
+        @type context: L{Context}
         """
 
         if any(x is NotImplemented for x in (self._binding,)):
@@ -333,7 +333,7 @@ class BindReleaseObject(GLObject, StateMixin):
         """Create a new C{BindReleaseObject}.
 
         @param context: The parent context.
-        @type context: L{Context}.
+        @type context: L{Context}
         """
 
         super(BindReleaseObject, self).__init__(context)

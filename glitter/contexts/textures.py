@@ -19,9 +19,9 @@ class TextureUnit(BindableObject):
 
     _binding = "active_texture"
 
-    def __init__(self, _context, _id):
-        super(TextureUnit, self).__init__(_context)
-        self._context = _context
+    def __init__(self, context, _id):
+        super(TextureUnit, self).__init__(context=context)
+        self._context = context
         self._id = _id
         self._use_count = 0
 
@@ -56,12 +56,12 @@ class TextureUnitList(object):
     L{Texture}s is delegated to the C{TextureUnitList}.
     """
 
-    def __init__(self, _context):
-        self._context = _context
-        num_units = _context.max_combined_texture_image_units
+    def __init__(self, context):
+        self._context = context
+        num_units = context.max_combined_texture_image_units
         if not 0 < num_units < 4096: # sanity check
             raise GlitterError("implausible number of texture units detected; are you sure there is a current OpenGL context?")
-        self._texture_units = [TextureUnit(_context, _gl.GL_TEXTURE0 + i) for i in range(num_units)]
+        self._texture_units = [TextureUnit(context, _gl.GL_TEXTURE0 + i) for i in range(num_units)]
         self._context.active_texture = self[0]
         self._bound_textures = dict()
 

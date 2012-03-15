@@ -11,6 +11,9 @@ class Sync(ManagedObject):
     """@todo: Implement properties using C{glGetSynciv}."""
     _delete_id = _gl.glDeleteSync
 
+    def __init__(self, context=None):
+        super(Sync, self).__init__(context=context)
+
 class FenceSync(Sync):
     _generate_id = lambda: _gl.glFenceSync(_gl.GL_SYNC_GPU_COMMANDS_COMPLETE, 0)
 

@@ -31,12 +31,3 @@ class QtWidget(QtOpenGL.QGLWidget, Context):
     def _bind(self):
         self.makeCurrent()
 
-class QtContext(QtOpenGL.QGLContext, Context):
-    def __init__(self, *args, **kwargs):
-        QtOpenGL.QGLContext.__init__(self, *args, **kwargs)
-        with self:
-            Context.__init__(self)
-
-    def _bind(self):
-        self.makeCurrent()
-

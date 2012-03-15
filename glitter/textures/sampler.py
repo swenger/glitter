@@ -25,7 +25,7 @@ class Sampler(ManagedObject, BindableObject):
     wrapmodes = texture_wrapmodes
 
     def __init__(self, unit, context=None):
-        super(Sampler, self).__init__(context)
+        super(Sampler, self).__init__(context=context)
         if not 0 <= unit < self._context.max_combined_texture_image_units:
             raise ValueError("invalid unit: %s" % unit)
         self._target = unit
