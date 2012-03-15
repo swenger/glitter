@@ -137,6 +137,10 @@ Changelog
 
 The following versions introduced noteworthy features, bug fixes, or API changes:
 
+version 0.1.4
+-------------
+- ``Framebuffer``\s expect attributes as separate ``__init__()`` parameters instead of a list.
+
 version 0.1.3
 -------------
 

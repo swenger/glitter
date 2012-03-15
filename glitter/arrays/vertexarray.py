@@ -18,7 +18,7 @@ class VertexArray(ManagedObject, BindableObject):
     _binding = "vertex_array_binding"
 
     def __init__(self, *attributes, **kwargs):
-        """
+        """Create a new vertex array.
 
         @param attributes: Buffers to bind to vertex attributes.
         @type attributes: C{list} of L{ArrayBuffer}s or C{numpy.ndarray}s
@@ -43,6 +43,7 @@ class VertexArray(ManagedObject, BindableObject):
             raise ValueError("vertex array has no attribute(s) %s" % ", ".join("'%s'" % x for x in attributes.keys()))
         
         self.elements = kwargs.pop("elements", None)
+
         if kwargs:
             raise TypeError("__init__() got an unexpected keyword argument '%s'" % kwargs.keys()[0])
 

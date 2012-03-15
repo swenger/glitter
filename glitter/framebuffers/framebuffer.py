@@ -23,8 +23,22 @@ class Framebuffer(ManagedObject, BindableObject):
     framebuffer_status = framebuffer_status
     _initialized = False
 
-    def __init__(self, attachments=[], depth=None, stencil=None, context=None):
-        super(Framebuffer, self).__init__(context=context)
+    def __init__(self, *attachments, **kwargs):
+        """Create a new framebuffer.
+
+        @param attachments: Textures to bind to color attachments.
+        @type attachments: C{list} of L{Texture}s
+        @param kwargs: Named arguments.
+        @type kwargs: C{dict}
+        @keyword context: The context in which to create the framebuffer.
+        @type context: L{Context}
+        @keyword depth: An optional depth buffer attachment.
+        @type depth: L{Texture}
+        @keyword stencil: An optional stencil buffer attachment.
+        @type stencil: L{Texture}
+        """
+
+        super(Framebuffer, self).__init__(context=kwargs.pop("context", None))
         self._attachments = {}
         
         if isinstance(attachments, dict):
@@ -36,8 +50,12 @@ class Framebuffer(ManagedObject, BindableObject):
         if attachments:
             raise ValueError("framebuffer has no attachment(s) %s" % ", ".join("'%s'" % x for x in attachments.keys()))
 
-        self.depth = depth
-        self.stencil = stencil
+        self.depth = kwargs.pop("depth", None)
+        self.stencil = kwargs.pop("stencil", None)
+
+        if kwargs:
+            raise TypeError("__init__() got an unexpected keyword argument '%s'" % kwargs.keys()[0])
+
         self._initialized = True
 
     def __getitem__(self, index):

@@ -150,14 +150,14 @@ class VolumeRenderer(object):
         # For rendering the back faces, we create a shader program and a
         # framebuffer with an attached texture:
         self.back_shader = ShaderProgram(vertex=vertex_code, fragment=back_fragment_code)
-        self.back_fbo = Framebuffer([RectangleTexture(shape=volume.shape[:2] + (4,), dtype=float32)])
+        self.back_fbo = Framebuffer(RectangleTexture(shape=volume.shape[:2] + (4,), dtype=float32))
 
         # For the front faces, we do the same. Additionally, the shader
         # receives the texture containing the back face coordinates in a
         # uniform variable <code>back</code>, and the 3D texture containing the
         # volumetric data in a uniform variable <code>volume</code>.
         self.front_shader = ShaderProgram(vertex=vertex_code, fragment=front_fragment_code, back=self.back_fbo[0], volume=volume)
-        self.front_fbo = Framebuffer([RectangleTexture(shape=volume.shape[:2] + (4,), dtype=float32)])
+        self.front_fbo = Framebuffer(RectangleTexture(shape=volume.shape[:2] + (4,), dtype=float32))
 
         # All other parameters are simply set as attributes (this might be
         # <code>modelview_matrix</code>, <code>intensity_scale</code>, or

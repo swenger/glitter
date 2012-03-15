@@ -102,7 +102,7 @@ def voxelize(mesh, size, solid=True):
 
     # We create a framebuffer with all layers of the volume attached and
     # directly bind it:
-    with Framebuffer([volume[i] for i in range(len(volume))]) as fbo:
+    with Framebuffer(*[volume[i] for i in range(len(volume))]) as fbo:
         fbo.clear()
         # Depending on the voxelization mode, we set the logic op mode. We then
         # create and activate a shader program and draw the mesh.
