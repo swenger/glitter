@@ -22,7 +22,10 @@ Hacking glitter:
     inheriting from L{StateMixin}).
   - If your class uses enums from the L{constants} module in a public
     interface, point a class variable of the same name to the enum so users do
-    not need to import any constants manually.
+    not need to import any constants manually. Functions that accept enums
+    should cast input values into the appropriate constants using
+    C{my_enum(value)} first to ensure type safety and to enable using enum
+    constant names instead of L{EnumConstant}s.
   - Use absolute module names when importing other glitter modules. When
     importing from the same subpackage, use fully qualified names for the
     module (e.g. C{from glitter.utils.objects import GLObject}); otherwise,
@@ -44,7 +47,6 @@ Hacking glitter:
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 @todo: Implement NeHe tutorials as tutorials, examples and tests.
 
-@todo: Convert strings into enum constants where appropriate.
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Transparent CUDA and OpenCL interoperability.
 

@@ -38,7 +38,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @compare_func.setter
     def compare_func(self, compare_func):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_gl.GLint(compare_func._value)))
+        _compare_func = _gl.GLint(self.compare_funcs(compare_func)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_COMPARE_FUNC, _gl.pointer(_compare_func))
 
     @property
     def compare_mode(self):
@@ -48,7 +49,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @compare_mode.setter
     def compare_mode(self, compare_mode):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_gl.GLint(compare_mode._value)))
+        _compare_mode = _gl.GLint(self.compare_modes(compare_mode)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
     
     @property
     def lod_bias(self):
@@ -68,7 +70,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @min_filter.setter
     def min_filter(self, min_filter):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_gl.GLint(min_filter._value)))
+        _min_filter = _gl.GLint(self.min_filters(min_filter)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_MIN_FILTER, _gl.pointer(_min_filter))
 
     @property
     def mag_filter(self):
@@ -78,7 +81,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @mag_filter.setter
     def mag_filter(self, mag_filter):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_gl.GLint(mag_filter._value)))
+        _mag_filter = _gl.GLint(self.mag_filters(mag_filter)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_MAG_FILTER, _gl.pointer(_mag_filter))
 
     @property
     def min_lod(self):
@@ -108,7 +112,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @wrap_s.setter
     def wrap_s(self, wrap_s):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_gl.GLint(wrap_s._value)))
+        _wrap_s = _gl.GLint(self.wrapmodes(wrap_s)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_WRAP_S, _gl.pointer(_wrap_s))
 
     @property
     def wrap_t(self):
@@ -118,7 +123,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @wrap_t.setter
     def wrap_t(self, wrap_t):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_gl.GLint(wrap_t._value)))
+        _wrap_t = _gl.GLint(self.wrapmodes(wrap_t)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_WRAP_T, _gl.pointer(_wrap_t))
 
     @property
     def wrap_r(self):
@@ -128,7 +134,8 @@ class Sampler(ManagedObject, BindableObject):
 
     @wrap_r.setter
     def wrap_r(self, wrap_r):
-        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_gl.GLint(wrap_r._value)))
+        _wrap_r = _gl.GLint(self.wrapmodes(wrap_r)._value)
+        _gl.glSamplerParameteriv(self._id, _gl.GL_TEXTURE_WRAP_R, _gl.pointer(_wrap_r))
 
 __all__ = ["Sampler"]
 

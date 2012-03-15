@@ -9,18 +9,19 @@ import types as _types
 import numpy as _np
 
 import glitter.raw as _gl
-from glitter.utils.dtypes import coerce_array
+from glitter.utils.dtypes import coerce_array, int32
 from glitter.utils.objects import with_obj
 
 class Proxy(object):
-    def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=None, enum=None):
+    def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=(), enum=None, name=None):
         self._getter = getter
         self._get_args = get_args
         self._setter = setter
         self._set_args = set_args
-        self._dtype = dtype
+        self._dtype = dtype if dtype else int32
         self._shape = None if shape is None else tuple(shape) if hasattr(shape, "__iter__") else (shape,)
         self._enum = enum
+        self._name = name
 
     def __get__(self, obj, cls):
         _value = _np.empty(self._shape, dtype=self._dtype.as_numpy())
@@ -39,8 +40,13 @@ class Proxy(object):
         if self._setter is None:
             raise AttributeError("can't set attribute")
         if self._enum is not None:
-            value = [x._value for x in value]
-        _value = coerce_array(value, dtype=self._dtype)
+            if hasattr(value, "__iter__"):
+                _value = [self._enum(x)._value for x in value]
+            else:
+                _value = self._enum(value)._value
+        else:
+            _value = value
+        _value = coerce_array(_value, dtype=self._dtype)
         if len(self._set_args) + len(_value) == len(self._setter.argtypes):
             args = list(self._set_args) + (list(_value) if _value.ndim == 1 else [x.ctypes for x in _value])
         elif len(self._set_args) + 1 == len(self._setter.argtypes):
@@ -49,6 +55,20 @@ class Proxy(object):
             raise RuntimeError("no valid setter invocation found")
         with obj:
             self._setter(*args)
+
+    def __repr__(self):
+        if self._name:
+            return "proxy for %s" % self._name
+        elif self._getter and self._setter:
+            return "proxy for %s(%s) / %s(%s)" % (
+                    self._getter.__name__, ", ".join(map(str, self._get_args)),
+                    self._setter.__name__, ", ".join(map(str, self._set_args)))
+        elif self._getter:
+            return "proxy for %s(%s)" % (self._getter.__name__, ", ".join(map(str, self._get_args)))
+        elif self._setter:
+            return "proxy for %s(%s)" % (self._setter.__name__, ", ".join(map(str, self._set_args)))
+        else:
+            return "proxy object"
 
 class ListProxy(object):
     def __init__(self, lst, insert_callback=None, delete_callback=None):

@@ -25,6 +25,17 @@ class Enum(object):
     def __getitem__(self, value):
         return self._reverse_dict[value]
 
+    def __call__(self, obj):
+        """Convert C{obj} into an appropriate L{EnumConstant}.
+        """
+
+        if obj in self.__dict__.values(): # A matching EnumConstant is okay.
+            return obj
+        elif obj in self.__dict__.keys(): # A string is converted to an EnumConstant if possible.
+            return self.__dict__[obj]
+        else: # Anything else is just wrong.
+            raise TypeError("'%s' is not a valid enum constant here" % obj)
+
     def _add(self, key, value):
         setattr(self, key, EnumConstant(self, key, value))
         self._reverse_dict[value] = getattr(self, key)
