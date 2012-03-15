@@ -317,7 +317,7 @@ if __name__ == "__main__":
     # to use. Here we use only a single vertex shader input: the coordinates of
     # a fullscreen quad. The <code>elements</code> parameter defines two
     # triangles that make up the quad.
-    vao = VertexArray([((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0))], elements=((0, 1, 2), (0, 2, 3)))
+    vao = VertexArray(((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0)), elements=((0, 1, 2), (0, 2, 3)))
 
     # To start the animation, we call the timer once; all subsequent timer
     # calls will be scheduled by the timer function itself.

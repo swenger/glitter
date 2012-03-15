@@ -134,7 +134,7 @@ if __name__ == "__main__":
     # We open the HDF5 file specified on the command line for reading, extract
     # the vertices and indices, and store them in a vertex array:
     with h5py.File(sys.argv[1]) as f:
-        mesh = VertexArray([f["vertices"]], elements=f["indices"])
+        mesh = VertexArray(f["vertices"], elements=f["indices"])
 
     # Now the voxelization is performed and the result is returned as an array
     # of 2D integer textures.

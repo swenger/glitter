@@ -241,7 +241,7 @@ if __name__ == "__main__":
     # We now create a vertex array that will pass the position and color data
     # to the shader. The vertex array constructor accepts
     # <code>ArrayBuffer</code> instances:
-    vao = VertexArray([gl_positions, gl_colors])
+    vao = VertexArray(gl_positions, gl_colors)
 
     # In the OpenGL core profile, there is no such thing as a "standard pipeline"
     # any more. We use the minimalistic <code>defaultpipeline</code> from the

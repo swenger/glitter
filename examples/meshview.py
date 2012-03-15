@@ -127,7 +127,7 @@ if __name__ == "__main__":
         # input variables as well as an index array. If <code>elements</code>
         # is <code>None</code>, the vertex array class will draw all vertices
         # in order.
-        vao = VertexArray([vertices, colors], elements=elements)
+        vao = VertexArray(vertices, colors, elements=elements)
 
     # To start the animation, we call the timer once; all subsequent timer
     # calls will be scheduled by the timer function itself.

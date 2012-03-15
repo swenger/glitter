@@ -43,13 +43,13 @@ if __name__ == "__main__":
     window.idle_callback = window.post_redisplay
     # shader program for rendering
     shader = get_default_program(modelview=False, color=False)
-    quad = VertexArray([[(-0.7,  0.3, 0.0, 1.0), 
-                         (-0.1,  0.3, 0.0, 1.0), 
-                         (-0.7, -0.3, 0.0, 1.0), 
-                         (-0.1, -0.3, 0.0, 1.0) ]])
-    triangle = VertexArray([[( 0.1, -0.2, 0.0, 1.0), 
-                             ( 0.7, -0.2, 0.0, 1.0), 
-                             ( 0.4,  0.2, 0.0, 1.0) ]])
+    quad = VertexArray(((-0.7,  0.3, 0.0, 1.0), 
+                        (-0.1,  0.3, 0.0, 1.0), 
+                        (-0.7, -0.3, 0.0, 1.0), 
+                        (-0.1, -0.3, 0.0, 1.0)))
+    triangle = VertexArray(((0.1, -0.2, 0.0, 1.0), 
+                            (0.7, -0.2, 0.0, 1.0), 
+                            (0.4,  0.2, 0.0, 1.0)))
     # loops until SystemExit is raised or window is closed
     main_loop()
 

@@ -62,7 +62,7 @@ def get_fullscreen_quad(context=None):
     @type context: L{Context}
     @rtype: L{VertexArray}
     """
-    return VertexArray([quad_vertices], elements=quad_indices, context=context)
+    return VertexArray(quad_vertices, elements=quad_indices, context=context)
 
 def get_program_rectangle(context=None):
     """Get a shader program for copying a rectangle texture onto the screen.

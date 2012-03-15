@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     # Here, we create a vertex array that contains buffers for two vertex array
     # input variables as well as an index array:
-    vao = VertexArray([vertices, colors], elements=indices)
+    vao = VertexArray(vertices, colors, elements=indices)
 
     # To start the animation, we call the timer once; all subsequent timer
     # calls will be scheduled by the timer function itself.

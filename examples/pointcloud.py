@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # Here, we create a vertex array that contains buffers for two vertex array
     # input variables as well as an index array:
     n_points = 100000
-    vao = VertexArray([randn(n_points, 3), randn(n_points, 3)])
+    vao = VertexArray(randn(n_points, 3), randn(n_points, 3))
 
     # To start the animation, we call the timer once; all subsequent timer
     # calls will be scheduled by the timer function itself.

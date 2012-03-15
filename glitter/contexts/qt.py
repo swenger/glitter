@@ -4,7 +4,10 @@
 @date: 2012-02-29
 """
 
-from PySide import QtOpenGL
+try:
+    from PySide import QtOpenGL
+except ImportError:
+    from PyQt4 import QtOpenGL
 
 from glitter.contexts.context import Context
 
@@ -28,5 +31,12 @@ class QtWidget(QtOpenGL.QGLWidget, Context):
     def _bind(self):
         self.makeCurrent()
 
-# TODO derive QtContext from QGLContext
+class QtContext(QtOpenGL.QGLContext, Context):
+    def __init__(self, *args, **kwargs):
+        QtOpenGL.QGLContext.__init__(self, *args, **kwargs)
+        with self:
+            Context.__init__(self)
+
+    def _bind(self):
+        self.makeCurrent()
 

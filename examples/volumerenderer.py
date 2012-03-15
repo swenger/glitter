@@ -145,7 +145,7 @@ class VolumeRenderer(object):
         assert isinstance(volume, Texture3D), "volume must be a 3D texture"
 
         # We need a vertex array to hold the faces of the cube:
-        self.vao = VertexArray([cube_vertices], elements=cube_indices)
+        self.vao = VertexArray(cube_vertices, elements=cube_indices)
 
         # For rendering the back faces, we create a shader program and a
         # framebuffer with an attached texture:

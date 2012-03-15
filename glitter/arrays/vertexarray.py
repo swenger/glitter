@@ -17,8 +17,11 @@ class VertexArray(ManagedObject, BindableObject):
     _db = "vertex_arrays"
     _binding = "vertex_array_binding"
 
-    def __init__(self, attributes=[], elements=None):
-        super(VertexArray, self).__init__()
+    def __init__(self, *attributes, **kwargs):
+        """@todo document kwargs: elements
+        """
+
+        super(VertexArray, self).__init__(kwargs.pop("context", None))
         self._attributes = {}
 
         if isinstance(attributes, dict):
@@ -30,7 +33,9 @@ class VertexArray(ManagedObject, BindableObject):
         if attributes:
             raise ValueError("vertex array has no attribute(s) %s" % ", ".join("'%s'" % x for x in attributes.keys()))
         
-        self.elements = elements
+        self.elements = kwargs.pop("elements", None)
+        if kwargs:
+            raise TypeError("__init__() got an unexpected keyword argument '%s'" % kwargs.keys()[0])
 
     def __getitem__(self, index):
         return self._attributes[index]
