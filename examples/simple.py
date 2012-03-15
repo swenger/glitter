@@ -55,72 +55,89 @@ vertices = ((0, 0, 0), (-1, 1, 0), (1, 1, 0), (1, -1, 0), (-1, -1, 0))
 colors = ((1, 1, 1), (0, 1, 0), (0, 0, 1), (0, 1, 1), (1, 0, 0))
 indices = ((0, 1, 2), (0, 2, 3), (0, 3, 4), (0, 4, 1))
 
-# <h2>Callback functions</h2>
+# <h2>Main class</h2>
 
-# <h3>Display function</h3>
+# We wrap all the OpenGL interaction in a class. The class will contain an
+# <code>__init__()</code> method to set up all OpenGL objects, any required
+# callback methods, as well as a <code>run()</code> method to trigger execution
+# of the GLUT main loop.
+class SimpleExample(object):
+    # <h3>Initialization</h3>
 
-# Here we define the display function. It will be called by GLUT whenever the
-# screen has to be redrawn.
-def display():
-    # In the initialization code, we will create a GLUT window. In the display
-    # function, we first clear this window:
-    window.clear()
+    # When a <code>SimpleExample</code> instance is created, we need to
+    # initialize a few OpenGL objects.
+    def __init__(self):
+        # First, we create a window; this also creates an OpenGL context.
+        self.window = GlutWindow(double=True, multisample=True)
+
+        # Then, we set the GLUT display callback function which will be defined
+        # later.
+        self.window.display_callback = self.display
+
+        # In the OpenGL core profile, there is no such thing as a "standard pipeline"
+        # any more. We use the minimalistic <code>defaultpipeline</code> from the
+        # <code>glitter.convenience</code> module to create a shader program instead:
+        self.shader = get_default_program()
+
+        # Here, we create a vertex array that contains buffers for two vertex array
+        # input variables as well as an index array:
+        self.vao = VertexArray(vertices, colors, elements=indices)
+
+    # <h3>Callback functions</h3>
+
+    # <h4>Display function</h4>
+
+    # Here we define the display function. It will be called by GLUT whenever the
+    # screen has to be redrawn.
+    def display(self):
+        # First we clear the default framebuffer:
+        self.window.clear()
+        
+        # To draw the vertex array, we use:
+        self.vao.draw()
+
+        # After all rendering commands have been issued, we swap the back buffer to
+        # the front, making the rendered image visible all at once:
+        self.window.swap_buffers()
+
+    # <h4>Timer function</h4>
+
+    # The animation is controlled by a GLUT timer. The timer callback changes the
+    # modelview matrix, schedules the next timer event, and causes a screen redraw:
+    def timer(self):
+        # We first get the elapsed time from GLUT using <code>get_elapsed_time()</code>:
+        phi = get_elapsed_time()
+
+        # We then set the <code>modelview_matrix</code> uniform variable of the
+        # shader created in the initialization section simply by setting an
+        # attribute:
+        self.shader.modelview_matrix = ((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 2))
+
+        # The following line schedules the next timer event to execute after ten milliseconds.
+        self.window.add_timer(10, self.timer)
+
+        # Finally, we tell GLUT to redraw the screen.
+        self.window.post_redisplay()
+
+    # <h3>Running</h3>
     
-    # We will also create a vertex array holding the vertex positions and
-    # colors. To draw this array, we use:
-    vao.draw()
+    # We will call the <code>run()</code> method later to run the OpenGL code.
+    def run(self):
+        # To start the animation, we call the timer once; all subsequent timer
+        # calls will be scheduled by the timer function itself.
+        self.timer()
 
-    # After all rendering commands have been issued, we swap the back buffer to
-    # the front, making the rendered image visible all at once:
-    window.swap_buffers()
+        # The default program is bound by using a <code>with</code> statement:
+        with self.shader:
+            # With the shader bound, we enter the GLUT main loop.
+            main_loop()
 
-# <h3>Timer function</h3>
+        # When the main loop exits, control is handed back to the script.
 
-# The animation is controlled by a GLUT timer. The timer callback changes the
-# modelview matrix, schedules the next timer event, and causes a screen redraw:
-def timer():
-    # We first get the elapsed time from GLUT using <code>get_elapsed_time()</code>:
-    phi = get_elapsed_time()
+# <h2>Main section</h2>
 
-    # We then set the <code>modelview_matrix</code> uniform variable of the
-    # shader created in the initialization section simply by setting an
-    # attribute:
-    shader.modelview_matrix = ((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 2))
-
-    # The following line schedules the next timer event to execute after ten milliseconds.
-    window.add_timer(10, timer)
-
-    # Finally, we tell GLUT to redraw the screen.
-    window.post_redisplay()
-
-# <h2>Initialization and main loop</h2>
-
-# Finally, if this program is being run from the command line, we set up all
-# the previously mentioned objects and start the GLUT main loop.
+# Finally, if this program is being run from the command line, we instanciate
+# the main class and run it.
 if __name__ == "__main__":
-    # First, wereate a window; this also creates an OpenGL context.
-    window = GlutWindow(double=True, multisample=True)
-
-    # Then, we set the GLUT display callback function.
-    window.display_callback = display
-
-    # In the OpenGL core profile, there is no such thing as a "standard pipeline"
-    # any more. We use the minimalistic <code>defaultpipeline</code> from the
-    # <code>glitter.convenience</code> module to create a shader program instead:
-    shader = get_default_program()
-
-    # Here, we create a vertex array that contains buffers for two vertex array
-    # input variables as well as an index array:
-    vao = VertexArray(vertices, colors, elements=indices)
-
-    # To start the animation, we call the timer once; all subsequent timer
-    # calls will be scheduled by the timer function itself.
-    timer()
-
-    # The default program is bound by using a <code>with</code> statement:
-    with shader:
-        # With the shader bound, we enter the GLUT main loop.
-        main_loop()
-
-# When the main loop exits, control is handed back to the script.
+    SimpleExample().run()
 

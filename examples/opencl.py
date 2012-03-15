@@ -161,108 +161,127 @@ class CLCode(object):
         # Finally, we allow OpenGL to access the buffers again:
         cl.enqueue_release_gl_objects(self.queue, [self.cl_positions, self.cl_colors])
 
-# <h2>Callback functions</h2>
+# <h2>Main class</h2>
 
-# <h3>Display function</h3>
+# We wrap all the OpenGL interaction in a class. The class will contain an
+# <code>__init__()</code> method to set up all OpenGL objects, any required
+# callback methods, as well as a <code>run()</code> method to trigger execution
+# of the GLUT main loop.
+class OpenCLExample(object):
+    # <h3>Initialization</h3>
 
-# Here we define the display function. It will be called by GLUT whenever the
-# screen has to be redrawn.
-def display():
-    # In the initialization code, we will create a GLUT window. In the display
-    # function, we first clear this window:
-    window.clear()
+    # When a <code>OpenCLExample</code> instance is created, we need to
+    # initialize a few OpenGL objects.
+    def __init__(self):
+        # First, we create a window; this also creates an OpenGL context.
+        self.window = GlutWindow(double=True, alpha=True, depth=True)
+
+        # Then, we set the GLUT display and keyboard callback functions which
+        # will be defined later.
+        self.window.display_callback = self.display
+        self.window.keyboard_callback = self.keyboard
+
+        # Here, we generate numpy arrays to hold the positions, colors, and
+        # velocities of the particles:
+        num = 200000
+        positions = numpy.empty((num, 4), dtype=numpy.float32)
+        colors = numpy.empty((num, 4), dtype=numpy.float32)
+        velocities = numpy.empty((num, 4), dtype=numpy.float32)
+
+        # So far, the array contents are undefined. We have to initialize them with meaningful values:
+        positions[:, 0] = numpy.sin(numpy.arange(0, num) * 2 * numpy.pi / num) * (numpy.random.random_sample((num,)) / 3 + 0.2)
+        positions[:, 1] = numpy.cos(numpy.arange(0, num) * 2 * numpy.pi / num) * (numpy.random.random_sample((num,)) / 3 + 0.2)
+        positions[:, 2:] = 0, 1
+        colors[:] = 0, 1, 0, 1
+        velocities[:, :2] = 2 * positions[:, :2]
+        velocities[:, 2] = 3
+        velocities[:, 3] = numpy.random.random_sample((num,))
+
+        # Instead of simply generating a vertex array from the position and color
+        # data, we first generate array buffers for them:
+        gl_positions = ArrayBuffer(data=positions, usage="DYNAMIC_DRAW")
+        gl_colors = ArrayBuffer(data=colors, usage="DYNAMIC_DRAW")
+        # These array buffers will later also be used by OpenCL. We do not need to
+        # wrap <code>velocities</code> in this way, as it will only be used by
+        # OpenCL and can be wrapped in an OpenCL buffer directly.
+
+        # We now create a vertex array that will pass the position and color data
+        # to the shader. The vertex array constructor accepts
+        # <code>ArrayBuffer</code> instances:
+        self.vao = VertexArray(gl_positions, gl_colors)
+
+        # In the OpenGL core profile, there is no such thing as a "standard pipeline"
+        # any more. We use the minimalistic <code>defaultpipeline</code> from the
+        # <code>glitter.convenience</code> module to create a shader program instead:
+        self.shader = get_default_program()
+        
+        # Here, we create the <code>CLCode</code> object that manages OpenCL
+        # interaction. It is passed the OpenGL buffer objects as well as a numpy
+        # array of velocities.
+        self.clcode = CLCode(gl_positions, gl_colors, velocities)
+
+    # <h3>Callback functions</h3>
+
+    # <h4>Display function</h4>
+
+    # Here we define the display function. It will be called by GLUT whenever the
+    # screen has to be redrawn.
+    def display(self):
+        # First we clear the default framebuffer:
+        self.window.clear()
+        
+        # To draw the vertex array, we use:
+        self.vao.draw()
+
+        # After all rendering commands have been issued, we swap the back buffer to
+        # the front, making the rendered image visible all at once:
+        self.window.swap_buffers()
+
+    # <h4>Timer function</h4>
+
+    # The animation is controlled by a GLUT timer. The timer callback animates the
+    # particle system, schedules the next timer event, and causes a screen redraw:
+    def timer(self):
+        # We first tell an instance of the <code>CLCode</code> class to execute the
+        # OpenCL kernel:
+        self.clcode.execute(10)
+
+        # The following line schedules the next timer event to execute after one millisecond.
+        self.window.add_timer(1, self.timer)
+
+        # Finally, we tell GLUT to redraw the screen.
+        self.window.post_redisplay()
+
+    # <h4>Keyboard function</h4>
+
+    # To further illustrate the concept of GLUT callbacks, here's a keyboard
+    # handler that will simply make the program exit when any key is pressed:
+    def keyboard(self, key, x, y):
+        raise SystemExit
+
+    # <h3>Running</h3>
     
-    # We will also create a vertex array holding the vertex positions and
-    # colors. To draw this array, we use:
-    vao.draw()
+    # We will call the <code>run()</code> method later to run the OpenGL code.
+    def run(self):
+        # To start the animation, we call the timer once; all subsequent timer
+        # calls will be scheduled by the timer function itself.
+        self.timer()
 
-    # After all rendering commands have been issued, we swap the back buffer to
-    # the front, making the rendered image visible all at once:
-    window.swap_buffers()
+        # The default program is bound by using a <code>with</code> statement. At
+        # the same time, we can pass in additional uniform variables, such as the
+        # modelview matrix:
+        with self.shader(modelview_matrix=((1, 0, 0, 0), (0, 0, 1, 0), (0, 1, 0, 0), (0, 0, 0, 2))):
+            # With the shader bound, we enter the GLUT main loop.
+            main_loop()
 
-# <h3>Timer function</h3>
+        # When the main loop exits, control is handed back to the script,
+        # unless <code>SystemExit</code> has been raised by the keyboard
+        # handler.
 
-# The animation is controlled by a GLUT timer. The timer callback animates the
-# particle system, schedules the next timer event, and causes a screen redraw:
-def timer(last_time=[0]):
-    # We first tell an instance of the <code>CLCode</code> class to execute the
-    # OpenCL kernel:
-    clcode.execute(10)
+# <h2>Main section</h2>
 
-    # The following line schedules the next timer event to execute after one millisecond.
-    window.add_timer(1, timer)
-
-    # Finally, we tell GLUT to redraw the screen.
-    window.post_redisplay()
-
-# <h3>Keyboard function</h3>
-
-# To further illustrate the concept of GLUT callbacks, here's a keyboard
-# handler that will simply make the program exit when any key is pressed:
-def keyboard(key, x, y):
-    raise SystemExit
-
-# <h2>Initialization and main loop</h2>
-
-# Finally, if this program is being run from the command line, we set up all
-# the previously mentioned objects and start the GLUT main loop.
+# Finally, if this program is being run from the command line, we instanciate
+# the main class and run it.
 if __name__ == "__main__":
-    # First, wereate a window; this also creates an OpenGL context.
-    window = GlutWindow(double=True, alpha=True, depth=True)
-
-    # Then, we set the GLUT display and keyboard callback functions.
-    window.display_callback = display
-    window.keyboard_callback = keyboard
-
-    # Here, we generate numpy arrays to hold the positions, colors, and
-    # velocities of the particles:
-    num = 200000
-    positions = numpy.empty((num, 4), dtype=numpy.float32)
-    colors = numpy.empty((num, 4), dtype=numpy.float32)
-    velocities = numpy.empty((num, 4), dtype=numpy.float32)
-
-    # So far, the array contents are undefined. We have to initialize them with meaningful values:
-    positions[:, 0] = numpy.sin(numpy.arange(0, num) * 2 * numpy.pi / num) * (numpy.random.random_sample((num,)) / 3 + 0.2)
-    positions[:, 1] = numpy.cos(numpy.arange(0, num) * 2 * numpy.pi / num) * (numpy.random.random_sample((num,)) / 3 + 0.2)
-    positions[:, 2:] = 0, 1
-    colors[:] = 0, 1, 0, 1
-    velocities[:, :2] = 2 * positions[:, :2]
-    velocities[:, 2] = 3
-    velocities[:, 3] = numpy.random.random_sample((num,))
-
-    # Instead of simply generating a vertex array from the position and color
-    # data, we first generate array buffers for them:
-    gl_positions = ArrayBuffer(data=positions, usage="DYNAMIC_DRAW")
-    gl_colors = ArrayBuffer(data=colors, usage="DYNAMIC_DRAW")
-    # These array buffers will later also be used by OpenCL. We do not need to
-    # wrap <code>velocities</code> in this way, as it will only be used by
-    # OpenCL and can be wrapped in an OpenCL buffer directly.
-
-    # We now create a vertex array that will pass the position and color data
-    # to the shader. The vertex array constructor accepts
-    # <code>ArrayBuffer</code> instances:
-    vao = VertexArray(gl_positions, gl_colors)
-
-    # In the OpenGL core profile, there is no such thing as a "standard pipeline"
-    # any more. We use the minimalistic <code>defaultpipeline</code> from the
-    # <code>glitter.convenience</code> module to create a shader program instead:
-    shader = get_default_program()
-    
-    # Here, we create the <code>CLCode</code> object that manages OpenCL
-    # interaction. It is passed the OpenGL buffer objects as well as a numpy
-    # array of velocities.
-    clcode = CLCode(gl_positions, gl_colors, velocities)
-
-    # To start the animation, we call the timer once; all subsequent timer
-    # calls will be scheduled by the timer function itself.
-    timer()
-
-    # The default program is bound by using a <code>with</code> statement. At
-    # the same time, we can pass in additional uniform variables, such as the
-    # modelview matrix:
-    with shader(modelview_matrix=((1, 0, 0, 0), (0, 0, 1, 0), (0, 1, 0, 0), (0, 0, 0, 2))):
-        # With the shader bound, we enter the GLUT main loop.
-        main_loop()
-
-# When the main loop exits, control is handed back to the script, unless <code>SystemExit</code> has been raised by the keyboard handler.
+    OpenCLExample().run()
 

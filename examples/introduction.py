@@ -181,155 +181,164 @@ indices = (
 # of values per vertex. Since in a typical geometry several primitives share a
 # common vertex, it is usually more memory efficient to use an index array.
 
-# <h2>Callback functions</h2>
+# <h2>Main class</h2>
 
-# <h3>Display function</h3>
+# We wrap all the OpenGL interaction in a class. The class will contain an
+# <code>__init__()</code> method to set up all OpenGL objects, any required
+# callback methods, as well as a <code>run()</code> method to trigger execution
+# of the GLUT main loop.
+class IntroductionExample(object):
+    # <h3>Initialization</h3>
 
-# Here we define the display function. It will be called by GLUT whenever the
-# screen has to be redrawn.
-def display():
-    """Display function.
+    # When an <code>IntroductionExample</code> instance is created, we need to
+    # initialize a few OpenGL objects.
+    def __init__(self):
+        # First, we create a window; this also creates an OpenGL context.
+        self.window = GlutWindow(double=True, multisample=True)
 
-    Renders the geometry into a framebuffer, then copies the texture to the screen.
-    """
+        # Then, we set the GLUT display and keyboard callback functions which
+        # will be defined later.
+        self.window.display_callback = self.display
+        self.window.keyboard_callback = self.keyboard
 
-    # In the initialization section of the program, we will generate a
-    # pipeline. A pipeline is a convenience object that encapsulates a vertex
-    # array for input, a shader program for processing, and a framebuffer for
-    # output. The framebuffer is optional (we could render directly to the
-    # screen if we wanted), but we will render into a texture and copy the
-    # texture to the screen for instructional purposes. We can simply clear the
-    # pipeline and render the vertices into the framebuffer using the shader
-    # with the following two lines:
-    render_pipeline.clear()
-    render_pipeline.draw()
+        # A shader program is built from the previously defined vertex and
+        # fragment codes:
+        self.shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader)
 
-    # For output on the screen, we will create a GLUT window. It can be cleared
-    # in very much the same way:
-    window.clear()
+        # This shader program is then used to build a pipeline. A pipeline is a
+        # convenience object that encapsulates a vertex array for input, a
+        # shader program for processing, and a framebuffer for output. The
+        # framebuffer is optional (we could render directly to the screen if we
+        # wanted), but we will render into a texture and copy the texture to
+        # the screen for instructional purposes. The <code>Pipeline</code>
+        # constructor automatically creates an empty vertex array and a
+        # framebuffer with no attachments. Named constructor arguments are
+        # interpreted as attributes of the vertex array and the framebuffer or
+        # as named inputs and outputs of the shader. This means we can directly
+        # pass in arrays of vertices and colors that will be bound to
+        # <code>in_position</code> and <code>in_color</code>, respectivey, as
+        # well as the array of element indices to draw and an empty texture to
+        # bind to the framebuffer:
+        self.render_pipeline = Pipeline(self.shader, in_position=vertices, in_color=colors,
+                elements=indices, out_color=RectangleTexture(shape=(300, 300, 3)))
 
-    # To copy the results of the pipeline to the screen, we will use a shader
-    # that simply displays a texture. The shader can be bound by using a
-    # <code>with</code> statement:
-    with copy_shader:
-        # All textures used by the shader are then bound automatically, and
-        # everything is reset to its previous state when we leave the
-        # <code>with</code> block.
+        # Shader uniform variables like textures can also be set directly on
+        # the pipeline. Here we initialize two textures with random data:
+        self.render_pipeline.texture_0 = Texture2D(random((30, 30, 4)))
+        self.render_pipeline.texture_1 = RectangleTexture(random((30, 30, 4)))
 
-        # With the shader bound, we simply draw a fullscreen quad that is
-        # stored in a vertex array we will create in the initialization
-        # section:
-        vao.draw()
+        # Many properties, such as the filtering mode for textures, can
+        # directly be set as attributes on the corresponding objects:
+        self.render_pipeline.texture_0.min_filter = Texture2D.min_filters.NEAREST
+        self.render_pipeline.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
 
-    # After all rendering commands have been issued, we swap the back buffer to
-    # the front, making the rendered image visible all at once:
-    window.swap_buffers()
+        # For copying the texture to the screen, we create another shader
+        # program.
+        self.copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader)
 
-    # Finally, we disable logging so that we only see the OpenGL calls of the
-    # first run of the display function:
-    add_logger(None)
+        # The input texture of this shader program is the output texture of the
+        # previous pipeline. Since all textures and framebuffers are
+        # automatically bound and unbound, we do not need to worry about
+        # whether the framebuffer is still writing to the texture.
+        self.copy_shader.image = self.render_pipeline.out_color
 
-# <h3>Keyboard function</h3>
+        # Instead of using a pipeline with named vertex shader inputs, we can
+        # also create a vertex array object directly with a list of vertex
+        # shader inputs to use. Here we use only a single vertex shader input:
+        # the coordinates of a fullscreen quad. The <code>elements</code>
+        # parameter defines two triangles that make up the quad.
+        self.vao = VertexArray(((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0)), elements=((0, 1, 2), (0, 2, 3)))
 
-# To further illustrate the concept of GLUT callbacks, here's a keyboard
-# handler that will simply make the program exit when any key is pressed:
-def keyboard(key, x, y):
-    """Keyboard handler.
+    # <h3>Callback functions</h3>
 
-    Any key press will cause the program to exit cleanly.
-    """
+    # <h4>Display function</h4>
 
-    raise SystemExit
+    # Here we define the display function. It will be called by GLUT whenever
+    # the screen has to be redrawn.
+    def display(self):
+        # We can simply clear the pipeline and render the vertices into the
+        # framebuffer using the shader with the following two lines:
+        self.render_pipeline.clear()
+        self.render_pipeline.draw()
 
-# <h3>Timer function</h3>
+        # For output on the screen, we have created a GLUT window. It can be
+        # cleared in very much the same way:
+        self.window.clear()
 
-# The animation is controlled by a GLUT timer. The timer callback changes the
-# modelview matrix, schedules the next timer event, and causes a screen redraw:
-def timer():
-    """Timer callback.
+        # To copy the results of the pipeline to the screen, we use the shader
+        # that simply displays a texture. The shader can be bound by using a
+        # <code>with</code> statement:
+        with self.copy_shader:
+            # All textures used by the shader are then bound automatically, and
+            # everything is reset to its previous state when we leave the
+            # <code>with</code> block.
 
-    Animates the modelview matrix, uploads it to the shader and causes a screen redraw.
-    """
+            # With the shader bound, we simply draw a fullscreen quad that is
+            # stored in a vertex array we will create in the initialization
+            # section:
+            self.vao.draw()
 
-    # We first get the elapsed time from GLUT using <code>get_elapsed_time()</code>:
-    t = get_elapsed_time()
-    phi = 2 * pi * t / 4.0
+        # After all rendering commands have been issued, we swap the back
+        # buffer to the front, making the rendered image visible all at once:
+        self.window.swap_buffers()
 
-    # We then set the <code>modelview_matrix</code> uniform variable of the
-    # shader created in the initialization section simply by setting an
-    # attribute:
-    shader.modelview_matrix = ((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))
+        # Finally, we disable logging so that we only see the OpenGL calls of
+        # the first run of the display function:
+        add_logger(None)
 
-    # The following line schedules the next timer event to execute after ten milliseconds.
-    window.add_timer(10, timer)
+    # <h4>Keyboard function</h4>
 
-    # Finally, we tell GLUT to redraw the screen.
-    window.post_redisplay()
+    # To further illustrate the concept of GLUT callbacks, here's a keyboard
+    # handler that will simply make the program exit when any key is pressed:
+    def keyboard(self, key, x, y):
+        raise SystemExit
 
-# <h2>Initialization and main loop</h2>
+    # <h4>Timer function</h4>
 
-# Finally, if this program is being run from the command line, we set up all
-# the previously mentioned objects and start the GLUT main loop.
+    # The animation is controlled by a GLUT timer. The timer callback changes
+    # the modelview matrix, schedules the next timer event, and causes a screen
+    # redraw:
+    def timer(self):
+        # We first get the elapsed time from GLUT using
+        # <code>get_elapsed_time()</code>:
+        t = get_elapsed_time()
+        phi = 2 * pi * t / 4.0
+
+        # We then set the <code>modelview_matrix</code> uniform variable of the
+        # shader created in the initialization section simply by setting an
+        # attribute:
+        self.shader.modelview_matrix = ((cos(phi), sin(phi), 0, 0), (-sin(phi), cos(phi), 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))
+
+        # The following line schedules the next timer event to execute after
+        # ten milliseconds.
+        self.window.add_timer(10, self.timer)
+
+        # Finally, we tell GLUT to redraw the screen.
+        self.window.post_redisplay()
+
+    # <h3>Running</h3>
+    
+    # We will call the <code>run()</code> method later to run the OpenGL code.
+    def run(self):
+        # To start the animation, we call the timer once; all subsequent timer
+        # calls will be scheduled by the timer function itself.
+        self.timer()
+
+        # Now that all the initialization is done, we add the default logger to
+        # all OpenGL commands so that we can see what OpenGL the display
+        # function issues, and in which order.
+        add_logger()
+
+        # Finally, to start rendering, we enter the GLUT main loop.
+        main_loop()
+
+    # When the main loop exits, control is handed back to the script, unless
+    # <code>SystemExit</code> has been raised by the keyboard handler.
+
+# <h2>Main section</h2>
+
+# Finally, if this program is being run from the command line, we instanciate
+# the main class and run it.
 if __name__ == "__main__":
-    # First, wereate a window; this also creates an OpenGL context.
-    window = GlutWindow(double=True, multisample=True) #: The main window.
-
-    # Then, we set the GLUT display and keyboard callback functions.
-    window.display_callback = display
-    window.keyboard_callback = keyboard
-
-    # A shader program is built from the previously defined vertex and fragment
-    # codes:
-    shader = ShaderProgram(vertex=vertex_shader, fragment=fragment_shader) #: The shader program for rendering the geometry.
-
-    # This shader program is then used to build a pipeline. The
-    # <code>Pipeline</code> constructor automatically creates an empty vertex
-    # array and a framebuffer with no attachments. Named constructor arguments
-    # are interpreted as attributes of the vertex array and the framebuffer or
-    # as named inputs and outputs of the shader. This means we can directly
-    # pass in arrays of vertices and colors that will be bound to
-    # <code>in_position</code> and <code>in_color</code>, respectivey, as well
-    # as the array of element indices to draw and an empty texture to bind to
-    # the framebuffer:
-    render_pipeline = Pipeline(shader, in_position=vertices, in_color=colors, elements=indices, out_color=RectangleTexture(shape=(300, 300, 3)))
-
-    # Shader uniform variables like textures can also be set directly on the
-    # pipeline. Here we initialize two textures with random data:
-    render_pipeline.texture_0 = Texture2D(random((30, 30, 4)))
-    render_pipeline.texture_1 = RectangleTexture(random((30, 30, 4)))
-
-    # Many properties, such as the filtering mode for textures, can directly be
-    # set as attributes on the corresponding objects:
-    render_pipeline.texture_0.min_filter = Texture2D.min_filters.NEAREST
-    render_pipeline.texture_0.mag_filter = Texture2D.mag_filters.NEAREST
-
-    # For copying the texture to the screen, we create another shader program.
-    copy_shader = ShaderProgram(vertex=copy_vertex_shader, fragment=copy_fragment_shader) #: The shader program for copying a texture to screen.
-
-    # The input texture of this shader program is the output texture of the
-    # previous pipeline. Since all textures and framebuffers are automatically
-    # bound and unbound, we do not need to worry about whether the framebuffer
-    # is still writing to the texture.
-    copy_shader.image = render_pipeline.out_color
-
-    # Instead of using a pipeline with named vertex shader inputs, we can also
-    # create a vertex array object directly with a list of vertex shader inputs
-    # to use. Here we use only a single vertex shader input: the coordinates of
-    # a fullscreen quad. The <code>elements</code> parameter defines two
-    # triangles that make up the quad.
-    vao = VertexArray(((-1.0, -1.0), (-1.0, 1.0), (1.0, 1.0), (1.0, -1.0)), elements=((0, 1, 2), (0, 2, 3)))
-
-    # To start the animation, we call the timer once; all subsequent timer
-    # calls will be scheduled by the timer function itself.
-    timer()
-
-    # Now that all the initialization is done, we add the default logger to all
-    # OpenGL commands so that we can see what OpenGL the display function
-    # issues, and in which order.
-    add_logger()
-
-    # Finally, to start rendering, we enter the GLUT main loop.
-    main_loop()
-
-# When the main loop exits, control is handed back to the script, unless <code>SystemExit</code> has been raised by the keyboard handler.
+    IntroductionExample().run()
 

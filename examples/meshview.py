@@ -37,6 +37,15 @@ from math import sin, cos, pi
 # function to generate random textures:
 from numpy.random import random
 
+# We need to read a mesh filename from <code>sys.argv</code>, so import
+# <code>sys</code>.
+import sys
+
+# We assume the mesh is stored in a <a
+# href="http://www.hdfgroup.org/HDF5/">HDF5</a> file, so import <a
+# href="h5py.alfven.org"><code>h5py</code></a>.
+import h5py
+
 # We can usually import classes and functions contained in <i>glitter</i>
 # submodules directly from glitter:
 from glitter import VertexArray, State, get_default_program
@@ -45,103 +54,109 @@ from glitter import VertexArray, State, get_default_program
 # context, however, have to be imported from their respective submodules:
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
-# <h2>Callback functions</h2>
+# <h2>Main class</h2>
 
-# <h3>Display function</h3>
+# We wrap all the OpenGL interaction in a class. The class will contain an
+# <code>__init__()</code> method to set up all OpenGL objects, any required
+# callback methods, as well as a <code>run()</code> method to trigger execution
+# of the GLUT main loop.
+class MeshViewer(object):
+    # <h3>Initialization</h3>
 
-# Here we define the display function. It will be called by GLUT whenever the
-# screen has to be redrawn.
-def display():
-    """Display function."""
+    # When a <code>MeshViewer</code> instance is created, we need to
+    # initialize a few OpenGL objects.
+    def __init__(self):
+        # First, we create a window; this also creates an OpenGL context.
+        self.window = GlutWindow(double=True, multisample=True)
 
-    # In the initialization code, we will create a GLUT window. In the display
-    # function, we first clear this window:
-    window.clear()
+        # Then, we set the GLUT display callback function which will be defined later.
+        self.window.display_callback = self.display
 
-    # We will later create a vertex array holding the vertex positions
-    # and colors. To draw this array, we use:
-    vao.draw()
+        # In the OpenGL core profile, there is no such thing as a "standard pipeline"
+        # any more. We use the minimalistic <code>defaultpipeline</code> from the
+        # <code>glitter.convenience</code> module to create a shader program instead:
+        self.shader = get_default_program()
 
-    window.swap_buffers()
+        # We open the HDF5 file specified on the command line for reading:
+        with h5py.File(sys.argv[1], "r") as f:
+            # The vertices, colors and indices of the mesh are read from the
+            # corresponding datasets in the HDF5 file. Note that the names of the
+            # datasets are mere convention. Colors and indices are allowed to be
+            # undefined.
+            vertices = f["vertices"]
+            colors = f.get("colors", None)
+            elements = f.get("indices", None)
 
-# <h3>Timer function</h3>
+            # If no colors were specified, we generate random ones so we can
+            # distinguish the triangles without fancy shading.
+            if colors is None:
+                colors = random((len(vertices), 3))[:, None, :][:, [0] * vertices.shape[1], :]
 
-# The animation is controlled by a GLUT timer. The timer callback changes the
-# modelview matrix, schedules the next timer event, and causes a screen redraw:
-def timer():
-    # We first get the elapsed time from GLUT using <code>get_elapsed_time()</code>:
-    phi = 2 * pi * get_elapsed_time() / 20.0
+            # Here, we create a vertex array that contains buffers for two vertex array
+            # input variables as well as an index array. If <code>elements</code>
+            # is <code>None</code>, the vertex array class will draw all vertices
+            # in order.
+            self.vao = VertexArray(vertices, colors, elements=elements)
 
-    # We then set the <code>modelview_matrix</code> uniform variable of the
-    # shader created in the initialization section simply by setting an
-    # attribute:
-    shader.modelview_matrix = ((cos(phi), 0, sin(phi), 0), (0, 1, 0, 0), (-sin(phi), 0, cos(phi), 0), (0, 0, 0, 1))
+    # <h3>Callback functions</h3>
 
-    # The following line schedules the next timer event to execute after ten milliseconds.
-    window.add_timer(10, timer)
+    # <h4>Display function</h4>
 
-    # Finally, we tell GLUT to redraw the screen.
-    window.post_redisplay()
+    # Here we define the display function. It will be called by GLUT whenever the
+    # screen has to be redrawn.
+    def display(self):
+        # First we clear the default framebuffer:
+        self.window.clear()
 
-# <h2>Initialization and main loop</h2>
+        # To draw the vertex array, we use:
+        self.vao.draw()
 
-# Finally, if this program is being run from the command line, we set up all
-# the previously mentioned objects and start the GLUT main loop.
+        # After all rendering commands have been issued, we swap the back buffer to
+        # the front, making the rendered image visible all at once:
+        self.window.swap_buffers()
+
+    # <h4>Timer function</h4>
+
+    # The animation is controlled by a GLUT timer. The timer callback changes the
+    # modelview matrix, schedules the next timer event, and causes a screen redraw:
+    def timer(self):
+        # We first get the elapsed time from GLUT using <code>get_elapsed_time()</code>:
+        phi = 2 * pi * get_elapsed_time() / 20.0
+
+        # We then set the <code>modelview_matrix</code> uniform variable of the
+        # shader simply by setting an attribute:
+        self.shader.modelview_matrix = ((cos(phi), 0, sin(phi), 0), (0, 1, 0, 0), (-sin(phi), 0, cos(phi), 0), (0, 0, 0, 1))
+
+        # The following line schedules the next timer event to execute after ten milliseconds.
+        self.window.add_timer(10, self.timer)
+
+        # Finally, we tell GLUT to redraw the screen.
+        self.window.post_redisplay()
+
+    # <h3>Running</h3>
+    
+    # We will call the <code>run()</code> method later to run the OpenGL code.
+    def run(self):
+        # To start the animation, we call the timer once; all subsequent timer
+        # calls will be scheduled by the timer function itself.
+        self.timer()
+
+        # The shader program is bound by using a <code>with</code> statement:
+        with self.shader:
+            # The <code>State</code> class encapsulates state changes in the
+            # context. For example, to enable depth testing for the duration of the
+            # following function call, we would write:
+            with State(depth_test=True):
+                # With the shader bound and depth testing enabled, we enter the
+                # GLUT main loop.
+                main_loop()
+
+        # When the main loop exits, control is handed back to the script.
+
+# <h2>Main section</h2>
+
+# Finally, if this program is being run from the command line, we instanciate
+# the main class and run it.
 if __name__ == "__main__":
-    # We need to read a mesh filename from <code>sys.argv</code>, so import
-    # <code>sys</code>.
-    import sys
-
-    # We assume the mesh is stored in a <a
-    # href="http://www.hdfgroup.org/HDF5/">HDF5</a> file, so import <a
-    # href="h5py.alfven.org"><code>h5py</code></a>.
-    import h5py
-
-    # First, wereate a window; this also creates an OpenGL context.
-    window = GlutWindow(double=True, multisample=True)
-
-    # Then, we set the GLUT display callback function.
-    window.display_callback = display
-
-    # In the OpenGL core profile, there is no such thing as a "standard pipeline"
-    # any more. We use the minimalistic <code>defaultpipeline</code> from the
-    # <code>glitter.convenience</code> module to create a shader program instead:
-    shader = get_default_program()
-
-    # We open the HDF5 file specified on the command line for reading:
-    with h5py.File(sys.argv[1], "r") as f:
-        # The vertices, colors and indices of the mesh are read from the
-        # corresponding datasets in the HDF5 file. Note that the names of the
-        # datasets are mere convention. Colors and indices are allowed to be
-        # undefined.
-        vertices = f["vertices"]
-        colors = f.get("colors", None)
-        elements = f.get("indices", None)
-
-        # If no colors were specified, we generate random ones so we can
-        # distinguish the triangles without fancy shading.
-        if colors is None:
-            colors = random((len(vertices), 3))[:, None, :][:, [0] * vertices.shape[1], :]
-
-        # Here, we create a vertex array that contains buffers for two vertex array
-        # input variables as well as an index array. If <code>elements</code>
-        # is <code>None</code>, the vertex array class will draw all vertices
-        # in order.
-        vao = VertexArray(vertices, colors, elements=elements)
-
-    # To start the animation, we call the timer once; all subsequent timer
-    # calls will be scheduled by the timer function itself.
-    timer()
-
-    # The shader program is bound by using a <code>with</code> statement:
-    with shader:
-        # The <code>State</code> class encapsulates state changes in the
-        # context. For example, to enable depth testing for the duration of the
-        # following function call, we would write:
-        with State(depth_test=True):
-            # With the shader bound and depth testing enabled, we enter the
-            # GLUT main loop.
-            main_loop()
-
-# When the main loop exits, control is handed back to the script.
+    MeshViewer().run()
 
