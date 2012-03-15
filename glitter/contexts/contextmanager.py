@@ -11,18 +11,28 @@ class ContextBindingProxy(object):
         return self._bound_context
 
     def __set__(self, obj, context=None):
-        if context is not None and context != self._bound_context:
+        if context is None:
+            self._bound_context = None
+        elif context != self._bound_context:
+            self._bound_context = context
             context._bind()
-        self._bound_context = context
 
     def __repr__(self):
         return "proxy for context binding"
 
 class ContextManager(object):
-    _stack = []
-
     current_context = ContextBindingProxy()
     """The currently active context."""
+
+    def __init__(self):
+        self._stack = []
+
+    def push(self, context):
+        self._stack.append(self.current_context)
+        self.current_context = context
+
+    def pop(self):
+        self.current_context = self._stack.pop()
 
     @staticmethod
     def create_default_context():

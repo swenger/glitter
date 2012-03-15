@@ -95,11 +95,11 @@ class Context(InstanceDescriptorMixin, StateMixin):
         return old_binding
 
     def __enter__(self):
-        context_manager._stack.append(self.bind())
+        context_manager.push(self)
         return self
 
     def __exit__(self, type, value, traceback):
-        context_manager.current_context = context_manager._stack.pop()
+        context_manager.pop()
 
     #{ Enums
     blend_functions = blend_functions
