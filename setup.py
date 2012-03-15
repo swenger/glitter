@@ -129,7 +129,7 @@ class build_py(_build_py):
 
 setup(
     name = "glitter",
-    version = "0.1.2",
+    version = "0.1.2", # if you increase the version number, please update the change log in README.txt
     author = "Stephan Wenger",
     author_email = "wenger@cg.cs.tu-bs.de",
     description = "Intuitive OpenGL wrappers",

@@ -132,3 +132,21 @@ The following constants are missing and have been defined::
 
     #define GL_POLYGON_MODE                   0x0B40
 
+Changelog
+=========
+
+The following versions introduced noteworthy features, bug fixes, or API changes:
+
+version 0.1.2
+-------------
+
+- Introduce literate example programs.
+- `ArrayBuffer`s determine the primitive type and check the buffer dimensions separately.
+- `GLObject`s accept a `context` parameter to `__init__()`.
+- `VertexArray`s expect attributes as separate `__init__()` parameters instead of a list.
+- Fix bug in `ContextManger` (did not call `_bind()`) and add caching.
+- Cast parameters that should be `EnumConstant`s into the appropriate types and accept constant names in addition to constant objects.
+- Add Qt support via PySide or PyQt4.
+- Add plausibility checks to avoid huge memory allocation when a `Context` object was created without a valid OpenGL context.
+- Make color and modelview matrix optional in `defaultpipeline`.
+

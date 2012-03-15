@@ -1,7 +1,5 @@
 """Descriptors for per-context state with complicated setters.
 
-@todo: Unify classes (e.g. C{__repr__} and C{lookup} methods).
-
 @author: Stephan Wenger
 @date: 2012-02-29
 """

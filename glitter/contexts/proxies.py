@@ -1,7 +1,5 @@
 """Generic descriptor classes for per-context state.
 
-@todo: Unify classes (e.g. C{__repr__} method).
-
 @author: Stephan Wenger
 @date: 2012-02-29
 """
