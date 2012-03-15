@@ -44,8 +44,7 @@ Hacking glitter:
   - Write examples (in the C{examples} directory).
 
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
-@todo: Transparent CUDA and OpenCL interoperability.
-@todo: Implement NeHe tutorials as literate example programs.
+@todo: Implement NeHe tutorials as literate example programs, add an example for PyCUDA interoperability.
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
 
 @author: Stephan Wenger
