@@ -137,7 +137,7 @@ Changelog
 
 The following versions introduced noteworthy features, bug fixes, or API changes:
 
-version 0.1.2
+version 0.1.3
 -------------
 
 - Introduce literate example programs.
@@ -149,4 +149,7 @@ version 0.1.2
 - Add Qt support via PySide or PyQt4.
 - Add plausibility checks to avoid huge memory allocation when a `Context` object was created without a valid OpenGL context.
 - Make color and modelview matrix optional in `defaultpipeline`.
+
+version 0.1.2
+-------------
 
