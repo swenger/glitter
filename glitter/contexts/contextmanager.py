@@ -11,9 +11,9 @@ class ContextBindingProxy(object):
         return self._bound_context
 
     def __set__(self, obj, context=None):
-        self._bound_context = context
-        if context is not None:
+        if context is not None and context != self._bound_context:
             context._bind()
+        self._bound_context = context
 
     def __repr__(self):
         return "proxy for context binding"

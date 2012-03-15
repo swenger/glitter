@@ -45,7 +45,7 @@ Hacking glitter:
 @todo: Implement NeHe tutorials as tutorials, examples and tests.
 
 @todo: Convert strings into enum constants where appropriate.
-@todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements, fix spurious context switches.
+@todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Transparent CUDA and OpenCL interoperability.
 
 @author: Stephan Wenger
