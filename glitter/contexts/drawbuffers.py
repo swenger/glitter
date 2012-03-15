@@ -8,12 +8,14 @@ import itertools as _itertools
 import numpy as _np
 
 import glitter.raw as _gl
-from glitter.utils import draw_buffers, EnumConstant, bool8
+from glitter.utils import draw_buffers, EnumConstant, bool8, GlitterError
 
 class DrawBufferList(object):
     def __init__(self, _context):
         self._context = _context
         self._num_buffers = _context.max_draw_buffers
+        if not 0 < self._num_buffers < 512: # sanity check
+            raise GlitterError("implausible number of draw buffers detected; are you sure there is a current OpenGL context?")
 
     def __set__(self, obj, value):
         """Set all draw buffers.
@@ -83,6 +85,8 @@ class ColorWritemaskList(object):
     def __init__(self, _context):
         self._context = _context
         self._num_buffers = _context.max_draw_buffers
+        if not 0 < self._num_buffers < 512: # sanity check
+            raise GlitterError("implausible number of draw buffers detected; are you sure there is a current OpenGL context?")
 
     def __set__(self, obj, value):
         if len(value) != self._num_buffers:

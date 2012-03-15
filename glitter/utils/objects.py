@@ -20,8 +20,8 @@ def _get_context():
     recursion on import because the L{context} module imports this module.
     """
 
-    from glitter.contexts import ContextManager
-    return ContextManager.current_context or ContextManager.create_default_context()
+    from glitter.contexts import context_manager
+    return context_manager.current_context or context_manager.create_default_context()
 
 class GLObject(object):
     """Base class for objects that belong to an OpenGL context.

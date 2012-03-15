@@ -11,8 +11,8 @@ class ContextBindingProxy(object):
         return self._bound_context
 
     def __set__(self, obj, context=None):
-        with obj:
-            old_value, self._bound_context = self._bound_context, context
+        self._bound_context = context
+        if context is not None:
             context._bind()
 
     def __repr__(self):
@@ -37,5 +37,7 @@ class ContextManager(object):
         from glitter.contexts.glut import GlutWindow
         return GlutWindow(shape=(1, 1), hide=True)
 
-__all__ = ["ContextManager"]
+context_manager = ContextManager()
+
+__all__ = ["context_manager"]
 

@@ -33,7 +33,7 @@ from weakref import WeakValueDictionary
 
 import glitter.raw as _gl
 from glitter.utils import blend_functions, blend_equations, depth_functions, draw_buffers, hints, provoking_vertices, logic_op_modes, provoke_modes, color_read_formats, color_read_types, read_buffers, cull_face_modes, front_face_modes, polygon_modes, InstanceDescriptorMixin, State, StateMixin
-from glitter.contexts.contextmanager import ContextManager
+from glitter.contexts.contextmanager import context_manager
 from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Integer64Proxy, EnableDisableProxy, EnumProxy, StringProxy, HintProxy, BindingProxy
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
@@ -72,6 +72,8 @@ class Context(InstanceDescriptorMixin, StateMixin):
         self.transform_feedbacks = GLObjectLibrary(self)
         self.vertex_arrays = GLObjectLibrary(self)
 
+        super(Context, self).__init__()
+
         self._frozen = True
 
     def __setattr__(self, name, value):
@@ -88,16 +90,16 @@ class Context(InstanceDescriptorMixin, StateMixin):
         raise NotImplementedError
 
     def bind(self):
-        old_binding = ContextManager.current_context
-        ContextManager.current_context = self
+        old_binding = context_manager.current_context
+        context_manager.current_context = self
         return old_binding
 
     def __enter__(self):
-        ContextManager._stack.append(self.bind())
+        context_manager._stack.append(self.bind())
         return self
 
     def __exit__(self, type, value, traceback):
-        ContextManager.current_context = ContextManager._stack.pop()
+        context_manager.current_context = context_manager._stack.pop()
 
     #{ Enums
     blend_functions = blend_functions

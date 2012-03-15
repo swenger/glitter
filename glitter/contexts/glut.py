@@ -15,7 +15,7 @@ import random as _random
 import glitter.raw as _gl
 from glitter.utils import Enum
 from glitter.contexts.context import Context
-from glitter.contexts.contextmanager import ContextManager
+from glitter.contexts.contextmanager import context_manager
 
 _cursors = Enum(
     right_arrow=_gl.GLUT_CURSOR_RIGHT_ARROW,
@@ -191,12 +191,12 @@ class GlutWindow(Context):
         if not _gl.glutGet(_gl.GLUT_DISPLAY_MODE_POSSIBLE):
             raise RuntimeError("display mode not possible")
 
-        old_binding = ContextManager.current_context
+        old_binding = context_manager.current_context
         self._id = _gl.glutCreateWindow(self._name) # creating a window changes the current context without the context manager's knowledge
         if old_binding:
             old_binding._bind() # rebind the previous context circumventing any caching performed by the context
         else:
-            ContextManager.current_context = self # tell the context manager about the changed binding
+            context_manager.current_context = self # tell the context manager about the changed binding
 
         super(GlutWindow, self).__init__()
 

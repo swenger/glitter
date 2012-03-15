@@ -7,7 +7,7 @@
 import itertools as _itertools
 
 import glitter.raw as _gl
-from glitter.utils import BindableObject
+from glitter.utils import BindableObject, GlitterError
 from glitter.contexts.proxies import BindingProxy
 
 class TextureUnit(BindableObject):
@@ -58,7 +58,10 @@ class TextureUnitList(object):
 
     def __init__(self, _context):
         self._context = _context
-        self._texture_units = [TextureUnit(_context, _gl.GL_TEXTURE0 + i) for i in range(_context.max_combined_texture_image_units)]
+        num_units = _context.max_combined_texture_image_units
+        if not 0 < num_units < 4096: # sanity check
+            raise GlitterError("implausible number of texture units detected; are you sure there is a current OpenGL context?")
+        self._texture_units = [TextureUnit(_context, _gl.GL_TEXTURE0 + i) for i in range(num_units)]
         self._context.active_texture = self[0]
         self._bound_textures = dict()
 
