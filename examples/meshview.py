@@ -50,8 +50,9 @@ import h5py
 # submodules directly from glitter:
 from glitter import VertexArray, State, get_default_program
 
-# Platform dependent parts like methods for the generation of an OpenGL
-# context, however, have to be imported from their respective submodules:
+# Modules with external dependencies other than numpy, such as platform
+# dependent parts like methods for the generation of an OpenGL context,
+# however, have to be imported from their respective submodules:
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 # <h2>Main class</h2>

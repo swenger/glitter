@@ -12,7 +12,8 @@
 # This program will open a GLUT window and render a textured, rotating fan,
 # overlaid with a textured background. To illustrate the use of framebuffer
 # objects, the scene will first be rendered to a texture, then displayed on
-# screen by a different shader.
+# screen by a different shader. This example has been adapted from <a
+# href="http://openglbook.com/the-book/">OpenGLBook.com</a>.
 
 # This is a fairly advanced "introductory" example using vertex arrays, shader
 # programs, pipelines, textures, and logging. If you are looking for something
@@ -55,8 +56,9 @@ from numpy.random import random
 # submodules directly from glitter:
 from glitter import ShaderProgram, RectangleTexture, Texture2D, Pipeline, VertexArray, add_logger
 
-# Platform dependent parts like methods for the generation of an OpenGL
-# context, however, have to be imported from their respective submodules:
+# Modules with external dependencies other than numpy, such as platform
+# dependent parts like methods for the generation of an OpenGL context,
+# however, have to be imported from their respective submodules:
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
 # <h2>Shaders</h2>

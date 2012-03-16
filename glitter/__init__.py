@@ -35,9 +35,9 @@ Hacking glitter:
     module directly as visibility of subpackages may change.
   - Define the public interface of your module in C{__all__} and, if your
     module is meant for external use, C{import *} from your module in the
-    C{__init__.py} of its parent. However, if your module is
-    platform-dependent, do not C{import *} but have the user import your
-    submodule manually.
+    C{__init__.py} of its parent. However, if your module has external
+    dependencies other than numpy, do not C{import *} but have the user import
+    your submodule manually.
   - Write docstrings for epydoc (use C{@todo}, C{@note}, C{@attention},
     C{@bug}, C{@warning} as appropriate).
   - Write tests for nosetests (in the C{tests} directory).
