@@ -143,15 +143,12 @@ class Canvas(QtWidget):
         # First, we clear the canvas using <code>Context.clear()</code>.
         self.clear()
 
-        # Then, if a mesh has been loaded, we draw it.
+        # Then, if a mesh pipeline has been loaded, we draw it with the
+        # <code>modelview_matrix</code> uniform set. The pipeline binds the
+        # vertex array and the shader, sets the depth test we requested
+        # earlier, draws the vertex array, and resets all modified state:
         if self.mesh is not None:
-            # The mesh shader has a <code>modelview_matrix</code> uniform that
-            # we can set directly on the pipeline object:
-            self.mesh.modelview_matrix = self.projection_matrix * self.modelview_matrix
-            # Then, we draw the pipeline. This binds the vertex array and the
-            # shader, sets the depth test we requested earlier, draws the
-            # vertex array, and resets all modified state:
-            self.mesh.draw()
+            self.mesh.draw_with(modelview_matrix=self.projection_matrix * self.modelview_matrix)
 
     # Finally, when the user requests resetting the view via the menu system,
     # we create a clean modelview matrix and update the screen:

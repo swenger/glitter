@@ -1,5 +1,6 @@
 """Base classes for descriptors and descriptor owners.
 
+@bug: L{Proxy} is currently unaware of its context.
 @author: Stephan Wenger
 @date: 2012-02-29
 """

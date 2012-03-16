@@ -187,14 +187,18 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         """Call L{draw<VertexArray.draw>} on C{self} with attributes from C{kwargs} set.
 
         Keyword arguments that are known attributes or shader input our output
-        variable names will be set as properties on C{self}. Any other
-        arguments will be passed to L{draw<VertexArray.draw>}.
+        variable names will be set as properties on C{self}. Context properties
+        are set before drawing and reset afterwards. Any other arguments will
+        be passed to L{draw<VertexArray.draw>}.
+
+        @todo C{kwargs} context properties should override L{_lazy_context_properties}.
         """
 
         def is_valid_property(name):
-            return hasattr(self, name) or self._has_input(name) or self._has_output(name) # TODO context properties should also be accepted
+            return hasattr(self, name) or self._has_input(name) or self._has_output(name)
         with self(**{key: kwargs.pop(key) for key, value in kwargs.items() if is_valid_property(key)}):
-            self.draw(*args, **kwargs)
+            with State(context=self._context, **{key: kwargs.pop(key) for key, value in kwargs.items() if hasattr(self._context, key)}):
+                self.draw(*args, **kwargs)
 
 __all__ = ["Pipeline"]
 

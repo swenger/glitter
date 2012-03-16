@@ -21,7 +21,7 @@ from glitter.shaders.shader import Shader, VertexShader, TesselationControlShade
 from glitter.shaders.attribute import Attribute, AttributeStruct, AttributeStructArray
 from glitter.shaders.uniform import Uniform, UniformStruct, UniformStructArray
 
-class ProgramProxy(Proxy): # TODO add context
+class ProgramProxy(Proxy):
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
