@@ -152,6 +152,8 @@ setup(
     download_url = "http://pypi.python.org/pypi/glitter",
     url = "http://packages.python.org/glitter",
     setup_requires=["ctypeslib", "nose"],
+    install_requires=["numpy"],
+    # TODO optional dependencies: PySide, h5py etc.?
     packages = find_packages(),
     test_suite = "nose.collector",
     cmdclass= {

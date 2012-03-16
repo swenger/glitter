@@ -28,5 +28,8 @@ def load_hdf5(filename, color_defaults_to_position=True, context=None, **kwargs)
             kwargs["elements"] = f["indices"].value
     return Pipeline(get_default_program(color=("in_color" in kwargs), context=context), use_framebuffer=False, **kwargs)
 
+load_mesh.supported_formats = tuple(sorted(key[5:] for key, value in globals().items()
+        if key.startswith("load_") and callable(value) and value is not load_mesh))
+
 __all__ = ["load_mesh", "load_hdf5"]
 

@@ -192,7 +192,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         """
 
         def is_valid_property(name):
-            return hasattr(self, name) or self._has_input(name) or self._has_output(name)
+            return hasattr(self, name) or self._has_input(name) or self._has_output(name) # TODO context properties should also be accepted
         with self(**{key: kwargs.pop(key) for key, value in kwargs.items() if is_valid_property(key)}):
             self.draw(*args, **kwargs)
 
