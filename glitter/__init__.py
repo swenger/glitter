@@ -8,9 +8,12 @@ Hacking glitter:
     through the {glitter.raw} wrapper. If your raw GL invocations are generic
     enough, think about extending the L{Context} instead. Make sure to derive
     from L{GLObject} and use C{with self._context:} where necessary if your
-    class does in any way interact directly with OpenGL. If you derive from
-    L{GLObject}, your constructor should take an optional C{context=None}
-    parameter and pass it to L{GLObject.__init__}.
+    class does in any way interact directly with OpenGL. If your object is tied
+    to a single context, derive from L{GLObject}. The constructor should take
+    an optional C{context=None} parameter and pass it to L{GLObject.__init__}.
+    Also be careful to create any additional OpenGL objects within the same
+    context, preferably by passing the C{context} parameter to their
+    constructors as well.
   - If your classes can be bound and unbound or change global state in some
     other way, they should act as context managers. Base classes are defined in
     the L{objects} module to help you doing it right.
