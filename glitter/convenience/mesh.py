@@ -11,14 +11,13 @@ import h5py
 from glitter.convenience.pipeline import Pipeline
 from glitter.convenience.defaultpipeline import get_default_program
 
-def load_mesh(filename, context=None):
+def load_mesh(filename, context=None, **kwargs):
     loader = globals().get("load_%s" % (os.path.splitext(filename)[1][1:].lower()))
     if not loader:
         raise ValueError("no loader for '%s'" % filename)
-    return loader(filename, context=context)
+    return loader(filename, context=context, **kwargs)
 
-def load_hdf5(filename, color_defaults_to_position=True, context=None):
-    kwargs = {}
+def load_hdf5(filename, color_defaults_to_position=True, context=None, **kwargs):
     with h5py.File(filename, "r") as f:
         kwargs["in_position"] = f["vertices"].value
         if "colors" in f:
