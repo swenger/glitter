@@ -47,6 +47,7 @@ Hacking glitter:
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Implement NeHe tutorials as literate example programs, add an example for PyCUDA interoperability.
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).
+@todo: Provide example datasets for the examples (volume and mesh), link to source and to index for examples.
 
 @author: Stephan Wenger
 @date: 2012-02-29
