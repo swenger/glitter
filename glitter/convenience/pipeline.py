@@ -195,7 +195,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         are set before drawing and reset afterwards. Any other arguments will
         be passed to L{draw<VertexArray.draw>}.
 
-        @todo C{kwargs} context properties should override L{_lazy_context_properties}.
+        @todo: C{kwargs} context properties should override C{_lazy_context_properties}.
         """
 
         def is_valid_property(name):
