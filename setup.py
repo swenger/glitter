@@ -129,7 +129,7 @@ class build_py(_build_py):
 
 setup(
     name = "glitter",
-    version = "0.1.3", # if you increase the version number, please update the change log in README.txt
+    version = "0.1.4", # if you increase the version number, please update the change log in README.txt
     author = "Stephan Wenger",
     author_email = "wenger@cg.cs.tu-bs.de",
     description = "Intuitive OpenGL wrappers",
@@ -151,9 +151,12 @@ setup(
         ],
     download_url = "http://pypi.python.org/pypi/glitter",
     url = "http://packages.python.org/glitter",
-    setup_requires=["ctypeslib", "nose"],
-    install_requires=["numpy"],
-    # TODO optional dependencies: PySide, h5py etc.?
+    setup_requires = ["ctypeslib", "nose"],
+    install_requires = ["numpy"],
+    extras_require = {
+        "Qt": ["PySide"],
+        "HDF5": ["h5py"],
+    },
     packages = find_packages(),
     test_suite = "nose.collector",
     cmdclass= {

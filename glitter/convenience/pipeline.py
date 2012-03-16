@@ -58,7 +58,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
     _frozen = False
     """Whether setting of unknown attributes should be interpreted literally or as accessing vertex array and framebuffer properties."""
 
-    def __init__(self, shader, use_framebuffer=True, **kwargs): # TODO use_framebuffer should depend on whether attachments are set, same for vao
+    def __init__(self, shader, use_framebuffer=True, **kwargs):
         """Create a new C{Pipeline}.
 
         @param shader: The compiled and linked shader program object to use.
@@ -66,6 +66,10 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         @param use_framebuffer: If C{True}, render to textures instead of the currently bound framebuffer.
         @type use_framebuffer: C{bool}
         @param kwargs: Named arguments are translated to setting of attributes.
+
+        @todo: C{_vao} and C{_fbo} should be created dynamically when (and if)
+        attributes and attachments are accessed, respectively;
+        C{use_framebuffer} should not be necessary then.
         """
 
         self._shader = shader
