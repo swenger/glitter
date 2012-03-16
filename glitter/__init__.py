@@ -43,6 +43,7 @@ Hacking glitter:
   - Write tests for nosetests (in the C{tests} directory).
   - Write examples (in the C{examples} directory).
 
+@todo: Use C{with self._context} for all GL calls, pass context when creating sub-objects.
 @todo: Use caching to reduce the number of bind and unbind operations caused by C{with} statements.
 @todo: Implement NeHe tutorials as literate example programs, add an example for PyCUDA interoperability.
 @todo: Write documentation and tests, expecially for using multiple objects at the same time (e.g., L{Texture}s, L{Context}s).

@@ -6,7 +6,7 @@
 
 from glitter.framebuffers import Framebuffer
 from glitter.arrays import VertexArray
-from glitter.utils import ItemProxy, InstanceDescriptorMixin, State, StateMixin, add_proxies
+from glitter.utils import ItemProxy, InstanceDescriptorMixin, State, StateMixin, add_proxies, PropertyProxy
 from glitter.shaders.uniform import BaseUniform # BaseUniform is an implementation detail of the shaders package
 
 class Pipeline(InstanceDescriptorMixin, StateMixin):
@@ -58,37 +58,36 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
     _frozen = False
     """Whether setting of unknown attributes should be interpreted literally or as accessing vertex array and framebuffer properties."""
 
-    def __init__(self, shader, use_framebuffer=True, **kwargs):
+    def __init__(self, shader, use_framebuffer=True, **kwargs): # TODO use_framebuffer should depend on whether attachments are set, same for vao
         """Create a new C{Pipeline}.
 
         @param shader: The compiled and linked shader program object to use.
         @type shader: L{ShaderProgram}
-        @param use_framebuffer: If C{True}, render to textures instead of the default framebuffer (the screen).
+        @param use_framebuffer: If C{True}, render to textures instead of the currently bound framebuffer.
         @type use_framebuffer: C{bool}
         @param kwargs: Named arguments are translated to setting of attributes.
         """
 
         self._shader = shader
+        self._context = self._shader._context
+        self._lazy_context_properties = {}
+        self._lazy_context_property_stack = []
 
         # add shader uniforms (attributes are handled by the vertex array)
         for name, proxy in self._shader.__dict__.items():
             if isinstance(proxy, BaseUniform):
-                setattr(self, name, proxy)
+                setattr(self, name, PropertyProxy(self._shader, name))
 
         # create vertex array
-        self._vao = VertexArray()
+        self._vao = VertexArray(context=self._context)
         add_proxies(self, self._vao)
         
         # create framebuffer
         if use_framebuffer:
-            self._fbo = Framebuffer()
+            self._fbo = Framebuffer(context=self._context)
             add_proxies(self, self._fbo)
         else:
-            # binding self._fbo binds the default framebuffer
-            self._fbo = State(draw_framebuffer_binding=None)
-
-            # add clear method for default framebuffer
-            self.clear = self._shader._context.clear
+            self._fbo = None
 
         self._frozen = True
         
@@ -109,7 +108,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
 
     def _has_output(self, name):
         """Determine whether the shader as a fragment output named C{name}."""
-        return not isinstance(self._fbo, State) and self._shader.has_frag_data_location(name)
+        return self._fbo is not None and self._shader.has_frag_data_location(name)
 
     def _add_output(self, name, value):
         """Add a proxy for the fragment output named C{name}."""
@@ -125,9 +124,12 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         C{self} is not in L{_frozen} state, C{__setattr__} works as usual.
 
         When C{self} is in L{_frozen} state (default), setting of unknown
-        attributes will check for vertex attributes and fragment outputs called
-        C{name} and create appropriate proxies or raise an error if no such
-        attribute or output exists.
+        attributes will check for vertex attributes, fragment outputs and
+        context properties called C{name} and create appropriate proxies or
+        raise an error if no such attribute or output exists.
+
+        Context properties set here will be set on binding and reset on
+        unbinding the pipeline.
         """
 
         if hasattr(self, name) or name.startswith("_") or not self._frozen:
@@ -136,19 +138,50 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
             self._add_input(name, value)
         elif self._has_output(name):
             self._add_output(name, value)
+        elif hasattr(self._context, name):
+            self._lazy_context_properties[name] = value
+        else:
+            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
+
+    def __delattr__(self, name, value):
+        """Delete an attribute.
+
+        When C{name} is a known attribute or starts with an underscore, or when
+        C{self} is not in L{_frozen} state, C{__delattr__} works as usual.
+
+        Otherwise, if the attribute is a previously set context property, it
+        will be removed from the pipeline.
+        """
+
+        if hasattr(self, name) or name.startswith("_") or not self._frozen:
+            super(Pipeline, self).__delattr__(name, value)
+        elif name in self._lazy_context_properties:
+            del self._lazy_context_properties[name]
         else:
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
 
     def __enter__(self):
         """Bind framebuffer and shader."""
-        self._fbo.__enter__()
+        
+        stack_frame = []
+        for key, value in self._lazy_context_properties.items():
+            stack_frame.append((key, getattr(self._context, key)))
+            setattr(self._context, key, value)
+        self._lazy_context_property_stack.append(stack_frame)
+
+        if self._fbo is not None:
+            self._fbo.__enter__()
         self._shader.__enter__()
         return self
 
     def __exit__(self, type, value, traceback):
         """Unbind framebuffer and shader."""
         self._shader.__exit__(type, value, traceback)
-        self._fbo.__exit__(type, value, traceback)
+        if self._fbo is not None:
+            self._fbo.__exit__(type, value, traceback)
+
+        for key, value in self._lazy_context_property_stack.pop():
+            setattr(self._context, key, value)
 
     def draw_with(self, *args, **kwargs):
         """Call L{draw<VertexArray.draw>} on C{self} with attributes from C{kwargs} set.

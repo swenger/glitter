@@ -21,7 +21,7 @@ from glitter.shaders.shader import Shader, VertexShader, TesselationControlShade
 from glitter.shaders.attribute import Attribute, AttributeStruct, AttributeStructArray
 from glitter.shaders.uniform import Uniform, UniformStruct, UniformStructArray
 
-class ProgramProxy(Proxy):
+class ProgramProxy(Proxy): # TODO add context
     def __init__(self, _id, arg, enum=None):
         super(ProgramProxy, self).__init__(_gl.glGetProgramiv, [_id, arg], dtype=int32, enum=enum)
 
@@ -56,15 +56,15 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         shaders = list(shaders) if hasattr(shaders, "__iter__") else [shaders]
         if not all(isinstance(x, Shader) for x in shaders):
             raise TypeError("expected Shader instance")
-        shaders += [x if isinstance(x, VertexShader) else VertexShader(x)
+        shaders += [x if isinstance(x, VertexShader) else VertexShader(x, context=context)
                 for x in (vertex if hasattr(vertex, "__iter__") else [vertex])]
-        shaders += [x if isinstance(x, TesselationControlShader) else TesselationControlShader(x)
+        shaders += [x if isinstance(x, TesselationControlShader) else TesselationControlShader(x, context=context)
                 for x in (tess_control if hasattr(tess_control, "__iter__") else [tess_control])]
-        shaders += [x if isinstance(x, TesselationEvaluationShader) else TesselationEvaluationShader(x)
+        shaders += [x if isinstance(x, TesselationEvaluationShader) else TesselationEvaluationShader(x, context=context)
                 for x in (tess_evaluation if hasattr(tess_evaluation, "__iter__") else [tess_evaluation])]
-        shaders += [x if isinstance(x, GeometryShader) else GeometryShader(x)
+        shaders += [x if isinstance(x, GeometryShader) else GeometryShader(x, context=context)
                 for x in (geometry if hasattr(geometry, "__iter__") else [geometry])]
-        shaders += [x if isinstance(x, FragmentShader) else FragmentShader(x)
+        shaders += [x if isinstance(x, FragmentShader) else FragmentShader(x, context=context)
                 for x in (fragment if hasattr(fragment, "__iter__") else [fragment])]
         self.shaders.extend(shaders)
 
@@ -99,10 +99,12 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
             proxy._on_release()
 
     def _attach(self, shader):
-        _gl.glAttachShader(self._id, shader._id)
+        with self._context:
+            _gl.glAttachShader(self._id, shader._id)
 
     def _detach(self, shader):
-        _gl.glDetachShader(self._id, shader._id)
+        with self._context:
+            _gl.glDetachShader(self._id, shader._id)
 
     def _get_texture_unit(self, name):
         candidates = [x for x in self._variable_proxies if x.name == name]
@@ -121,14 +123,16 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         return location, _size.value, ShaderDatatype._from_gl(_type.value), _name.value
 
     def _get_active_attribute(self, index):
-        return self._get_active_X(_gl.glGetActiveAttrib, _gl.glGetAttribLocation, self._active_attribute_max_length, index)
+        with self._context:
+            return self._get_active_X(_gl.glGetActiveAttrib, _gl.glGetAttribLocation, self._active_attribute_max_length, index)
 
     def _get_active_attributes(self):
         return self._group_structs((self._get_active_attribute(i) for i in range(self._active_attributes)),
                 Attribute, AttributeStruct, AttributeStructArray)
 
     def _get_active_uniform(self, index):
-        return self._get_active_X(_gl.glGetActiveUniform, _gl.glGetUniformLocation, self._active_uniform_max_length, index)
+        with self._context:
+            return self._get_active_X(_gl.glGetActiveUniform, _gl.glGetUniformLocation, self._active_uniform_max_length, index)
 
     def _get_active_uniforms(self):
         return self._group_structs((self._get_active_uniform(i) for i in range(self._active_uniforms)),
@@ -171,41 +175,47 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         return ListProxy(self._shaders, self._attach, self._detach)
 
     def link(self):
-        old_program = self._context.current_program
-        _gl.glLinkProgram(self._id) # linking binds the program without the context's knowledge
-        if self._link_status != _gl.GL_TRUE:
-            raise ShaderLinkError(self._log)
+        with self._context:
+            old_program = self._context.current_program
+            _gl.glLinkProgram(self._id) # linking binds the program without the context's knowledge
 
-        # rebind the previous program circumventing any caching performed by the context
-        if old_program is None:
-            _gl.glUseProgram(0)
-        elif old_program._id != self._id:
-            _gl.glUseProgram(old_program._id)
+            # rebind the previous program circumventing any caching performed by the context
+            if old_program is None:
+                _gl.glUseProgram(0)
+            elif old_program._id != self._id:
+                _gl.glUseProgram(old_program._id)
 
-        return self._log or None
+            if self._link_status != _gl.GL_TRUE:
+                raise ShaderLinkError(self._log)
+            return self._log or None
 
     def validate(self):
-        self._on_bind()
-        _gl.glValidateProgram(self._id)
-        self._on_release()
-        if self._validate_status != _gl.GL_TRUE:
-            raise ShaderValidateError(self._log)
-        return self._log or None
+        with self._context:
+            self._on_bind()
+            _gl.glValidateProgram(self._id)
+            self._on_release()
+            if self._validate_status != _gl.GL_TRUE:
+                raise ShaderValidateError(self._log)
+            return self._log or None
 
     def has_attribute_location(self, name):
-        return _gl.glGetAttribLocation(self._id, name) >= 0
+        with self._context:
+            return _gl.glGetAttribLocation(self._id, name) >= 0
 
     def get_attribute_location(self, name):
-        loc = _gl.glGetAttribLocation(self._id, name)
+        with self._context:
+            loc = _gl.glGetAttribLocation(self._id, name)
         if loc == -1:
             raise NameError("shader has no attribute '%s'" % name)
         return loc
 
     def has_frag_data_location(self, name):
-        return _gl.glGetFragDataLocation(self._id, name) >= 0
+        with self._context:
+            return _gl.glGetFragDataLocation(self._id, name) >= 0
 
     def get_frag_data_location(self, name):
-        loc = _gl.glGetFragDataLocation(self._id, name)
+        with self._context:
+            loc = _gl.glGetFragDataLocation(self._id, name)
         if loc == -1:
             raise NameError("shader has no frag data '%s'" % name)
         return loc
@@ -218,7 +228,8 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         """
 
         _info_log = _gl.create_string_buffer(self._info_log_length)
-        _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
+        with self._context:
+            _gl.glGetProgramInfoLog(self._id, self._info_log_length, _gl.POINTER(_gl.GLint)(), _info_log)
         return _info_log.value
 
 __all__ = ["ShaderProgram"]

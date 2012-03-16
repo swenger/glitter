@@ -140,6 +140,11 @@ The following versions introduced noteworthy features, bug fixes, or API changes
 version 0.1.4
 -------------
 - ``Framebuffer``\s expect attributes as separate ``__init__()`` parameters instead of a list.
+- Implement mesh loading from HDF5.
+- Fix context bugs in ``VertexArray``, ``Pipeline``, and ``ShaderProgram``.
+- Fix shader proxies in ``Pipeline``.
+- ``Pipeline`` now uses the currently bound framebuffer instead of the default framebuffer.
+- Add context properties to ``Pipeline``.
 
 version 0.1.3
 -------------

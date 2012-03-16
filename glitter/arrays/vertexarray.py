@@ -57,7 +57,7 @@ class VertexArray(ManagedObject, BindableObject):
                 _gl.glDisableVertexAttribArray(index)
         else:
             if not isinstance(value, ArrayBuffer):
-                value = ArrayBuffer(value)
+                value = ArrayBuffer(value, context=self._context)
             with self:
                 with value:
                     value._use(index)
@@ -74,7 +74,7 @@ class VertexArray(ManagedObject, BindableObject):
     @elements.setter
     def elements(self, elements):
         if elements is not None and not isinstance(elements, ElementArrayBuffer):
-            elements = ElementArrayBuffer(elements)
+            elements = ElementArrayBuffer(elements, context=self._context)
         with self:
             self._context.element_array_buffer_binding = elements
         self._elements = elements
