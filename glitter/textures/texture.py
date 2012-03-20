@@ -1,7 +1,6 @@
 """Texture classes.
 
 @todo: Check OpenGL memory layout; do shaders use the same coordinates as C{numpy} does?
-@todo: Implement depth and depth-stencil textures (format and internal format are C{GL_DEPTH_COMPONENT} / C{GL_DEPTH_STENCIL}).
 @todo: Implement C{__getitem__} and C{__setitem__} for subimages (C{glTexSubImage3D}, C{glGetTexImage} with C{format=GL_RED} etc.).
 @todo: Implement image textures.
 
@@ -72,9 +71,9 @@ class Texture(ManagedObject, BindReleaseObject):
         _iformat = dtype_to_gl_iformat[dtype, shape[-1]]
         _format = dtype_to_gl_format[dtype, shape[-1]]
         _type = dtype._as_gl()
-        if stencil:
+        if stencil: # TODO lookup a matching format; what about stencil only?
             _iformat = _format = _gl.GL_DEPTH_STENCIL
-        elif depth:
+        elif depth: # TODO lookup a matching format
             _iformat = _format = _gl.GL_DEPTH_COMPONENT
         _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
