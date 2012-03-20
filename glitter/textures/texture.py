@@ -1,7 +1,7 @@
 """Texture classes.
 
 @todo: Check OpenGL memory layout; do shaders use the same coordinates as C{numpy} does?
-@todo: Implement depth textures.
+@todo: Implement depth and depth-stencil textures (format and internal format are C{GL_DEPTH_COMPONENT} / C{GL_DEPTH_STENCIL}).
 @todo: Implement C{__getitem__} and C{__setitem__} for subimages (C{glTexSubImage3D}, C{glGetTexImage} with C{format=GL_RED} etc.).
 @todo: Implement image textures.
 
@@ -12,7 +12,7 @@
 import numpy as _np
 
 import glitter.raw as _gl
-from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_swizzles, texture_wrapmodes, dtype_to_gl_iformat, dtype_to_gl_format, gl_iformat_to_dtype, gl_iformat_to_dtype, dtype_to_gl_format, gl_iformat_to_gl_type, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
+from glitter.utils import texture_compare_funcs, texture_compare_modes, texture_min_filters, texture_mag_filters, texture_swizzles, texture_wrapmodes, dtype_to_gl_iformat, dtype_to_gl_format, gl_iformat_to_dtype, gl_iformat_to_gl_type, Datatype, coerce_array, ManagedObject, BindReleaseObject, float32
 
 class Texture(ManagedObject, BindReleaseObject):
     _generate_id = _gl.glGenTextures
@@ -35,11 +35,11 @@ class Texture(ManagedObject, BindReleaseObject):
     def release(self):
         self._context.texture_units.release(self)
 
-    def __init__(self, data=None, shape=None, dtype=None, mipmap=False, context=None):
+    def __init__(self, data=None, shape=None, dtype=None, depth=False, stencil=False, mipmap=False, context=None):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Texture, self).__init__(context=context)
-        self.set_data(data, shape, dtype, mipmap)
+        self.set_data(data, shape, dtype, depth=depth, stencil=stencil, mipmap=mipmap)
 
     def __getitem__(self, key):
         """Return a tuple describing a texture layer.
@@ -53,7 +53,7 @@ class Texture(ManagedObject, BindReleaseObject):
     def __len__(self):
         return self.shape[0]
 
-    def set_data(self, data=None, shape=None, dtype=None, level=0, mipmap=False):
+    def set_data(self, data=None, shape=None, dtype=None, level=0, depth=False, stencil=False, mipmap=False):
         if data is None:
             if shape is None:
                 raise ValueError("must specify either data or shape")
@@ -72,6 +72,10 @@ class Texture(ManagedObject, BindReleaseObject):
         _iformat = dtype_to_gl_iformat[dtype, shape[-1]]
         _format = dtype_to_gl_format[dtype, shape[-1]]
         _type = dtype._as_gl()
+        if stencil:
+            _iformat = _format = _gl.GL_DEPTH_STENCIL
+        elif depth:
+            _iformat = _format = _gl.GL_DEPTH_COMPONENT
         _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:

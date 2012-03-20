@@ -1,7 +1,5 @@
 """Constants and enums.
 
-@todo: Add internal formats GL_DEPTH_COMPONENT and GL_DEPTH_STENCIL to C{texture_formats}.
-
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -11,6 +9,9 @@ from glitter.utils.dtypes import uint8, uint16, uint32, int8, int16, int32, floa
 from glitter.utils.enum import Enum
 
 texture_formats = [
+        ((float32, 1), _gl.GL_DEPTH_COMPONENT, (_gl.GL_FLOAT, _gl.GL_DEPTH_COMPONENT)),
+        ((float32, 1), _gl.GL_DEPTH_STENCIL, (_gl.GL_FLOAT, _gl.GL_DEPTH_STENCIL)),
+
         ((uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
         ((uint16,  1), _gl.GL_R16UI,    (_gl.GL_UNSIGNED_SHORT, _gl.GL_RED_INTEGER )),

@@ -64,41 +64,45 @@ def get_fullscreen_quad(context=None):
     """
     return VertexArray(quad_vertices, elements=quad_indices, context=context)
 
-def get_program_rectangle(context=None):
+def get_copy_program_rectangle(context=None):
     """Get a shader program for copying a rectangle texture onto the screen.
 
     @param context: The context to create the program in, or C{None} for the current context.
     @type context: L{Context}
     @rtype: L{ShaderProgram}
     """
-    return ShaderProgram(fragment=fragment_code_rectangle, context=context)
+    return ShaderProgram(vertex=vertex_code, fragment=fragment_code_rectangle, context=context)
 
-def get_program_2d(context=None):
+def get_copy_program_2d(context=None):
     """Get a shader program for copying a 2D texture onto the screen.
 
     @param context: The context to create the program in, or C{None} for the current context.
     @type context: L{Context}
     @rtype: L{ShaderProgram}
     """
-    return ShaderProgram(fragment=fragment_code_2d, context=context)
+    return ShaderProgram(vertex=vertex_code, fragment=fragment_code_2d, context=context)
 
-def get_pipeline_rectangle(context=None):
+def get_copy_pipeline_rectangle(context=None, **kwargs):
     """Get a pipeline for copying a rectangle texture onto the screen.
 
     @param context: The context to create the program in, or C{None} for the current context.
     @type context: L{Context}
+    @keyword image: The texture to display.
+    @type image: L{RectangleTexture}
     @rtype: L{Pipeline}
     """
-    return Pipeline(get_program_rectangle(context), in_position=quad_vertices, elements=quad_indices)
+    return Pipeline(get_copy_program_rectangle(context), in_position=quad_vertices, elements=quad_indices, **kwargs)
 
-def get_pipeline_2d(context=None):
+def get_copy_pipeline_2d(context=None, **kwargs):
     """Get a pipeline for copying a 2D texture onto the screen.
 
     @param context: The context to create the program in, or C{None} for the current context.
     @type context: L{Context}
+    @keyword image: The texture to display.
+    @type image: L{Texture2D}
     @rtype: L{Pipeline}
     """
-    return Pipeline(get_program_2d(context), in_position=quad_vertices, elements=quad_indices)
+    return Pipeline(get_copy_program_2d(context), in_position=quad_vertices, elements=quad_indices, **kwargs)
 
 __all__ = [
     "vertex_code",
@@ -107,9 +111,9 @@ __all__ = [
     "quad_vertices",
     "quad_indices",
     "get_fullscreen_quad",
-    "get_program_rectangle",
-    "get_program_2d",
-    "get_pipeline_rectangle",
-    "get_pipeline_2d",
+    "get_copy_program_rectangle",
+    "get_copy_program_2d",
+    "get_copy_pipeline_rectangle",
+    "get_copy_pipeline_2d",
 ]
 
