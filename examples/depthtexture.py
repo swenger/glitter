@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+
+"""Simple mesh viewer.
+
+@todo: Add literate programming comments.
+
+@author: Stephan Wenger
+@date: 2012-03-20
+"""
+
 from math import sin, cos, pi
 from numpy.random import random
 import sys

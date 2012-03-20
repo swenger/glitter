@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+
+"""Simple mesh viewer.
+
+@todo: Add literate programming comments.
+
+@author: Stephan Wenger
+@date: 2012-03-20
+"""
+
 from numpy import float32, zeros_like
 import pyopencl as cl
 from pyopencl.tools import get_gl_sharing_context_properties
