@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Simple mesh viewer.
+"""Poisson integration on OpenGL textures using OpenCL.
 
 @todo: Add literate programming comments.
 

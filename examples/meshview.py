@@ -37,10 +37,6 @@ from math import sin, cos, pi
 # function to generate random textures:
 from numpy.random import random
 
-# We need to read a mesh filename from <code>sys.argv</code>, so import
-# <code>sys</code>.
-import sys
-
 # We assume the mesh is stored in a <a
 # href="http://www.hdfgroup.org/HDF5/">HDF5</a> file, so import <a
 # href="h5py.alfven.org"><code>h5py</code></a>.
@@ -66,7 +62,7 @@ class MeshViewer(object):
 
     # When a <code>MeshViewer</code> instance is created, we need to
     # initialize a few OpenGL objects.
-    def __init__(self):
+    def __init__(self, filename):
         # First, we create a window; this also creates an OpenGL context.
         self.window = GlutWindow(double=True, multisample=True)
 
@@ -79,7 +75,7 @@ class MeshViewer(object):
         self.shader = get_default_program()
 
         # We open the HDF5 file specified on the command line for reading:
-        with h5py.File(sys.argv[1], "r") as f:
+        with h5py.File(filename, "r") as f:
             # The vertices, colors and indices of the mesh are read from the
             # corresponding datasets in the HDF5 file. Note that the names of the
             # datasets are mere convention. Colors and indices are allowed to be
@@ -159,5 +155,6 @@ class MeshViewer(object):
 # Finally, if this program is being run from the command line, we instanciate
 # the main class and run it.
 if __name__ == "__main__":
-    MeshViewer().run()
+    import sys
+    MeshViewer(sys.argv[1]).run()
 

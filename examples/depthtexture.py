@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Simple mesh viewer.
+"""Mesh viewer that displays the depth instead of color.
 
 @todo: Add literate programming comments.
 
@@ -10,23 +10,19 @@
 
 from math import sin, cos, pi
 from numpy.random import random
-import sys
 import h5py
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-from glitter import VertexArray, State, get_default_program, Framebuffer, Texture2D, get_copy_pipeline_2d, add_logger
+from glitter import VertexArray, State, get_default_program, Framebuffer, Texture2D, get_copy_pipeline_2d
 from glitter.contexts.glut import GlutWindow, main_loop, get_elapsed_time
 
-class MeshViewer(object):
-    def __init__(self):
+class DepthViewer(object):
+    def __init__(self, filename):
         self.window = GlutWindow(double=True, multisample=True)
         self.window.display_callback = self.display
         self.shader = get_default_program()
         self.fbo = Framebuffer(depth=Texture2D(shape=self.window.shape + (1,), depth=True))
         self.copy_pipeline = get_copy_pipeline_2d(image=self.fbo.depth, use_framebuffer=False)
-        with h5py.File(sys.argv[1], "r") as f:
+        with h5py.File(filename, "r") as f:
             vertices = f["vertices"]
             colors = f.get("colors", None)
             elements = f.get("indices", None)
@@ -46,7 +42,6 @@ class MeshViewer(object):
             import traceback
             traceback.print_exc()
             raise SystemExit(e)
-        add_logger(None)
 
     def timer(self):
         phi = 2 * pi * get_elapsed_time() / 20.0
@@ -58,9 +53,9 @@ class MeshViewer(object):
         self.timer()
         with self.shader:
             with State(depth_test=True):
-                add_logger()
                 main_loop()
 
 if __name__ == "__main__":
-    MeshViewer().run()
+    import sys
+    DepthViewer(sys.argv[1]).run()
 
