@@ -1,5 +1,7 @@
 """Constants and enums.
 
+@todo: Add stencil components to L{texture_formats}.
+
 @author: Stephan Wenger
 @date: 2012-02-29
 """
@@ -13,7 +15,6 @@ texture_formats = [
         ((int16, 1), _gl.GL_DEPTH_COMPONENT16, (_gl.GL_SHORT, _gl.GL_DEPTH_COMPONENT)),
         ((int32, 1), _gl.GL_DEPTH_COMPONENT24, (_gl.GL_INT, _gl.GL_DEPTH_COMPONENT)),
         ((int32, 1), _gl.GL_DEPTH_COMPONENT32, (_gl.GL_INT, _gl.GL_DEPTH_COMPONENT)),
-        # TODO stencil components: GL_DEPTH24_STENCIL8, GL_DEPTH32F_STENCIL8; GL_STENCIL, GL_STENCIL_INDEX, GL_STENCIL_INDEX1, GL_STENCIL_INDEX4, GL_STENCIL_INDEX8, GL_STENCIL_INDEX16?
 
         ((uint8,   1), _gl.GL_R8UI,     (_gl.GL_UNSIGNED_BYTE,  _gl.GL_RED_INTEGER )),
         ((int8,    1), _gl.GL_R8I,      (_gl.GL_BYTE,           _gl.GL_RED_INTEGER )),
