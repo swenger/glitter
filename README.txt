@@ -142,6 +142,10 @@ development
 - Fix bugs in ``copying`` module.
 - Add support for depth and stencil textures.
 
+version 0.1.5
+-------------
+- Add support for integer sampler types in ``glitter.convenience``.
+
 version 0.1.4
 -------------
 - ``Framebuffer``\s expect attributes as separate ``__init__()`` parameters instead of a list.
