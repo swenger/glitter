@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""OpenGL image viewer and player.
+"""OpenGL player for videos stored as directories of image files.
 
 @author: Stephan Wenger
 @date: 2012-02-29
@@ -38,7 +38,7 @@ class ImageCache(object):
         return len(self.filenames)
 
     def __getitem__(self, idx):
-        return array(self.filenames[idx])
+        return array(self.filenames[idx]) # TODO caching and preloading
 
 class IntroductionExample(object):
     def __init__(self, images):
@@ -58,8 +58,7 @@ class IntroductionExample(object):
         self.window.swap_buffers()
 
     def keyboard(self, key, x, y):
-        # TODO play, pause, speed control, single frame
-        raise SystemExit
+        raise SystemExit # TODO play, pause, speed control, single frame
 
     def timer(self):
         self.current_index = (self.current_index + 1) % len(self.images)
