@@ -4,6 +4,7 @@
 @todo: Implement C{__getitem__} and C{__setitem__} for subimages (C{glTexSubImage3D}, C{glGetTexImage} with C{format=GL_RED} etc.).
 @todo: Implement stencil textures.
 @todo: Implement image textures.
+@todo: Implement normalized integer types (GL_RGBA8_SNORM etc.)
 
 @author: Stephan Wenger
 @date: 2012-02-29
