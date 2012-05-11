@@ -122,7 +122,7 @@ class CLCode(object):
 
         # Next, we generate OpenCL buffers. The positions and colors are
         # contained in OpenGL buffers, which we wrap in PyOpenCL's
-        # <code>GLBuffer<(/code> class:
+        # <code>GLBuffer</code> class:
         self.cl_positions = cl.GLBuffer(self.ctx, cl.mem_flags.READ_WRITE, self.gl_positions._id)
         self.cl_colors = cl.GLBuffer(self.ctx, cl.mem_flags.READ_WRITE, self.gl_colors._id)
         # Note how we had to extract the <code>_id</code>s from the
