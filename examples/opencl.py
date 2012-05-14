@@ -105,7 +105,7 @@ class CLCode(object):
         # <code>get_gl_sharing_context_properties()</code> as a property
         # ensures that we share state with the active OpenGL context:
         self.ctx = cl.Context(properties=[(cl.context_properties.PLATFORM, platform)] +
-                get_gl_sharing_context_properties(), devices=None)
+                get_gl_sharing_context_properties(), devices=[platform.get_devices()[0]])
         # A command queue is necessary for serializing OpenCL commands:
         self.queue = cl.CommandQueue(self.ctx)
         # Finally, we can compile the kernel:
