@@ -28,7 +28,7 @@ class Uniform(BaseUniform):
     def __str__(self):
         return "uniform %s %s[%d];" % (self.dtype, self.name, self.size)
 
-    def __get__(self, obj, cls=None, get_texture_unit_instead_of_object=False):
+    def __get__(self, obj, cls=None, get_texture_unit_instead_of_object=False): # TODO return a writable handle to arrays
         if self.dtype.is_texture() and not get_texture_unit_instead_of_object:
             return self.textures[0] if len(self.textures) == 1 else self.textures
         else:

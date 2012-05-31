@@ -141,6 +141,7 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
     def _group_structs(self, lst, make_variable, make_struct, coerce_array):
         array_of_structs_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\[([0-9]+)\]\.([a-zA-Z_][a-zA-Z_0-9]*)$")
         struct_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\.([a-zA-Z_][a-zA-Z_0-9]*)$")
+        array_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)\[([0-9]+)\]$")
         basic_re = _re.compile("^([a-zA-Z_][a-zA-Z_0-9]*)$")
         names = _odict()
         for location, size, dtype, name in lst:
@@ -156,6 +157,12 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
                 name, field = m.groups()
                 struct = names.setdefault(name, make_struct(name, parent=self))
                 struct[field] = make_variable(field, location, dtype, size, parent=self)
+                continue
+            m = array_re.match(name)
+            if m is not None:
+                name, index = m.groups()
+                index = int(index)
+                names[name] = make_variable(name, location, dtype, size, parent=self) # TODO how should this depend on index?
                 continue
             m = basic_re.match(name)
             if m is not None:
