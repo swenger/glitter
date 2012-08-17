@@ -86,7 +86,7 @@ def make_constant(name, value):
             "__init__": lambda self, name, value: NamedConstant.__init__(self, name),
             "__hash__": lambda self: dtype.__hash__(self),
         }
-        globals()[cls_name] = types.ClassType(cls_name, (NamedConstant, dtype), d)
+        globals()[cls_name] = type(cls_name, (NamedConstant, dtype), d)
 
     return globals()[cls_name](name, value)
 

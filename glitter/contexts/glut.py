@@ -72,7 +72,7 @@ def initialize(argv=None):
     _argc = _gl.c_int(len(argv))
     _argv = (_gl.c_char_p * _argc.value)()
     for i, a in enumerate(argv):
-        _argv[i] = a
+        _argv[i] = a.encode("utf8")
     _gl.glutInit(_gl.pointer(_argc), _argv)
     argv[:] = [_argv[i] for i in range(_argc.value)]
 

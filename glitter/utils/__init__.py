@@ -4,7 +4,10 @@
 @date: 2012-02-29
 """
 
-from contextlib import nested
+try:
+    from contextlib import nested
+except ImportError:
+    pass
 
 from glitter.utils import constants
 from glitter.utils.constants import *
