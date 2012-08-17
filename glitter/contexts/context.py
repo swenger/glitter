@@ -87,7 +87,7 @@ class Context(InstanceDescriptorMixin, StateMixin):
         This should be overwritten appropriately by window system dependent subclasses.
         """
 
-        raise NotImplementedError
+        pass
 
     def bind(self):
         old_binding = context_manager.current_context
