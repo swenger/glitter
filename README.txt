@@ -88,6 +88,9 @@ Build instructions
 
 - tests: ``nosetests tests``
 
+- installing with Python 3: run ``python setup.py build`` with Python 2, then
+  ``2to3 -w build`` and manually install the files from the build folder
+
 OpenGL 3 notes
 ==============
 
