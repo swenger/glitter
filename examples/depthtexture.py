@@ -38,7 +38,7 @@ class DepthViewer(object):
             self.window.clear()
             self.copy_pipeline.draw()
             self.window.swap_buffers()
-        except Exception, e:
+        except Exception as e:
             import traceback
             traceback.print_exc()
             raise SystemExit(e)

@@ -9,7 +9,7 @@ def check_property(context, name):
         if isinstance(value, EnumConstant):
             if name in ("draw_buffer", "read_buffer"):
                 return # avoid problems with unavailable stereo buffers
-            valid_values = value._enum._reverse_dict.values()
+            valid_values = list(value._enum._reverse_dict.values())
             for value in valid_values:
                 setattr(context, name, value)
                 assert numpy.all(getattr(context, name) == value), "property %s is broken" % name

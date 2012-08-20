@@ -162,7 +162,7 @@ class VolumeRenderer(object):
         # All other parameters are simply set as attributes (this might be
         # <code>modelview_matrix</code>, <code>intensity_scale</code>, or
         # <code>absorption</code>).
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             setattr(self, key, value)
 
     # <h3>Rendering</h3>

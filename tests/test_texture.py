@@ -22,7 +22,7 @@ def test_texture_generator():
 def check_property(texture, name):
     value = getattr(texture, name)
     if isinstance(value, EnumConstant):
-        valid_values = value._enum._reverse_dict.values()
+        valid_values = list(value._enum._reverse_dict.values())
         for value in valid_values:
             setattr(texture, name, value)
             assert getattr(texture, name) == value, "property %s is broken" % name

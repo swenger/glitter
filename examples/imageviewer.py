@@ -26,7 +26,7 @@ class ImageCache(object):
                 return None
 
         def add_files(lst, dirname, fnames):
-            lst.extend(filter(None, (imopen(os.path.join(dirname, fname)) for fname in sorted(fnames))))
+            lst.extend(x for x in (imopen(os.path.join(dirname, fname)) for fname in sorted(fnames)) if x)
 
         self.filenames = []
         for filename in filenames:

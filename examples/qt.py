@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# vim: set fileencoding=utf-8 :
 
 #! This file is a literate Python program. You can compile the documentation
 #! using mylit (http://pypi.python.org/pypi/mylit/).
@@ -26,6 +27,7 @@
 """
 
 # <h3>Imports</h3>
+from __future__ import unicode_literals
 
 # Some math functions are required for mouse interaction:
 from math import sqrt, exp
@@ -173,7 +175,7 @@ class MainWindow(QtGui.QMainWindow):
         # Then, we create menus and keyboard shortcuts for opening meshes,
         # resetting the view, and exiting the program:
         self.fileMenu = self.menuBar().addMenu("&File")
-        self.fileOpenMeshAction = QtGui.QAction(u"&Open Mesh\u2026", self)
+        self.fileOpenMeshAction = QtGui.QAction("&Open Mesh\u2026", self)
         self.fileOpenMeshAction.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_O))
         self.fileOpenMeshAction.triggered.connect(self.fileOpenMesh)
         self.fileMenu.addAction(self.fileOpenMeshAction)

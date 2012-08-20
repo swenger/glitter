@@ -3,7 +3,7 @@ from glitter import Sampler, EnumConstant
 def check_property(sampler, name):
     value = getattr(sampler, name)
     if isinstance(value, EnumConstant):
-        valid_values = value._enum._reverse_dict.values()
+        valid_values = list(value._enum._reverse_dict.values())
         for value in valid_values:
             setattr(sampler, name, value)
             assert getattr(sampler, name) == value, "property %s is broken" % name

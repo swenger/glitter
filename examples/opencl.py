@@ -153,7 +153,7 @@ class CLCode(object):
         # This increases the accuracy with respect to a single step with a
         # large step size. However, it is not necessary to display all the
         # intermediate results.
-        for i in xrange(0, sub_intervals):
+        for i in range(0, sub_intervals):
             # In each step, the <code>animate</code> kernel function is called.
             # Its arguments are the queue object that schedules its execution,
             # the global and local block sizes, and any arguments that will be
