@@ -295,7 +295,7 @@ class State(GLObject, StateMixin):
             self._context.__exit__(type, value, traceback)
 
     def __getattr__(self, key):
-        if not hasattr(self, "_stack"): # constructor not done yet
+        if key == "_stack" or hasattr(self, "_stack"): # constructor not done yet
             return super(State, self).__getattr__(key)
         return getattr(self._context, key)
 
