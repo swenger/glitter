@@ -53,19 +53,19 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         self._transform_feedback_varyings = ProgramProxy(self._id, _gl.GL_TRANSFORM_FEEDBACK_VARYINGS)
         self._transform_feedback_varying_max_length = ProgramProxy(self._id, _gl.GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH)
 
-        shaders = list(shaders) if hasattr(shaders, "__iter__") else [shaders]
+        shaders = list(shaders) if not isinstance(shaders, str) else [shaders]
         if not all(isinstance(x, Shader) for x in shaders):
             raise TypeError("expected Shader instance")
         shaders += [x if isinstance(x, VertexShader) else VertexShader(x, context=context)
-                for x in (vertex if hasattr(vertex, "__iter__") else [vertex])]
+                for x in (vertex if not isinstance(vertex, str) else [vertex])]
         shaders += [x if isinstance(x, TesselationControlShader) else TesselationControlShader(x, context=context)
-                for x in (tess_control if hasattr(tess_control, "__iter__") else [tess_control])]
+                for x in (tess_control if not isinstance(tess_control, str) else [tess_control])]
         shaders += [x if isinstance(x, TesselationEvaluationShader) else TesselationEvaluationShader(x, context=context)
-                for x in (tess_evaluation if hasattr(tess_evaluation, "__iter__") else [tess_evaluation])]
+                for x in (tess_evaluation if not isinstance(tess_evaluation, str) else [tess_evaluation])]
         shaders += [x if isinstance(x, GeometryShader) else GeometryShader(x, context=context)
-                for x in (geometry if hasattr(geometry, "__iter__") else [geometry])]
+                for x in (geometry if not isinstance(geometry, str) else [geometry])]
         shaders += [x if isinstance(x, FragmentShader) else FragmentShader(x, context=context)
-                for x in (fragment if hasattr(fragment, "__iter__") else [fragment])]
+                for x in (fragment if not isinstance(fragment, str) else [fragment])]
         self.shaders.extend(shaders)
 
         if link is None:
@@ -120,7 +120,7 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         with self._context:
             getter(self._id, index, max_length, None, _gl.pointer(_size), _gl.pointer(_type), _name)
             location = location_getter(self._id, _name)
-        return location, _size.value, ShaderDatatype._from_gl(_type.value), _name.value
+        return location, _size.value, ShaderDatatype._from_gl(_type.value), _name.value.decode("ascii")
 
     def _get_active_attribute(self, index):
         with self._context:
@@ -207,22 +207,22 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
 
     def has_attribute_location(self, name):
         with self._context:
-            return _gl.glGetAttribLocation(self._id, name.encode("utf8")) >= 0
+            return _gl.glGetAttribLocation(self._id, name.encode("ascii")) >= 0
 
     def get_attribute_location(self, name):
         with self._context:
-            loc = _gl.glGetAttribLocation(self._id, name.encode("utf8"))
+            loc = _gl.glGetAttribLocation(self._id, name.encode("ascii"))
         if loc == -1:
             raise NameError("shader has no attribute '%s'" % name)
         return loc
 
     def has_frag_data_location(self, name):
         with self._context:
-            return _gl.glGetFragDataLocation(self._id, name.encode("utf8")) >= 0
+            return _gl.glGetFragDataLocation(self._id, name.encode("ascii")) >= 0
 
     def get_frag_data_location(self, name):
         with self._context:
-            loc = _gl.glGetFragDataLocation(self._id, name.encode("utf8"))
+            loc = _gl.glGetFragDataLocation(self._id, name.encode("ascii"))
         if loc == -1:
             raise NameError("shader has no frag data '%s'" % name)
         return loc

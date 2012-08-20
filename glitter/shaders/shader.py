@@ -55,7 +55,7 @@ class Shader(ManagedObject):
     @source.setter
     def source(self, source):
         with self._context:
-            _gl.glShaderSource(self._id, 1, _gl.pointer(_gl.c_char_p(source.encode("utf8"))), _gl.POINTER(_gl.GLint)())
+            _gl.glShaderSource(self._id, 1, _gl.pointer(_gl.c_char_p(source.encode("ascii"))), _gl.POINTER(_gl.GLint)())
 
 class VertexShader(Shader):
     """Vertes shader.

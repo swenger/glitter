@@ -37,7 +37,7 @@ class Uniform(BaseUniform):
                     data = self.dtype.get_value(obj, self.location)
                     return data.item() if len(data) == 1 else data
                 else:
-                    data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, ("%s[%d]" % (self.name, i)).encode("utf8"))) for i in range(self.size)]
+                    data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, ("%s[%d]" % (self.name, i)).encode("ascii"))) for i in range(self.size)]
                     return _np.concatenate([x.squeeze()[None] for x in data])
 
     def __set__(self, obj, value):

@@ -9,7 +9,7 @@ class GlitterError(Exception):
         self.message = message
 
     def __str__(self):
-        return self.message
+        return self.message.decode("ascii")
 
 class ShaderError(GlitterError):
     pass
