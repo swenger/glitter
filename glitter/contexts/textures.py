@@ -10,6 +10,12 @@ import glitter.raw as _gl
 from glitter.utils import BindableObject, GlitterError
 from glitter.contexts.proxies import BindingProxy
 
+try:
+    next
+except NameError:
+    def next(iterator):
+        return iterator.next()
+
 class TextureUnit(BindableObject):
     """Proxy for a texture unit.
     
