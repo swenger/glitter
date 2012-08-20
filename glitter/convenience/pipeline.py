@@ -78,7 +78,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         self._lazy_context_property_stack = []
 
         # add shader uniforms (attributes are handled by the vertex array)
-        for name, proxy in self._shader.__dict__.items():
+        for name, proxy in list(self._shader.__dict__.items()):
             if isinstance(proxy, BaseUniform):
                 setattr(self, name, PropertyProxy(self._shader, name))
 
@@ -96,7 +96,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         self._frozen = True
         
         # translate kwargs to setters on self
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             setattr(self, key, value)
 
     def _has_input(self, name):
@@ -168,7 +168,7 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
         """Bind framebuffer and shader."""
         
         stack_frame = []
-        for key, value in self._lazy_context_properties.items():
+        for key, value in list(self._lazy_context_properties.items()):
             stack_frame.append((key, getattr(self._context, key)))
             setattr(self._context, key, value)
         self._lazy_context_property_stack.append(stack_frame)
@@ -200,8 +200,8 @@ class Pipeline(InstanceDescriptorMixin, StateMixin):
 
         def is_valid_property(name):
             return hasattr(self, name) or self._has_input(name) or self._has_output(name)
-        with self(**{key: kwargs.pop(key) for key, value in kwargs.items() if is_valid_property(key)}):
-            with State(context=self._context, **{key: kwargs.pop(key) for key, value in kwargs.items() if hasattr(self._context, key)}):
+        with self(**{key: kwargs.pop(key) for key, value in list(kwargs.items()) if is_valid_property(key)}):
+            with State(context=self._context, **{key: kwargs.pop(key) for key, value in list(kwargs.items()) if hasattr(self._context, key)}):
                 self.draw(*args, **kwargs)
 
 __all__ = ["Pipeline"]

@@ -40,12 +40,12 @@ class VertexArray(ManagedObject, BindableObject):
         for i in range(self._context.max_vertex_attribs):
             self[i] = attributes.pop(i, None)
         if attributes:
-            raise ValueError("vertex array has no attribute(s) %s" % ", ".join("'%s'" % x for x in attributes.keys()))
+            raise ValueError("vertex array has no attribute(s) %s" % ", ".join("'%s'" % x for x in list(attributes.keys())))
         
         self.elements = kwargs.pop("elements", None)
 
         if kwargs:
-            raise TypeError("__init__() got an unexpected keyword argument '%s'" % kwargs.keys()[0])
+            raise TypeError("__init__() got an unexpected keyword argument '%s'" % list(kwargs.keys())[0])
 
     def __getitem__(self, index):
         return self._attributes[index]
@@ -89,7 +89,7 @@ class VertexArray(ManagedObject, BindableObject):
                 if self.elements is not None:
                     self.elements.draw(mode, count, first, instances)
                 else:
-                    min(x for x in self._attributes.items() if x[1] is not None)[1].draw(mode, count, first, instances)
+                    min(x for x in list(self._attributes.items()) if x[1] is not None)[1].draw(mode, count, first, instances)
             else:
                 self[index].draw(mode, count, first, instances)
 

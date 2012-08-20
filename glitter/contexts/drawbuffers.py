@@ -27,7 +27,7 @@ class DrawBufferList(object):
         """
 
         _buffers = (_gl.GLenum * self._num_buffers)()
-        for i, o in _itertools.islice(_itertools.izip_longest(range(self._num_buffers), value, fillvalue=None), self._num_buffers):
+        for i, o in _itertools.islice(_itertools.izip_longest(list(range(self._num_buffers)), value, fillvalue=None), self._num_buffers):
             _buffers[i] = _gl.GL_NONE if o is None else _gl.GL_COLOR_ATTACHMENT0 + o if isinstance(o, int) else draw_buffers(o)._value
         with self._context:
             _gl.glDrawBuffers(self._num_buffers, _buffers)

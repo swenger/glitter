@@ -90,7 +90,7 @@ def make_constant(name, value):
 
     return globals()[cls_name](name, value)
 
-def wrap_constants(name_re="^(GL|GLU|GLUT|GLX)_[A-Z][A-Z0-9_]*$", types=(int, long, float), d=None):
+def wrap_constants(name_re="^(GL|GLU|GLUT|GLX)_[A-Z][A-Z0-9_]*$", types=(int, int, float), d=None):
     """Convert OpenGL constants to named constants.
 
     All values in C{d} that match C{name_re} and are of one of the types in
@@ -102,7 +102,7 @@ def wrap_constants(name_re="^(GL|GLU|GLUT|GLX)_[A-Z][A-Z0-9_]*$", types=(int, lo
         from glitter import raw
         d = raw.__dict__
 
-    for key, value in d.items():
+    for key, value in list(d.items()):
         if re.match(name_re, key) and isinstance(value, tuple(types)):
             d[key] = make_constant(key, value)
 

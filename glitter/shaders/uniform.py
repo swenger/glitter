@@ -37,7 +37,7 @@ class Uniform(BaseUniform):
                     data = self.dtype.get_value(obj, self.location)
                     return data.item() if len(data) == 1 else data
                 else:
-                    data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, "%s[%d]" % (self.name, i))) for i in range(self.size)]
+                    data = [self.dtype.get_value(obj, _gl.glGetUniformLocation(obj._id, ("%s[%d]" % (self.name, i)).encode("utf8"))) for i in range(self.size)]
                     return _np.concatenate([x.squeeze()[None] for x in data])
 
     def __set__(self, obj, value):
@@ -68,7 +68,7 @@ class UniformStruct(_odict, BaseUniform):
         self.parent = parent
 
     def __str__(self):
-        return "uniform struct { %s } %s;" % (" ".join(str(value) for value in self.values()), self.name)
+        return "uniform struct { %s } %s;" % (" ".join(str(value) for value in list(self.values())), self.name)
 
     def __get__(self, obj, cls=None):
         """@todo: Implement this."""
@@ -94,11 +94,11 @@ class UniformStructArray(_odict, BaseUniform):
 
     @property
     def size(self):
-        return max(index for index, field in self.keys()) + 1
+        return max(index for index, field in list(self.keys())) + 1
 
     def __str__(self):
-        unique_values = _odict((field, value) for ((index, field), value) in self.items())
-        return "uniform struct { %s } %s[%d];" % (" ".join(str(value) for value in unique_values.values()), self.name, self.size)
+        unique_values = _odict((field, value) for ((index, field), value) in list(self.items()))
+        return "uniform struct { %s } %s[%d];" % (" ".join(str(value) for value in list(unique_values.values())), self.name, self.size)
 
     def __get__(self, obj, cls=None):
         """@todo: Implement this."""

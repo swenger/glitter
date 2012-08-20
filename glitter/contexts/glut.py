@@ -303,7 +303,7 @@ class GlutWindow(Context):
     def window_title(self, window_title):
         self._window_title = window_title
         with self:
-            _gl.glutSetWindowTitle(window_title)
+            _gl.glutSetWindowTitle(window_title.encode("utf8"))
 
     @property
     def icon_title(self):
@@ -313,7 +313,7 @@ class GlutWindow(Context):
     def icon_title(self, icon_title):
         self._icon_title = icon_title
         with self:
-            _gl.glutSetIconTitle(icon_title)
+            _gl.glutSetIconTitle(icon_title.encode("utf8"))
 
     def add_timer(self, msecs, func):
         timer_id = _random.randint(0, 1 << 30)

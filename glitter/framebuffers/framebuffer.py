@@ -48,13 +48,13 @@ class Framebuffer(ManagedObject, BindableObject):
         for i in range(self._context.max_color_attachments):
             self[i] = attachments.pop(i, None)
         if attachments:
-            raise ValueError("framebuffer has no attachment(s) %s" % ", ".join("'%s'" % x for x in attachments.keys()))
+            raise ValueError("framebuffer has no attachment(s) %s" % ", ".join("'%s'" % x for x in list(attachments.keys())))
 
         self.depth = kwargs.pop("depth", None)
         self.stencil = kwargs.pop("stencil", None)
 
         if kwargs:
-            raise TypeError("__init__() got an unexpected keyword argument '%s'" % kwargs.keys()[0])
+            raise TypeError("__init__() got an unexpected keyword argument '%s'" % list(kwargs.keys())[0])
 
         self._initialized = True
 

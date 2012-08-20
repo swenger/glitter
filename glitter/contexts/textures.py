@@ -84,7 +84,7 @@ class TextureUnitList(object):
             unit._use_count += 1
         else:
             try:
-                unit = _itertools.dropwhile(lambda x: not x.is_available(), self).next()
+                unit = next(_itertools.dropwhile(lambda x: not x.is_available(), self))
             except StopIteration:
                 raise RuntimeError("no free texture units available")
             setattr(unit, texture._binding, texture)

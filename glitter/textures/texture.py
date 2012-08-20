@@ -41,7 +41,7 @@ class Texture(ManagedObject, BindReleaseObject):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Texture, self).__init__(context=context)
         self.set_data(data, shape, dtype, depth=depth, stencil=stencil, mipmap=mipmap)
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             setattr(self, key, value)
 
     def __getitem__(self, key):
@@ -190,19 +190,19 @@ class Texture(ManagedObject, BindReleaseObject):
     def border_color(self, border_color):
         if self.dtype.is_float():
             _border_color = (_gl.GLfloat * 4)()
-            for i, v in zip(range(4), border_color):
+            for i, v in zip(list(range(4)), border_color):
                 _border_color[i] = v
             with self:
                 _gl.glTexParameterfv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         elif self.dtype.is_signed():
             _border_color = (_gl.GLint * 4)()
-            for i, v in zip(range(4), border_color):
+            for i, v in zip(list(range(4)), border_color):
                 _border_color[i] = v
             with self:
                 _gl.glTexParameterIiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
         else:
             _border_color = (_gl.GLuint * 4)()
-            for i, v in zip(range(4), border_color):
+            for i, v in zip(list(range(4)), border_color):
                 _border_color[i] = v
             with self:
                 _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_BORDER_COLOR, _border_color)
@@ -376,7 +376,7 @@ class Texture(ManagedObject, BindReleaseObject):
     @swizzle_rgba.setter
     def swizzle_rgba(self, swizzle_rgba):
         _swizzle_rgba = (_gl.GLenum * 4)()
-        for i, v in zip(range(4), swizzle_rgba):
+        for i, v in zip(list(range(4)), swizzle_rgba):
             _swizzle_rgba[i] = self.swizzles(v)._value
         with self:
             _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_SWIZZLE_RGBA, _swizzle_rgba)

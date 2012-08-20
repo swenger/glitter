@@ -19,7 +19,7 @@ class EnumConstant(object):
 class Enum(object):
     def __init__(self, **kwargs):
         self._reverse_dict = {}
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             self._add(key, value)
 
     def __getitem__(self, value):
@@ -29,9 +29,9 @@ class Enum(object):
         """Convert C{obj} into an appropriate L{EnumConstant}.
         """
 
-        if obj in self.__dict__.values(): # A matching EnumConstant is okay.
+        if obj in list(self.__dict__.values()): # A matching EnumConstant is okay.
             return obj
-        elif obj in self.__dict__.keys(): # A string is converted to an EnumConstant if possible.
+        elif obj in list(self.__dict__.keys()): # A string is converted to an EnumConstant if possible.
             return self.__dict__[obj]
         else: # Anything else is just wrong.
             raise TypeError("'%s' is not a valid enum constant here" % obj)
@@ -41,5 +41,5 @@ class Enum(object):
         self._reverse_dict[value] = getattr(self, key)
 
     def __repr__(self):
-        return "Enum(%s)" % ", ".join(map(str, self._reverse_dict.values()))
+        return "Enum(%s)" % ", ".join(map(str, list(self._reverse_dict.values())))
 

@@ -2,6 +2,7 @@
 """
 
 import re
+import collections
 
 class LoggingWrapper(object):
     """Wrap a ctypes function so that function calls are logged.
@@ -30,7 +31,7 @@ class LoggingWrapper(object):
             return repr(x)
 
     def _format_args(self, args, kwargs):
-        return ", ".join([self._format_arg(x) for x in args] + ["%s=%s" % (k, self._format_arg(v)) for (k, v) in kwargs.items()])
+        return ", ".join([self._format_arg(x) for x in args] + ["%s=%s" % (k, self._format_arg(v)) for (k, v) in list(kwargs.items())])
 
     def __call__(self, *args, **kwargs):
         self._logger_func("%s(%s)", self.__name__, self._format_args(args, kwargs))
@@ -59,18 +60,18 @@ def add_logger(logger="root", name_re="^(gl|glu|glut|glX)[A-Z].*$", d=None):
         d = raw.__dict__
 
     if logger is None:
-        for key, value in d.items():
+        for key, value in list(d.items()):
             if re.match(name_re, key) and isinstance(value, LoggingWrapper):
                 d[key] = value._func
     else:
-        if not callable(logger):
+        if not isinstance(logger, collections.Callable):
             import logging
             if isinstance(logger, logging.Logger):
                 logger = logger.debug
             else:
                 logger = logging.getLogger(logger).debug
 
-        for key, value in d.items():
+        for key, value in list(d.items()):
             if re.match(name_re, key) and hasattr(value, "errcheck"):
                 d[key] = LoggingWrapper(value, logger)
 

@@ -80,7 +80,7 @@ class BindingProxy(Proxy):
             if old_value is not None and old_value != value and hasattr(old_value, "_on_release") and old_value._on_release is not NotImplemented:
                 old_value._on_release()
             try:
-                self._setter(*([getattr(obj, x) if isinstance(x, basestring) else x for x in self._set_args] + [0 if value is None else value._id]))
+                self._setter(*([getattr(obj, x) if isinstance(x, str) else x for x in self._set_args] + [0 if value is None else value._id]))
             except:
                 self._value[obj] = old_value
                 raise

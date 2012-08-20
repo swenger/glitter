@@ -53,7 +53,7 @@ class AttributeStruct(_odict, BaseAttribute):
         self.parent = parent
 
     def __repr__(self):
-        return "struct { %s } %s;" % (" ".join(str(value) for value in self.values()), self.name)
+        return "struct { %s } %s;" % (" ".join(str(value) for value in list(self.values())), self.name)
 
     def __str__(self):
         return "in %r" % self
@@ -82,11 +82,11 @@ class AttributeStructArray(_odict, BaseAttribute):
 
     @property
     def size(self):
-        return max(index for index, field in self.keys()) + 1
+        return max(index for index, field in list(self.keys())) + 1
 
     def __repr__(self):
-        unique_values = _odict((field, value) for ((index, field), value) in self.items())
-        return "struct { %s } %s[%d];" % (" ".join(repr(value) for value in unique_values.values()), self.name, self.size)
+        unique_values = _odict((field, value) for ((index, field), value) in list(self.items()))
+        return "struct { %s } %s[%d];" % (" ".join(repr(value) for value in list(unique_values.values())), self.name, self.size)
 
     def __str__(self):
         return "in %r" % self

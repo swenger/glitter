@@ -12,6 +12,7 @@ import numpy as _np
 import glitter.raw as _gl
 from glitter.utils.dtypes import coerce_array, int32
 from glitter.utils.objects import with_obj
+import collections
 
 class Proxy(object):
     def __init__(self, getter=None, get_args=(), setter=None, set_args=(), dtype=None, shape=(), enum=None, name=None):
@@ -103,7 +104,7 @@ class InstanceDescriptorMixin(object):
 
     def __getattribute__(self, name):
         attr = super(InstanceDescriptorMixin, self).__getattribute__(name)
-        if hasattr(attr, "__get__") and not callable(attr):
+        if hasattr(attr, "__get__") and not isinstance(attr, collections.Callable):
             return attr.__get__(self, self.__class__)
         else:
             return attr
@@ -157,12 +158,12 @@ def add_proxies(parent, obj):
     for key, value in _getmembers(type(obj)):
         if key.startswith("_"):
             continue
-        if hasattr(value, "__get__") and not callable(value): # exclude member functions
+        if hasattr(value, "__get__") and not isinstance(value, collections.Callable): # exclude member functions
             setattr(parent, key, PropertyProxy(obj, key))
 
     # add instance descriptors if applicable
     if isinstance(obj, InstanceDescriptorMixin):
-        for key, value in obj.__dict__.items():
+        for key, value in list(obj.__dict__.items()):
             if key.startswith("_"):
                 continue
             if hasattr(value, "__get__"):

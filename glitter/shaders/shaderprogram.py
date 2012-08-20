@@ -73,16 +73,16 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
         if link:
             self.link()
 
-        for name, proxy in self._get_active_attributes().items():
+        for name, proxy in list(self._get_active_attributes().items()):
             setattr(self, name, proxy)
             self._variable_proxies.append(proxy)
-        for name, proxy in self._get_active_uniforms().items():
+        for name, proxy in list(self._get_active_uniforms().items()):
             setattr(self, name, proxy)
             self._variable_proxies.append(proxy)
 
         self._frozen = True
 
-        for key, value in variables.items():
+        for key, value in list(variables.items()):
             setattr(self, key, value)
 
     def __setattr__(self, name, value):
@@ -207,22 +207,22 @@ class ShaderProgram(ManagedObject, BindableObject, InstanceDescriptorMixin):
 
     def has_attribute_location(self, name):
         with self._context:
-            return _gl.glGetAttribLocation(self._id, name) >= 0
+            return _gl.glGetAttribLocation(self._id, name.encode("utf8")) >= 0
 
     def get_attribute_location(self, name):
         with self._context:
-            loc = _gl.glGetAttribLocation(self._id, name)
+            loc = _gl.glGetAttribLocation(self._id, name.encode("utf8"))
         if loc == -1:
             raise NameError("shader has no attribute '%s'" % name)
         return loc
 
     def has_frag_data_location(self, name):
         with self._context:
-            return _gl.glGetFragDataLocation(self._id, name) >= 0
+            return _gl.glGetFragDataLocation(self._id, name.encode("utf8")) >= 0
 
     def get_frag_data_location(self, name):
         with self._context:
-            loc = _gl.glGetFragDataLocation(self._id, name)
+            loc = _gl.glGetFragDataLocation(self._id, name.encode("utf8"))
         if loc == -1:
             raise NameError("shader has no frag data '%s'" % name)
         return loc

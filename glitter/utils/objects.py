@@ -280,7 +280,7 @@ class State(GLObject, StateMixin):
     def __enter__(self):
         if self._do_enter_exit and hasattr(self._context, "__enter__"):
             self._context.__enter__()
-        for key, value in self._properties.items():
+        for key, value in list(self._properties.items()):
             try:
                 self._stack.append(getattr(self._context, key))
             except AttributeError:
@@ -289,7 +289,7 @@ class State(GLObject, StateMixin):
         return self
 
     def __exit__(self, type, value, traceback):
-        for key in reversed(self._properties.keys()):
+        for key in reversed(list(self._properties.keys())):
             setattr(self._context, key, self._stack.pop())
         if self._do_enter_exit and hasattr(self._context, "__exit__"):
             self._context.__exit__(type, value, traceback)

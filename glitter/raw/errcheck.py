@@ -62,7 +62,7 @@ def set_error_check(errcheck_func=Ellipsis, errcheck_ok=Ellipsis, name_re="^gl[A
         else:
             raise GLError(error, result, func, arguments)
 
-    for key, value in d.items():
+    for key, value in list(d.items()):
         if re.match(name_re, key) and value is not errcheck_func and hasattr(value, "errcheck"):
             value.errcheck = errcheck
 
