@@ -21,7 +21,7 @@ class Proxy(object):
         self._setter = setter
         self._set_args = set_args
         self._dtype = dtype if dtype else int32
-        self._shape = None if shape is None else tuple(shape) if hasattr(shape, "__iter__") else (shape,)
+        self._shape = None if shape is None else tuple(shape) if hasattr(shape, "__iter__") and not isinstance(shape, str) else (shape,)
         self._enum = enum
         self._name = name
 
@@ -32,7 +32,7 @@ class Proxy(object):
             self._getter(*args)
         value = _value.item() if _value.shape is () else _value
         if self._enum is not None:
-            if hasattr(value, "__iter__"):
+            if hasattr(value, "__iter__") and not isinstance(value, str):
                 value = [self._enum[x] for x in value]
             else:
                 value = self._enum[value]
@@ -42,7 +42,7 @@ class Proxy(object):
         if self._setter is None:
             raise AttributeError("can't set attribute")
         if self._enum is not None:
-            if hasattr(value, "__iter__"):
+            if hasattr(value, "__iter__") and not isinstance(value, str):
                 _value = [self._enum(x)._value for x in value]
             else:
                 _value = self._enum(value)._value

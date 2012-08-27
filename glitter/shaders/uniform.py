@@ -44,7 +44,7 @@ class Uniform(BaseUniform):
         if self.dtype.is_texture():
             if self.parent._context.current_program == self.parent:
                 self._on_release()
-            self.textures = value if hasattr(value, "__iter__") else [value]
+            self.textures = value if hasattr(value, "__iter__") and not isinstance(value, str) else [value]
             if self.parent._context.current_program == self.parent:
                 self._on_bind()
         else:

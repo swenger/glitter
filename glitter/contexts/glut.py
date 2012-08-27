@@ -157,7 +157,7 @@ class GlutWindow(Context):
 
         self._name = self._window_title = self._icon_title = name
 
-        if hasattr(version, "__iter__"):
+        if hasattr(version, "__iter__") and not isinstance(version, str):
             _gl.glutInitContextVersion(*version)
         else:
             _gl.glutInitContextVersion(version, 0)

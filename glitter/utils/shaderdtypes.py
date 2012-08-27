@@ -17,7 +17,7 @@ class ShaderDatatype(object):
         self._name = name
         self._gltype = _gltype
         self._dtype = dtype
-        self._shape = (shape,) if not hasattr(shape, "__iter__") else tuple(shape)
+        self._shape = (shape,) if not hasattr(shape, "__iter__") and not isinstance(shape, str) else tuple(shape)
         self._texture = texture
         self._atomic = atomic
 
