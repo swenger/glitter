@@ -1,5 +1,9 @@
 """GLX context creation and management.
 
+Depends on the binary glxcontext module.
+
+@todo: Include glxcontext in distribution as an optional module.
+
 @author: Stephan Wenger
 @date: 2012-08-28
 """
