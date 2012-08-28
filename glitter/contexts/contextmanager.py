@@ -44,8 +44,12 @@ class ContextManager(object):
         hidden GLUT window so that rendering is possible without an X connection.
         """
 
-        from glitter.contexts.glut import GlutWindow
-        return GlutWindow(shape=(1, 1), hide=True)
+        try:
+            from glitter.contexts.glx import GLXContext
+            return GLXContext()
+        except ImportError:
+            from glitter.contexts.glut import GlutWindow
+            return GlutWindow(shape=(1, 1), hide=True)
 
 context_manager = ContextManager()
 
