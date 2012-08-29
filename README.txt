@@ -142,7 +142,7 @@ The following versions introduced noteworthy features, bug fixes, or API changes
 
 version 0.1.7
 -----------
-- TODO
+- Fix GLUT modifier key functions.
 
 version 0.1.6
 -------------
