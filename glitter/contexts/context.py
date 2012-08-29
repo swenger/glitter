@@ -279,7 +279,7 @@ class Context(InstanceDescriptorMixin, StateMixin):
     unpack_skip_images = IntegerProxy([_gl.GL_UNPACK_SKIP_IMAGES], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_IMAGES])
     unpack_skip_pixels = IntegerProxy([_gl.GL_UNPACK_SKIP_PIXELS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_PIXELS])
     unpack_skip_rows = IntegerProxy([_gl.GL_UNPACK_SKIP_ROWS], _gl.glPixelStorei, [_gl.GL_UNPACK_SKIP_ROWS])
-    viewport = IntegerProxy([_gl.GL_VIEWPORT], _gl.glViewport, shape=4)
+    viewport = IntegerProxy([_gl.GL_VIEWPORT], _gl.glViewport, shape=4) # XXX viewport dimensions are (x, y, width, height) as in OpenGL, not (height, width) as in numpy!
     viewport_bounds_range = IntegerProxy([_gl.GL_VIEWPORT_BOUNDS_RANGE], shape=2)
     viewport_subpixel_bits = IntegerProxy([_gl.GL_VIEWPORT_SUBPIXEL_BITS])
 

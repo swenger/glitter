@@ -142,8 +142,17 @@ The following versions introduced noteworthy features, bug fixes, or API changes
 
 development
 -----------
-- Fix bugs in ``copying`` module.
 - Add support for depth and stencil textures.
+
+version 0.1.6
+-------------
+- Additional examples.
+- Python 3 compatibility (built distribution only, not build script).
+- Add GLX and dummy contexts (GLX context via separate glxcontext package), GLX is now the default if available.
+- Fix ``Framebuffer`` viewport.
+- Rename and add parameters to copy pipeline.
+- Add convenience matrix functions.
+- Fix setattr bug in ``Pipeline``.
 
 version 0.1.5
 -------------

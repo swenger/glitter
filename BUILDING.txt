@@ -4,7 +4,7 @@ git commit
 git push
 
 # build docs
-epydoc -v --html -o doc glitter examples tests
+epydoc -v --html -o docs glitter examples tests
 cd doc
 zip doc.zip *
 upload doc.zip to pypi
