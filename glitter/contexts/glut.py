@@ -107,15 +107,15 @@ def get_elapsed_time():
 
 def get_shift_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_SHIFT)
+    return bool(_gl.glutGetModifiers() & _gl.GLUT_ACTIVE_SHIFT)
 
 def get_ctrl_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_CTRL)
+    return bool(_gl.glutGetModifiers() & _gl.GLUT_ACTIVE_CTRL)
 
 def get_alt_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_ALT)
+    return bool(_gl.glutGetModifiers() & _gl.GLUT_ACTIVE_ALT)
 
 class GlutWindow(Context):
     cursors = _cursors
