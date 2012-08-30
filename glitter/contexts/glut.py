@@ -5,6 +5,7 @@
 @todo: Implement menus, font rendering, and geometric object rendering,
 @todo: Fail gracefully (better error message) when context cannot be created, e.g. when opengl 3.2 not available
 @todo: Key constants like C{GLUT_KEY_F1} should be available as an enum.
+@todo: Allow overriding callbacks in subclasses in addition to assigning to properties.
 
 @author: Stephan Wenger
 @date: 2012-02-29
