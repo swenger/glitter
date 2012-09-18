@@ -10,6 +10,22 @@ import glitter.raw as _gl
 from glitter.utils.dtypes import uint8, uint16, uint32, int8, int16, int32, float32
 from glitter.utils.enum import Enum
 
+format_to_length = {
+        #_gl.GL_COLOR_INDEX: 1,
+        _gl.GL_STENCIL_INDEX: 1,
+        _gl.GL_DEPTH_COMPONENT: 1,
+        _gl.GL_RED: 1,
+        _gl.GL_GREEN: 1,
+        _gl.GL_BLUE: 1,
+        _gl.GL_ALPHA: 1,
+        _gl.GL_RGB: 3,
+        _gl.GL_BGR: 3,
+        _gl.GL_RGBA: 4,
+        _gl.GL_BGRA: 4,
+        #_gl.GL_LUMINANCE: 1,
+        #_gl.GL_LUMINANCE_ALPHA: 2,
+        }
+
 texture_formats = [
         ((float32, 1), _gl.GL_DEPTH_COMPONENT32F, (_gl.GL_FLOAT, _gl.GL_DEPTH_COMPONENT)),
         ((int16, 1), _gl.GL_DEPTH_COMPONENT16, (_gl.GL_SHORT, _gl.GL_DEPTH_COMPONENT)),
@@ -321,6 +337,7 @@ polygon_modes = Enum(
 )
 
 __all__ = [
+    "format_to_length",
     "texture_formats",
     "dtype_to_gl_iformat",
     "gl_iformat_to_dtype",

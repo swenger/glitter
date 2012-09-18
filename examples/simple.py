@@ -75,6 +75,11 @@ class SimpleExample(object):
         # later.
         self.window.display_callback = self.display
 
+        # We also set mouse callbacks that will display the pixel color in the
+        # title bar.
+        self.window.mouse_callback = self.mouse
+        self.window.motion_callback = self.motion
+
         # In the OpenGL core profile, there is no such thing as a "standard pipeline"
         # any more. We use the minimalistic <code>defaultpipeline</code> from the
         # <code>glitter.convenience</code> module to create a shader program instead:
@@ -100,6 +105,19 @@ class SimpleExample(object):
         # After all rendering commands have been issued, we swap the back buffer to
         # the front, making the rendered image visible all at once:
         self.window.swap_buffers()
+
+    # <h4>Mouse functions</h4>
+
+    # The motion callback is called when the mouse is moved while a button is
+    # pressed. It reads the current color of the pixel under the cursor from
+    # the front buffer and displays it in the window title.
+    def motion(self, x, y):
+        self.window.window_title = "%.2f, %.2f, %.2f, %.2f" % tuple(self.window.front_pixels[self.window.shape[0] - y, x])
+
+    # The mouse callback is called whenever a mouse button is pressed. It
+    # redirects to the functionality of the motion callback.
+    def mouse(self, button, state, x, y):
+        self.motion(x, y)
 
     # <h4>Timer function</h4>
 

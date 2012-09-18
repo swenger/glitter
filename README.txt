@@ -144,6 +144,7 @@ development
 -----------
 - Fix bugs in ``copying`` module.
 - Add support for depth and stencil textures.
+- Add rudimentary support for ``glReadPixels`` on ``Context`` objects.
 
 version 0.1.5
 -------------

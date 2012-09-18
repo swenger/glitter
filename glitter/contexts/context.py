@@ -38,6 +38,7 @@ from glitter.contexts.proxies import BooleanProxy, FloatProxy, IntegerProxy, Int
 from glitter.contexts.textures import TextureUnitList
 from glitter.contexts.drawbuffers import DrawBufferList, ColorWritemaskList
 from glitter.contexts.multiproxies import BlendFuncProxy, BlendEquationProxy, PolygonOffsetProxy
+from glitter.contexts.bufferproxy import BufferProxy
 
 class GLObjectLibrary(object):
     def __init__(self, _context):
@@ -292,6 +293,17 @@ class Context(InstanceDescriptorMixin, StateMixin):
     version = StringProxy(_gl.GL_VERSION)
     shading_language_version = StringProxy(_gl.GL_SHADING_LANGUAGE_VERSION)
     extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
+
+    #{ Pixel buffer proxies
+    left_pixels = BufferProxy(mode=_gl.GL_LEFT)
+    right_pixels = BufferProxy(mode=_gl.GL_RIGHT)
+    front_pixels = BufferProxy(mode=_gl.GL_FRONT)
+    back_pixels = BufferProxy(mode=_gl.GL_BACK)
+    front_left_pixels = BufferProxy(mode=_gl.GL_FRONT_LEFT)
+    front_right_pixels = BufferProxy(mode=_gl.GL_FRONT_RIGHT)
+    back_left_pixels = BufferProxy(mode=_gl.GL_BACK_LEFT)
+    back_right_pixels = BufferProxy(mode=_gl.GL_BACK_RIGHT)
+    # TODO AUX buffers
 
     #{ Global actions
 
