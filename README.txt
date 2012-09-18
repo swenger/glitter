@@ -140,11 +140,21 @@ Changelog
 
 The following versions introduced noteworthy features, bug fixes, or API changes:
 
-development
+version 0.1.7
 -----------
-- Fix bugs in ``copying`` module.
-- Add support for depth and stencil textures.
+- Fix GLUT modifier key functions.
 - Add rudimentary support for ``glReadPixels`` on ``Context`` objects.
+
+version 0.1.6
+-------------
+- Add support for depth and stencil textures.
+- Additional examples.
+- Python 3 compatibility (built distribution only, not build script).
+- Add GLX and dummy contexts (GLX context via separate glxcontext package), GLX is now the default if available.
+- Fix ``Framebuffer`` viewport.
+- Rename and add parameters to copy pipeline.
+- Add convenience matrix functions.
+- Fix setattr bug in ``Pipeline``.
 
 version 0.1.5
 -------------
