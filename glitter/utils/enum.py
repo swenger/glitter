@@ -34,7 +34,7 @@ class Enum(object):
         elif obj in list(self.__dict__.keys()): # A string is converted to an EnumConstant if possible.
             return self.__dict__[obj]
         else: # Anything else is just wrong.
-            raise TypeError("'%s' is not a valid enum constant here" % obj)
+            raise TypeError("%r is not a valid enum constant here" % obj)
 
     def _add(self, key, value):
         setattr(self, key, EnumConstant(self, key, value))

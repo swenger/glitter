@@ -295,14 +295,14 @@ class Context(InstanceDescriptorMixin, StateMixin):
     extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
 
     #{ Pixel buffer proxies
-    left_pixels = BufferProxy(mode=_gl.GL_LEFT)
-    right_pixels = BufferProxy(mode=_gl.GL_RIGHT)
-    front_pixels = BufferProxy(mode=_gl.GL_FRONT)
-    back_pixels = BufferProxy(mode=_gl.GL_BACK)
-    front_left_pixels = BufferProxy(mode=_gl.GL_FRONT_LEFT)
-    front_right_pixels = BufferProxy(mode=_gl.GL_FRONT_RIGHT)
-    back_left_pixels = BufferProxy(mode=_gl.GL_BACK_LEFT)
-    back_right_pixels = BufferProxy(mode=_gl.GL_BACK_RIGHT)
+    left_pixels = BufferProxy(mode="LEFT")
+    right_pixels = BufferProxy(mode="RIGHT")
+    front_pixels = BufferProxy(mode="FRONT")
+    back_pixels = BufferProxy(mode="BACK")
+    front_left_pixels = BufferProxy(mode="FRONT_LEFT")
+    front_right_pixels = BufferProxy(mode="FRONT_RIGHT")
+    back_left_pixels = BufferProxy(mode="BACK_LEFT")
+    back_right_pixels = BufferProxy(mode="BACK_RIGHT")
     # TODO AUX buffers
 
     #{ Global actions

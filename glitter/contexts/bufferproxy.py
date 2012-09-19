@@ -7,7 +7,7 @@
 import numpy as _np
 
 import glitter.raw as _gl
-from glitter.utils import float32, format_to_length
+from glitter.utils import float32, format_to_length, State
 
 class BufferProxy(object):
     def __init__(self, mode, dtype=float32, format=_gl.GL_RGBA, context=None):
@@ -73,12 +73,8 @@ class BufferProxy(object):
         return shape, x, y, width, height
         
     def __getitem__(self, s):
-        with self._context:
+        with State(read_buffer=self._mode, context=self._context): # TODO glPixelStore, glPixelTransfer, glPixelMap
             shape, x, y, width, height = self._parse_slices(s)
-            _gl.glReadBuffer(self._mode) # TODO set self._context.read_buffer in a with statement
-            # TODO set glPixelStore arguments on self._context in a with statement
-            # TODO set glPixelTransfer arguments on self._context in a with statement
-            # TODO set glPixelMap arguments on self._context in a with statement
             _data = _np.empty(shape, dtype=self._dtype.as_numpy())
             _gl.glReadPixels(x, y, width, height, self._format, self._dtype._as_gl(), _data.ctypes)
             return _data
