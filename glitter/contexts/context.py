@@ -295,7 +295,7 @@ class Context(InstanceDescriptorMixin, StateMixin):
     extensions = StringProxy(_gl.GL_EXTENSIONS, _gl.GL_NUM_EXTENSIONS)
 
     #{ Pixel buffer proxies
-    left_pixels = BufferProxy(mode="LEFT")
+    left_pixels = BufferProxy(mode="LEFT") # TODO why isn't draw_buffers.LEFT etc. working?
     right_pixels = BufferProxy(mode="RIGHT")
     front_pixels = BufferProxy(mode="FRONT")
     back_pixels = BufferProxy(mode="BACK")
