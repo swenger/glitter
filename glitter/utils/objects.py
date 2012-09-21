@@ -121,12 +121,13 @@ class ManagedObject(GLObject):
         """
 
         try:
-            with self._context:
-                if hasattr(self._delete_id, "argtypes") and len(self._delete_id.argtypes) == 2:
-                    self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
-                else:
-                    self._delete_id(self._id)
-            self._id = 0
+            if self._id is not None:
+                with self._context:
+                    if hasattr(self._delete_id, "argtypes") and len(self._delete_id.argtypes) == 2:
+                        self._delete_id(1, _gl.pointer(_gl.GLuint(self._id)))
+                    else:
+                        self._delete_id(self._id)
+                self._id = None
         except:
             pass
 
