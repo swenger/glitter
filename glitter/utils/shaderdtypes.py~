@@ -29,7 +29,7 @@ class ShaderDatatype(object):
         return Datatype._gltype_db[_gltype]
 
     def get_value(self, program, location):
-        data = _np.empty(self._shape, int32.as_numpy() if self._dtype.is_boolean() else self._dtype.as_numpy(), order="F")
+        data = _np.empty(self._shape, int32.as_numpy() if self._dtype.is_boolean() else self._dtype.as_numpy())
         if self._dtype == int32 or self._dtype == bool8:
             _gl.glGetUniformiv(program._id, location, _gl.cast(data.ctypes, _gl.glGetUniformiv.argtypes[-1]))
         elif self._dtype == uint32:

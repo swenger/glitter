@@ -7,7 +7,6 @@ C{glGetTransformFeedbackVarying}, C{glTransformFeedbackVarying},
 C{glGetUniformBlockIndex}, C{glGetUniformIndices}, C{glGetActiveUniformBlock},
 C{glGetActiveUniformBlockName}, C{glUniformBlockBinding}, and
 C{glUniformSubroutine}.
-@todo: uniform matrices seem to be transposed while reading or writing
 
 @author: Stephan Wenger
 @date: 2012-02-29
