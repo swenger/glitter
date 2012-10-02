@@ -79,7 +79,7 @@ class Framebuffer(ManagedObject, BindableObject):
 
             self._stack.append(self._context.viewport)
             if self.shape is not None:
-                self._context.viewport = (0, 0) + self.shape
+                self._context.viewport = (0, 0, self.shape[1], self.shape[0])
 
     def _on_release(self):
         """Restore global framebuffer related state.

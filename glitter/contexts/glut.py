@@ -5,6 +5,7 @@
 @todo: Implement menus, font rendering, and geometric object rendering,
 @todo: Fail gracefully (better error message) when context cannot be created, e.g. when opengl 3.2 not available
 @todo: Key constants like C{GLUT_KEY_F1} should be available as an enum.
+@todo: Allow overriding callbacks in subclasses in addition to assigning to properties.
 
 @author: Stephan Wenger
 @date: 2012-02-29
@@ -107,15 +108,15 @@ def get_elapsed_time():
 
 def get_shift_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_SHIFT)
+    return bool(_gl.glutGetModifiers() & _gl.GLUT_ACTIVE_SHIFT)
 
 def get_ctrl_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_CTRL)
+    return bool(_gl.glutGetModifiers() & _gl.GLUT_ACTIVE_CTRL)
 
 def get_alt_state():
     """Only available in keyboard, special, and mouse callbacks."""
-    return _gl.glutGetModifiers(_gl.GLUT_ACTIVE_ALT)
+    return bool(_gl.glutGetModifiers() & _gl.GLUT_ACTIVE_ALT)
 
 class GlutWindow(Context):
     cursors = _cursors
