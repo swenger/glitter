@@ -37,6 +37,9 @@ from math import sin, cos, pi
 # function to generate random textures:
 from numpy.random import random
 
+# We use numpy to parse data files:
+from numpy import loadtxt
+
 # We assume the mesh is stored in a <a
 # href="http://www.hdfgroup.org/HDF5/">HDF5</a> file, so import <a
 # href="h5py.alfven.org"><code>h5py</code></a>.
@@ -75,25 +78,40 @@ class MeshViewer(object):
         self.shader = get_default_program()
 
         # We open the HDF5 file specified on the command line for reading:
-        with h5py.File(filename, "r") as f:
-            # The vertices, colors and indices of the mesh are read from the
-            # corresponding datasets in the HDF5 file. Note that the names of the
-            # datasets are mere convention. Colors and indices are allowed to be
-            # undefined.
-            vertices = f["vertices"]
-            colors = f.get("colors", None)
-            elements = f.get("indices", None)
+        if filename.endswith(".dat"):
+            data = loadtxt(filename)
+            assert data.ndim == 2 and data.shape[1] in (3, 6)
 
-            # If no colors were specified, we generate random ones so we can
-            # distinguish the triangles without fancy shading.
-            if colors is None:
-                colors = random((len(vertices), 3))[:, None, :][:, [0] * vertices.shape[1], :]
+            vertices = data[:, :3]
+            vertices -= vertices.min()
+            vertices /= vertices.max()
+            vertices -= 0.5
+            
+            colors = data[:, 3:] if data.shape[1] == 6 else None
+            colors -= colors.min()
+            colors /= colors.max()
+            
+            elements = None
+        else:
+            with h5py.File(filename, "r") as f:
+                # The vertices, colors and indices of the mesh are read from the
+                # corresponding datasets in the HDF5 file. Note that the names of the
+                # datasets are mere convention. Colors and indices are allowed to be
+                # undefined.
+                vertices = f["vertices"]
+                colors = f.get("colors", None)
+                elements = f.get("indices", None)
 
-            # Here, we create a vertex array that contains buffers for two vertex array
-            # input variables as well as an index array. If <code>elements</code>
-            # is <code>None</code>, the vertex array class will draw all vertices
-            # in order.
-            self.vao = VertexArray(vertices, colors, elements=elements)
+        # If no colors were specified, we generate random ones so we can
+        # distinguish the triangles without fancy shading.
+        if colors is None:
+            colors = random((len(vertices), 3))[:, None, :][:, [0] * vertices.shape[1], :]
+
+        # Here, we create a vertex array that contains buffers for two vertex array
+        # input variables as well as an index array. If <code>elements</code>
+        # is <code>None</code>, the vertex array class will draw all vertices
+        # in order.
+        self.vao = VertexArray(vertices, colors, elements=elements)
 
     # <h3>Callback functions</h3>
 
