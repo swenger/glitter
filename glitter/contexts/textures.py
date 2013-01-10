@@ -88,6 +88,7 @@ class TextureUnitList(object):
         if texture in self._bound_textures:
             unit = self._bound_textures[texture]
             unit._use_count += 1
+            unit.activate() # make unit the current glActiveTexture because "with Texture*():" relies on that
         else:
             try:
                 unit = next(_itertools.dropwhile(lambda x: not x.is_available(), self))

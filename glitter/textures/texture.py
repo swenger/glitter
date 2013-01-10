@@ -125,7 +125,7 @@ class Texture(ManagedObject, BindReleaseObject):
     @property
     def shape(self):
         with self:
-            colors = gl_iformat_to_dtype[self._iformat][1]        
+            colors = gl_iformat_to_dtype[self._iformat][1]
             _width = _gl.GLint()
             _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
             if self._ndim == 2:
