@@ -8,7 +8,7 @@
 @date: 2012-03-20
 """
 
-from numpy import float32, zeros_like
+from numpy import float32, zeros_like, dstack
 import pyopencl as cl
 from pyopencl.tools import get_gl_sharing_context_properties
 
@@ -71,9 +71,9 @@ class PoissonIntegrator(object):
 if __name__ == "__main__":
     import sys
     from matplotlib.pyplot import imread
-    from scipy.misc import imsave
+    from scipy.misc import imsave, lena
 
-    image = imread(sys.argv[1])
+    image = imread(sys.argv[1]) if len(sys.argv) > 1 else dstack([lena()] * 4)
     lapl_mask = zeros_like(image)
     lapl_mask[:, :, 3] = image[:, :, 3]
     lapl_mask[0, :, 3] = lapl_mask[-1, :, 3] = lapl_mask[:, 0, 3] = lapl_mask[:, -1, 3] = 1.0
