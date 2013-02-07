@@ -124,18 +124,22 @@ class Texture(ManagedObject, BindReleaseObject):
 
     @property
     def shape(self):
+        return self.get_shape(0)
+
+    def get_shape(self, level=0):
+        """Returns the current texture data size at given mipmap level."""
         with self:
             colors = gl_iformat_to_dtype[self._iformat][1]
             _width = _gl.GLint()
-            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
+            _gl.glGetTexLevelParameteriv(self._target, level, _gl.GL_TEXTURE_WIDTH, _gl.pointer(_width))
             if self._ndim == 2:
                 return (_width.value, colors)
             _height = _gl.GLint()
-            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_HEIGHT, _gl.pointer(_height))
+            _gl.glGetTexLevelParameteriv(self._target, level, _gl.GL_TEXTURE_HEIGHT, _gl.pointer(_height))
             if self._ndim == 3:
                 return (_height.value, _width.value, colors)
             _depth = _gl.GLint()
-            _gl.glGetTexLevelParameteriv(self._target, 0, _gl.GL_TEXTURE_DEPTH, _gl.pointer(_depth))
+            _gl.glGetTexLevelParameteriv(self._target, level, _gl.GL_TEXTURE_DEPTH, _gl.pointer(_depth))
             if self._ndim == 4:
                 return (_depth.value, _height.value, _width.value, colors)
 

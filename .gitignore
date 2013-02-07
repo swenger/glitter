@@ -2,3 +2,4 @@
 /dist/
 /glitter.egg-info/
 *.pyc
+*.egg
