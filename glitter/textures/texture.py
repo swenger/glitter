@@ -87,7 +87,7 @@ class Texture(ManagedObject, BindReleaseObject):
                 raise TypeError("no matching depth texture format for %d %s colors" % (shape[-1], dtype))
         elif stencil:
             raise NotImplementedError("stencil textures are currently not supported")
-        
+
         _data = data.ctypes if data is not None else _gl.POINTER(_gl.GLvoid)()
         _gl.glPixelStorei(_gl.GL_UNPACK_ALIGNMENT, 1)
         with self:
@@ -103,16 +103,17 @@ class Texture(ManagedObject, BindReleaseObject):
         if mipmap:
             self.generate_mipmap()
 
+    def generate_mipmap(self):
+        with self:
+            _gl.glGenerateMipmap(self._target)
+
     def get_data(self, level=0):
-        _data = _np.empty(self.shape, dtype=self.dtype.as_numpy())
+        _shape = self.get_shape(level)
+        _data = _np.empty(_shape, dtype=self.dtype.as_numpy())
         _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
         with self:
             _gl.glGetTexImage(self._target, level, self._format, self._type, _data.ctypes)
         return _data
-
-    def generate_mipmap(self):
-        with self:
-            _gl.glGenerateMipmap(self._target)
 
     @property
     def data(self):
@@ -236,7 +237,7 @@ class Texture(ManagedObject, BindReleaseObject):
         _compare_mode = _gl.GLenum(self.compare_modes(compare_mode)._value)
         with self:
             _gl.glTexParameterIuiv(self._target, _gl.GL_TEXTURE_COMPARE_MODE, _gl.pointer(_compare_mode))
-    
+
     @property
     def immutable_format(self): # Textures become immutable if their storage is specified with glTexStorage1D, glTexStorage2D or glTexStorage3D
         _immutable_format = _gl.GLenum()
