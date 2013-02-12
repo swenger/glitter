@@ -26,7 +26,7 @@ format_to_length = {
         #_gl.GL_LUMINANCE_ALPHA: 2,
         }
 
-texture_formats = [
+texture_formats = [ # WARNING: In case of ambiguities, the LAST ONE will win.
         ((float32, 1), _gl.GL_DEPTH_COMPONENT32F, (_gl.GL_FLOAT, _gl.GL_DEPTH_COMPONENT)),
         ((int16, 1), _gl.GL_DEPTH_COMPONENT16, (_gl.GL_SHORT, _gl.GL_DEPTH_COMPONENT)),
         ((int32, 1), _gl.GL_DEPTH_COMPONENT24, (_gl.GL_INT, _gl.GL_DEPTH_COMPONENT)),

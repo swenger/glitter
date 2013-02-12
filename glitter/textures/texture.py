@@ -40,7 +40,7 @@ class Texture(ManagedObject, BindReleaseObject):
         if any(x is NotImplemented for x in (self._ndim, self._set)):
             raise TypeError("%s is abstract" % self.__class__.__name__)
         super(Texture, self).__init__(context=context)
-        self.set_data(data, shape, dtype, depth=depth, stencil=stencil, mipmap=mipmap)
+        self.set_data(data, shape, dtype, depth=depth, stencil=stencil, mipmap=mipmap, set_default_interpolation=True)
         for key, value in list(kwargs.items()):
             setattr(self, key, value)
 
@@ -56,7 +56,7 @@ class Texture(ManagedObject, BindReleaseObject):
     def __len__(self):
         return self.shape[0]
 
-    def set_data(self, data=None, shape=None, dtype=None, level=0, depth=False, stencil=False, mipmap=False):
+    def set_data(self, data=None, shape=None, dtype=None, level=0, depth=False, stencil=False, mipmap=False, set_default_interpolation=False):
         if data is None:
             if shape is None:
                 raise ValueError("must specify either data or shape")
@@ -93,12 +93,18 @@ class Texture(ManagedObject, BindReleaseObject):
         with self:
             args = [self._target, level, _iformat] + list(reversed(shape[:-1])) + [0, _format, _type, _data]
             self._set(*args)
-        if dtype.is_float():
+
+        if not dtype.is_float(): # NEAREST is the only possible options for non-floats.
+            self.min_filter = self.min_filters.NEAREST_MIPMAP_NEAREST if mipmap else self.min_filters.NEAREST # mipmap untested, use at own risk!
+            self.mag_filter = self.mag_filters.NEAREST
+        elif set_default_interpolation:
             self.min_filter = self.min_filters.LINEAR_MIPMAP_LINEAR if mipmap else self.min_filters.LINEAR
             self.mag_filter = self.mag_filters.LINEAR
-        else:
-            self.min_filter = self.min_filters.NEAREST
-            self.mag_filter = self.mag_filters.NEAREST
+
+        # No unambiguous way to determine depth component from dtype,
+        # so we have to save it separately.
+        self._depth = depth
+        self._stencil = stencil
 
         if mipmap:
             self.generate_mipmap()
@@ -108,7 +114,7 @@ class Texture(ManagedObject, BindReleaseObject):
             _gl.glGenerateMipmap(self._target)
 
     def get_data(self, level=0):
-        _shape = self.get_shape(level)
+        _shape = self.get_shape(level) # for mipmaps.
         _data = _np.empty(_shape, dtype=self.dtype.as_numpy())
         _gl.glPixelStorei(_gl.GL_PACK_ALIGNMENT, 1)
         with self:
@@ -157,7 +163,14 @@ class Texture(ManagedObject, BindReleaseObject):
 
     @property
     def _format(self):
-        return dtype_to_gl_format[self.dtype, self.shape[-1]]
+        if self._depth and not self._stencil:
+            return _gl.GL_DEPTH_COMPONENT
+        elif self._stencil and not self._depth:
+            raise NotImplementedError("Stencil is not supported yet (for getting a format).")
+        elif self._depth and self._stencil:
+            raise NotImplementedError("Stencil AND depth is not supported yet (for getting a format).")
+        else:
+            return dtype_to_gl_format[self.dtype, self.shape[-1]]
 
     @property
     def _type(self):

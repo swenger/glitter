@@ -30,7 +30,9 @@ def get_gl_context(option="g"):
         print "Creating QT context."
         from PySide import QtGui
         from glitter.contexts.qt import QtWidget
-        app = QtGui.QApplication(sys.argv)
+        app = QtGui.QApplication.instance()
+        if app is None:
+            app = QtGui.QApplication(sys.argv)
         gl_context = QtWidget(None)
     else:
         raise Exception("Unknown option: %s" % option)
@@ -55,9 +57,8 @@ def get_cl_context(gl_context):
     return cl_context
 
 
-if __name__ == "__main__":
-    gl_context = get_gl_context("g" if len(sys.argv) < 2 else sys.argv[1])
-    cl_context = get_cl_context(gl_context)
+def test_clgl_texture_interop(gl_context, cl_context):
+    """Tests that an OpenGL texture can be used in an OpenCL kernel."""
     from scipy.misc import lena;
     img = np.dstack([lena() / 256.] * 3).astype(np.float32); hei, wid = img.shape[:2]
     gl_img = Texture2D(img, mipmap=True, context=gl_context)
@@ -72,4 +73,19 @@ if __name__ == "__main__":
         cl.enqueue_release_gl_objects(cl_queue, cl_gl_data)
         cl_queue.flush()
     cl_queue.finish()
+
+
+if __name__ == "__main__":
+    gl_context = get_gl_context("q" if len(sys.argv) < 2 else sys.argv[1])
+    cl_context = get_cl_context(gl_context)
+    test_clgl_texture_interop(gl_context, cl_context);
+    w, h = 800, 600;
+    if False:
+        from glitter.framebuffers.framebuffer import Framebuffer
+        gl_frame_buffer = Framebuffer(Texture2D(shape=(h, w, 3), context=gl_context), depth=Texture2D(shape=(h, w, 1), depth=True, context=gl_context), context=self)
+    if False:
+        import glitter.utils.dtypes as gdtype
+        gl_int_mipmap_texture = Texture2D(shape=(h, w, 3), dtype=gdtype.uint8, mipmap=True, context=gl_context)
+        gl_int_mipmap_texture.min_filter = Texture2D.min_filters.LINEAR_MIPMAP_LINEAR
+        gl_data = gl_int_mipmap_texture.get_data(level=2)
     print "Finished."
