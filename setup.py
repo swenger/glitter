@@ -103,6 +103,17 @@ class generate_glx(generate_py_base):
         self.libs = ["GL", "X11"]
         self.patterns = ['glX[A-Z].*', 'GLX_[A-Z].*', 'GLX[a-z].*']
 
+class generate_glew(generate_py_base):
+    description = "generate ctypes wrapper for GLEW"
+    name = "glew"
+
+    def initialize_options(self):
+        generate_py_base.initialize_options(self)
+        self.header = "glew.h"
+        self.include_dirs = ["/usr/include/GL"]
+        self.libs = ["GL", "X11", "GLEW"]
+        self.patterns = ['gl[A-Z].*', 'GL_[A-Z].*', 'GL[a-z].*', 'glew[A-Z].*', 'GLEW_[A-Z].*', 'GLEW[a-z].*']
+
 class generate_py(Command):
     description = "generate ctypes wrappers"
     
@@ -110,7 +121,7 @@ class generate_py(Command):
         ("force", None, "rebuild even if target files exist"),
     ]
     
-    commands = ["generate_gl", "generate_glu", "generate_glut", "generate_glx"]
+    commands = ["generate_gl", "generate_glu", "generate_glut", "generate_glx", "generate_glew"]
 
     def initialize_options(self):
         self.force = None
@@ -164,6 +175,7 @@ setup(
         "generate_glu": generate_glu,
         "generate_glut": generate_glut,
         "generate_glx": generate_glx,
+        "generate_glew": generate_glew,
         "generate_py": generate_py,
         "build_py": build_py,
     },

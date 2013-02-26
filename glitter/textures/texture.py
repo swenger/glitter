@@ -80,7 +80,7 @@ class Texture(ManagedObject, BindReleaseObject):
             raise NotImplementedError("depth-and-stencil textures are currently not supported")
         elif depth:
             _iformat = _format = None
-            for (nptype, colors), ifmt, (gltype, fmt) in texture_formats:
+            for (nptype, colors), ifmt, (gltype, fmt) in texture_formats: # @UnusedVariable
                 if nptype == dtype and colors == shape[-1] and fmt == _gl.GL_DEPTH_COMPONENT:
                     _iformat, _format = ifmt, fmt
             if _iformat is None or _format is None:
