@@ -1,0 +1,8165 @@
+from ctypes import *
+
+_libraries = {}
+_libraries['libGL.so.1'] = CDLL('libGL.so.1')
+_libraries['libGLEW.so.1.8'] = CDLL('libGLEW.so.1.8')
+STRING = c_char_p
+
+
+GL_SOURCE2_ALPHA = 34186 # Variable c_int '34186'
+GL_SRC2_ALPHA = GL_SOURCE2_ALPHA # alias
+GL_CLIP_PLANE2 = 12290 # Variable c_int '12290'
+GL_CLIP_DISTANCE2 = GL_CLIP_PLANE2 # alias
+GL_SOURCE1_RGB = 34177 # Variable c_int '34177'
+GL_SRC1_RGB = GL_SOURCE1_RGB # alias
+GL_CLIP_PLANE1 = 12289 # Variable c_int '12289'
+GL_CLIP_DISTANCE1 = GL_CLIP_PLANE1 # alias
+GL_CLIP_PLANE3 = 12291 # Variable c_int '12291'
+GL_CLIP_DISTANCE3 = GL_CLIP_PLANE3 # alias
+GL_CLIP_PLANE0 = 12288 # Variable c_int '12288'
+GL_CLIP_DISTANCE0 = GL_CLIP_PLANE0 # alias
+# GLEW_FUN_EXPORT = GLEWAPI # alias
+GL_FOG_COORDINATE_ARRAY_POINTER = 33878 # Variable c_int '33878'
+GL_FOG_COORD_ARRAY_POINTER = GL_FOG_COORDINATE_ARRAY_POINTER # alias
+GL_SOURCE0_RGB = 34176 # Variable c_int '34176'
+GL_SRC0_RGB = GL_SOURCE0_RGB # alias
+GL_MAX_CLIP_PLANES = 3378 # Variable c_int '3378'
+GL_MAX_CLIP_DISTANCES = GL_MAX_CLIP_PLANES # alias
+GL_FOG_COORDINATE_SOURCE = 33872 # Variable c_int '33872'
+GL_FOG_COORD_SRC = GL_FOG_COORDINATE_SOURCE # alias
+GL_FOG_COORDINATE_ARRAY_TYPE = 33876 # Variable c_int '33876'
+GL_FOG_COORD_ARRAY_TYPE = GL_FOG_COORDINATE_ARRAY_TYPE # alias
+GL_SOURCE1_ALPHA = 34185 # Variable c_int '34185'
+GL_SRC1_ALPHA = GL_SOURCE1_ALPHA # alias
+GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING = 34973 # Variable c_int '34973'
+GL_FOG_COORD_ARRAY_BUFFER_BINDING = GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING # alias
+GL_MAX_VARYING_FLOATS = 35659 # Variable c_int '35659'
+GL_MAX_VARYING_COMPONENTS = GL_MAX_VARYING_FLOATS # alias
+GL_FOG_COORDINATE_ARRAY = 33879 # Variable c_int '33879'
+GL_FOG_COORD_ARRAY = GL_FOG_COORDINATE_ARRAY # alias
+# def GLEW_GET_VAR(x): return (*(const GLboolean*)&x) # macro
+def GLEW_GET_FUN(x): return x # macro
+GL_FOG_COORDINATE = 33873 # Variable c_int '33873'
+GL_FOG_COORD = GL_FOG_COORDINATE # alias
+GL_CURRENT_FOG_COORDINATE = 33875 # Variable c_int '33875'
+GL_CURRENT_FOG_COORD = GL_CURRENT_FOG_COORDINATE # alias
+GL_BLEND_EQUATION = 32777 # Variable c_int '32777'
+GL_BLEND_EQUATION_RGB = GL_BLEND_EQUATION # alias
+# GLEW_VAR_EXPORT = GLEWAPI # alias
+def glewIsExtensionSupported(x): return glewIsSupported(x) # macro
+GL_FOG_COORDINATE_ARRAY_STRIDE = 33877 # Variable c_int '33877'
+GL_FOG_COORD_ARRAY_STRIDE = GL_FOG_COORDINATE_ARRAY_STRIDE # alias
+GL_SOURCE0_ALPHA = 34184 # Variable c_int '34184'
+GL_SRC0_ALPHA = GL_SOURCE0_ALPHA # alias
+GL_COMPARE_R_TO_TEXTURE_ARB = 34894 # Variable c_int '34894'
+GL_COMPARE_REF_TO_TEXTURE = GL_COMPARE_R_TO_TEXTURE_ARB # alias
+GL_CLIP_PLANE5 = 12293 # Variable c_int '12293'
+GL_CLIP_DISTANCE5 = GL_CLIP_PLANE5 # alias
+GL_CLIP_PLANE4 = 12292 # Variable c_int '12292'
+GL_CLIP_DISTANCE4 = GL_CLIP_PLANE4 # alias
+GL_SOURCE2_RGB = 34178 # Variable c_int '34178'
+GL_SRC2_RGB = GL_SOURCE2_RGB # alias
+GL_INDEX_CLEAR_VALUE = 3104 # Variable c_int '3104'
+GL_POINT_SPRITE_CULL_CLIP_ATIX = 24757 # Variable c_int '24757'
+GL_OUTPUT_TEXTURE_COORD20_EXT = 34737 # Variable c_int '34737'
+GL_TEXCOORD2_BIT_PGI = 536870912 # Variable c_int '536870912'
+GL_PROVOKING_VERTEX_EXT = 36431 # Variable c_int '36431'
+GL_CURRENT_RASTER_NORMAL_EXT = 33798 # Variable c_int '33798'
+GL_SGIX_tag_sample_buffer = 1 # Variable c_int '1'
+GL_SAMPLE_ALPHA_TO_ONE_SGIS = 32927 # Variable c_int '32927'
+GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER = 36059 # Variable c_int '36059'
+GL_SUNX_constant_data = 1 # Variable c_int '1'
+GL_MAX_TEXTURE_IMAGE_UNITS_NV = 34930 # Variable c_int '34930'
+GL_DITHER = 3024 # Variable c_int '3024'
+GL_DRAW_INDIRECT_BUFFER = 36671 # Variable c_int '36671'
+GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE = 33300 # Variable c_int '33300'
+GL_SAMPLER_2D_ARB = 35678 # Variable c_int '35678'
+GL_DST_ALPHA = 772 # Variable c_int '772'
+GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE = 33303 # Variable c_int '33303'
+GL_COMBINE_EXT = 34160 # Variable c_int '34160'
+GL_MAP2_VERTEX_ATTRIB4_4_NV = 34420 # Variable c_int '34420'
+GL_INT_IMAGE_2D_MULTISAMPLE = 36960 # Variable c_int '36960'
+GL_COORD_REPLACE_NV = 34914 # Variable c_int '34914'
+GL_HISTOGRAM_FORMAT_EXT = 32807 # Variable c_int '32807'
+GL_INDEX_ARRAY_TYPE = 32901 # Variable c_int '32901'
+GL_INT_2_10_10_10_REV = 36255 # Variable c_int '36255'
+GL_PROXY_TEXTURE_2D_MULTISAMPLE = 37121 # Variable c_int '37121'
+GL_TEXTURE_MAX_LOD = 33083 # Variable c_int '33083'
+GL_LINE_STRIP_ADJACENCY_ARB = 11 # Variable c_int '11'
+GL_PATH_ERROR_POSITION_NV = 37035 # Variable c_int '37035'
+GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS = 36482 # Variable c_int '36482'
+GL_OBJECT_SUBTYPE_ARB = 35663 # Variable c_int '35663'
+GL_ELEMENT_ARRAY_BUFFER_ARB = 34963 # Variable c_int '34963'
+GL_RGBA_INTEGER_EXT = 36249 # Variable c_int '36249'
+GL_DU8DV8_ATI = 34682 # Variable c_int '34682'
+GL_SRGB8_EXT = 35905 # Variable c_int '35905'
+GL_ALPHA_FLOAT32_ATI = 34838 # Variable c_int '34838'
+GL_MIRROR_CLAMP_TO_EDGE_EXT = 34627 # Variable c_int '34627'
+GL_SAMPLER_2D_RECT = 35683 # Variable c_int '35683'
+GL_RGB9_E5 = 35901 # Variable c_int '35901'
+GL_DEPENDENT_RGB_TEXTURE_3D_NV = 34905 # Variable c_int '34905'
+GL_EXT_blend_subtract = 1 # Variable c_int '1'
+GL_TEXTURE_COMPRESSED = 34465 # Variable c_int '34465'
+GL_PIXEL_PACK_BUFFER_BINDING_EXT = 35053 # Variable c_int '35053'
+GL_IMAGE_1D_EXT = 36940 # Variable c_int '36940'
+GL_ALL_BARRIER_BITS = 4294967295L # Variable c_uint '4294967295u'
+GL_RGBA32UI = 36208 # Variable c_int '36208'
+GL_SOURCE2_ALPHA_EXT = 34186 # Variable c_int '34186'
+GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT = 33884 # Variable c_int '33884'
+GL_TEXTURE_MIN_LOD = 33082 # Variable c_int '33082'
+GL_SOURCE0_RGB_EXT = 34176 # Variable c_int '34176'
+GL_PALETTE8_R5_G6_B5_OES = 35735 # Variable c_int '35735'
+GL_PROXY_TEXTURE_RECTANGLE_EXT = 34039 # Variable c_int '34039'
+GL_MAX_GEOMETRY_VARYING_COMPONENTS_ARB = 36317 # Variable c_int '36317'
+GL_MODELVIEW6_ARB = 34598 # Variable c_int '34598'
+GL_FONT_Y_MIN_BOUNDS_BIT_NV = 131072 # Variable c_int '131072'
+GL_INT_VEC4_ARB = 35669 # Variable c_int '35669'
+GL_HISTOGRAM_LUMINANCE_SIZE_EXT = 32812 # Variable c_int '32812'
+GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT = 36494 # Variable c_int '36494'
+GL_TEXTURE_CUBE_MAP_POSITIVE_X = 34069 # Variable c_int '34069'
+GL_GLYPH_VERTICAL_BEARING_X_BIT_NV = 32 # Variable c_int '32'
+GL_TEXTURE_CUBE_MAP_POSITIVE_Z = 34073 # Variable c_int '34073'
+GL_BYTE = 5120 # Variable c_int '5120'
+GL_EYE_DISTANCE_TO_LINE_SGIS = 33266 # Variable c_int '33266'
+GL_TEXTURE21_ARB = 34005 # Variable c_int '34005'
+GL_PATH_DASH_CAPS_NV = 36987 # Variable c_int '36987'
+GL_TIMEOUT_IGNORED = 18446744073709551615L # Variable c_ulong '-1ul'
+GL_RGBA8UI_EXT = 36220 # Variable c_int '36220'
+GL_PATH_COORD_COUNT_NV = 37022 # Variable c_int '37022'
+GL_SAMPLER_1D_ARRAY_EXT = 36288 # Variable c_int '36288'
+GL_PGI_misc_hints = 1 # Variable c_int '1'
+GL_ARB_shader_texture_lod = 1 # Variable c_int '1'
+GL_DEPTH_BIAS = 3359 # Variable c_int '3359'
+GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_ARB = 33347 # Variable c_int '33347'
+GL_TEXTURE_BINDING_BUFFER = 35884 # Variable c_int '35884'
+GL_TEXTURE_DEPTH_TYPE_ARB = 35862 # Variable c_int '35862'
+GL_BUFFER_USAGE = 34661 # Variable c_int '34661'
+GL_NV_fence = 1 # Variable c_int '1'
+GL_TEXTURE_GEN_MODE = 9472 # Variable c_int '9472'
+GL_DEPTH32F_STENCIL8_NV = 36268 # Variable c_int '36268'
+GL_SGIX_async_histogram = 1 # Variable c_int '1'
+GL_PIXEL_MAP_G_TO_G = 3191 # Variable c_int '3191'
+GL_MATRIX_INDEX_ARRAY_STRIDE_ARB = 34888 # Variable c_int '34888'
+GL_RENDER = 7168 # Variable c_int '7168'
+GL_MAX_TEXTURE_COORDS = 34929 # Variable c_int '34929'
+GL_ATOMIC_COUNTER_BUFFER_DATA_SIZE = 37572 # Variable c_int '37572'
+GL_COMPARE_REF_DEPTH_TO_TEXTURE_EXT = 34894 # Variable c_int '34894'
+GL_TEXTURE_COORD_ARRAY_POINTER_EXT = 32914 # Variable c_int '32914'
+GL_NV_texture_env_combine4 = 1 # Variable c_int '1'
+GL_INTENSITY32I_EXT = 36229 # Variable c_int '36229'
+GL_MATRIX_PALETTE_ARB = 34880 # Variable c_int '34880'
+GL_DOT3_RGBA_EXT = 34625 # Variable c_int '34625'
+GL_ATTRIB_ARRAY_POINTER_NV = 34373 # Variable c_int '34373'
+GL_TRIANGLE_STRIP_ADJACENCY = 13 # Variable c_int '13'
+GL_ATIX_texture_env_combine3 = 1 # Variable c_int '1'
+GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS = 37588 # Variable c_int '37588'
+GL_TRANSFORM_FEEDBACK_BUFFER = 35982 # Variable c_int '35982'
+GL_FRAMEBUFFER_COMPLETE_EXT = 36053 # Variable c_int '36053'
+GL_DEPTH_STENCIL_ATTACHMENT = 33306 # Variable c_int '33306'
+GL_NV_vertex_attrib_integer_64bit = 1 # Variable c_int '1'
+GL_BGRA_EXT = 32993 # Variable c_int '32993'
+GL_MATRIX19_ARB = 35027 # Variable c_int '35027'
+GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 36164 # Variable c_int '36164'
+GL_FLOAT_RGBA32_NV = 34955 # Variable c_int '34955'
+GL_FONT_HAS_KERNING_BIT_NV = 268435456 # Variable c_int '268435456'
+GL_COLOR_TABLE_ALPHA_SIZE_SGI = 32989 # Variable c_int '32989'
+GL_CLAMP_TO_EDGE_EXT = 33071 # Variable c_int '33071'
+GL_TEXTURE_COORD_ARRAY_LENGTH_NV = 36655 # Variable c_int '36655'
+GL_COLOR_ATTACHMENT15_EXT = 36079 # Variable c_int '36079'
+GL_SPARE1_NV = 34095 # Variable c_int '34095'
+GL_CURRENT_RASTER_TEXTURE_COORDS = 2822 # Variable c_int '2822'
+GL_RENDERBUFFER_FREE_MEMORY_ATI = 34813 # Variable c_int '34813'
+GL_PROGRAM_NATIVE_ATTRIBS_ARB = 34990 # Variable c_int '34990'
+GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING_ARB = 34973 # Variable c_int '34973'
+GL_LINE_STRIP_ADJACENCY = 11 # Variable c_int '11'
+GL_STENCIL_ATTACHMENT_EXT = 36128 # Variable c_int '36128'
+GL_PATH_STENCIL_VALUE_MASK_NV = 37049 # Variable c_int '37049'
+GL_POINT_SIZE = 2833 # Variable c_int '2833'
+GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = 34993 # Variable c_int '34993'
+GL_SGIX_flush_raster = 1 # Variable c_int '1'
+GL_TEXTURE_COMPARE_FUNC = 34893 # Variable c_int '34893'
+GL_CMYK_EXT = 32780 # Variable c_int '32780'
+GL_TIME_ELAPSED_EXT = 35007 # Variable c_int '35007'
+GL_BLEND_DST_ALPHA_EXT = 32970 # Variable c_int '32970'
+GL_IMAGE_2D = 36941 # Variable c_int '36941'
+GL_RGB16 = 32852 # Variable c_int '32852'
+GL_GLYPH_HEIGHT_BIT_NV = 2 # Variable c_int '2'
+GL_TEXTURE_COMPARE_FAIL_VALUE_ARB = 32959 # Variable c_int '32959'
+GL_POLYGON_OFFSET_FILL = 32823 # Variable c_int '32823'
+GL_TRACK_MATRIX_NV = 34376 # Variable c_int '34376'
+GL_FIRST_VERTEX_CONVENTION = 36429 # Variable c_int '36429'
+GL_OBJECT_ATTACHED_OBJECTS_ARB = 35717 # Variable c_int '35717'
+GL_COUNT_DOWN_NV = 37001 # Variable c_int '37001'
+GL_FLOAT_RGB16_NV = 34952 # Variable c_int '34952'
+GL_NV_tessellation_program5 = 1 # Variable c_int '1'
+GL_DOUBLEBUFFER = 3122 # Variable c_int '3122'
+GL_MINMAX_FORMAT = 32815 # Variable c_int '32815'
+GL_ALL_COMPLETED_NV = 34034 # Variable c_int '34034'
+GL_EXT_shared_texture_palette = 1 # Variable c_int '1'
+GL_CONSTANT_BORDER = 33105 # Variable c_int '33105'
+GL_EXT_packed_float = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_MAP1_ORDER_APPLE = 35332 # Variable c_int '35332'
+GL_TEXTURE_SWIZZLE_G_EXT = 36419 # Variable c_int '36419'
+GL_PROGRAM_TEX_INSTRUCTIONS_ARB = 34822 # Variable c_int '34822'
+GL_DOUBLE_MAT4 = 36680 # Variable c_int '36680'
+GL_IMAGE_2D_ARRAY_EXT = 36947 # Variable c_int '36947'
+GL_MAX_VERTEX_SHADER_INVARIANTS_EXT = 34759 # Variable c_int '34759'
+GL_DOUBLE_MAT3 = 36679 # Variable c_int '36679'
+GL_COMPILE_AND_EXECUTE = 4865 # Variable c_int '4865'
+GL_DRAW_BUFFER0_ARB = 34853 # Variable c_int '34853'
+GL_PATH_STROKE_BOUNDING_BOX_NV = 37026 # Variable c_int '37026'
+GL_GREEN_BITS = 3411 # Variable c_int '3411'
+GL_DEBUG_SEVERITY_HIGH_AMD = 37190 # Variable c_int '37190'
+GL_TEXTURE_GREEN_TYPE = 35857 # Variable c_int '35857'
+GL_SHADING_LANGUAGE_VERSION = 35724 # Variable c_int '35724'
+GL_SGIX_framezoom = 1 # Variable c_int '1'
+GL_R1UI_T2F_N3F_V3F_SUN = 34250 # Variable c_int '34250'
+GL_NV_texture_barrier = 1 # Variable c_int '1'
+GL_MODELVIEW17_ARB = 34609 # Variable c_int '34609'
+GL_COMBINE_ALPHA_EXT = 34162 # Variable c_int '34162'
+GL_RGB5_A1_EXT = 32855 # Variable c_int '32855'
+GL_MATRIX1_ARB = 35009 # Variable c_int '35009'
+GL_TRIANGLES_ADJACENCY_ARB = 12 # Variable c_int '12'
+GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 34373 # Variable c_int '34373'
+GL_CONTEXT_CORE_PROFILE_BIT = 1 # Variable c_int '1'
+GL_RGBA2_EXT = 32853 # Variable c_int '32853'
+GL_QUAD_MESH_SUN = 34324 # Variable c_int '34324'
+GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS = 35979 # Variable c_int '35979'
+GL_FRAGMENT_SHADER_DERIVATIVE_HINT = 35723 # Variable c_int '35723'
+GL_TEXTURE_DEPTH = 32881 # Variable c_int '32881'
+GL_GPU_MEMORY_INFO_EVICTED_MEMORY_NVX = 36939 # Variable c_int '36939'
+GL_EXT_separate_shader_objects = 1 # Variable c_int '1'
+GL_TEXTURE_ENV_COLOR = 8705 # Variable c_int '8705'
+GL_TEXTURE_BASE_LEVEL = 33084 # Variable c_int '33084'
+GL_DRAW_BUFFER6 = 34859 # Variable c_int '34859'
+GL_DRAW_BUFFER7 = 34860 # Variable c_int '34860'
+GL_DRAW_BUFFER4 = 34857 # Variable c_int '34857'
+GL_RGB16F = 34843 # Variable c_int '34843'
+GL_DRAW_BUFFER2 = 34855 # Variable c_int '34855'
+GL_DRAW_BUFFER3 = 34856 # Variable c_int '34856'
+GL_DRAW_BUFFER0 = 34853 # Variable c_int '34853'
+GL_DRAW_BUFFER1 = 34854 # Variable c_int '34854'
+GL_TEXTURE_BORDER_COLOR = 4100 # Variable c_int '4100'
+GL_LIGHT0 = 16384 # Variable c_int '16384'
+GL_LIGHT3 = 16387 # Variable c_int '16387'
+GL_LIGHT2 = 16386 # Variable c_int '16386'
+GL_LIGHT5 = 16389 # Variable c_int '16389'
+GL_LIGHT4 = 16388 # Variable c_int '16388'
+GL_DRAW_BUFFER8 = 34861 # Variable c_int '34861'
+GL_LIGHT6 = 16390 # Variable c_int '16390'
+GL_VERTEX_STREAM2_ATI = 34671 # Variable c_int '34671'
+GL_PN_TRIANGLES_NORMAL_MODE_ATI = 34803 # Variable c_int '34803'
+GL_ACCUM_GREEN_BITS = 3417 # Variable c_int '3417'
+GL_TEXTURE_CUBE_MAP_SEAMLESS = 34895 # Variable c_int '34895'
+GL_PATH_DASH_OFFSET_NV = 36990 # Variable c_int '36990'
+GL_VERTEX_PROGRAM_ARB = 34336 # Variable c_int '34336'
+GL_MAX_GEOMETRY_VARYING_COMPONENTS_EXT = 36317 # Variable c_int '36317'
+GL_FILL = 6914 # Variable c_int '6914'
+GL_ARB_color_buffer_float = 1 # Variable c_int '1'
+GL_COMBINER6_NV = 34134 # Variable c_int '34134'
+GL_DEPTH_BUFFER = 33315 # Variable c_int '33315'
+GL_INT_IMAGE_1D = 36951 # Variable c_int '36951'
+GL_SRC_COLOR = 768 # Variable c_int '768'
+GL_COVERAGE_SAMPLES_NV = 32937 # Variable c_int '32937'
+GL_SAMPLER_BINDING = 35097 # Variable c_int '35097'
+GL_FLOAT_RGB_NV = 34946 # Variable c_int '34946'
+GL_ATI_map_object_buffer = 1 # Variable c_int '1'
+GL_ARB_robustness = 1 # Variable c_int '1'
+GL_NV_pixel_data_range = 1 # Variable c_int '1'
+GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTER_INDICES = 37574 # Variable c_int '37574'
+GL_EXT_framebuffer_blit = 1 # Variable c_int '1'
+GL_SAMPLE_BUFFERS = 32936 # Variable c_int '32936'
+GL_RELATIVE_SMOOTH_CUBIC_CURVE_TO_NV = 17 # Variable c_int '17'
+GL_ELEMENT_ARRAY_POINTER_ATI = 34666 # Variable c_int '34666'
+GL_RGBA_INTEGER = 36249 # Variable c_int '36249'
+GL_CONVOLUTION_FILTER_SCALE_EXT = 32788 # Variable c_int '32788'
+GL_COLOR_ATTACHMENT11_EXT = 36075 # Variable c_int '36075'
+GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 35722 # Variable c_int '35722'
+GL_MATRIX_INDEX_ARRAY_SIZE_ARB = 34886 # Variable c_int '34886'
+GL_TEXTURE_FREE_MEMORY_ATI = 34812 # Variable c_int '34812'
+GL_COLOR_MATRIX = 32945 # Variable c_int '32945'
+GL_VERTEX_WEIGHT_ARRAY_EXT = 34060 # Variable c_int '34060'
+GL_PASS_THROUGH_TOKEN = 1792 # Variable c_int '1792'
+GL_EXT_bindable_uniform = 1 # Variable c_int '1'
+GL_FOG_BIT = 128 # Variable c_int '128'
+GL_MAP1_VERTEX_ATTRIB2_4_NV = 34402 # Variable c_int '34402'
+GL_INT_IMAGE_2D_ARRAY_EXT = 36958 # Variable c_int '36958'
+GL_ELEMENT_ARRAY_ADDRESS_NV = 36649 # Variable c_int '36649'
+GL_BUFFER_UPDATE_BARRIER_BIT = 512 # Variable c_int '512'
+GL_CON_2_ATI = 35139 # Variable c_int '35139'
+GL_TRANSPOSE_TEXTURE_MATRIX = 34021 # Variable c_int '34021'
+GL_NUM_INPUT_INTERPOLATOR_COMPONENTS_ATI = 35187 # Variable c_int '35187'
+GL_COUNTER_RANGE_AMD = 35777 # Variable c_int '35777'
+GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_EXT = 36321 # Variable c_int '36321'
+GL_COMPRESSED_RED_GREEN_RGTC2_EXT = 36285 # Variable c_int '36285'
+GL_STENCIL_BACK_PASS_DEPTH_FAIL = 34818 # Variable c_int '34818'
+GL_PROXY_COLOR_TABLE_SGI = 32979 # Variable c_int '32979'
+GL_INT_SAMPLER_CUBE_MAP_ARRAY = 36878 # Variable c_int '36878'
+GL_WRAP_BORDER = 33106 # Variable c_int '33106'
+GL_UNIFORM_BUFFER = 35345 # Variable c_int '35345'
+GL_SAMPLE_MASK = 36433 # Variable c_int '36433'
+GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB = 36495 # Variable c_int '36495'
+GL_SGIS_texture_filter4 = 1 # Variable c_int '1'
+GL_MULTISAMPLE_ARB = 32925 # Variable c_int '32925'
+GL_NV_geometry_shader4 = 1 # Variable c_int '1'
+GL_IMPLEMENTATION_COLOR_READ_TYPE_OES = 35738 # Variable c_int '35738'
+GL_TEXTURE_1D = 3552 # Variable c_int '3552'
+GL_MAX_PIXEL_MAP_TABLE = 3380 # Variable c_int '3380'
+GL_LUMINANCE16F_ARB = 34846 # Variable c_int '34846'
+GL_HP_convolution_border_modes = 1 # Variable c_int '1'
+GL_RG_SNORM = 36753 # Variable c_int '36753'
+GL_VERTEX_ATTRIB_ARRAY_INTEGER = 35069 # Variable c_int '35069'
+GL_MODELVIEW18_ARB = 34610 # Variable c_int '34610'
+GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE = 33302 # Variable c_int '33302'
+GL_RGBA_EXTENDED_RANGE_SGIX = 34285 # Variable c_int '34285'
+GL_NV_multisample_coverage = 1 # Variable c_int '1'
+GL_R32I = 33333 # Variable c_int '33333'
+GL_R32F = 33326 # Variable c_int '33326'
+GL_SAMPLE_ALPHA_TO_ONE_EXT = 32927 # Variable c_int '32927'
+GL_MAX_VERTEX_SHADER_VARIANTS_EXT = 34758 # Variable c_int '34758'
+GL_MAX_PIXEL_TRANSFORM_2D_STACK_DEPTH_EXT = 33591 # Variable c_int '33591'
+GL_MIN_RED_SGIS = 34214 # Variable c_int '34214'
+GL_LUMINANCE12_ALPHA4 = 32838 # Variable c_int '32838'
+GL_VERTEX_ARRAY_BUFFER_BINDING = 34966 # Variable c_int '34966'
+GL_PIXEL_MAP_R_TO_R = 3190 # Variable c_int '3190'
+GL_INGR_interlace_read = 1 # Variable c_int '1'
+GL_UNSIGNED_SHORT_5_6_5_REV = 33636 # Variable c_int '33636'
+GL_TEXTURE_BORDER = 4101 # Variable c_int '4101'
+GL_REPLICATE_BORDER = 33107 # Variable c_int '33107'
+GL_DUP_FIRST_CUBIC_CURVE_TO_NV = 242 # Variable c_int '242'
+GL_ELEMENT_ARRAY_ATI = 34664 # Variable c_int '34664'
+GL_CMYKA_EXT = 32781 # Variable c_int '32781'
+GL_PROXY_TEXTURE_2D_EXT = 32868 # Variable c_int '32868'
+GL_MATRIX20_ARB = 35028 # Variable c_int '35028'
+GL_RGB32F = 34837 # Variable c_int '34837'
+GL_FLOAT_MAT2 = 35674 # Variable c_int '35674'
+GL_FLOAT_MAT3 = 35675 # Variable c_int '35675'
+GL_DEPTH = 6145 # Variable c_int '6145'
+GL_EDGE_FLAG_ARRAY_LENGTH_NV = 36656 # Variable c_int '36656'
+GL_LUMINANCE_ALPHA_EXTENDED_RANGE_SGIX = 34289 # Variable c_int '34289'
+GL_FLOAT_MAT4 = 35676 # Variable c_int '35676'
+GL_PALETTE4_RGB8_OES = 35728 # Variable c_int '35728'
+GL_DSDT_NV = 34549 # Variable c_int '34549'
+GL_POST_COLOR_MATRIX_ALPHA_SCALE_SGI = 32951 # Variable c_int '32951'
+GL_ARB_instanced_arrays = 1 # Variable c_int '1'
+GL_SRGB8_ALPHA8_EXT = 35907 # Variable c_int '35907'
+GL_COLOR_ATTACHMENT8_EXT = 36072 # Variable c_int '36072'
+GL_BUMP_TARGET_ATI = 34684 # Variable c_int '34684'
+GL_MAX_TESS_PATCH_COMPONENTS = 36484 # Variable c_int '36484'
+GL_MAX_VERTEX_HINT_PGI = 107053 # Variable c_int '107053'
+GL_FAILURE_NV = 36912 # Variable c_int '36912'
+GL_COLOR_ARRAY_LIST_STRIDE_IBM = 103082 # Variable c_int '103082'
+GL_T2F_C4UB_V3F = 10793 # Variable c_int '10793'
+GL_RG8I = 33335 # Variable c_int '33335'
+GL_RGBA8I = 36238 # Variable c_int '36238'
+GL_ACTIVE_UNIFORM_MAX_LENGTH = 35719 # Variable c_int '35719'
+GL_BINORMAL_ARRAY_TYPE_EXT = 33856 # Variable c_int '33856'
+GL_PALETTE4_RGBA4_OES = 35731 # Variable c_int '35731'
+GL_ARB_cl_event = 1 # Variable c_int '1'
+GL_RG32F = 33328 # Variable c_int '33328'
+GL_MODELVIEW30_ARB = 34622 # Variable c_int '34622'
+GL_SIGNED_ALPHA_NV = 34565 # Variable c_int '34565'
+GL_R3_G3_B2 = 10768 # Variable c_int '10768'
+GL_TEXTURE8_ARB = 33992 # Variable c_int '33992'
+GL_ALPHA_BIAS = 3357 # Variable c_int '3357'
+GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV = 37020 # Variable c_int '37020'
+GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 34825 # Variable c_int '34825'
+GL_HILO16_NV = 34552 # Variable c_int '34552'
+GL_TRANSFORM_FEEDBACK_NV = 36386 # Variable c_int '36386'
+GL_INT_IMAGE_CUBE_EXT = 36955 # Variable c_int '36955'
+GL_MULTISAMPLE_EXT = 32925 # Variable c_int '32925'
+GL_TEXTURE_BUFFER_FORMAT_EXT = 35886 # Variable c_int '35886'
+GL_NV_primitive_restart = 1 # Variable c_int '1'
+GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_CONTROL_SHADER = 37576 # Variable c_int '37576'
+GL_MATRIX1_NV = 34353 # Variable c_int '34353'
+GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER = 37577 # Variable c_int '37577'
+GL_TEXTURE_BINDING_3D = 32874 # Variable c_int '32874'
+GL_VERTEX_SHADER_BINDING_EXT = 34689 # Variable c_int '34689'
+GL_RELATIVE_LINE_TO_NV = 5 # Variable c_int '5'
+GL_VERTEX_ATTRIB_MAP2_SIZE_APPLE = 35334 # Variable c_int '35334'
+GL_OP_CLAMP_EXT = 34702 # Variable c_int '34702'
+GL_FOG_COORDINATE_SOURCE_EXT = 33872 # Variable c_int '33872'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT = 36052 # Variable c_int '36052'
+GL_TEXTURE = 5890 # Variable c_int '5890'
+GL_DOUBLE_MAT4x2_EXT = 36685 # Variable c_int '36685'
+GL_MAX_PROJECTION_STACK_DEPTH = 3384 # Variable c_int '3384'
+GL_CND_ATI = 35178 # Variable c_int '35178'
+GL_CULL_MODES_NV = 34528 # Variable c_int '34528'
+GL_IMAGE_2D_MULTISAMPLE_ARRAY = 36950 # Variable c_int '36950'
+GL_CLIP_DISTANCE_NV = 35962 # Variable c_int '35962'
+GL_ARB_depth_buffer_float = 1 # Variable c_int '1'
+GL_PIXEL_MAP_I_TO_G_SIZE = 3251 # Variable c_int '3251'
+GL_MODELVIEW1_STACK_DEPTH_EXT = 34050 # Variable c_int '34050'
+GL_ACTIVE_UNIFORMS = 35718 # Variable c_int '35718'
+GL_UNSIGNED_INT = 5125 # Variable c_int '5125'
+GL_DOT2_ADD_ATI = 35180 # Variable c_int '35180'
+GL_EVAL_VERTEX_ATTRIB3_NV = 34505 # Variable c_int '34505'
+GL_EXT_subtexture = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_BUFFER_EXT = 35982 # Variable c_int '35982'
+GL_PROGRAM_POINT_SIZE = 34370 # Variable c_int '34370'
+GL_PIXEL_TRANSFORM_2D_MATRIX_EXT = 33592 # Variable c_int '33592'
+GL_PIXEL_UNPACK_BUFFER_BINDING_ARB = 35055 # Variable c_int '35055'
+GL_PARTIAL_SUCCESS_NV = 36910 # Variable c_int '36910'
+GL_ACTIVE_SUBROUTINES = 36325 # Variable c_int '36325'
+GL_NUM_COMPRESSED_TEXTURE_FORMATS = 34466 # Variable c_int '34466'
+GL_YCBCR_MESA = 34647 # Variable c_int '34647'
+GL_NORMAL_ARRAY_BUFFER_BINDING_ARB = 34967 # Variable c_int '34967'
+GL_LUMINANCE_SNORM = 36881 # Variable c_int '36881'
+GL_SECONDARY_COLOR_ARRAY_EXT = 33886 # Variable c_int '33886'
+GL_UNPACK_RESAMPLE_OML = 35205 # Variable c_int '35205'
+GLEW_VERSION = 1 # Variable c_int '1'
+GL_UNPACK_IMAGE_HEIGHT_EXT = 32878 # Variable c_int '32878'
+GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE = 36388 # Variable c_int '36388'
+GL_UNSIGNED_INT_8_8_8_8_EXT = 32821 # Variable c_int '32821'
+GL_ALPHA_FLOAT16_APPLE = 34844 # Variable c_int '34844'
+GL_POST_CONVOLUTION_BLUE_SCALE_EXT = 32798 # Variable c_int '32798'
+GL_RASTERIZER_DISCARD_NV = 35977 # Variable c_int '35977'
+GL_TEXTURE_MAX_LEVEL = 33085 # Variable c_int '33085'
+GL_SOURCE3_ALPHA_NV = 34187 # Variable c_int '34187'
+GL_OPERAND0_RGB_EXT = 34192 # Variable c_int '34192'
+GL_ACCUM_RED_BITS = 3416 # Variable c_int '3416'
+GL_TRANSFORM_FEEDBACK_BARRIER_BIT = 2048 # Variable c_int '2048'
+GL_TEXTURE_COMPARE_FUNC_ARB = 34893 # Variable c_int '34893'
+GL_OML_interlace = 1 # Variable c_int '1'
+GL_ALL_ATTRIB_BITS = 1048575 # Variable c_int '1048575'
+GL_APPLE_client_storage = 1 # Variable c_int '1'
+GL_MAX_IMAGE_UNITS = 36664 # Variable c_int '36664'
+GL_PRIMITIVE_ID_NV = 35964 # Variable c_int '35964'
+GL_CLAMP_VERTEX_COLOR_ARB = 35098 # Variable c_int '35098'
+GL_STENCIL_BUFFER = 33316 # Variable c_int '33316'
+GL_ALPHA8 = 32828 # Variable c_int '32828'
+GL_GEOMETRY_PROGRAM_PARAMETER_BUFFER_NV = 36259 # Variable c_int '36259'
+GL_EXT_shadow_funcs = 1 # Variable c_int '1'
+GL_ATI_text_fragment_shader = 1 # Variable c_int '1'
+GL_FRAGMENT_COLOR_EXT = 33612 # Variable c_int '33612'
+GL_TEXTURE_APPLICATION_MODE_EXT = 33615 # Variable c_int '33615'
+GL_PROGRAM_ATTRIBS_ARB = 34988 # Variable c_int '34988'
+GL_INT_IMAGE_BUFFER = 36956 # Variable c_int '36956'
+GL_GLYPH_HORIZONTAL_BEARING_ADVANCE_BIT_NV = 16 # Variable c_int '16'
+GL_DRAW_BUFFER13_ARB = 34866 # Variable c_int '34866'
+GL_FLOAT_RG_NV = 34945 # Variable c_int '34945'
+GL_MAX_GEOMETRY_OUTPUT_COMPONENTS = 37156 # Variable c_int '37156'
+GL_RGBA_SIGNED_COMPONENTS_EXT = 35900 # Variable c_int '35900'
+GL_FENCE_STATUS_NV = 34035 # Variable c_int '34035'
+GL_FLOAT_R32_NV = 34949 # Variable c_int '34949'
+GL_EXT_color_subtable = 1 # Variable c_int '1'
+GL_LINE = 6913 # Variable c_int '6913'
+GL_PIXEL_BUFFER_BARRIER_BIT = 128 # Variable c_int '128'
+GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = 35919 # Variable c_int '35919'
+GL_INTENSITY16_SIGNED_SGIX = 34282 # Variable c_int '34282'
+GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS = 36382 # Variable c_int '36382'
+GL_PATH_DASH_ARRAY_COUNT_NV = 37023 # Variable c_int '37023'
+GL_DRAW_BUFFER4_ATI = 34857 # Variable c_int '34857'
+GL_SAMPLER_2D_MULTISAMPLE = 37128 # Variable c_int '37128'
+GL_VIDEO_BUFFER_NV = 36896 # Variable c_int '36896'
+GL_EVAL_VERTEX_ATTRIB2_NV = 34504 # Variable c_int '34504'
+GL_MATRIX3_NV = 34355 # Variable c_int '34355'
+GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE = 36971 # Variable c_int '36971'
+GL_OUTPUT_TEXTURE_COORD19_EXT = 34736 # Variable c_int '34736'
+GLEW_VERSION_MICRO = 4 # Variable c_int '4'
+GL_RGBA32UI_EXT = 36208 # Variable c_int '36208'
+GL_CONVOLUTION_FILTER_SCALE = 32788 # Variable c_int '32788'
+GL_BLUE_INTEGER = 36246 # Variable c_int '36246'
+GL_MAX_CUBE_MAP_TEXTURE_SIZE = 34076 # Variable c_int '34076'
+GL_MAX_VERTEX_VARYING_COMPONENTS_ARB = 36318 # Variable c_int '36318'
+GL_DYNAMIC_COPY = 35050 # Variable c_int '35050'
+GL_RGB565 = 36194 # Variable c_int '36194'
+GL_GEOMETRY_PROGRAM_NV = 35878 # Variable c_int '35878'
+GL_SYNC_FLAGS = 37141 # Variable c_int '37141'
+GL_SAMPLE_MASK_VALUE_NV = 36434 # Variable c_int '36434'
+GL_SOURCE3_RGB_NV = 34179 # Variable c_int '34179'
+GL_PATCH_DEFAULT_OUTER_LEVEL = 36468 # Variable c_int '36468'
+GL_ZOOM_Y = 3351 # Variable c_int '3351'
+GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 34930 # Variable c_int '34930'
+GL_PATH_FILL_BOUNDING_BOX_NV = 37025 # Variable c_int '37025'
+GL_VIDEO_COLOR_CONVERSION_MIN_NV = 36907 # Variable c_int '36907'
+GL_UNSIGNED_BYTE_2_3_3_REV = 33634 # Variable c_int '33634'
+GL_RENDERBUFFER_INTERNAL_FORMAT = 36164 # Variable c_int '36164'
+GL_EXT_stencil_two_side = 1 # Variable c_int '1'
+GL_COLOR_ARRAY_TYPE_EXT = 32898 # Variable c_int '32898'
+GL_MAX_LUMINANCE_SGIS = 34297 # Variable c_int '34297'
+GL_SATURATE_BIT_ATI = 64 # Variable c_int '64'
+GL_CLIENT_ACTIVE_TEXTURE = 34017 # Variable c_int '34017'
+GL_DOT_PRODUCT_TEXTURE_CUBE_MAP_NV = 34544 # Variable c_int '34544'
+GL_RGBA_FLOAT16_APPLE = 34842 # Variable c_int '34842'
+GL_LUMINANCE16_EXT = 32834 # Variable c_int '32834'
+GL_CND0_ATI = 35179 # Variable c_int '35179'
+GL_DEBUG_LOGGED_MESSAGES_ARB = 37189 # Variable c_int '37189'
+GL_BUFFER_FLUSHING_UNMAP_APPLE = 35347 # Variable c_int '35347'
+GL_FONT_MAX_ADVANCE_HEIGHT_BIT_NV = 33554432 # Variable c_int '33554432'
+GL_BUFFER_MAPPED_ARB = 35004 # Variable c_int '35004'
+GL_OPERAND2_ALPHA = 34202 # Variable c_int '34202'
+GL_ZERO_EXT = 34781 # Variable c_int '34781'
+GL_FRAMEBUFFER_SRGB_CAPABLE_EXT = 36282 # Variable c_int '36282'
+GL_FOG_DENSITY = 2914 # Variable c_int '2914'
+GL_COLOR_ATTACHMENT13_EXT = 36077 # Variable c_int '36077'
+GL_BUFFER_MAP_POINTER_ARB = 35005 # Variable c_int '35005'
+GL_MOVE_TO_CONTINUES_NV = 37046 # Variable c_int '37046'
+GL_MAX_UNIFORM_BUFFER_BINDINGS = 35375 # Variable c_int '35375'
+GL_CONSTANT_ATTENUATION = 4615 # Variable c_int '4615'
+GL_OUTPUT_TEXTURE_COORD25_EXT = 34742 # Variable c_int '34742'
+GL_STATIC_VERTEX_ARRAY_IBM = 103061 # Variable c_int '103061'
+GL_MAX_SHININESS_NV = 34052 # Variable c_int '34052'
+GL_CONVOLUTION_HINT_SGIX = 33558 # Variable c_int '33558'
+GL_VIDEO_CAPTURE_SURFACE_ORIGIN_NV = 36924 # Variable c_int '36924'
+GL_EQUIV = 5385 # Variable c_int '5385'
+GL_EXT_draw_buffers2 = 1 # Variable c_int '1'
+GL_PATH_COVER_DEPTH_FUNC_NV = 37055 # Variable c_int '37055'
+GL_WRITE_PIXEL_DATA_RANGE_LENGTH_NV = 34938 # Variable c_int '34938'
+GL_INT_IMAGE_2D = 36952 # Variable c_int '36952'
+GL_INT8_VEC3_NV = 36834 # Variable c_int '36834'
+GL_COMBINER_AB_OUTPUT_NV = 34122 # Variable c_int '34122'
+GL_ARB_vertex_attrib_64bit = 1 # Variable c_int '1'
+GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING_ARB = 34972 # Variable c_int '34972'
+GL_EVAL_VERTEX_ATTRIB7_NV = 34509 # Variable c_int '34509'
+GL_CON_5_ATI = 35142 # Variable c_int '35142'
+GL_SAMPLES_SGIS = 32937 # Variable c_int '32937'
+GL_COLOR_SAMPLES_NV = 36384 # Variable c_int '36384'
+GL_HILO8_NV = 34910 # Variable c_int '34910'
+GL_PACK_COMPRESSED_BLOCK_HEIGHT = 37164 # Variable c_int '37164'
+GL_VERTEX_ARRAY_STRIDE_EXT = 32892 # Variable c_int '32892'
+GL_DISTANCE_ATTENUATION_EXT = 33065 # Variable c_int '33065'
+GL_COLOR_ATTACHMENT5 = 36069 # Variable c_int '36069'
+GL_COLOR_ATTACHMENT4 = 36068 # Variable c_int '36068'
+GL_MAX_VARYING_FLOATS_ARB = 35659 # Variable c_int '35659'
+GL_COLOR_ATTACHMENT6 = 36070 # Variable c_int '36070'
+GL_COLOR_ATTACHMENT1 = 36065 # Variable c_int '36065'
+GL_COLOR_ATTACHMENT0 = 36064 # Variable c_int '36064'
+GL_COLOR_ATTACHMENT2 = 36066 # Variable c_int '36066'
+GL_PACK_COMPRESSED_BLOCK_DEPTH = 37165 # Variable c_int '37165'
+GL_COLOR_ATTACHMENT9 = 36073 # Variable c_int '36073'
+GL_COLOR_ATTACHMENT8 = 36072 # Variable c_int '36072'
+GL_TEXTURE_RANGE_POINTER_APPLE = 34232 # Variable c_int '34232'
+GL_MIRROR_CLAMP_ATI = 34626 # Variable c_int '34626'
+GL_PACK_IMAGE_HEIGHT = 32876 # Variable c_int '32876'
+GL_MATRIX5_NV = 34357 # Variable c_int '34357'
+GL_PIXEL_MAP_B_TO_B_SIZE = 3256 # Variable c_int '3256'
+GL_READ_PIXEL_DATA_RANGE_LENGTH_NV = 34939 # Variable c_int '34939'
+GL_OUTPUT_TEXTURE_COORD23_EXT = 34740 # Variable c_int '34740'
+GL_PATCH_VERTICES = 36466 # Variable c_int '36466'
+GL_CULL_FACE_MODE = 2885 # Variable c_int '2885'
+GL_POST_CONVOLUTION_COLOR_TABLE = 32977 # Variable c_int '32977'
+GL_TRANSFORM_FEEDBACK_BUFFER_BINDING = 35983 # Variable c_int '35983'
+GL_RGBA_S3TC = 33698 # Variable c_int '33698'
+GL_PROGRAM_TARGET_NV = 34374 # Variable c_int '34374'
+GL_VERTEX_PROGRAM_PARAMETER_BUFFER_NV = 36258 # Variable c_int '36258'
+GL_FRAGMENT_COLOR_MATERIAL_EXT = 33793 # Variable c_int '33793'
+GL_POST_TEXTURE_FILTER_SCALE_RANGE_SGIX = 33148 # Variable c_int '33148'
+GL_COLOR_TABLE_LUMINANCE_SIZE = 32990 # Variable c_int '32990'
+GL_BOOL = 35670 # Variable c_int '35670'
+GL_MIN_MAP_BUFFER_ALIGNMENT = 37052 # Variable c_int '37052'
+GL_POST_CONVOLUTION_BLUE_SCALE = 32798 # Variable c_int '32798'
+GL_TEXTURE24_ARB = 34008 # Variable c_int '34008'
+GL_OFFSET_PROJECTIVE_TEXTURE_2D_NV = 34896 # Variable c_int '34896'
+GL_DOUBLE_MAT2 = 36678 # Variable c_int '36678'
+GL_DOUBLE_VEC3_EXT = 36861 # Variable c_int '36861'
+GL_SIGNED_HILO8_NV = 34911 # Variable c_int '34911'
+GL_PGI_vertex_hints = 1 # Variable c_int '1'
+GL_DOT3_RGB_EXT = 34624 # Variable c_int '34624'
+GL_COLOR_ARRAY_POINTER_EXT = 32912 # Variable c_int '32912'
+GL_SAMPLE_BUFFERS_EXT = 32936 # Variable c_int '32936'
+GL_COMBINE_RGB_EXT = 34161 # Variable c_int '34161'
+GL_T2F_V3F = 10791 # Variable c_int '10791'
+GL_COLOR_INDEX4_EXT = 32996 # Variable c_int '32996'
+GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB = 34827 # Variable c_int '34827'
+GL_NUM_VIDEO_CAPTURE_STREAMS_NV = 36900 # Variable c_int '36900'
+GL_MAX_PROGRAM_MATRICES_ARB = 34351 # Variable c_int '34351'
+GL_ALWAYS = 519 # Variable c_int '519'
+GL_IMAGE_2D_MULTISAMPLE_ARRAY_EXT = 36950 # Variable c_int '36950'
+GL_EXT_texture_integer = 1 # Variable c_int '1'
+GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB = 36494 # Variable c_int '36494'
+GL_VERTEX_SHADER = 35633 # Variable c_int '35633'
+GL_MODELVIEW1_EXT = 34058 # Variable c_int '34058'
+GL_MAX_PROGRAM_IF_DEPTH_NV = 35062 # Variable c_int '35062'
+GL_TRANSPOSE_AFFINE_3D_NV = 37016 # Variable c_int '37016'
+GL_INTERLACE_SGIX = 32916 # Variable c_int '32916'
+GL_APPLE_ycbcr_422 = 1 # Variable c_int '1'
+GL_HISTOGRAM_WIDTH = 32806 # Variable c_int '32806'
+GL_PIXEL_COUNT_NV = 34918 # Variable c_int '34918'
+GL_DEBUG_SOURCE_APPLICATION_ARB = 33354 # Variable c_int '33354'
+GL_DRAW_BUFFER12_ARB = 34865 # Variable c_int '34865'
+GL_SAMPLE_POSITION_NV = 36432 # Variable c_int '36432'
+GL_DEBUG_TYPE_ERROR_ARB = 33356 # Variable c_int '33356'
+GL_FLOAT_MAT3x4 = 35688 # Variable c_int '35688'
+GL_DRAW_BUFFER10_ARB = 34863 # Variable c_int '34863'
+GL_FIXED_ONLY = 35101 # Variable c_int '35101'
+GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE = 36182 # Variable c_int '36182'
+GL_MODELVIEW16_ARB = 34608 # Variable c_int '34608'
+GL_FRAMEBUFFER_EXT = 36160 # Variable c_int '36160'
+GL_UNSIGNED_INT16_NV = 36848 # Variable c_int '36848'
+GL_DEBUG_SEVERITY_MEDIUM_AMD = 37191 # Variable c_int '37191'
+GL_TRANSPOSE_TEXTURE_MATRIX_ARB = 34021 # Variable c_int '34021'
+GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 34832 # Variable c_int '34832'
+GL_SLUMINANCE8_ALPHA8_EXT = 35909 # Variable c_int '35909'
+GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER = 34032 # Variable c_int '34032'
+GL_DRAW_BUFFER10 = 34863 # Variable c_int '34863'
+GL_MATRIX7_NV = 34359 # Variable c_int '34359'
+GL_TEXTURE_LUMINANCE_TYPE = 35860 # Variable c_int '35860'
+GL_RG16UI = 33338 # Variable c_int '33338'
+GL_SWIZZLE_STRQ_DQ_ATI = 35195 # Variable c_int '35195'
+GL_LUMINANCE_ALPHA16I_EXT = 36237 # Variable c_int '36237'
+GL_SIGNED_INTENSITY_NV = 34567 # Variable c_int '34567'
+GL_MAX_RECTANGLE_TEXTURE_SIZE_EXT = 34040 # Variable c_int '34040'
+GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTERS = 37573 # Variable c_int '37573'
+GL_COUNTER_TYPE_AMD = 35776 # Variable c_int '35776'
+GL_MAX_PROGRAM_TEMPORARIES_ARB = 34981 # Variable c_int '34981'
+GL_ALWAYS_FAST_HINT_PGI = 107020 # Variable c_int '107020'
+GL_PROGRAM_FORMAT_ARB = 34934 # Variable c_int '34934'
+GL_INT_IMAGE_2D_EXT = 36952 # Variable c_int '36952'
+GL_VERTEX_STREAM0_ATI = 34669 # Variable c_int '34669'
+GL_STENCIL_BACK_REF = 36003 # Variable c_int '36003'
+GL_LINE_RESET_TOKEN = 1799 # Variable c_int '1799'
+GL_COLOR_SUM_ARB = 33880 # Variable c_int '33880'
+GL_COMBINE_RGB = 34161 # Variable c_int '34161'
+GL_TEXTURE0_ARB = 33984 # Variable c_int '33984'
+GL_STEREO = 3123 # Variable c_int '3123'
+GL_MATRIX21_ARB = 35029 # Variable c_int '35029'
+GL_NV_fragment_program_option = 1 # Variable c_int '1'
+GL_ARB_explicit_attrib_location = 1 # Variable c_int '1'
+GL_QUADRATIC_CURVE_TO_NV = 10 # Variable c_int '10'
+GL_EXT_blend_color = 1 # Variable c_int '1'
+GL_UNSIGNED_INT_SAMPLER_CUBE_EXT = 36308 # Variable c_int '36308'
+GL_SAMPLER_3D_ARB = 35679 # Variable c_int '35679'
+GL_DISCARD_ATI = 34659 # Variable c_int '34659'
+GL_MEDIUM_INT = 36340 # Variable c_int '36340'
+GL_TEXTURE_CUBE_MAP = 34067 # Variable c_int '34067'
+GL_REG_2_ATI = 35107 # Variable c_int '35107'
+GL_COMPRESSED_RGBA = 34030 # Variable c_int '34030'
+GL_MAX_ELEMENTS_INDICES_EXT = 33001 # Variable c_int '33001'
+GL_VERTEX_STREAM6_ATI = 34675 # Variable c_int '34675'
+GL_EXT_multi_draw_arrays = 1 # Variable c_int '1'
+GL_EXT_pixel_buffer_object = 1 # Variable c_int '1'
+GL_PROXY_POST_CONVOLUTION_COLOR_TABLE_SGI = 32980 # Variable c_int '32980'
+GL_VERTEX_BLEND_ARB = 34471 # Variable c_int '34471'
+GL_NORMAL_ARRAY_TYPE = 32894 # Variable c_int '32894'
+GL_TEXTURE_BUFFER = 35882 # Variable c_int '35882'
+GL_ENV_REVERSE_BLEND_EXT = 0 # Variable c_int '0'
+GL_OUTPUT_TEXTURE_COORD4_EXT = 34721 # Variable c_int '34721'
+GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_NV = 35979 # Variable c_int '35979'
+GL_COLOR_ATTACHMENT10_EXT = 36074 # Variable c_int '36074'
+GL_CON_4_ATI = 35141 # Variable c_int '35141'
+GL_POINTS = 0 # Variable c_int '0'
+GL_AMD_sample_positions = 1 # Variable c_int '1'
+GL_RENDERBUFFER_DEPTH_SIZE_EXT = 36180 # Variable c_int '36180'
+GL_RENDERBUFFER_BLUE_SIZE = 36178 # Variable c_int '36178'
+GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT = 35954 # Variable c_int '35954'
+GL_PATH_TERMINAL_END_CAP_NV = 36984 # Variable c_int '36984'
+GL_POLYGON = 9 # Variable c_int '9'
+GL_NAND = 5390 # Variable c_int '5390'
+GL_MAP1_INDEX = 3473 # Variable c_int '3473'
+GL_COMBINER_SUM_OUTPUT_NV = 34124 # Variable c_int '34124'
+GL_MODELVIEW15_ARB = 34607 # Variable c_int '34607'
+GL_LINE_WIDTH_GRANULARITY = 2851 # Variable c_int '2851'
+GL_TEXTURE_SWIZZLE_R_EXT = 36418 # Variable c_int '36418'
+GL_VERTEX_ARRAY_BINDING_APPLE = 34229 # Variable c_int '34229'
+GL_OP_MUL_EXT = 34694 # Variable c_int '34694'
+GL_SECONDARY_COLOR_ARRAY_ADDRESS_NV = 36647 # Variable c_int '36647'
+GL_ADD_SIGNED = 34164 # Variable c_int '34164'
+GL_MAX_3D_TEXTURE_SIZE = 32883 # Variable c_int '32883'
+GL_DONT_CARE = 4352 # Variable c_int '4352'
+GL_BOOL_VEC2_ARB = 35671 # Variable c_int '35671'
+GL_LUMINANCE_ALPHA_FLOAT32_APPLE = 34841 # Variable c_int '34841'
+GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING = 34972 # Variable c_int '34972'
+GL_SIGNED_RGB_UNSIGNED_ALPHA_NV = 34572 # Variable c_int '34572'
+GL_UNSIGNED_SHORT = 5123 # Variable c_int '5123'
+GL_POST_COLOR_MATRIX_GREEN_SCALE_SGI = 32949 # Variable c_int '32949'
+GL_UNSIGNED_SHORT_1_5_5_5_REV = 33638 # Variable c_int '33638'
+GL_MAX_PROGRAM_TEXEL_OFFSET = 35077 # Variable c_int '35077'
+GL_CURRENT_VERTEX_WEIGHT_EXT = 34059 # Variable c_int '34059'
+GL_R16F = 33325 # Variable c_int '33325'
+GL_UNSIGNED_SHORT_5_5_5_1 = 32820 # Variable c_int '32820'
+GL_MODELVIEW0_MATRIX_EXT = 2982 # Variable c_int '2982'
+GL_SAMPLER_RENDERBUFFER_NV = 36438 # Variable c_int '36438'
+GL_RENDERBUFFER_STENCIL_SIZE = 36181 # Variable c_int '36181'
+GL_FULL_STIPPLE_HINT_PGI = 107033 # Variable c_int '107033'
+GL_TRIANGLE_MESH_SUN = 34325 # Variable c_int '34325'
+GL_UNIFORM_BLOCK_BINDING = 35391 # Variable c_int '35391'
+GL_LOCAL_CONSTANT_DATATYPE_EXT = 34797 # Variable c_int '34797'
+GL_Z_EXT = 34775 # Variable c_int '34775'
+GL_LINE_WIDTH = 2849 # Variable c_int '2849'
+GL_FILE_NAME_NV = 36980 # Variable c_int '36980'
+GL_RGBA_FLOAT32_APPLE = 34836 # Variable c_int '34836'
+GL_RETURN = 258 # Variable c_int '258'
+GL_DYNAMIC_READ_ARB = 35049 # Variable c_int '35049'
+GL_LEQUAL = 515 # Variable c_int '515'
+GL_INTENSITY16F_ARB = 34845 # Variable c_int '34845'
+GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT = 36058 # Variable c_int '36058'
+GL_ARB_transform_feedback2 = 1 # Variable c_int '1'
+GL_UNSIGNED_SHORT_8_8_REV_MESA = 34235 # Variable c_int '34235'
+GL_COMBINE_ARB = 34160 # Variable c_int '34160'
+GL_UNSIGNED_INVERT_NV = 34103 # Variable c_int '34103'
+GL_PIXEL_MAP_A_TO_A_SIZE = 3257 # Variable c_int '3257'
+GL_LIGHT_MODEL_AMBIENT = 2899 # Variable c_int '2899'
+GL_HISTOGRAM = 32804 # Variable c_int '32804'
+GL_INTERPOLATE_ARB = 34165 # Variable c_int '34165'
+GL_EXT_bgra = 1 # Variable c_int '1'
+GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT = 36055 # Variable c_int '36055'
+GL_VERTEX_ARRAY_SIZE_EXT = 32890 # Variable c_int '32890'
+GL_FIRST_TO_REST_NV = 37039 # Variable c_int '37039'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB = 34072 # Variable c_int '34072'
+GL_RELATIVE_VERTICAL_LINE_TO_NV = 9 # Variable c_int '9'
+GL_ATI_fragment_shader = 1 # Variable c_int '1'
+GL_REPLACEMENT_CODE_ARRAY_TYPE_SUN = 34241 # Variable c_int '34241'
+GL_UNPACK_SWAP_BYTES = 3312 # Variable c_int '3312'
+GL_PIXEL_PACK_BUFFER_BINDING_ARB = 35053 # Variable c_int '35053'
+GL_MAP1_VERTEX_ATTRIB0_4_NV = 34400 # Variable c_int '34400'
+GL_OP_FRAC_EXT = 34697 # Variable c_int '34697'
+GL_ALLOW_DRAW_FRG_HINT_PGI = 107024 # Variable c_int '107024'
+GL_LUMINANCE6_ALPHA2 = 32836 # Variable c_int '32836'
+GL_SCALE_BY_TWO_NV = 34110 # Variable c_int '34110'
+GL_MATRIX10_ARB = 35018 # Variable c_int '35018'
+GL_PRIMARY_COLOR = 34167 # Variable c_int '34167'
+GL_C3F_V3F = 10788 # Variable c_int '10788'
+GL_OP_EXP_BASE_2_EXT = 34705 # Variable c_int '34705'
+GL_COMBINER_BIAS_NV = 34121 # Variable c_int '34121'
+GL_MODELVIEW20_ARB = 34612 # Variable c_int '34612'
+GL_AUX_BUFFERS = 3072 # Variable c_int '3072'
+GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT = 34061 # Variable c_int '34061'
+GL_ITALIC_BIT_NV = 2 # Variable c_int '2'
+GL_OPERAND2_RGB_ARB = 34194 # Variable c_int '34194'
+GL_IMPLEMENTATION_COLOR_READ_TYPE = 35738 # Variable c_int '35738'
+GL_IMAGE_3D_EXT = 36942 # Variable c_int '36942'
+GL_UNSIGNED_SHORT_4_4_4_4_REV = 33637 # Variable c_int '33637'
+GL_TRIANGULAR_NV = 37029 # Variable c_int '37029'
+GL_UNPACK_COMPRESSED_BLOCK_SIZE = 37162 # Variable c_int '37162'
+GL_INT_SAMPLER_2D_EXT = 36298 # Variable c_int '36298'
+GL_SMOOTH = 7425 # Variable c_int '7425'
+GL_EXP = 2048 # Variable c_int '2048'
+GL_DISCARD_NV = 34096 # Variable c_int '34096'
+GL_MAX_UNIFORM_BLOCK_SIZE = 35376 # Variable c_int '35376'
+GL_NV_shader_atomic_float = 1 # Variable c_int '1'
+GL_POST_COLOR_MATRIX_RED_BIAS_SGI = 32952 # Variable c_int '32952'
+GL_MODELVIEW27_ARB = 34619 # Variable c_int '34619'
+GL_MAX_PROGRAM_PARAMETERS_ARB = 34985 # Variable c_int '34985'
+GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_APPLE = 34080 # Variable c_int '34080'
+GL_CURRENT_TEXTURE_COORDS = 2819 # Variable c_int '2819'
+GLEW_ERROR_NO_GL_VERSION = 1 # Variable c_int '1'
+GL_LUMINANCE8I_EXT = 36242 # Variable c_int '36242'
+GL_VERTEX_ATTRIB_MAP2_APPLE = 35329 # Variable c_int '35329'
+GL_UNPACK_ROW_BYTES_APPLE = 35350 # Variable c_int '35350'
+GL_CURRENT_MATRIX_STACK_DEPTH_NV = 34368 # Variable c_int '34368'
+GL_MAX_COLOR_ATTACHMENTS_EXT = 36063 # Variable c_int '36063'
+GL_IMAGE_BINDING_LEVEL_EXT = 36667 # Variable c_int '36667'
+GL_INT_IMAGE_CUBE_MAP_ARRAY = 36959 # Variable c_int '36959'
+GL_BOOL_VEC3_ARB = 35672 # Variable c_int '35672'
+GL_MATRIX25_ARB = 35033 # Variable c_int '35033'
+GL_CONVOLUTION_2D_EXT = 32785 # Variable c_int '32785'
+GL_ASYNC_DRAW_PIXELS_SGIX = 33629 # Variable c_int '33629'
+GL_VIEWPORT_BOUNDS_RANGE = 33373 # Variable c_int '33373'
+GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION = 36428 # Variable c_int '36428'
+GL_LUMINANCE_ALPHA16F_ARB = 34847 # Variable c_int '34847'
+GL_SHARED_TEXTURE_PALETTE_EXT = 33275 # Variable c_int '33275'
+GL_ACTIVE_STENCIL_FACE_EXT = 35089 # Variable c_int '35089'
+GL_LUMINANCE_ALPHA = 6410 # Variable c_int '6410'
+GL_MAX_CONVOLUTION_WIDTH = 32794 # Variable c_int '32794'
+GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV = 34350 # Variable c_int '34350'
+GL_PIXEL_UNPACK_BUFFER_BINDING = 35055 # Variable c_int '35055'
+GL_HILO_NV = 34548 # Variable c_int '34548'
+GL_IMAGE_2D_MULTISAMPLE = 36949 # Variable c_int '36949'
+GL_DRAW_BUFFER9_ATI = 34862 # Variable c_int '34862'
+GL_COMPRESSED_INTENSITY = 34028 # Variable c_int '34028'
+GL_TRANSFORM_FEEDBACK_VARYINGS = 35971 # Variable c_int '35971'
+GL_ELEMENT_ARRAY_LENGTH_NV = 36659 # Variable c_int '36659'
+GL_TRANSPOSE_NV = 34348 # Variable c_int '34348'
+GL_SGIX_fragment_specular_lighting = 1 # Variable c_int '1'
+GL_VERTEX_STREAM5_ATI = 34674 # Variable c_int '34674'
+GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS = 36481 # Variable c_int '36481'
+GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 34994 # Variable c_int '34994'
+GL_MAX_GEOMETRY_SHADER_INVOCATIONS = 36442 # Variable c_int '36442'
+GL_SPOT_DIRECTION = 4612 # Variable c_int '4612'
+GL_COMPRESSED_SIGNED_RG_RGTC2 = 36286 # Variable c_int '36286'
+GL_INT_VEC2_ARB = 35667 # Variable c_int '35667'
+GL_CURRENT_COLOR = 2816 # Variable c_int '2816'
+GL_TEXTURE_FILTER_CONTROL_EXT = 34048 # Variable c_int '34048'
+GL_DSDT8_MAG8_NV = 34570 # Variable c_int '34570'
+GL_GLYPH_VERTICAL_BEARING_ADVANCE_BIT_NV = 128 # Variable c_int '128'
+GL_COMPRESSED_RED_RGTC1_EXT = 36283 # Variable c_int '36283'
+GL_INVALID_FRAMEBUFFER_OPERATION = 1286 # Variable c_int '1286'
+GL_RGB12 = 32851 # Variable c_int '32851'
+GL_BUFFER_GPU_ADDRESS_NV = 36637 # Variable c_int '36637'
+GL_RGB_INTEGER_EXT = 36248 # Variable c_int '36248'
+GL_MAX_TRANSFORM_FEEDBACK_BUFFERS = 36464 # Variable c_int '36464'
+GL_REPLACE_VALUE_AMD = 34635 # Variable c_int '34635'
+GL_NV_blend_square = 1 # Variable c_int '1'
+GL_FLOAT_VEC4_ARB = 35666 # Variable c_int '35666'
+GL_HALF_BIAS_NORMAL_NV = 34106 # Variable c_int '34106'
+GL_MAX_ARRAY_TEXTURE_LAYERS = 35071 # Variable c_int '35071'
+GL_MAX_COMBINED_IMAGE_UNIFORMS = 37071 # Variable c_int '37071'
+GL_DT_BIAS_NV = 34583 # Variable c_int '34583'
+GL_EXT_texture_sRGB_decode = 1 # Variable c_int '1'
+GL_IMAGE_BINDING_NAME = 36666 # Variable c_int '36666'
+GL_MIN_FRAGMENT_INTERPOLATION_OFFSET = 36443 # Variable c_int '36443'
+GL_MAX_SERVER_WAIT_TIMEOUT = 37137 # Variable c_int '37137'
+GL_RENDERBUFFER_COLOR_SAMPLES_NV = 36368 # Variable c_int '36368'
+GL_UNSIGNED_INT_2_10_10_10_REV = 33640 # Variable c_int '33640'
+GL_MODULATE_SUBTRACT_ATI = 34630 # Variable c_int '34630'
+GL_SRGB_EXT = 35904 # Variable c_int '35904'
+GL_NV_path_rendering = 1 # Variable c_int '1'
+GLEW_VERSION_MINOR = 3 # Variable c_int '3'
+GL_SGIX_pixel_texture_bits = 1 # Variable c_int '1'
+GL_NOR = 5384 # Variable c_int '5384'
+GL_EXT_texture_snorm = 1 # Variable c_int '1'
+GL_TEXTURE_UPDATE_BARRIER_BIT = 256 # Variable c_int '256'
+GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = 32990 # Variable c_int '32990'
+GL_FLAT = 7424 # Variable c_int '7424'
+GL_UNSIGNED_INT8_NV = 36844 # Variable c_int '36844'
+GL_DECAL = 8449 # Variable c_int '8449'
+GL_DRAW_BUFFER6_ATI = 34859 # Variable c_int '34859'
+GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_GEOMETRY_SHADER = 37578 # Variable c_int '37578'
+GL_VERTEX_ARRAY_STORAGE_HINT_APPLE = 34079 # Variable c_int '34079'
+GL_RGB2_EXT = 32846 # Variable c_int '32846'
+GL_UNPACK_LSB_FIRST = 3313 # Variable c_int '3313'
+GL_INTENSITY_FLOAT16_APPLE = 34845 # Variable c_int '34845'
+GL_ARB_texture_env_crossbar = 1 # Variable c_int '1'
+GL_PATH_STENCIL_FUNC_NV = 37047 # Variable c_int '37047'
+GL_TEXTURE_INTENSITY_TYPE_ARB = 35861 # Variable c_int '35861'
+GL_ALREADY_SIGNALED = 37146 # Variable c_int '37146'
+GL_STRICT_LIGHTING_HINT_PGI = 107031 # Variable c_int '107031'
+GL_BUFFER_MAP_POINTER = 35005 # Variable c_int '35005'
+GL_UNSIGNED_INT_VEC4_EXT = 36296 # Variable c_int '36296'
+GL_CURRENT_FOG_COORDINATE_EXT = 33875 # Variable c_int '33875'
+GL_ACTIVE_TEXTURE = 34016 # Variable c_int '34016'
+GL_POST_CONVOLUTION_BLUE_BIAS_EXT = 32802 # Variable c_int '32802'
+GL_IBM_vertex_array_lists = 1 # Variable c_int '1'
+GL_ALPHA_INTEGER = 36247 # Variable c_int '36247'
+GL_GREEN_SCALE = 3352 # Variable c_int '3352'
+GL_OR_REVERSE = 5387 # Variable c_int '5387'
+GL_MATRIX17_ARB = 35025 # Variable c_int '35025'
+GL_PROJECTION = 5889 # Variable c_int '5889'
+GL_LINE_TO_NV = 4 # Variable c_int '4'
+GL_UNSIGNED_INT_SAMPLER_3D = 36307 # Variable c_int '36307'
+GL_FRAGMENT_SHADER_BIT = 2 # Variable c_int '2'
+GL_EXT_shader_image_load_store = 1 # Variable c_int '1'
+GL_INT_VEC4 = 35669 # Variable c_int '35669'
+GL_INT_VEC3 = 35668 # Variable c_int '35668'
+GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB = 35657 # Variable c_int '35657'
+GL_STENCIL_FAIL = 2964 # Variable c_int '2964'
+GL_STENCIL_TAG_BITS_EXT = 35058 # Variable c_int '35058'
+GL_TEXTURE_STORAGE_HINT_APPLE = 34236 # Variable c_int '34236'
+GL_VERSION_4_2 = 1 # Variable c_int '1'
+GL_VERSION_4_0 = 1 # Variable c_int '1'
+GL_VERSION_4_1 = 1 # Variable c_int '1'
+GL_COLOR_TABLE = 32976 # Variable c_int '32976'
+GL_SAMPLE_MASK_INVERT_SGIS = 32939 # Variable c_int '32939'
+GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT = 36060 # Variable c_int '36060'
+GL_PACK_SKIP_IMAGES_EXT = 32875 # Variable c_int '32875'
+GL_FRAMEBUFFER_UNSUPPORTED = 36061 # Variable c_int '36061'
+GL_RED_BIAS = 3349 # Variable c_int '3349'
+GL_COMBINER_INPUT_NV = 34114 # Variable c_int '34114'
+GL_MAX_PROGRAM_NATIVE_INSTRUCTIONS_ARB = 34979 # Variable c_int '34979'
+GL_KTX_FRONT_REGION = 0 # Variable c_int '0'
+GL_MAX_PROGRAM_LOOP_COUNT_NV = 35064 # Variable c_int '35064'
+GL_PROGRAM_LENGTH_ARB = 34343 # Variable c_int '34343'
+GL_COLOR_TABLE_FORMAT_EXT = 32984 # Variable c_int '32984'
+GL_RENDER_MODE = 3136 # Variable c_int '3136'
+GL_EDGE_FLAG_ARRAY_BUFFER_BINDING = 34971 # Variable c_int '34971'
+GL_ARB_viewport_array = 1 # Variable c_int '1'
+GL_ARB_separate_shader_objects = 1 # Variable c_int '1'
+GL_PROGRAM_BINARY_LENGTH = 34625 # Variable c_int '34625'
+GL_OFFSET_HILO_TEXTURE_RECTANGLE_NV = 34901 # Variable c_int '34901'
+GL_CONSTANT_COLOR_EXT = 32769 # Variable c_int '32769'
+GL_RENDERBUFFER_WIDTH = 36162 # Variable c_int '36162'
+GL_STENCIL_BACK_VALUE_MASK = 36004 # Variable c_int '36004'
+GL_MAP2_VERTEX_ATTRIB13_4_NV = 34429 # Variable c_int '34429'
+GL_STORAGE_CACHED_APPLE = 34238 # Variable c_int '34238'
+GL_ARB_texture_env_add = 1 # Variable c_int '1'
+GL_TEXTURE_BLUE_SIZE = 32862 # Variable c_int '32862'
+GL_HISTOGRAM_GREEN_SIZE = 32809 # Variable c_int '32809'
+GL_FLOAT16_NV = 36856 # Variable c_int '36856'
+GL_OFFSET_TEXTURE_RECTANGLE_SCALE_NV = 34381 # Variable c_int '34381'
+GL_NV_video_capture = 1 # Variable c_int '1'
+GL_COLOR_ARRAY_PARALLEL_POINTERS_INTEL = 33783 # Variable c_int '33783'
+GL_VERTEX_ATTRIB_ARRAY2_NV = 34386 # Variable c_int '34386'
+GL_ARB_matrix_palette = 1 # Variable c_int '1'
+GL_OBJECT_INFO_LOG_LENGTH_ARB = 35716 # Variable c_int '35716'
+GL_DOT_PRODUCT_AFFINE_DEPTH_REPLACE_NV = 34909 # Variable c_int '34909'
+GL_FOG_COLOR = 2918 # Variable c_int '2918'
+GL_DRAW_BUFFER11 = 34864 # Variable c_int '34864'
+GL_DRAW_BUFFER12 = 34865 # Variable c_int '34865'
+GL_DRAW_BUFFER13 = 34866 # Variable c_int '34866'
+GL_UNSIGNED_INT_10_10_10_2 = 32822 # Variable c_int '32822'
+GL_DRAW_BUFFER15 = 34868 # Variable c_int '34868'
+GL_INT_IMAGE_3D = 36953 # Variable c_int '36953'
+GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 34340 # Variable c_int '34340'
+GL_RGB_INTEGER = 36248 # Variable c_int '36248'
+GL_SKIP_DECODE_EXT = 35402 # Variable c_int '35402'
+GL_EDGEFLAG_BIT_PGI = 262144 # Variable c_int '262144'
+GL_MAP1_TEXTURE_COORD_2 = 3476 # Variable c_int '3476'
+GL_PIXEL_MAP_S_TO_S = 3185 # Variable c_int '3185'
+GL_BLUE_INTEGER_EXT = 36246 # Variable c_int '36246'
+GL_EXT_vertex_attrib_64bit = 1 # Variable c_int '1'
+GL_CONSTANT_ALPHA = 32771 # Variable c_int '32771'
+GL_GLYPH_HORIZONTAL_BEARING_Y_BIT_NV = 8 # Variable c_int '8'
+GL_VERTEX_ARRAY_RANGE_VALID_NV = 34079 # Variable c_int '34079'
+GL_R16I = 33331 # Variable c_int '33331'
+GL_ASYNC_READ_PIXELS_SGIX = 33630 # Variable c_int '33630'
+GL_IMAGE_BINDING_ACCESS_EXT = 36670 # Variable c_int '36670'
+GL_OES_byte_coordinates = 1 # Variable c_int '1'
+GL_ARB_geometry_shader4 = 1 # Variable c_int '1'
+GL_FRAGMENT_PROGRAM_ARB = 34820 # Variable c_int '34820'
+GL_SAMPLE_ALPHA_TO_COVERAGE_ARB = 32926 # Variable c_int '32926'
+GL_TEXTURE_RED_SIZE_EXT = 32860 # Variable c_int '32860'
+GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER = 35398 # Variable c_int '35398'
+GL_COMPARE_R_TO_TEXTURE = 34894 # Variable c_int '34894'
+GL_TEXTURE_WRAP_R_EXT = 32882 # Variable c_int '32882'
+GL_PREVIOUS = 34168 # Variable c_int '34168'
+GL_ACTIVE_VARYING_MAX_LENGTH_NV = 35970 # Variable c_int '35970'
+GL_MAT_EMISSION_BIT_PGI = 8388608 # Variable c_int '8388608'
+GL_MAX_IMAGE_SAMPLES_EXT = 36973 # Variable c_int '36973'
+GL_PIXEL_UNPACK_BUFFER_ARB = 35052 # Variable c_int '35052'
+GL_STENCIL_CLEAR_VALUE = 2961 # Variable c_int '2961'
+GL_UNSIGNED_NORMALIZED = 35863 # Variable c_int '35863'
+GL_IMAGE_CUBE_MAP_ARRAY_EXT = 36948 # Variable c_int '36948'
+GL_EXT_gpu_shader4 = 1 # Variable c_int '1'
+GL_DIFFUSE = 4609 # Variable c_int '4609'
+GL_ENV_REVERSE_SUBTRACT_EXT = 0 # Variable c_int '0'
+GL_MAX_RENDERBUFFER_SIZE = 34024 # Variable c_int '34024'
+GL_EYE_DISTANCE_TO_POINT_SGIS = 33264 # Variable c_int '33264'
+GL_APPLE_object_purgeable = 1 # Variable c_int '1'
+GL_TEXTURE_3D_EXT = 32879 # Variable c_int '32879'
+GL_NEXT_VIDEO_CAPTURE_BUFFER_STATUS_NV = 36901 # Variable c_int '36901'
+GL_INGR_color_clamp = 1 # Variable c_int '1'
+GL_MODELVIEW31_ARB = 34623 # Variable c_int '34623'
+GL_KTX_Z_REGION = 2 # Variable c_int '2'
+GL_STENCIL_PASS_DEPTH_PASS = 2966 # Variable c_int '2966'
+GL_ARB_texture_cube_map_array = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY4_NV = 34388 # Variable c_int '34388'
+GL_INCR_WRAP = 34055 # Variable c_int '34055'
+GL_EXTENDED_RANGE_SGIS = 34213 # Variable c_int '34213'
+GL_FRAGMENT_PROGRAM_PARAMETER_BUFFER_NV = 36260 # Variable c_int '36260'
+GL_AMD_debug_output = 1 # Variable c_int '1'
+GL_RENDERBUFFER_ALPHA_SIZE = 36179 # Variable c_int '36179'
+GL_TEXTURE_2D_BINDING_EXT = 32873 # Variable c_int '32873'
+GL_SQUARE_NV = 37027 # Variable c_int '37027'
+GL_TEXTURE_GREEN_TYPE_ARB = 35857 # Variable c_int '35857'
+GL_TEXTURE20 = 34004 # Variable c_int '34004'
+GL_DECR_WRAP = 34056 # Variable c_int '34056'
+GL_MAP2_VERTEX_ATTRIB6_4_NV = 34422 # Variable c_int '34422'
+GL_DELETE_STATUS = 35712 # Variable c_int '35712'
+GL_HIGH_INT = 36341 # Variable c_int '36341'
+GL_MAX_CONVOLUTION_WIDTH_EXT = 32794 # Variable c_int '32794'
+GL_COMPILE = 4864 # Variable c_int '4864'
+GL_SAMPLE_POSITION = 36432 # Variable c_int '36432'
+GL_EXT_provoking_vertex = 1 # Variable c_int '1'
+GL_STORAGE_PRIVATE_APPLE = 34237 # Variable c_int '34237'
+GL_ARB_shader_image_load_store = 1 # Variable c_int '1'
+GL_GUILTY_CONTEXT_RESET_ARB = 33363 # Variable c_int '33363'
+GL_ALPHA12 = 32829 # Variable c_int '32829'
+GL_C4UB_V2F = 10786 # Variable c_int '10786'
+GL_EXT_texture_compression_dxt1 = 1 # Variable c_int '1'
+GL_POST_COLOR_MATRIX_COLOR_TABLE_SGI = 32978 # Variable c_int '32978'
+GL_DOUBLE_MAT4x3_EXT = 36686 # Variable c_int '36686'
+GL_MIN_SAMPLE_SHADING_VALUE = 35895 # Variable c_int '35895'
+GL_TEXTURE_BUFFER_FORMAT_ARB = 35886 # Variable c_int '35886'
+GL_MAP_ATTRIB_V_ORDER_NV = 34500 # Variable c_int '34500'
+GL_UNPACK_SKIP_ROWS = 3315 # Variable c_int '3315'
+GL_TRUE = 1 # Variable c_int '1'
+GL_PROGRAM_ERROR_STRING_ARB = 34932 # Variable c_int '34932'
+GL_COLOR_ALPHA_PAIRING_ATI = 35189 # Variable c_int '35189'
+GL_DEPTH_CLAMP = 34383 # Variable c_int '34383'
+GL_LUMINANCE_ALPHA_INTEGER_EXT = 36253 # Variable c_int '36253'
+GL_MODELVIEW25_ARB = 34617 # Variable c_int '34617'
+GL_INT_SAMPLER_CUBE = 36300 # Variable c_int '36300'
+GL_POINT_SPRITE_R_MODE_NV = 34915 # Variable c_int '34915'
+GL_CURRENT_QUERY = 34917 # Variable c_int '34917'
+GL_MODELVIEW1_MATRIX_EXT = 34054 # Variable c_int '34054'
+GL_DRAW_BUFFER3_ATI = 34856 # Variable c_int '34856'
+GL_COMPRESSED_RGBA_BPTC_UNORM = 36492 # Variable c_int '36492'
+GL_INT8_NV = 36832 # Variable c_int '36832'
+GL_TEXTURE28_ARB = 34012 # Variable c_int '34012'
+GL_RGB16UI = 36215 # Variable c_int '36215'
+GL_COPY_INVERTED = 5388 # Variable c_int '5388'
+GL_LIGHT_MODEL_TWO_SIDE = 2898 # Variable c_int '2898'
+GL_TEXTURE_PRIORITY = 32870 # Variable c_int '32870'
+GL_STATIC_ATI = 34656 # Variable c_int '34656'
+GL_MAX_GEOMETRY_INPUT_COMPONENTS = 37155 # Variable c_int '37155'
+GL_LOWER_LEFT = 36001 # Variable c_int '36001'
+GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT = 35976 # Variable c_int '35976'
+GL_SECONDARY_COLOR_ARRAY_TYPE_EXT = 33883 # Variable c_int '33883'
+GL_DEBUG_CATEGORY_API_ERROR_AMD = 37193 # Variable c_int '37193'
+GL_INDEX_ARRAY_EXT = 32887 # Variable c_int '32887'
+GL_CONVOLUTION_FILTER_BIAS_EXT = 32789 # Variable c_int '32789'
+GL_UNSIGNED_INT_8_8_S8_S8_REV_NV = 34523 # Variable c_int '34523'
+GL_FOG_OFFSET_SGIX = 33176 # Variable c_int '33176'
+GL_PALETTE4_RGB5_A1_OES = 35732 # Variable c_int '35732'
+GL_FOG_COORDINATE_ARRAY_EXT = 33879 # Variable c_int '33879'
+GL_PROGRAM_MATRIX_STACK_DEPTH_EXT = 36399 # Variable c_int '36399'
+GL_SAMPLE_MASK_NV = 36433 # Variable c_int '36433'
+GL_PIXEL_UNPACK_BUFFER = 35052 # Variable c_int '35052'
+GL_EVAL_VERTEX_ATTRIB6_NV = 34508 # Variable c_int '34508'
+GL_CONSTANT_COLOR0_NV = 34090 # Variable c_int '34090'
+GL_R1UI_C4UB_V3F_SUN = 34245 # Variable c_int '34245'
+GL_LOCAL_CONSTANT_VALUE_EXT = 34796 # Variable c_int '34796'
+GL_POINT_DISTANCE_ATTENUATION = 33065 # Variable c_int '33065'
+GL_UNSIGNED_BYTE_3_3_2_EXT = 32818 # Variable c_int '32818'
+GL_OPERAND0_ALPHA_ARB = 34200 # Variable c_int '34200'
+GL_REPLACE_OLDEST_SUN = 3 # Variable c_int '3'
+GL_LUMINANCE16_ALPHA16_EXTENDED_RANGE_SGIX = 34295 # Variable c_int '34295'
+GL_DYNAMIC_ATI = 34657 # Variable c_int '34657'
+GL_AMBIENT_AND_DIFFUSE = 5634 # Variable c_int '5634'
+GL_TEXTURE_1D_BINDING_EXT = 32872 # Variable c_int '32872'
+GL_UTF16_NV = 37019 # Variable c_int '37019'
+GL_INDEX_ARRAY_LIST_IBM = 103073 # Variable c_int '103073'
+GL_VERTEX_SHADER_BIT = 1 # Variable c_int '1'
+GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = 34871 # Variable c_int '34871'
+GL_ZERO = 0 # Variable c_int '0'
+GL_APPLE_vertex_array_range = 1 # Variable c_int '1'
+GL_OP_CROSS_PRODUCT_EXT = 34711 # Variable c_int '34711'
+GL_AMD_query_buffer_object = 1 # Variable c_int '1'
+GL_POINT_SPRITE_COORD_ORIGIN = 36000 # Variable c_int '36000'
+GL_SCISSOR_BIT = 524288 # Variable c_int '524288'
+GL_ARB_point_parameters = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_ATTRIBS_NV = 35966 # Variable c_int '35966'
+GL_READ_ONLY = 35000 # Variable c_int '35000'
+GL_SAMPLE_MASK_VALUE = 36434 # Variable c_int '36434'
+GL_SPARE0_PLUS_SECONDARY_COLOR_NV = 34098 # Variable c_int '34098'
+GL_SGI_color_matrix = 1 # Variable c_int '1'
+GL_MAX_FRAGMENT_IMAGE_UNIFORMS = 37070 # Variable c_int '37070'
+GL_MAP1_GRID_DOMAIN = 3536 # Variable c_int '3536'
+GL_TEXTURE_COVERAGE_SAMPLES_NV = 36933 # Variable c_int '36933'
+GL_RETAINED_APPLE = 35355 # Variable c_int '35355'
+GL_PROGRAM_ATTRIB_COMPONENTS_NV = 35078 # Variable c_int '35078'
+GL_EXT_texture_sRGB = 1 # Variable c_int '1'
+GL_INVARIANT_EXT = 34754 # Variable c_int '34754'
+GL_FIXED = 5132 # Variable c_int '5132'
+GL_APPLE_row_bytes = 1 # Variable c_int '1'
+GL_TEXTURE_COORD_ARRAY_EXT = 32888 # Variable c_int '32888'
+GL_TEXTURE_SWIZZLE_G = 36419 # Variable c_int '36419'
+GL_PIXEL_MAP_I_TO_R_SIZE = 3250 # Variable c_int '3250'
+GL_NORMALIZED_RANGE_EXT = 34784 # Variable c_int '34784'
+GL_FOG_START = 2915 # Variable c_int '2915'
+GL_RGBA_FLOAT32_ATI = 34836 # Variable c_int '34836'
+GL_HISTOGRAM_BLUE_SIZE_EXT = 32810 # Variable c_int '32810'
+GL_MINMAX = 32814 # Variable c_int '32814'
+GL_SIGNED_RGB_NV = 34558 # Variable c_int '34558'
+GL_RGBA16_SNORM = 36763 # Variable c_int '36763'
+GL_INTENSITY8UI_EXT = 36223 # Variable c_int '36223'
+GL_SAMPLER_2D_ARRAY_EXT = 36289 # Variable c_int '36289'
+GL_RGB16F_ARB = 34843 # Variable c_int '34843'
+GL_COMBINER_MUX_SUM_NV = 34119 # Variable c_int '34119'
+GL_RELATIVE_HORIZONTAL_LINE_TO_NV = 7 # Variable c_int '7'
+GL_ATI_texture_float = 1 # Variable c_int '1'
+GL_LIST_INDEX = 2867 # Variable c_int '2867'
+GL_TEXTURE_WRAP_S = 10242 # Variable c_int '10242'
+GL_OP_RECIP_EXT = 34708 # Variable c_int '34708'
+GL_STENCIL_BACK_OP_VALUE_AMD = 34637 # Variable c_int '34637'
+GL_FRAGMENT_NORMAL_EXT = 33610 # Variable c_int '33610'
+GL_TEXTURE_SWIZZLE_A = 36421 # Variable c_int '36421'
+GL_MAX_RECTANGLE_TEXTURE_SIZE = 34040 # Variable c_int '34040'
+GL_LUMINANCE16_ALPHA16 = 32840 # Variable c_int '32840'
+GL_PROXY_TEXTURE_1D_EXT = 32867 # Variable c_int '32867'
+GL_MATRIX31_ARB = 35039 # Variable c_int '35039'
+GL_WIN_phong_shading = 1 # Variable c_int '1'
+GL_MIN_INTENSITY_SGIS = 34298 # Variable c_int '34298'
+GL_MAX_ACTIVE_LIGHTS_EXT = 33797 # Variable c_int '33797'
+GL_RGB_FLOAT32_ATI = 34837 # Variable c_int '34837'
+GL_GENERATE_MIPMAP_HINT = 33170 # Variable c_int '33170'
+GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT = 36320 # Variable c_int '36320'
+GL_ELEMENT_ARRAY_BARRIER_BIT = 2 # Variable c_int '2'
+GL_ALPHA_TEST_REF = 3010 # Variable c_int '3010'
+GL_MAX_PROGRAM_NATIVE_PARAMETERS_ARB = 34987 # Variable c_int '34987'
+GL_ALPHA_MIN_CLAMP_INGR = 34147 # Variable c_int '34147'
+GL_MAX_SUBROUTINE_UNIFORM_LOCATIONS = 36328 # Variable c_int '36328'
+GL_RENDERBUFFER_ALPHA_SIZE_EXT = 36179 # Variable c_int '36179'
+GL_COMPILE_STATUS = 35713 # Variable c_int '35713'
+GL_LOGIC_OP_MODE = 3056 # Variable c_int '3056'
+GL_PREVIOUS_TEXTURE_INPUT_NV = 34532 # Variable c_int '34532'
+GL_RGB_FLOAT32_APPLE = 34837 # Variable c_int '34837'
+GL_SRC1_COLOR = 35065 # Variable c_int '35065'
+GL_OUTPUT_TEXTURE_COORD17_EXT = 34734 # Variable c_int '34734'
+GL_MATRIX16_ARB = 35024 # Variable c_int '35024'
+GL_ALPHA_FLOAT32_APPLE = 34838 # Variable c_int '34838'
+GL_MAX_ALPHA_SGIS = 34221 # Variable c_int '34221'
+GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB = 35719 # Variable c_int '35719'
+GLEW_NO_ERROR = 0 # Variable c_int '0'
+GL_READ_WRITE = 35002 # Variable c_int '35002'
+GL_UNSIGNED_BYTE = 5121 # Variable c_int '5121'
+GL_EXT_transform_feedback = 1 # Variable c_int '1'
+GL_INT_SAMPLER_BUFFER_EXT = 36304 # Variable c_int '36304'
+GL_CONSERVE_MEMORY_HINT_PGI = 107005 # Variable c_int '107005'
+GL_OUTPUT_TEXTURE_COORD7_EXT = 34724 # Variable c_int '34724'
+GL_NV_vertex_program3 = 1 # Variable c_int '1'
+GL_NV_vertex_program2 = 1 # Variable c_int '1'
+GL_NV_vertex_program4 = 1 # Variable c_int '1'
+GL_R16 = 33322 # Variable c_int '33322'
+GL_AMD_transform_feedback3_lines_triangles = 1 # Variable c_int '1'
+GL_DRAW_BUFFER0_ATI = 34853 # Variable c_int '34853'
+GL_CURRENT_SAMPLE_COUNT_QUERY_NV = 34917 # Variable c_int '34917'
+GL_SGIS_fog_function = 1 # Variable c_int '1'
+GL_SIGNED_RGBA_NV = 34555 # Variable c_int '34555'
+GL_MODELVIEW10_ARB = 34602 # Variable c_int '34602'
+GL_PIXEL_PACK_BUFFER = 35051 # Variable c_int '35051'
+GL_VERSION_1_5 = 1 # Variable c_int '1'
+GL_VERSION_1_4 = 1 # Variable c_int '1'
+GL_VERSION_1_3 = 1 # Variable c_int '1'
+GL_VERSION_1_2 = 1 # Variable c_int '1'
+GL_OUTPUT_FOG_EXT = 34749 # Variable c_int '34749'
+GL_RGB16_SIGNED_SGIX = 34278 # Variable c_int '34278'
+GL_HISTOGRAM_ALPHA_SIZE_EXT = 32811 # Variable c_int '32811'
+GL_DRAW_BUFFER5 = 34858 # Variable c_int '34858'
+GL_PROXY_TEXTURE_CUBE_MAP_ARRAY_ARB = 36875 # Variable c_int '36875'
+GL_CURRENT_MATRIX_NV = 34369 # Variable c_int '34369'
+GL_MAX_VERTEX_BINDABLE_UNIFORMS_EXT = 36322 # Variable c_int '36322'
+GL_TRANSFORM_FEEDBACK_BUFFER_SIZE = 35973 # Variable c_int '35973'
+GL_DRAW_BUFFER = 3073 # Variable c_int '3073'
+GL_FONT_UNDERLINE_THICKNESS_BIT_NV = 134217728 # Variable c_int '134217728'
+GL_POST_COLOR_MATRIX_BLUE_SCALE = 32950 # Variable c_int '32950'
+GL_VERSION_3_1 = 1 # Variable c_int '1'
+GL_VERSION_3_0 = 1 # Variable c_int '1'
+GL_VERSION_3_3 = 1 # Variable c_int '1'
+GL_STENCIL_INDEX1 = 36166 # Variable c_int '36166'
+GL_VERTEX_ATTRIB_ARRAY6_NV = 34390 # Variable c_int '34390'
+GL_PATH_COMMAND_COUNT_NV = 37021 # Variable c_int '37021'
+GL_STENCIL_INDEX4 = 36167 # Variable c_int '36167'
+GL_MIRROR_CLAMP_TO_BORDER_EXT = 35090 # Variable c_int '35090'
+GL_EVAL_VERTEX_ATTRIB12_NV = 34514 # Variable c_int '34514'
+GL_MAX_COLOR_MATRIX_STACK_DEPTH = 32947 # Variable c_int '32947'
+GL_MAX_VERTEX_SHADER_LOCAL_CONSTANTS_EXT = 34760 # Variable c_int '34760'
+GL_DRAW_BUFFER7_ARB = 34860 # Variable c_int '34860'
+GL_INT_SAMPLER_BUFFER = 36304 # Variable c_int '36304'
+GL_VERTEX_ARRAY_POINTER = 32910 # Variable c_int '32910'
+GL_RGB8UI = 36221 # Variable c_int '36221'
+GL_TEXTURE27_ARB = 34011 # Variable c_int '34011'
+GL_VERTEX_SHADER_EXT = 34688 # Variable c_int '34688'
+GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB = 35658 # Variable c_int '35658'
+GL_OUTPUT_TEXTURE_COORD21_EXT = 34738 # Variable c_int '34738'
+GL_VERTEX_PROGRAM_POINT_SIZE_NV = 34370 # Variable c_int '34370'
+GL_POST_COLOR_MATRIX_COLOR_TABLE = 32978 # Variable c_int '32978'
+GL_TEXTURE26_ARB = 34010 # Variable c_int '34010'
+GL_EXT_framebuffer_multisample = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 34339 # Variable c_int '34339'
+GL_BLEND_DST_RGB = 32968 # Variable c_int '32968'
+GL_CG_FRAGMENT_SHADER_EXT = 35087 # Variable c_int '35087'
+GL_MAP1_VERTEX_4 = 3480 # Variable c_int '3480'
+GL_MIRROR_CLAMP_TO_EDGE_ATI = 34627 # Variable c_int '34627'
+GL_BLEND_DST_ALPHA = 32970 # Variable c_int '32970'
+GL_MAP1_VERTEX_3 = 3479 # Variable c_int '3479'
+GL_SAMPLE_PATTERN_EXT = 32940 # Variable c_int '32940'
+GL_MAX_GEOMETRY_UNIFORM_BLOCKS = 35372 # Variable c_int '35372'
+GL_VERTEX_ATTRIB_ARRAY_INTEGER_EXT = 35069 # Variable c_int '35069'
+GL_CLEAR = 5376 # Variable c_int '5376'
+GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB = 34881 # Variable c_int '34881'
+GL_LIGHT7 = 16391 # Variable c_int '16391'
+GL_CURRENT_RASTER_POSITION_VALID = 2824 # Variable c_int '2824'
+GL_BUMP_NUM_TEX_UNITS_ATI = 34679 # Variable c_int '34679'
+GL_HISTOGRAM_LUMINANCE_SIZE = 32812 # Variable c_int '32812'
+GL_TEXTURE22_ARB = 34006 # Variable c_int '34006'
+GL_COLOR_ATTACHMENT3_EXT = 36067 # Variable c_int '36067'
+GL_DRAW_BUFFER9 = 34862 # Variable c_int '34862'
+GL_ADD_SIGNED_ARB = 34164 # Variable c_int '34164'
+GL_PIXEL_PACK_BUFFER_BINDING = 35053 # Variable c_int '35053'
+GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB = 4 # Variable c_int '4'
+GL_FONT_ASCENDER_BIT_NV = 2097152 # Variable c_int '2097152'
+GL_INT_IMAGE_1D_ARRAY_EXT = 36957 # Variable c_int '36957'
+GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = 35661 # Variable c_int '35661'
+GL_TEXTURE_BINDING_2D_MULTISAMPLE = 37124 # Variable c_int '37124'
+GL_MAP_STENCIL = 3345 # Variable c_int '3345'
+GL_POINT_SIZE_MAX_ARB = 33063 # Variable c_int '33063'
+GL_MITER_REVERT_NV = 37031 # Variable c_int '37031'
+GL_SGIS_point_line_texgen = 1 # Variable c_int '1'
+GL_UNSIGNED_INT_IMAGE_2D_EXT = 36963 # Variable c_int '36963'
+GL_IMAGE_BINDING_FORMAT_EXT = 36974 # Variable c_int '36974'
+GL_TEXTURE_BUFFER_DATA_STORE_BINDING_EXT = 35885 # Variable c_int '35885'
+GL_VARIABLE_B_NV = 34084 # Variable c_int '34084'
+GL_SELECTION_BUFFER_SIZE = 3572 # Variable c_int '3572'
+GL_LUMINANCE32I_EXT = 36230 # Variable c_int '36230'
+GL_INTENSITY_SIGNED_SGIX = 34276 # Variable c_int '34276'
+GL_RED_MIN_CLAMP_INGR = 34144 # Variable c_int '34144'
+GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE = 37064 # Variable c_int '37064'
+GL_UNSIGNED_INT_10F_11F_11F_REV_EXT = 35899 # Variable c_int '35899'
+GL_VARIABLE_F_NV = 34088 # Variable c_int '34088'
+GL_TEXTURE_CUBE_MAP_POSITIVE_Y = 34071 # Variable c_int '34071'
+GL_OUTPUT_TEXTURE_COORD24_EXT = 34741 # Variable c_int '34741'
+GL_SOURCE1_RGB_EXT = 34177 # Variable c_int '34177'
+GL_CURRENT_RASTER_POSITION = 2823 # Variable c_int '2823'
+GL_VERTEX_ATTRIB_ARRAY_SIZE = 34339 # Variable c_int '34339'
+GL_EXP2 = 2049 # Variable c_int '2049'
+GL_MAX_GEOMETRY_IMAGE_UNIFORMS = 37069 # Variable c_int '37069'
+GL_WEIGHT_ARRAY_STRIDE_ARB = 34474 # Variable c_int '34474'
+GL_MATRIX6_ARB = 35014 # Variable c_int '35014'
+GL_ATI_separate_stencil = 1 # Variable c_int '1'
+GL_SHADOW_ATTENUATION_EXT = 33614 # Variable c_int '33614'
+GL_TRIANGLE_LIST_SUN = 33239 # Variable c_int '33239'
+GL_NV_vertex_program2_option = 1 # Variable c_int '1'
+GL_TEXTURE_RECTANGLE = 34037 # Variable c_int '34037'
+GL_EXT_texture_buffer_object = 1 # Variable c_int '1'
+GL_SPHERE_MAP = 9218 # Variable c_int '9218'
+GL_DOT_PRODUCT_DEPTH_REPLACE_NV = 34541 # Variable c_int '34541'
+GL_FLOAT_VEC2 = 35664 # Variable c_int '35664'
+GL_FOG_INDEX = 2913 # Variable c_int '2913'
+GL_DRAW_INDIRECT_LENGTH_NV = 36674 # Variable c_int '36674'
+GL_FLOAT_VEC4 = 35666 # Variable c_int '35666'
+GL_R11F_G11F_B10F_EXT = 35898 # Variable c_int '35898'
+GL_FACTOR_MIN_AMD = 36892 # Variable c_int '36892'
+GL_COEFF = 2560 # Variable c_int '2560'
+GL_PROXY_TEXTURE_2D_ARRAY_EXT = 35867 # Variable c_int '35867'
+GL_PATH_GEN_MODE_NV = 37040 # Variable c_int '37040'
+GL_BUFFER_MAP_OFFSET = 37153 # Variable c_int '37153'
+GL_ENV_REPLACE_EXT = 0 # Variable c_int '0'
+GL_VERTEX_ATTRIB_MAP1_APPLE = 35328 # Variable c_int '35328'
+GL_MIN_PROGRAM_TEXEL_OFFSET = 35076 # Variable c_int '35076'
+GL_BUFFER_SIZE = 34660 # Variable c_int '34660'
+GL_MAP1_VERTEX_ATTRIB9_4_NV = 34409 # Variable c_int '34409'
+GL_BUFFER_SIZE_ARB = 34660 # Variable c_int '34660'
+GL_COLOR_SUM_EXT = 33880 # Variable c_int '33880'
+GL_UNIFORM_BUFFER_START = 35369 # Variable c_int '35369'
+GL_VARIABLE_D_NV = 34086 # Variable c_int '34086'
+GL_RGBA4_S3TC = 33699 # Variable c_int '33699'
+GL_AUX_DEPTH_STENCIL_APPLE = 35348 # Variable c_int '35348'
+GL_CLAMP_READ_COLOR_ARB = 35100 # Variable c_int '35100'
+GL_TRANSFORM_FEEDBACK_BUFFER_SIZE_NV = 35973 # Variable c_int '35973'
+GL_SHADER_BINARY_FORMATS = 36344 # Variable c_int '36344'
+GL_TEXTURE_DEPTH_EXT = 32881 # Variable c_int '32881'
+GL_VARIABLE_C_NV = 34085 # Variable c_int '34085'
+GL_SMOOTH_CUBIC_CURVE_TO_NV = 16 # Variable c_int '16'
+GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT = 36054 # Variable c_int '36054'
+GL_UNSIGNED_INT_SAMPLER_2D = 36306 # Variable c_int '36306'
+GL_SUN_read_video_pixels = 1 # Variable c_int '1'
+GL_SLUMINANCE8 = 35911 # Variable c_int '35911'
+GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT = 36319 # Variable c_int '36319'
+GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS = 36479 # Variable c_int '36479'
+GL_EDGE_FLAG_ARRAY_LIST_STRIDE_IBM = 103085 # Variable c_int '103085'
+GL_LUMINANCE_ALPHA8I_EXT = 36243 # Variable c_int '36243'
+GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = 35918 # Variable c_int '35918'
+GL_OES_compressed_paletted_texture = 1 # Variable c_int '1'
+GL_TEXTURE_COORD_ARRAY_STRIDE = 32906 # Variable c_int '32906'
+GL_CONTEXT_FLAGS = 33310 # Variable c_int '33310'
+GLEW_OK = 0 # Variable c_int '0'
+GL_R = 8194 # Variable c_int '8194'
+GL_S = 8192 # Variable c_int '8192'
+GL_T = 8193 # Variable c_int '8193'
+GL_NV_shader_buffer_load = 1 # Variable c_int '1'
+GL_PATH_STROKE_COVER_MODE_NV = 36995 # Variable c_int '36995'
+GL_DOUBLE = 5130 # Variable c_int '5130'
+GL_MAP2_VERTEX_ATTRIB15_4_NV = 34431 # Variable c_int '34431'
+GL_FLOAT_MAT3_ARB = 35675 # Variable c_int '35675'
+GL_EXT_separate_specular_color = 1 # Variable c_int '1'
+GL_MATRIX26_ARB = 35034 # Variable c_int '35034'
+GL_ONE_MINUS_DST_ALPHA = 773 # Variable c_int '773'
+GL_LIGHT1 = 16385 # Variable c_int '16385'
+GL_DOT3_RGB = 34478 # Variable c_int '34478'
+GL_PROGRAM_RESIDENT_NV = 34375 # Variable c_int '34375'
+GL_MAP_ATTRIB_U_ORDER_NV = 34499 # Variable c_int '34499'
+GL_POST_COLOR_MATRIX_RED_SCALE_SGI = 32948 # Variable c_int '32948'
+GL_INT_VEC2 = 35667 # Variable c_int '35667'
+GL_OP_RECIP_SQRT_EXT = 34709 # Variable c_int '34709'
+GL_EXT_texture_env_combine = 1 # Variable c_int '1'
+GL_MAX_SAMPLES = 36183 # Variable c_int '36183'
+GL_AMD_depth_clamp_separate = 1 # Variable c_int '1'
+GL_MAX_TEXTURE_UNITS_ARB = 34018 # Variable c_int '34018'
+GL_REPLACEMENT_CODE_ARRAY_STRIDE_SUN = 34242 # Variable c_int '34242'
+GL_YCBYCR8_422_NV = 36913 # Variable c_int '36913'
+GL_GEOMETRY_OUTPUT_TYPE_EXT = 36316 # Variable c_int '36316'
+GL_NOOP = 5381 # Variable c_int '5381'
+GL_NUM_LOOPBACK_COMPONENTS_ATI = 35188 # Variable c_int '35188'
+GL_PIXEL_MIN_FILTER_EXT = 33586 # Variable c_int '33586'
+GL_LIGHT_MODEL_COLOR_CONTROL_EXT = 33272 # Variable c_int '33272'
+GL_PROGRAM_LENGTH_NV = 34343 # Variable c_int '34343'
+GL_GEOMETRY_SHADER_BIT = 4 # Variable c_int '4'
+GL_TEXCOORD3_BIT_PGI = 1073741824 # Variable c_int '1073741824'
+GL_BLEND_DST_RGB_EXT = 32968 # Variable c_int '32968'
+GL_INTENSITY16_SNORM = 36891 # Variable c_int '36891'
+GL_MATRIX24_ARB = 35032 # Variable c_int '35032'
+GL_ALL_SHADER_BITS = 4294967295L # Variable c_uint '4294967295u'
+GL_DRAW_BUFFER14_ARB = 34867 # Variable c_int '34867'
+GL_TEXTURE_BINDING_1D = 32872 # Variable c_int '32872'
+GL_ARB_map_buffer_range = 1 # Variable c_int '1'
+GL_SAMPLER_2D_MULTISAMPLE_ARRAY = 37131 # Variable c_int '37131'
+GL_ATOMIC_COUNTER_BARRIER_BIT_EXT = 4096 # Variable c_int '4096'
+GL_MATRIX27_ARB = 35035 # Variable c_int '35035'
+GL_POINT_SIZE_MAX = 33063 # Variable c_int '33063'
+GL_MODELVIEW_MATRIX = 2982 # Variable c_int '2982'
+GL_FIELD_LOWER_NV = 36899 # Variable c_int '36899'
+GL_QUERY_WAIT = 36371 # Variable c_int '36371'
+GL_INDEX_BITS = 3409 # Variable c_int '3409'
+GL_TEXTURE15_ARB = 33999 # Variable c_int '33999'
+GL_OUTPUT_TEXTURE_COORD2_EXT = 34719 # Variable c_int '34719'
+GL_LUMINANCE_ALPHA_SIGNED_SGIX = 34277 # Variable c_int '34277'
+GL_DEPTH_COMPONENT16_SGIX = 33189 # Variable c_int '33189'
+GL_COMPRESSED_SRGB_EXT = 35912 # Variable c_int '35912'
+GL_LO_SCALE_NV = 34575 # Variable c_int '34575'
+GL_NATIVE_GRAPHICS_HANDLE_PGI = 107010 # Variable c_int '107010'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB = 34074 # Variable c_int '34074'
+GL_MULTISAMPLE_BIT_3DFX = 536870912 # Variable c_int '536870912'
+GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_ARB = 36319 # Variable c_int '36319'
+GL_MAX_TEXTURE_LOD_BIAS = 34045 # Variable c_int '34045'
+GL_ALIASED_LINE_WIDTH_RANGE = 33902 # Variable c_int '33902'
+GL_VERTEX_ATTRIB_ARRAY_LENGTH_NV = 36650 # Variable c_int '36650'
+GL_SGIX_resample = 1 # Variable c_int '1'
+GL_SURFACE_REGISTERED_NV = 34557 # Variable c_int '34557'
+GL_EXT_light_texture = 1 # Variable c_int '1'
+GL_ARB_point_sprite = 1 # Variable c_int '1'
+GL_FRAGMENT_MATERIAL_EXT = 33609 # Variable c_int '33609'
+GL_MAX_FRAGMENT_INTERPOLATION_OFFSET_NV = 36444 # Variable c_int '36444'
+GL_HISTOGRAM_EXT = 32804 # Variable c_int '32804'
+GL_VERSION_1_2_1 = 1 # Variable c_int '1'
+GL_DEPENDENT_AR_TEXTURE_2D_NV = 34537 # Variable c_int '34537'
+GL_UNSIGNED_INT_SAMPLER_2D_EXT = 36306 # Variable c_int '36306'
+GL_RENDERBUFFER_WIDTH_EXT = 36162 # Variable c_int '36162'
+GL_EDGE_FLAG_ARRAY_ADDRESS_NV = 36646 # Variable c_int '36646'
+GL_CURRENT_MATRIX_ARB = 34369 # Variable c_int '34369'
+GL_NV_register_combiners = 1 # Variable c_int '1'
+GL_STREAM_READ_ARB = 35041 # Variable c_int '35041'
+GL_EXTENSIONS = 7939 # Variable c_int '7939'
+GL_MAX_FRAGMENT_ATOMIC_COUNTERS = 37590 # Variable c_int '37590'
+GL_VERTEX_PROGRAM_NV = 34336 # Variable c_int '34336'
+GL_WEIGHT_SUM_UNITY_ARB = 34470 # Variable c_int '34470'
+GL_RENDERBUFFER_HEIGHT_EXT = 36163 # Variable c_int '36163'
+GL_AFFINE_3D_NV = 37012 # Variable c_int '37012'
+GL_SMOOTH_LINE_WIDTH_GRANULARITY = 2851 # Variable c_int '2851'
+GL_MESA_window_pos = 1 # Variable c_int '1'
+GL_BUFFER_UPDATE_BARRIER_BIT_EXT = 512 # Variable c_int '512'
+GL_SRGB = 35904 # Variable c_int '35904'
+GL_ONE_MINUS_CONSTANT_COLOR = 32770 # Variable c_int '32770'
+GL_MAX_COLOR_MATRIX_STACK_DEPTH_SGI = 32947 # Variable c_int '32947'
+GL_INT_IMAGE_CUBE_MAP_ARRAY_EXT = 36959 # Variable c_int '36959'
+GL_MAX_TESS_CONTROL_INPUT_COMPONENTS = 34924 # Variable c_int '34924'
+GL_TEXTURE_CUBE_MAP_SEAMLESS_ARB = 34895 # Variable c_int '34895'
+GL_ENV_ADD_EXT = 0 # Variable c_int '0'
+GL_POST_CONVOLUTION_ALPHA_BIAS = 32803 # Variable c_int '32803'
+GL_REPLACE_MIDDLE_SUN = 2 # Variable c_int '2'
+GL_TEXTURE_ENV = 8960 # Variable c_int '8960'
+GL_ALPHA_SNORM = 36880 # Variable c_int '36880'
+GL_UNSIGNED_INT_SAMPLER_2D_RECT = 36309 # Variable c_int '36309'
+GL_SCALED_RESOLVE_NICEST_EXT = 37051 # Variable c_int '37051'
+GL_FOG_COORDINATE_ARRAY_POINTER_EXT = 33878 # Variable c_int '33878'
+GL_UNSIGNED_SHORT_8_8_MESA = 34234 # Variable c_int '34234'
+GL_AFFINE_2D_NV = 37010 # Variable c_int '37010'
+GL_LUMINANCE_ALPHA16UI_EXT = 36219 # Variable c_int '36219'
+GL_RELATIVE_QUADRATIC_CURVE_TO_NV = 11 # Variable c_int '11'
+GL_LUMINANCE_ALPHA32UI_EXT = 36213 # Variable c_int '36213'
+GL_CONSTANT_EXT = 34166 # Variable c_int '34166'
+GL_DEBUG_CALLBACK_FUNCTION_ARB = 33348 # Variable c_int '33348'
+GL_PALETTE8_RGB8_OES = 35733 # Variable c_int '35733'
+GL_MUL_ATI = 35172 # Variable c_int '35172'
+GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = 36049 # Variable c_int '36049'
+GL_DOUBLE_MAT2x3_EXT = 36681 # Variable c_int '36681'
+GL_BLEND_SRC_ALPHA = 32971 # Variable c_int '32971'
+GL_UNSIGNED_INT_IMAGE_2D = 36963 # Variable c_int '36963'
+GL_INTERPOLATE_EXT = 34165 # Variable c_int '34165'
+GL_POST_CONVOLUTION_RED_BIAS = 32800 # Variable c_int '32800'
+GL_GEOMETRY_INPUT_TYPE_EXT = 36315 # Variable c_int '36315'
+GL_AND_REVERSE = 5378 # Variable c_int '5378'
+GL_MAX_INTEGER_SAMPLES = 37136 # Variable c_int '37136'
+GL_EVAL_VERTEX_ATTRIB11_NV = 34513 # Variable c_int '34513'
+GL_CLAMP_FRAGMENT_COLOR = 35099 # Variable c_int '35099'
+GL_QUERY_RESULT_AVAILABLE = 34919 # Variable c_int '34919'
+GL_FORMAT_SUBSAMPLE_24_24_OML = 35202 # Variable c_int '35202'
+GL_TEXTURE_RED_TYPE_ARB = 35856 # Variable c_int '35856'
+GL_PROGRAM_STRING_ARB = 34344 # Variable c_int '34344'
+GL_POSITION = 4611 # Variable c_int '4611'
+GL_SOURCE0_RGB_ARB = 34176 # Variable c_int '34176'
+GL_NV_texture_rectangle = 1 # Variable c_int '1'
+GL_FOG_MODE = 2917 # Variable c_int '2917'
+GL_QUERY_RESULT_AVAILABLE_NV = 34919 # Variable c_int '34919'
+GL_RGBA8_SNORM = 36759 # Variable c_int '36759'
+GL_POST_COLOR_MATRIX_RED_SCALE = 32948 # Variable c_int '32948'
+GL_CLAMP_TO_EDGE_SGIS = 33071 # Variable c_int '33071'
+GL_COLOR3_BIT_PGI = 65536 # Variable c_int '65536'
+GL_INT_SAMPLER_3D = 36299 # Variable c_int '36299'
+GL_MAX_FRAGMENT_BINDABLE_UNIFORMS_EXT = 36323 # Variable c_int '36323'
+GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = 35721 # Variable c_int '35721'
+GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS_EXT = 36665 # Variable c_int '36665'
+GL_AND = 5377 # Variable c_int '5377'
+GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD = 37198 # Variable c_int '37198'
+GL_IMAGE_2D_MULTISAMPLE_EXT = 36949 # Variable c_int '36949'
+GL_BLUE_MIN_CLAMP_INGR = 34146 # Variable c_int '34146'
+GL_WRITE_DISCARD_NV = 35006 # Variable c_int '35006'
+GL_PASS_THROUGH_NV = 34534 # Variable c_int '34534'
+GL_ARB_ES2_compatibility = 1 # Variable c_int '1'
+GL_MATRIX7_ARB = 35015 # Variable c_int '35015'
+GL_SGIS_color_range = 1 # Variable c_int '1'
+GL_LINE_STRIP_ADJACENCY_EXT = 11 # Variable c_int '11'
+GL_INT_SAMPLER_1D_ARRAY_EXT = 36302 # Variable c_int '36302'
+GL_STATIC_COPY = 35046 # Variable c_int '35046'
+GL_COMPRESSED_SIGNED_RED_RGTC1_EXT = 36284 # Variable c_int '36284'
+GL_FOG_COORD_ARRAY_ADDRESS_NV = 36648 # Variable c_int '36648'
+GL_COORD_REPLACE_ARB = 34914 # Variable c_int '34914'
+GL_ARB_texture_compression_bptc = 1 # Variable c_int '1'
+GL_SAMPLER_2D_SHADOW_ARB = 35682 # Variable c_int '35682'
+GL_ELEMENT_ARRAY_TYPE_ATI = 34665 # Variable c_int '34665'
+GL_FUNC_REVERSE_SUBTRACT_EXT = 32779 # Variable c_int '32779'
+GL_RESAMPLE_AVERAGE_OML = 35208 # Variable c_int '35208'
+GL_EXT_texture_compression_rgtc = 1 # Variable c_int '1'
+GL_FRAGMENT_LIGHT0_EXT = 33804 # Variable c_int '33804'
+GL_TEXTURE_SHARED_SIZE_EXT = 35903 # Variable c_int '35903'
+GL_COMPRESSED_RGBA_BPTC_UNORM_ARB = 36492 # Variable c_int '36492'
+GL_SYNC_GPU_COMMANDS_COMPLETE = 37143 # Variable c_int '37143'
+GL_SMOOTH_POINT_SIZE_RANGE = 2834 # Variable c_int '2834'
+GL_ELEMENT_ARRAY_BUFFER = 34963 # Variable c_int '34963'
+GL_UNIFORM_BARRIER_BIT_EXT = 4 # Variable c_int '4'
+GL_ALPHA_FLOAT16_ATI = 34844 # Variable c_int '34844'
+GL_ALIASED_POINT_SIZE_RANGE = 33901 # Variable c_int '33901'
+GL_TESS_CONTROL_SHADER_BIT = 8 # Variable c_int '8'
+GL_DT_SCALE_NV = 34577 # Variable c_int '34577'
+GL_EXT_fragment_lighting = 1 # Variable c_int '1'
+GL_POINT_SPRITE_CULL_MODE_ATIX = 24755 # Variable c_int '24755'
+GL_NEGATIVE_X_EXT = 34777 # Variable c_int '34777'
+GL_RGB9_E5_EXT = 35901 # Variable c_int '35901'
+GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX = 36935 # Variable c_int '36935'
+GL_MODULATE_SIGNED_ADD_ATIX = 34629 # Variable c_int '34629'
+GL_MAX_NAME_STACK_DEPTH = 3383 # Variable c_int '3383'
+GL_MAX_PROGRAM_PARAMETER_BUFFER_SIZE_NV = 36257 # Variable c_int '36257'
+GL_ACTIVE_PROGRAM_EXT = 35725 # Variable c_int '35725'
+GL_GEOMETRY_VERTICES_OUT_EXT = 36314 # Variable c_int '36314'
+GL_MAX_GEOMETRY_OUTPUT_VERTICES = 36320 # Variable c_int '36320'
+GL_MATRIX15_ARB = 35023 # Variable c_int '35023'
+GL_OPERAND1_RGB_EXT = 34193 # Variable c_int '34193'
+GL_DEPTH_BUFFER_BIT = 256 # Variable c_int '256'
+GL_VIDEO_COLOR_CONVERSION_OFFSET_NV = 36908 # Variable c_int '36908'
+GL_UNSIGNED_INT_SAMPLER_2D_RECT_EXT = 36309 # Variable c_int '36309'
+GL_TEXTURE23 = 34007 # Variable c_int '34007'
+GL_MODELVIEW29_ARB = 34621 # Variable c_int '34621'
+GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING = 34970 # Variable c_int '34970'
+GL_DRAW_BUFFER12_ATI = 34865 # Variable c_int '34865'
+GL_ALPHA32UI_EXT = 36210 # Variable c_int '36210'
+GL_MATRIX_INDEX_ARRAY_ARB = 34884 # Variable c_int '34884'
+GL_SET_AMD = 34634 # Variable c_int '34634'
+GL_HISTOGRAM_SINK = 32813 # Variable c_int '32813'
+GL_FLOAT_CLEAR_COLOR_VALUE_NV = 34957 # Variable c_int '34957'
+GL_TANGENT_ARRAY_EXT = 33849 # Variable c_int '33849'
+GL_IMPLEMENTATION_COLOR_READ_FORMAT = 35739 # Variable c_int '35739'
+GL_BGR = 32992 # Variable c_int '32992'
+GL_MAX_SPOT_EXPONENT_NV = 34053 # Variable c_int '34053'
+GL_ARRAY_BUFFER_BINDING_ARB = 34964 # Variable c_int '34964'
+GL_VERTEX_SHADER_INSTRUCTIONS_EXT = 34767 # Variable c_int '34767'
+GL_COLOR_TABLE_BIAS = 32983 # Variable c_int '32983'
+GL_TEXTURE_POINT_MODE_ATIX = 24752 # Variable c_int '24752'
+GL_NV_transform_feedback = 1 # Variable c_int '1'
+GL_VARIANT_ARRAY_TYPE_EXT = 34791 # Variable c_int '34791'
+GL_TEXTURE22 = 34006 # Variable c_int '34006'
+GL_TEXTURE_RENDERBUFFER_DATA_STORE_BINDING_NV = 36436 # Variable c_int '36436'
+GL_DEPTH_STENCIL_NV = 34041 # Variable c_int '34041'
+GL_COMPRESSED_TEXTURE_FORMATS = 34467 # Variable c_int '34467'
+GL_MAX_SAMPLE_MASK_WORDS_NV = 36441 # Variable c_int '36441'
+GL_PERFMON_RESULT_SIZE_AMD = 35781 # Variable c_int '35781'
+GL_DEBUG_SEVERITY_HIGH_ARB = 37190 # Variable c_int '37190'
+GL_MODULATE_SIGNED_ADD_ATI = 34629 # Variable c_int '34629'
+GL_PIXEL_COUNT_AVAILABLE_NV = 34919 # Variable c_int '34919'
+GL_SAMPLE_COUNT_NV = 35092 # Variable c_int '35092'
+GL_DEPTH_COMPONENT24_ARB = 33190 # Variable c_int '33190'
+GL_MAT_COLOR_INDEXES_BIT_PGI = 16777216 # Variable c_int '16777216'
+GL_PRIMITIVES_GENERATED_EXT = 35975 # Variable c_int '35975'
+GL_TESS_CONTROL_OUTPUT_VERTICES = 36469 # Variable c_int '36469'
+GL_RENDERBUFFER_STENCIL_SIZE_EXT = 36181 # Variable c_int '36181'
+GL_NUM_INSTRUCTIONS_PER_PASS_ATI = 35185 # Variable c_int '35185'
+GL_T2F_C3F_V3F = 10794 # Variable c_int '10794'
+GL_EXT_polygon_offset = 1 # Variable c_int '1'
+GL_STENCIL_INDEX1_EXT = 36166 # Variable c_int '36166'
+GL_NV_vertex_array_range2 = 1 # Variable c_int '1'
+GL_ALL_STATIC_DATA_IBM = 103060 # Variable c_int '103060'
+GL_VARIANT_VALUE_EXT = 34788 # Variable c_int '34788'
+GL_T4F_C4F_N3F_V4F = 10797 # Variable c_int '10797'
+GL_TEXTURE30 = 34014 # Variable c_int '34014'
+GL_TEXTURE31 = 34015 # Variable c_int '34015'
+GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB = 33351 # Variable c_int '33351'
+GL_UNSIGNED_INT_SAMPLER_1D = 36305 # Variable c_int '36305'
+GL_VERTEX_ATTRIB_ARRAY9_NV = 34393 # Variable c_int '34393'
+GL_CONVOLUTION_HEIGHT = 32793 # Variable c_int '32793'
+GL_EXT_texture_compression_s3tc = 1 # Variable c_int '1'
+GL_POST_COLOR_MATRIX_BLUE_SCALE_SGI = 32950 # Variable c_int '32950'
+GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS = 37067 # Variable c_int '37067'
+GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY_EXT = 36961 # Variable c_int '36961'
+GL_MAP1_VERTEX_ATTRIB11_4_NV = 34411 # Variable c_int '34411'
+GL_RGB_422_APPLE = 35359 # Variable c_int '35359'
+GL_MODELVIEW23_ARB = 34615 # Variable c_int '34615'
+GL_OBJECT_TYPE_ARB = 35662 # Variable c_int '35662'
+GL_STENCIL_REF = 2967 # Variable c_int '2967'
+GL_MIN_BLUE_SGIS = 34218 # Variable c_int '34218'
+GL_LUMINANCE_ALPHA8UI_EXT = 36225 # Variable c_int '36225'
+GL_INDEX_SHIFT = 3346 # Variable c_int '3346'
+GL_ACTIVE_SUBROUTINE_UNIFORMS = 36326 # Variable c_int '36326'
+GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING_ARB = 34970 # Variable c_int '34970'
+GL_DOUBLE_MAT4x2 = 36685 # Variable c_int '36685'
+GL_BLEND_EQUATION_RGB_EXT = 32777 # Variable c_int '32777'
+GL_VERTEX_ATTRIB_MAP1_SIZE_APPLE = 35330 # Variable c_int '35330'
+GL_COPY_WRITE_BUFFER = 36663 # Variable c_int '36663'
+GL_INDEX_ARRAY_COUNT_EXT = 32903 # Variable c_int '32903'
+GL_OPERAND0_RGB = 34192 # Variable c_int '34192'
+GL_MAX_TEXTURE_BUFFER_SIZE_ARB = 35883 # Variable c_int '35883'
+GL_EXT_texture_object = 1 # Variable c_int '1'
+GL_DS_BIAS_NV = 34582 # Variable c_int '34582'
+GL_LIGHT_MODEL_COLOR_CONTROL = 33272 # Variable c_int '33272'
+GL_FEEDBACK = 7169 # Variable c_int '7169'
+GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT = 36495 # Variable c_int '36495'
+GL_TEXCOORD1_BIT_PGI = 268435456 # Variable c_int '268435456'
+GL_EXT_texture = 1 # Variable c_int '1'
+GL_POLYGON_TOKEN = 1795 # Variable c_int '1795'
+GL_MAX_ATTRIB_STACK_DEPTH = 3381 # Variable c_int '3381'
+GL_RGBA4_DXT5_S3TC = 33701 # Variable c_int '33701'
+GL_PIXEL_UNPACK_BUFFER_BINDING_EXT = 35055 # Variable c_int '35055'
+GL_MODELVIEW13_ARB = 34605 # Variable c_int '34605'
+GL_FORCE_BLUE_TO_ONE_NV = 34912 # Variable c_int '34912'
+GL_RELATIVE_MOVE_TO_NV = 3 # Variable c_int '3'
+GL_PIXEL_MAP_I_TO_G = 3187 # Variable c_int '3187'
+GL_INTERLEAVED_ATTRIBS_EXT = 35980 # Variable c_int '35980'
+GL_TEXTURE29_ARB = 34013 # Variable c_int '34013'
+GL_TRANSFORM_FEEDBACK_BINDING_NV = 36389 # Variable c_int '36389'
+GL_PIXEL_MAP_I_TO_B = 3188 # Variable c_int '3188'
+GL_PIXEL_MAP_I_TO_A = 3189 # Variable c_int '3189'
+GL_OUTPUT_TEXTURE_COORD10_EXT = 34727 # Variable c_int '34727'
+GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS = 36423 # Variable c_int '36423'
+GL_FORMAT_SUBSAMPLE_244_244_OML = 35203 # Variable c_int '35203'
+GL_OBJECT_POINT_SGIS = 33269 # Variable c_int '33269'
+GL_OFFSET_HILO_PROJECTIVE_TEXTURE_2D_NV = 34902 # Variable c_int '34902'
+GL_SUN_slice_accum = 1 # Variable c_int '1'
+GL_PROGRAM_SEPARABLE = 33368 # Variable c_int '33368'
+GL_PIXEL_MAP_I_TO_R = 3186 # Variable c_int '3186'
+GL_MAX_3D_TEXTURE_SIZE_EXT = 32883 # Variable c_int '32883'
+GL_COLOR_ARRAY_BUFFER_BINDING = 34968 # Variable c_int '34968'
+GL_MIN_LUMINANCE_SGIS = 34296 # Variable c_int '34296'
+GL_TEXTURE_MIN_LOD_SGIS = 33082 # Variable c_int '33082'
+GL_TEXTURE25 = 34009 # Variable c_int '34009'
+GL_ARB_texture_multisample = 1 # Variable c_int '1'
+GL_OP_SET_LT_EXT = 34701 # Variable c_int '34701'
+GL_INT64_NV = 5134 # Variable c_int '5134'
+GL_OP_LOG_BASE_2_EXT = 34706 # Variable c_int '34706'
+GL_SEPARABLE_2D = 32786 # Variable c_int '32786'
+GL_SOURCE2_ALPHA_ARB = 34186 # Variable c_int '34186'
+GL_ALPHA4 = 32827 # Variable c_int '32827'
+GL_EDGE_FLAG_ARRAY_STRIDE = 32908 # Variable c_int '32908'
+GL_LIGHT_MODEL_LOCAL_VIEWER = 2897 # Variable c_int '2897'
+GL_TEXTURE_MAG_FILTER = 10240 # Variable c_int '10240'
+GL_BGRA_INTEGER_EXT = 36251 # Variable c_int '36251'
+GL_CONVOLUTION_FILTER_BIAS = 32789 # Variable c_int '32789'
+GL_SYNC_X11_FENCE_EXT = 37089 # Variable c_int '37089'
+GL_COLOR_MATERIAL_FACE = 2901 # Variable c_int '2901'
+GL_TEXTURE_LIGHT_EXT = 33616 # Variable c_int '33616'
+GL_COLOR_TABLE_SCALE = 32982 # Variable c_int '32982'
+GL_PROGRAM_POINT_SIZE_ARB = 34370 # Variable c_int '34370'
+GL_SAMPLER_CUBE = 35680 # Variable c_int '35680'
+GL_EVAL_FRACTIONAL_TESSELLATION_NV = 34501 # Variable c_int '34501'
+GL_OBJECT_ACTIVE_UNIFORMS_ARB = 35718 # Variable c_int '35718'
+GL_TEXTURE_SWIZZLE_B = 36420 # Variable c_int '36420'
+GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV = 35060 # Variable c_int '35060'
+GL_GLYPH_WIDTH_BIT_NV = 1 # Variable c_int '1'
+GL_SIGNED_RGB8_NV = 34559 # Variable c_int '34559'
+GL_UNPACK_SKIP_IMAGES_EXT = 32877 # Variable c_int '32877'
+GL_TANGENT_ARRAY_STRIDE_EXT = 33855 # Variable c_int '33855'
+GL_MAX_BLUE_SGIS = 34219 # Variable c_int '34219'
+GL_LEFT = 1030 # Variable c_int '1030'
+GL_NV_vertex_array_range = 1 # Variable c_int '1'
+GL_FLOAT_RGBA16_NV = 34954 # Variable c_int '34954'
+GL_MAX_PROGRAM_NATIVE_ATTRIBS_ARB = 34991 # Variable c_int '34991'
+GL_POST_COLOR_MATRIX_BLUE_BIAS = 32954 # Variable c_int '32954'
+GL_DEPTH24_STENCIL8_EXT = 35056 # Variable c_int '35056'
+GL_INT_IMAGE_2D_RECT_EXT = 36954 # Variable c_int '36954'
+GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY_EXT = 36970 # Variable c_int '36970'
+GL_COMPRESSED_SRGB_S3TC_DXT1_EXT = 35916 # Variable c_int '35916'
+GL_LOSE_CONTEXT_ON_RESET_ARB = 33362 # Variable c_int '33362'
+GL_PROXY_TEXTURE_3D_EXT = 32880 # Variable c_int '32880'
+GL_PROJECTION_MATRIX = 2983 # Variable c_int '2983'
+GL_MATRIX4_ARB = 35012 # Variable c_int '35012'
+GL_PN_TRIANGLES_TESSELATION_LEVEL_ATI = 34804 # Variable c_int '34804'
+GL_INVERTED_SCREEN_W_REND = 33937 # Variable c_int '33937'
+GL_MAX_TEXTURE_SIZE = 3379 # Variable c_int '3379'
+GL_SGIX_clipmap = 1 # Variable c_int '1'
+GL_ALPHA8_SNORM = 36884 # Variable c_int '36884'
+GL_MESA_ycbcr_texture = 1 # Variable c_int '1'
+GL_ALPHA32F_ARB = 34838 # Variable c_int '34838'
+GL_SGIS_texture_select = 1 # Variable c_int '1'
+GL_ARRAY_BUFFER = 34962 # Variable c_int '34962'
+GL_COMPRESSED_ALPHA = 34025 # Variable c_int '34025'
+GL_PATH_CLIENT_LENGTH_NV = 36991 # Variable c_int '36991'
+GL_INVARIANT_VALUE_EXT = 34794 # Variable c_int '34794'
+GL_IGNORE_BORDER = 33104 # Variable c_int '33104'
+GL_TEXTURE_COMPRESSED_IMAGE_SIZE = 34464 # Variable c_int '34464'
+GL_UNSIGNED_INT_SAMPLER_2D_ARRAY_EXT = 36311 # Variable c_int '36311'
+GL_TEXTURE_ALPHA_TYPE_ARB = 35859 # Variable c_int '35859'
+GL_NAME_STACK_DEPTH = 3440 # Variable c_int '3440'
+GL_BLEND_SRC_RGB = 32969 # Variable c_int '32969'
+GL_MATRIX14_ARB = 35022 # Variable c_int '35022'
+GL_ALPHA8I_EXT = 36240 # Variable c_int '36240'
+GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS = 35377 # Variable c_int '35377'
+GL_TRIANGLE_STRIP_ADJACENCY_EXT = 13 # Variable c_int '13'
+GLEW_VERSION_MAJOR = 2 # Variable c_int '2'
+GL_R1UI_T2F_C4F_N3F_V3F_SUN = 34251 # Variable c_int '34251'
+GL_DRAW_INDIRECT_BUFFER_BINDING = 36675 # Variable c_int '36675'
+GL_MATRIX3_ARB = 35011 # Variable c_int '35011'
+GL_DSDT_MAG_INTENSITY_NV = 34524 # Variable c_int '34524'
+GL_SAMPLE_ALPHA_TO_ONE = 32927 # Variable c_int '32927'
+GL_WEIGHT_ARRAY_BUFFER_BINDING = 34974 # Variable c_int '34974'
+GL_HI_BIAS_NV = 34580 # Variable c_int '34580'
+GL_SGIX_texture_lod_bias = 1 # Variable c_int '1'
+GL_PROGRAM_POINT_SIZE_EXT = 34370 # Variable c_int '34370'
+GL_NUM_SHADER_BINARY_FORMATS = 36345 # Variable c_int '36345'
+GL_CLAMP_FRAGMENT_COLOR_ARB = 35099 # Variable c_int '35099'
+GL_ATTRIB_ARRAY_STRIDE_NV = 34340 # Variable c_int '34340'
+GL_STENCIL_BACK_PASS_DEPTH_PASS = 34819 # Variable c_int '34819'
+GL_BACK_NORMALS_HINT_PGI = 107043 # Variable c_int '107043'
+GL_VERTEX_ARRAY_LIST_IBM = 103070 # Variable c_int '103070'
+GL_EXT_clip_volume_hint = 1 # Variable c_int '1'
+GL_MULTISAMPLE_FILTER_HINT_NV = 34100 # Variable c_int '34100'
+GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE_NV = 36388 # Variable c_int '36388'
+GL_PROGRAM_PIPELINE_BINDING = 33370 # Variable c_int '33370'
+GL_OBJECT_LINEAR = 9217 # Variable c_int '9217'
+GL_LUMINANCE16_SNORM = 36889 # Variable c_int '36889'
+GL_LARGE_CCW_ARC_TO_NV = 22 # Variable c_int '22'
+GL_TEXTURE_COMPARE_SGIX = 33178 # Variable c_int '33178'
+GL_STENCIL_CLEAR_TAG_VALUE_EXT = 35059 # Variable c_int '35059'
+GL_INT_SAMPLER_2D = 36298 # Variable c_int '36298'
+GL_STENCIL_BITS = 3415 # Variable c_int '3415'
+GL_VERTEX_ARRAY_RANGE_LENGTH_NV = 34078 # Variable c_int '34078'
+GL_DOUBLE_MAT3x2 = 36683 # Variable c_int '36683'
+GL_MAP1_VERTEX_ATTRIB6_4_NV = 34406 # Variable c_int '34406'
+GL_STENCIL_PASS_DEPTH_FAIL = 2965 # Variable c_int '2965'
+GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY = 36961 # Variable c_int '36961'
+GL_PIXEL_MAP_A_TO_A = 3193 # Variable c_int '3193'
+GL_DOUBLE_MAT3x4 = 36684 # Variable c_int '36684'
+GL_NV_texture_shader = 1 # Variable c_int '1'
+GL_TEXTURE_CONSTANT_DATA_SUNX = 33238 # Variable c_int '33238'
+GL_UNSIGNED_INT_IMAGE_2D_ARRAY_EXT = 36969 # Variable c_int '36969'
+GL_ARB_tessellation_shader = 1 # Variable c_int '1'
+GL_TEXTURE_ALPHA_SIZE_EXT = 32863 # Variable c_int '32863'
+GL_TEXTURE_2D_STACK_BINDING_MESAX = 34654 # Variable c_int '34654'
+GL_LUMINANCE8_SNORM = 36885 # Variable c_int '36885'
+GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS = 37585 # Variable c_int '37585'
+GL_NV_copy_image = 1 # Variable c_int '1'
+GL_ARB_fragment_program = 1 # Variable c_int '1'
+GL_AMD_vertex_shader_layer = 1 # Variable c_int '1'
+GL_MAT_SPECULAR_BIT_PGI = 67108864 # Variable c_int '67108864'
+GL_OML_resample = 1 # Variable c_int '1'
+GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_EXT = 36971 # Variable c_int '36971'
+GL_FRAMEBUFFER_INCOMPLETE_LAYER_COUNT_ARB = 36265 # Variable c_int '36265'
+GL_POINT_FADE_THRESHOLD_SIZE_EXT = 33064 # Variable c_int '33064'
+GL_DOUBLE_MAT4_EXT = 36680 # Variable c_int '36680'
+GL_OP_MAX_EXT = 34698 # Variable c_int '34698'
+GL_FRAMEBUFFER_UNDEFINED = 33305 # Variable c_int '33305'
+GL_NONE = 0 # Variable c_int '0'
+GL_PACK_COMPRESSED_BLOCK_WIDTH = 37163 # Variable c_int '37163'
+GL_PROXY_TEXTURE_RECTANGLE_ARB = 34039 # Variable c_int '34039'
+GL_HALF_FLOAT = 5131 # Variable c_int '5131'
+GL_SGIX_texture_add_env = 1 # Variable c_int '1'
+GL_RGBA_SNORM = 36755 # Variable c_int '36755'
+GL_COLOR_ATTACHMENT14_EXT = 36078 # Variable c_int '36078'
+GL_PRIMITIVES_GENERATED_NV = 35975 # Variable c_int '35975'
+GL_LIGHTING_BIT = 64 # Variable c_int '64'
+GL_NV_vertex_program = 1 # Variable c_int '1'
+GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD = 37194 # Variable c_int '37194'
+GL_SCISSOR_BOX = 3088 # Variable c_int '3088'
+GL_UNIFORM_BLOCK_DATA_SIZE = 35392 # Variable c_int '35392'
+GL_HP_texture_lighting = 1 # Variable c_int '1'
+GL_MAX_PATCH_VERTICES = 36477 # Variable c_int '36477'
+GL_TRANSFORM_FEEDBACK = 36386 # Variable c_int '36386'
+GL_UNIFORM_IS_ROW_MAJOR = 35390 # Variable c_int '35390'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER_EXT = 36052 # Variable c_int '36052'
+GL_FRAGMENT_INTERPOLATION_OFFSET_BITS = 36445 # Variable c_int '36445'
+GL_INTENSITY8I_EXT = 36241 # Variable c_int '36241'
+GL_V2F = 10784 # Variable c_int '10784'
+GL_CONVOLUTION_1D_EXT = 32784 # Variable c_int '32784'
+GL_ASYNC_HISTOGRAM_SGIX = 33580 # Variable c_int '33580'
+GL_SLUMINANCE_ALPHA_EXT = 35908 # Variable c_int '35908'
+GL_INDEX_ARRAY_LIST_STRIDE_IBM = 103083 # Variable c_int '103083'
+GL_VERTEX_ATTRIB_ARRAY_ENABLED = 34338 # Variable c_int '34338'
+GL_SGIX_convolution_accuracy = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_NV = 35983 # Variable c_int '35983'
+GL_LIST_BASE = 2866 # Variable c_int '2866'
+GL_RGB10 = 32850 # Variable c_int '32850'
+GL_TEXTURE_RESIDENT_EXT = 32871 # Variable c_int '32871'
+GL_INT_SAMPLER_CUBE_MAP_ARRAY_ARB = 36878 # Variable c_int '36878'
+GL_COLOR_WRITEMASK = 3107 # Variable c_int '3107'
+GL_MATRIX23_ARB = 35031 # Variable c_int '35031'
+GL_EXT_texture_edge_clamp = 1 # Variable c_int '1'
+GL_UNSIGNED_INT_IMAGE_1D = 36962 # Variable c_int '36962'
+GL_MODELVIEW0_STACK_DEPTH_EXT = 2979 # Variable c_int '2979'
+GL_MAP2_VERTEX_ATTRIB10_4_NV = 34426 # Variable c_int '34426'
+GL_LIGHT_ENV_MODE_EXT = 33799 # Variable c_int '33799'
+GL_PROGRAM_NATIVE_PARAMETERS_ARB = 34986 # Variable c_int '34986'
+GL_TEXTURE_WRAP_R = 32882 # Variable c_int '32882'
+GL_PACK_SKIP_IMAGES = 32875 # Variable c_int '32875'
+GL_TEXTURE_WRAP_T = 10243 # Variable c_int '10243'
+GL_CONVEX_HULL_NV = 37003 # Variable c_int '37003'
+GL_LUMINANCE_ALPHA32I_EXT = 36231 # Variable c_int '36231'
+GL_INT_SAMPLER_3D_EXT = 36299 # Variable c_int '36299'
+GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_NV = 35978 # Variable c_int '35978'
+GL_SHADOW_AMBIENT_SGIX = 32959 # Variable c_int '32959'
+GL_EVAL_BIT = 65536 # Variable c_int '65536'
+GL_INT_SAMPLER_2D_ARRAY = 36303 # Variable c_int '36303'
+GL_TESS_EVALUATION_SHADER_BIT = 16 # Variable c_int '16'
+GL_TEXTURE_BLUE_TYPE_ARB = 35858 # Variable c_int '35858'
+GL_COMPRESSED_RGB = 34029 # Variable c_int '34029'
+GL_FRACTIONAL_ODD = 36475 # Variable c_int '36475'
+GL_DUDV_ATI = 34681 # Variable c_int '34681'
+GL_MAX_TEXTURE_COORDS_ARB = 34929 # Variable c_int '34929'
+GL_MAP1_VERTEX_ATTRIB12_4_NV = 34412 # Variable c_int '34412'
+GL_COLOR_ARRAY_STRIDE_EXT = 32899 # Variable c_int '32899'
+GL_PROGRAM_PARAMETER_NV = 34372 # Variable c_int '34372'
+GL_FRAGMENT_SHADER_ARB = 35632 # Variable c_int '35632'
+GL_CULL_VERTEX_OBJECT_POSITION_EXT = 33196 # Variable c_int '33196'
+GL_TEXTURE12_ARB = 33996 # Variable c_int '33996'
+GL_REPLACE = 7681 # Variable c_int '7681'
+GL_CON_7_ATI = 35144 # Variable c_int '35144'
+GL_BLUE_BITS = 3412 # Variable c_int '3412'
+GL_OUTPUT_COLOR1_EXT = 34716 # Variable c_int '34716'
+GL_TEXTURE_SWIZZLE_R = 36418 # Variable c_int '36418'
+GL_FLOAT_RG32_NV = 34951 # Variable c_int '34951'
+GL_RELATIVE_ARC_TO_NV = 255 # Variable c_int '255'
+GL_PACK_SWAP_BYTES = 3328 # Variable c_int '3328'
+GL_EXT_vertex_array = 1 # Variable c_int '1'
+GL_TEXTURE3_ARB = 33987 # Variable c_int '33987'
+GL_EQUAL = 514 # Variable c_int '514'
+GL_OBJECT_DISTANCE_TO_LINE_SGIS = 33267 # Variable c_int '33267'
+GL_ATI_draw_buffers = 1 # Variable c_int '1'
+GL_TEXTURE_BINDING_CUBE_MAP = 34068 # Variable c_int '34068'
+GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB = 34071 # Variable c_int '34071'
+GL_MIN_SAMPLE_SHADING_VALUE_ARB = 35895 # Variable c_int '35895'
+GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 34922 # Variable c_int '34922'
+GL_SECONDARY_COLOR_ARRAY_SIZE = 33882 # Variable c_int '33882'
+GL_LOW_FLOAT = 36336 # Variable c_int '36336'
+GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB = 35723 # Variable c_int '35723'
+GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY_EXT = 36972 # Variable c_int '36972'
+GL_POINT_FADE_THRESHOLD_SIZE = 33064 # Variable c_int '33064'
+GL_SGIX_interlace = 1 # Variable c_int '1'
+GL_INT_SAMPLER_1D_EXT = 36297 # Variable c_int '36297'
+GL_MAX_GEOMETRY_OUTPUT_VERTICES_ARB = 36320 # Variable c_int '36320'
+GL_SAMPLE_COUNT_BITS_NV = 34916 # Variable c_int '34916'
+GL_COMBINE = 34160 # Variable c_int '34160'
+GL_UNSIGNED_INT_IMAGE_3D = 36964 # Variable c_int '36964'
+GL_EXT_rescale_normal = 1 # Variable c_int '1'
+GL_ARB_pixel_buffer_object = 1 # Variable c_int '1'
+GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW = 36877 # Variable c_int '36877'
+GL_UNSIGNED_INT_IMAGE_3D_EXT = 36964 # Variable c_int '36964'
+GL_ATIX_vertex_shader_output_point_size = 1 # Variable c_int '1'
+GL_LINE_STRIP = 3 # Variable c_int '3'
+GL_ASYNC_TEX_IMAGE_SGIX = 33628 # Variable c_int '33628'
+GL_PACK_ROW_LENGTH = 3330 # Variable c_int '3330'
+GL_VARIABLE_G_NV = 34089 # Variable c_int '34089'
+GL_COLOR_MATERIAL = 2903 # Variable c_int '2903'
+GL_OPERAND1_RGB = 34193 # Variable c_int '34193'
+GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_ARB = 36321 # Variable c_int '36321'
+GL_OBJECT_LINK_STATUS_ARB = 35714 # Variable c_int '35714'
+GL_HISTOGRAM_ALPHA_SIZE = 32811 # Variable c_int '32811'
+GL_INT16_VEC3_NV = 36838 # Variable c_int '36838'
+GL_RENDERBUFFER_DEPTH_SIZE = 36180 # Variable c_int '36180'
+GL_INTENSITY_FLOAT16_ATI = 34845 # Variable c_int '34845'
+GL_BITMAP = 6656 # Variable c_int '6656'
+GL_DYNAMIC_READ = 35049 # Variable c_int '35049'
+GL_COMPRESSED_LUMINANCE = 34026 # Variable c_int '34026'
+GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = 34063 # Variable c_int '34063'
+GL_Z6Y10Z6CB10Z6A10Z6Y10Z6CR10Z6A10_4224_NV = 36916 # Variable c_int '36916'
+GL_TEXTURE_MAX_CLAMP_S_SGIX = 33641 # Variable c_int '33641'
+GL_MAX_GREEN_SGIS = 34217 # Variable c_int '34217'
+GL_SLUMINANCE_ALPHA = 35908 # Variable c_int '35908'
+GL_INDEX_ARRAY_LENGTH_NV = 36654 # Variable c_int '36654'
+GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT = 36057 # Variable c_int '36057'
+GL_DEPTH_STENCIL = 34041 # Variable c_int '34041'
+GL_ELEMENT_ARRAY_TYPE_APPLE = 35341 # Variable c_int '35341'
+GL_EXT_direct_state_access = 1 # Variable c_int '1'
+GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_NV = 34898 # Variable c_int '34898'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = 36050 # Variable c_int '36050'
+GL_SAMPLER_OBJECT_AMD = 37205 # Variable c_int '37205'
+GL_BOLD_BIT_NV = 1 # Variable c_int '1'
+GL_UNIFORM_BUFFER_BINDING_EXT = 36335 # Variable c_int '36335'
+GL_Z4Y12Z4CB12Z4CR12_444_NV = 36919 # Variable c_int '36919'
+GL_TEXTURE_INTENSITY_SIZE = 32865 # Variable c_int '32865'
+GL_IMAGE_BUFFER = 36945 # Variable c_int '36945'
+GL_INDEX_WRITEMASK = 3105 # Variable c_int '3105'
+GL_SYNC_CONDITION = 37139 # Variable c_int '37139'
+GL_VERTEX_ATTRIB_ARRAY10_NV = 34394 # Variable c_int '34394'
+GL_DEBUG_CATEGORY_APPLICATION_AMD = 37199 # Variable c_int '37199'
+GL_INTERPOLATE = 34165 # Variable c_int '34165'
+GL_TEXTURE1_ARB = 33985 # Variable c_int '33985'
+GL_TEXTURE_DT_SIZE_NV = 34590 # Variable c_int '34590'
+GL_MAP_INVALIDATE_RANGE_BIT = 4 # Variable c_int '4'
+GL_TEXTURE_BINDING_1D_ARRAY_EXT = 35868 # Variable c_int '35868'
+GL_TEXTURE21 = 34005 # Variable c_int '34005'
+GL_DRAW_FRAMEBUFFER_BINDING_EXT = 36006 # Variable c_int '36006'
+GL_TEXTURE27 = 34011 # Variable c_int '34011'
+GL_TEXTURE26 = 34010 # Variable c_int '34010'
+GL_VERTEX_ARRAY_RANGE_LENGTH_APPLE = 34078 # Variable c_int '34078'
+GL_TEXTURE24 = 34008 # Variable c_int '34008'
+GL_DOUBLE_MAT2_EXT = 36678 # Variable c_int '36678'
+GL_R8_SNORM = 36756 # Variable c_int '36756'
+GL_TEXTURE29 = 34013 # Variable c_int '34013'
+GL_TEXTURE28 = 34012 # Variable c_int '34012'
+GL_ELEMENT_ARRAY_BUFFER_BINDING = 34965 # Variable c_int '34965'
+GL_RGB4_S3TC = 33697 # Variable c_int '33697'
+GL_INTENSITY8_EXT = 32843 # Variable c_int '32843'
+GL_TRIANGLES_ADJACENCY = 12 # Variable c_int '12'
+GL_PIXEL_MODE_BIT = 32 # Variable c_int '32'
+GL_IMAGE_2D_ARRAY = 36947 # Variable c_int '36947'
+GL_INT_VEC3_ARB = 35668 # Variable c_int '35668'
+GL_TEXTURE_1D_STACK_BINDING_MESAX = 34653 # Variable c_int '34653'
+GL_ALPHA_SCALE = 3356 # Variable c_int '3356'
+GL_ARB_transpose_matrix = 1 # Variable c_int '1'
+GL_READ_BUFFER = 3074 # Variable c_int '3074'
+GL_ARB_shadow_ambient = 1 # Variable c_int '1'
+GL_ELEMENT_ARRAY_APPLE = 35340 # Variable c_int '35340'
+GL_PACK_SKIP_PIXELS = 3332 # Variable c_int '3332'
+GL_TEXTURE_HI_SIZE_NV = 34587 # Variable c_int '34587'
+GL_ARB_half_float_vertex = 1 # Variable c_int '1'
+GL_BLEND_EQUATION_EXT = 32777 # Variable c_int '32777'
+GL_TESS_CONTROL_SHADER = 36488 # Variable c_int '36488'
+GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS = 36264 # Variable c_int '36264'
+GL_FIXED_ONLY_ARB = 35101 # Variable c_int '35101'
+GL_TANGENT_ARRAY_TYPE_EXT = 33854 # Variable c_int '33854'
+GL_GEQUAL = 518 # Variable c_int '518'
+GL_CURRENT_PALETTE_MATRIX_ARB = 34883 # Variable c_int '34883'
+GL_FRAMEBUFFER_SRGB_EXT = 36281 # Variable c_int '36281'
+GL_MODELVIEW8_ARB = 34600 # Variable c_int '34600'
+GL_MAX_CONVOLUTION_HEIGHT_EXT = 32795 # Variable c_int '32795'
+GL_EXPAND_NORMAL_NV = 34104 # Variable c_int '34104'
+GL_DSDT8_NV = 34569 # Variable c_int '34569'
+GL_NEGATE_BIT_ATI = 4 # Variable c_int '4'
+GL_INTENSITY32UI_EXT = 36211 # Variable c_int '36211'
+GL_STRICT_SCISSOR_HINT_PGI = 107032 # Variable c_int '107032'
+GL_VARIANT_EXT = 34753 # Variable c_int '34753'
+GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION_EXT = 36428 # Variable c_int '36428'
+GL_SUBTRACT = 34023 # Variable c_int '34023'
+GL_PROGRAM_PARAMETERS_ARB = 34984 # Variable c_int '34984'
+GL_EDGE_FLAG_ARRAY_EXT = 32889 # Variable c_int '32889'
+GL_EXT_index_array_formats = 1 # Variable c_int '1'
+GL_DOT_PRODUCT_DIFFUSE_CUBE_MAP_NV = 34545 # Variable c_int '34545'
+GL_COMPRESSED_RED_RGTC1 = 36283 # Variable c_int '36283'
+GL_UNSIGNED_INT_24_8 = 34042 # Variable c_int '34042'
+GL_BINORMAL_ARRAY_STRIDE_EXT = 33857 # Variable c_int '33857'
+GL_LUMINANCE16_ALPHA16_SNORM = 36890 # Variable c_int '36890'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_X = 34070 # Variable c_int '34070'
+GL_BIAS_BY_NEGATIVE_ONE_HALF_NV = 34113 # Variable c_int '34113'
+GL_ARRAY_BUFFER_BINDING = 34964 # Variable c_int '34964'
+GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX = 36936 # Variable c_int '36936'
+GL_TEXTURE_2D = 3553 # Variable c_int '3553'
+GL_TESSELLATION_MODE_AMD = 36868 # Variable c_int '36868'
+GL_MAX_BINDABLE_UNIFORM_SIZE_EXT = 36333 # Variable c_int '36333'
+GL_DYNAMIC_DRAW = 35048 # Variable c_int '35048'
+GL_MIN_PBUFFER_VIEWPORT_DIMS_APPLE = 35344 # Variable c_int '35344'
+GL_RGB8_EXT = 32849 # Variable c_int '32849'
+GL_UNPACK_CMYK_HINT_EXT = 32783 # Variable c_int '32783'
+GL_MULTISAMPLE_SGIS = 32925 # Variable c_int '32925'
+GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS = 36321 # Variable c_int '36321'
+GL_TEXTURE_INTENSITY_SIZE_EXT = 32865 # Variable c_int '32865'
+GL_MAX_LIGHTS = 3377 # Variable c_int '3377'
+GL_UNPACK_ROW_LENGTH = 3314 # Variable c_int '3314'
+GL_CURRENT_TANGENT_EXT = 33851 # Variable c_int '33851'
+GL_RELATIVE_CUBIC_CURVE_TO_NV = 13 # Variable c_int '13'
+GL_SGIS_texture_lod = 1 # Variable c_int '1'
+GL_BUFFER_MAPPED = 35004 # Variable c_int '35004'
+GL_DEBUG_CATEGORY_PERFORMANCE_AMD = 37197 # Variable c_int '37197'
+GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB = 34829 # Variable c_int '34829'
+GL_EXT_texture_compression_latc = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY7_NV = 34391 # Variable c_int '34391'
+GL_EDGE_FLAG_ARRAY_BUFFER_BINDING_ARB = 34971 # Variable c_int '34971'
+GL_EVAL_VERTEX_ATTRIB14_NV = 34516 # Variable c_int '34516'
+GL_SECONDARY_COLOR_ATIX = 34631 # Variable c_int '34631'
+GL_CLAMP_READ_COLOR = 35100 # Variable c_int '35100'
+GL_STREAM_DRAW = 35040 # Variable c_int '35040'
+GL_ALPHA4_EXT = 32827 # Variable c_int '32827'
+GL_SAMPLE_PATTERN_SGIS = 32940 # Variable c_int '32940'
+GL_QUARTER_BIT_ATI = 16 # Variable c_int '16'
+GL_EDGE_FLAG_ARRAY_POINTER_EXT = 32915 # Variable c_int '32915'
+GL_COMPRESSED_LUMINANCE_LATC1_EXT = 35952 # Variable c_int '35952'
+GL_SIGNALED = 37145 # Variable c_int '37145'
+GL_BOOL_VEC4_ARB = 35673 # Variable c_int '35673'
+GL_OFFSET_TEXTURE_2D_NV = 34536 # Variable c_int '34536'
+GL_FRAMEBUFFER = 36160 # Variable c_int '36160'
+GL_SPECULAR = 4610 # Variable c_int '4610'
+GL_NV_texgen_reflection = 1 # Variable c_int '1'
+GL_COLOR_TABLE_FORMAT_SGI = 32984 # Variable c_int '32984'
+GL_MAX_PROGRAM_ATTRIBS_ARB = 34989 # Variable c_int '34989'
+GL_VERTEX_SHADER_VARIANTS_EXT = 34768 # Variable c_int '34768'
+GL_HALF_FLOAT_ARB = 5131 # Variable c_int '5131'
+GL_RGB32I_EXT = 36227 # Variable c_int '36227'
+GL_TEXTURE_SWIZZLE_A_EXT = 36421 # Variable c_int '36421'
+GL_POINT_SIZE_MIN_ARB = 33062 # Variable c_int '33062'
+GL_GENERATE_MIPMAP = 33169 # Variable c_int '33169'
+GL_TESS_EVALUATION_SHADER = 36487 # Variable c_int '36487'
+GL_RELATIVE_SMOOTH_QUADRATIC_CURVE_TO_NV = 15 # Variable c_int '15'
+GL_FOG_COORDINATE_ARRAY_LIST_STRIDE_IBM = 103086 # Variable c_int '103086'
+GL_OP_INDEX_EXT = 34690 # Variable c_int '34690'
+GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB = 33357 # Variable c_int '33357'
+GL_DEBUG_SOURCE_THIRD_PARTY_ARB = 33353 # Variable c_int '33353'
+GL_ARB_shader_bit_encoding = 1 # Variable c_int '1'
+GLEW_ERROR_GL_VERSION_10_ONLY = 2 # Variable c_int '2'
+GL_SECONDARY_INTERPOLATOR_ATI = 35181 # Variable c_int '35181'
+GL_STENCIL_BACK_FAIL = 34817 # Variable c_int '34817'
+GL_POLYGON_OFFSET_FACTOR = 32824 # Variable c_int '32824'
+GL_COMPRESSED_RGBA_S3TC_DXT3_EXT = 33778 # Variable c_int '33778'
+GL_Y_EXT = 34774 # Variable c_int '34774'
+GL_GENERATE_MIPMAP_SGIS = 33169 # Variable c_int '33169'
+GL_SYNC_FLUSH_COMMANDS_BIT = 1 # Variable c_int '1'
+GL_QUERY_WAIT_NV = 36371 # Variable c_int '36371'
+GL_INT_SAMPLER_RENDERBUFFER_NV = 36439 # Variable c_int '36439'
+GL_SIGNED_INTENSITY8_NV = 34568 # Variable c_int '34568'
+GL_EXT_x11_sync_object = 1 # Variable c_int '1'
+GL_ZOOM_X = 3350 # Variable c_int '3350'
+GL_MODELVIEW28_ARB = 34620 # Variable c_int '34620'
+GL_TEXTURE_RECTANGLE_ARB = 34037 # Variable c_int '34037'
+GL_EDGE_FLAG = 2883 # Variable c_int '2883'
+GL_PIXEL_MAP_I_TO_B_SIZE = 3252 # Variable c_int '3252'
+GL_PACK_LSB_FIRST = 3329 # Variable c_int '3329'
+GL_MULTISAMPLE_3DFX = 34482 # Variable c_int '34482'
+GL_GLYPH_VERTICAL_BEARING_Y_BIT_NV = 64 # Variable c_int '64'
+GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT = 36264 # Variable c_int '36264'
+GL_ATOMIC_COUNTER_BUFFER_SIZE = 37571 # Variable c_int '37571'
+GL_MAX_PALETTE_MATRICES_ARB = 34882 # Variable c_int '34882'
+GL_TEXTURE_BIT = 262144 # Variable c_int '262144'
+GL_CLIP_VOLUME_CLIPPING_HINT_EXT = 33008 # Variable c_int '33008'
+GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD = 37196 # Variable c_int '37196'
+GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS = 37587 # Variable c_int '37587'
+GL_MAX_DEPTH_TEXTURE_SAMPLES = 37135 # Variable c_int '37135'
+GL_VERSION_1_1 = 1 # Variable c_int '1'
+GL_RASTERIZER_DISCARD_EXT = 35977 # Variable c_int '35977'
+GL_SGIX_vertex_preclip_hint = 1 # Variable c_int '1'
+GL_QUERY_BY_REGION_WAIT = 36373 # Variable c_int '36373'
+GL_TESS_GEN_VERTEX_ORDER = 36472 # Variable c_int '36472'
+GL_EXT_abgr = 1 # Variable c_int '1'
+GL_OP_MOV_EXT = 34713 # Variable c_int '34713'
+GL_QUERY_RESULT_AVAILABLE_ARB = 34919 # Variable c_int '34919'
+GL_FOG = 2912 # Variable c_int '2912'
+GL_POST_CONVOLUTION_RED_SCALE_EXT = 32796 # Variable c_int '32796'
+GL_MAP_FLUSH_EXPLICIT_BIT = 16 # Variable c_int '16'
+GL_BACK_PRIMARY_COLOR_NV = 35959 # Variable c_int '35959'
+GL_TEXTURE18_ARB = 34002 # Variable c_int '34002'
+GL_DECODE_EXT = 35401 # Variable c_int '35401'
+GL_FONT_HEIGHT_BIT_NV = 8388608 # Variable c_int '8388608'
+GL_VIDEO_BUFFER_INTERNAL_FORMAT_NV = 36909 # Variable c_int '36909'
+GL_UNSIGNED_BYTE_3_3_2 = 32818 # Variable c_int '32818'
+GL_PATH_FILL_COVER_MODE_NV = 36994 # Variable c_int '36994'
+GL_MAX_COLOR_ATTACHMENTS = 36063 # Variable c_int '36063'
+GL_INT_IMAGE_3D_EXT = 36953 # Variable c_int '36953'
+GL_OFFSET_TEXTURE_2D_SCALE_NV = 34530 # Variable c_int '34530'
+GL_RG = 33319 # Variable c_int '33319'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT = 34074 # Variable c_int '34074'
+GL_VERTEX_ATTRIB_ARRAY1_NV = 34385 # Variable c_int '34385'
+GL_LINE_STIPPLE_PATTERN = 2853 # Variable c_int '2853'
+GL_VERTEX_ARRAY_RANGE_NV = 34077 # Variable c_int '34077'
+GL_ARB_shader_stencil_export = 1 # Variable c_int '1'
+GL_COMPATIBLE_SUBROUTINES = 36427 # Variable c_int '36427'
+GL_VARIANT_ARRAY_EXT = 34792 # Variable c_int '34792'
+GL_COLOR_TABLE_GREEN_SIZE = 32987 # Variable c_int '32987'
+GL_LAST_VERTEX_CONVENTION_EXT = 36430 # Variable c_int '36430'
+GL_STENCIL_INDEX4_EXT = 36167 # Variable c_int '36167'
+GL_MODULATE_SUBTRACT_ATIX = 34630 # Variable c_int '34630'
+GL_ONE_MINUS_CONSTANT_ALPHA_EXT = 32772 # Variable c_int '32772'
+GL_TRANSPOSE_MODELVIEW_MATRIX_ARB = 34019 # Variable c_int '34019'
+GL_INDEX_ARRAY_STRIDE_EXT = 32902 # Variable c_int '32902'
+GL_MAX_GEOMETRY_ATOMIC_COUNTERS = 37589 # Variable c_int '37589'
+GL_PROXY_TEXTURE_2D = 32868 # Variable c_int '32868'
+GL_ARB_shadow = 1 # Variable c_int '1'
+GL_ARB_texture_mirrored_repeat = 1 # Variable c_int '1'
+GL_DEBUG_TYPE_PERFORMANCE_ARB = 33360 # Variable c_int '33360'
+GL_POLYGON_OFFSET_EXT = 32823 # Variable c_int '32823'
+GL_ENABLE_BIT = 8192 # Variable c_int '8192'
+GL_LUMINANCE6_ALPHA2_EXT = 32836 # Variable c_int '32836'
+GL_PARALLEL_ARRAYS_INTEL = 33780 # Variable c_int '33780'
+GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ARB = 35070 # Variable c_int '35070'
+GL_SAMPLER_1D_ARRAY_SHADOW_EXT = 36291 # Variable c_int '36291'
+GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS = 35378 # Variable c_int '35378'
+GL_SWIZZLE_STQ_DQ_ATI = 35193 # Variable c_int '35193'
+GL_OUTPUT_TEXTURE_COORD8_EXT = 34725 # Variable c_int '34725'
+GL_MAX_VERTEX_ATTRIBS = 34921 # Variable c_int '34921'
+GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS = 36483 # Variable c_int '36483'
+GL_VARIABLE_E_NV = 34087 # Variable c_int '34087'
+GL_VERTEX_DATA_HINT_PGI = 107050 # Variable c_int '107050'
+GL_PACK_IMAGE_HEIGHT_EXT = 32876 # Variable c_int '32876'
+GL_LINE_WIDTH_RANGE = 2850 # Variable c_int '2850'
+GL_EVAL_VERTEX_ATTRIB15_NV = 34517 # Variable c_int '34517'
+GL_XOR = 5382 # Variable c_int '5382'
+GL_BLUE_BIT_ATI = 4 # Variable c_int '4'
+GL_VERTEX_ATTRIB_ARRAY15_NV = 34399 # Variable c_int '34399'
+GL_COMPRESSED_SRGB_ALPHA = 35913 # Variable c_int '35913'
+GL_PATH_DASH_OFFSET_RESET_NV = 37044 # Variable c_int '37044'
+GL_SGIX_texture_scale_bias = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY3_NV = 34387 # Variable c_int '34387'
+GL_EXT_draw_instanced = 1 # Variable c_int '1'
+GL_NV_copy_depth_to_color = 1 # Variable c_int '1'
+GL_LESS = 513 # Variable c_int '513'
+GL_VERTEX_ATTRIB_ARRAY13_NV = 34397 # Variable c_int '34397'
+GL_MAX_OPTIMIZED_VERTEX_SHADER_INSTRUCTIONS_EXT = 34762 # Variable c_int '34762'
+GL_VERSION_3_2 = 1 # Variable c_int '1'
+GL_DEPTH_BOUNDS_TEST_EXT = 34960 # Variable c_int '34960'
+GL_TEXTURE_STENCIL_SIZE = 35057 # Variable c_int '35057'
+GL_SEPARATE_SPECULAR_COLOR = 33274 # Variable c_int '33274'
+GL_VERTEX_SHADER_LOCAL_CONSTANTS_EXT = 34770 # Variable c_int '34770'
+GL_SGIX_async = 1 # Variable c_int '1'
+GL_FONT_X_MIN_BOUNDS_BIT_NV = 65536 # Variable c_int '65536'
+GL_EXT_depth_bounds_test = 1 # Variable c_int '1'
+GL_UNSIGNED_INT_IMAGE_BUFFER_EXT = 36967 # Variable c_int '36967'
+GL_SGIX_fog_texture = 1 # Variable c_int '1'
+GL_EMISSION = 5632 # Variable c_int '5632'
+GL_UNSIGNED_INT16_VEC4_NV = 36851 # Variable c_int '36851'
+GL_PROGRAM_ADDRESS_REGISTERS_ARB = 34992 # Variable c_int '34992'
+GL_PROGRAM_FORMAT_ASCII_ARB = 34933 # Variable c_int '34933'
+GL_OUTPUT_TEXTURE_COORD0_EXT = 34717 # Variable c_int '34717'
+GL_COMPRESSED_LUMINANCE_ALPHA = 34027 # Variable c_int '34027'
+GL_MATRIX13_ARB = 35021 # Variable c_int '35021'
+GL_MAX_PROGRAM_INSTRUCTIONS_ARB = 34977 # Variable c_int '34977'
+GL_INT_SAMPLER_1D = 36297 # Variable c_int '36297'
+GL_ARB_gpu_shader_fp64 = 1 # Variable c_int '1'
+GL_TEXTURE14_ARB = 33998 # Variable c_int '33998'
+GL_APPLE_vertex_program_evaluators = 1 # Variable c_int '1'
+GL_ALLOW_DRAW_WIN_HINT_PGI = 107023 # Variable c_int '107023'
+GL_RENDERBUFFER_RED_SIZE = 36176 # Variable c_int '36176'
+GL_STENCIL_VALUE_MASK = 2963 # Variable c_int '2963'
+GL_PHONG_WIN = 33002 # Variable c_int '33002'
+GL_COMBINE4_NV = 34051 # Variable c_int '34051'
+GL_NV_transform_feedback2 = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT_EXT = 1 # Variable c_int '1'
+GL_DEPTH_BITS = 3414 # Variable c_int '3414'
+GL_MAX_DRAW_BUFFERS_ARB = 34852 # Variable c_int '34852'
+GL_ADD_SIGNED_EXT = 34164 # Variable c_int '34164'
+GL_APPLE_aux_depth_stencil = 1 # Variable c_int '1'
+GL_DEBUG_SEVERITY_LOW_ARB = 37192 # Variable c_int '37192'
+GL_ARB_compressed_texture_pixel_storage = 1 # Variable c_int '1'
+GL_STENCIL_INDEX16_EXT = 36169 # Variable c_int '36169'
+GL_ENV_COPY_EXT = 0 # Variable c_int '0'
+GL_FRAMEBUFFER_UNSUPPORTED_EXT = 36061 # Variable c_int '36061'
+GL_REPEAT = 10497 # Variable c_int '10497'
+GL_VARIANT_ARRAY_STRIDE_EXT = 34790 # Variable c_int '34790'
+GL_BLUE_MAX_CLAMP_INGR = 34150 # Variable c_int '34150'
+GL_T2F_C4F_N3F_V3F = 10796 # Variable c_int '10796'
+GL_TEXTURE_INTENSITY_TYPE = 35861 # Variable c_int '35861'
+GL_OBJECT_DELETE_STATUS_ARB = 35712 # Variable c_int '35712'
+GL_MAX_DEBUG_MESSAGE_LENGTH_AMD = 37187 # Variable c_int '37187'
+GL_INT64_VEC4_NV = 36843 # Variable c_int '36843'
+GL_WEIGHT_ARRAY_SIZE_ARB = 34475 # Variable c_int '34475'
+GL_COLOR_TABLE_WIDTH_SGI = 32985 # Variable c_int '32985'
+GL_DEBUG_SOURCE_OTHER_ARB = 33355 # Variable c_int '33355'
+GL_VERTEX_ARRAY_TYPE = 32891 # Variable c_int '32891'
+GL_MAP1_VERTEX_ATTRIB8_4_NV = 34408 # Variable c_int '34408'
+GL_STENCIL_INDEX16 = 36169 # Variable c_int '36169'
+GL_CLIENT_ALL_ATTRIB_BITS = 4294967295L # Variable c_uint '4294967295u'
+GL_VALIDATE_STATUS = 35715 # Variable c_int '35715'
+GL_RG16 = 33324 # Variable c_int '33324'
+GL_RGB_SCALE_ARB = 34163 # Variable c_int '34163'
+GL_EXT_Cg_shader = 1 # Variable c_int '1'
+GL_INDEX_ARRAY_ADDRESS_NV = 36644 # Variable c_int '36644'
+GL_SCISSOR_TEST = 3089 # Variable c_int '3089'
+GL_UNPACK_SKIP_IMAGES = 32877 # Variable c_int '32877'
+GLEW_ERROR_GLX_VERSION_11_ONLY = 3 # Variable c_int '3'
+GL_UNSIGNED_INT_IMAGE_2D_RECT_EXT = 36965 # Variable c_int '36965'
+GL_SAMPLER_BUFFER_AMD = 36865 # Variable c_int '36865'
+GL_SAMPLER_1D_ARRAY_SHADOW = 36291 # Variable c_int '36291'
+GL_UNSIGNED_INT_SAMPLER_1D_EXT = 36305 # Variable c_int '36305'
+GL_INT_IMAGE_2D_RECT = 36954 # Variable c_int '36954'
+GL_RGB16UI_EXT = 36215 # Variable c_int '36215'
+GL_COLOR_TABLE_BLUE_SIZE_EXT = 32988 # Variable c_int '32988'
+GL_BUFFER_USAGE_ARB = 34661 # Variable c_int '34661'
+GL_BLEND_EQUATION_ALPHA = 34877 # Variable c_int '34877'
+GL_MIN_PROGRAM_TEXEL_OFFSET_NV = 35076 # Variable c_int '35076'
+GL_RGB10_A2_EXT = 32857 # Variable c_int '32857'
+GL_POST_CONVOLUTION_COLOR_TABLE_SGI = 32977 # Variable c_int '32977'
+GL_ACTIVE_ATTRIBUTES = 35721 # Variable c_int '35721'
+GL_ONE_MINUS_CONSTANT_COLOR_EXT = 32770 # Variable c_int '32770'
+GL_NV_geometry_program4 = 1 # Variable c_int '1'
+GL_TEXCOORD4_BIT_PGI = 2147483648L # Variable c_uint '2147483648u'
+GL_NORMAL_ARRAY_POINTER_EXT = 32911 # Variable c_int '32911'
+GL_MAX_ASYNC_DRAW_PIXELS_SGIX = 33632 # Variable c_int '33632'
+GL_PROXY_COLOR_TABLE = 32979 # Variable c_int '32979'
+GL_ARB_fragment_coord_conventions = 1 # Variable c_int '1'
+GL_DOT_PRODUCT_TEXTURE_2D_NV = 34542 # Variable c_int '34542'
+GL_IMAGE_CUBE_EXT = 36944 # Variable c_int '36944'
+GL_READ_FRAMEBUFFER_BINDING_EXT = 36010 # Variable c_int '36010'
+GL_EDGE_FLAG_ARRAY_LIST_IBM = 103075 # Variable c_int '103075'
+GL_LOCAL_EXT = 34756 # Variable c_int '34756'
+GL_FLOAT_MAT2_ARB = 35674 # Variable c_int '35674'
+GL_VERTEX_CONSISTENT_HINT_PGI = 107051 # Variable c_int '107051'
+GL_LUMINANCE8_ALPHA8_EXT = 32837 # Variable c_int '32837'
+GL_MATRIX6_NV = 34358 # Variable c_int '34358'
+GL_QUERY_BY_REGION_NO_WAIT = 36374 # Variable c_int '36374'
+GL_VIEWPORT_INDEX_PROVOKING_VERTEX = 33375 # Variable c_int '33375'
+GL_SAMPLE_COVERAGE_INVERT = 32939 # Variable c_int '32939'
+GL_LINES = 1 # Variable c_int '1'
+GL_TEXTURE18 = 34002 # Variable c_int '34002'
+GL_TEXTURE19 = 34003 # Variable c_int '34003'
+GL_TEXTURE16 = 34000 # Variable c_int '34000'
+GL_TEXTURE17 = 34001 # Variable c_int '34001'
+GL_TEXTURE14 = 33998 # Variable c_int '33998'
+GL_NORMAL_ARRAY_ADDRESS_NV = 36642 # Variable c_int '36642'
+GL_TEXTURE12 = 33996 # Variable c_int '33996'
+GL_TEXTURE13 = 33997 # Variable c_int '33997'
+GL_OUTPUT_TEXTURE_COORD28_EXT = 34745 # Variable c_int '34745'
+GL_TEXTURE11 = 33995 # Variable c_int '33995'
+GL_DEPTH_WRITEMASK = 2930 # Variable c_int '2930'
+GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 34826 # Variable c_int '34826'
+GL_QUERY_OBJECT_AMD = 37203 # Variable c_int '37203'
+GL_NEGATIVE_W_EXT = 34780 # Variable c_int '34780'
+GL_MAX_PROGRAM_CALL_DEPTH_NV = 35061 # Variable c_int '35061'
+GL_PATH_INITIAL_DASH_CAP_NV = 36988 # Variable c_int '36988'
+GL_TEXTURE_MAX_LOD_SGIS = 33083 # Variable c_int '33083'
+GL_POLYGON_MODE = 2880 # Variable c_int '2880'
+GL_MAP2_VERTEX_ATTRIB7_4_NV = 34423 # Variable c_int '34423'
+GL_TEXTURE_BASE_LEVEL_SGIS = 33084 # Variable c_int '33084'
+GL_TEXTURE_DS_SIZE_NV = 34589 # Variable c_int '34589'
+GL_POST_CONVOLUTION_ALPHA_BIAS_EXT = 32803 # Variable c_int '32803'
+GL_ARB_framebuffer_sRGB = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_BUFFER_START = 35972 # Variable c_int '35972'
+GL_STACK_OVERFLOW = 1283 # Variable c_int '1283'
+GL_TEXTURE_FILTER_CONTROL = 34048 # Variable c_int '34048'
+GL_FLOAT_VEC3 = 35665 # Variable c_int '35665'
+GL_RECLAIM_MEMORY_HINT_PGI = 107006 # Variable c_int '107006'
+GL_FLOAT_RGBA_NV = 34947 # Variable c_int '34947'
+GL_SAMPLE_MASK_VALUE_EXT = 32938 # Variable c_int '32938'
+GL_RGBA32F = 34836 # Variable c_int '34836'
+GL_RGBA32I = 36226 # Variable c_int '36226'
+GL_INT_IMAGE_BUFFER_EXT = 36956 # Variable c_int '36956'
+GL_VERTEX_ATTRIB_ARRAY_TYPE = 34341 # Variable c_int '34341'
+GL_MATRIX_INDEX_ARRAY_POINTER_ARB = 34889 # Variable c_int '34889'
+GL_NORMAL_ARRAY_LENGTH_NV = 36652 # Variable c_int '36652'
+GL_COLOR_TABLE_BLUE_SIZE = 32988 # Variable c_int '32988'
+GL_STENCIL_WRITEMASK = 2968 # Variable c_int '2968'
+GL_UNSIGNED_SHORT_4_4_4_4 = 32819 # Variable c_int '32819'
+GL_NAMED_STRING_LENGTH_ARB = 36329 # Variable c_int '36329'
+GL_PERFMON_RESULT_AMD = 35782 # Variable c_int '35782'
+GL_STENCIL_INDEX8_EXT = 36168 # Variable c_int '36168'
+GL_MODULATE_ADD_ATI = 34628 # Variable c_int '34628'
+GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = 35660 # Variable c_int '35660'
+GL_UNSIGNED_INT_IMAGE_2D_ARRAY = 36969 # Variable c_int '36969'
+GL_PN_TRIANGLES_POINT_MODE_ATI = 34802 # Variable c_int '34802'
+GL_UNSIGNED_INT_IMAGE_BUFFER = 36967 # Variable c_int '36967'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = 36051 # Variable c_int '36051'
+GL_MAP_UNSYNCHRONIZED_BIT = 32 # Variable c_int '32'
+GL_EXT_vertex_weighting = 1 # Variable c_int '1'
+GL_MODELVIEW0_ARB = 5888 # Variable c_int '5888'
+GL_PRIMITIVE_RESTART = 36765 # Variable c_int '36765'
+GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX = 37594 # Variable c_int '37594'
+GL_VERTEX_ATTRIB_ARRAY_INTEGER_NV = 35069 # Variable c_int '35069'
+GL_VERTEX_ARRAY_LENGTH_NV = 36651 # Variable c_int '36651'
+GL_UNSIGNED_IDENTITY_NV = 34102 # Variable c_int '34102'
+GL_NV_fragment_program = 1 # Variable c_int '1'
+GL_INTENSITY_EXTENDED_RANGE_SGIX = 34288 # Variable c_int '34288'
+GL_SRGB_ALPHA = 35906 # Variable c_int '35906'
+GL_UNIFORM_NAME_LENGTH = 35385 # Variable c_int '35385'
+GL_EXT_cull_vertex = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED = 36387 # Variable c_int '36387'
+GL_TEXTURE_3D = 32879 # Variable c_int '32879'
+GL_NV_parameter_buffer_object2 = 1 # Variable c_int '1'
+GL_ARB_conservative_depth = 1 # Variable c_int '1'
+GL_TEXTURE_COORD_ARRAY_PARALLEL_POINTERS_INTEL = 33784 # Variable c_int '33784'
+GL_VIDEO_COLOR_CONVERSION_MAX_NV = 36906 # Variable c_int '36906'
+GL_INDEX_ARRAY_POINTER = 32913 # Variable c_int '32913'
+GL_DRAW_BUFFER5_ARB = 34858 # Variable c_int '34858'
+GL_BLEND_SRC_RGB_EXT = 32969 # Variable c_int '32969'
+GL_MIN_GREEN_SGIS = 34216 # Variable c_int '34216'
+GL_CCW = 2305 # Variable c_int '2305'
+GL_SAMPLES_PASSED_ARB = 35092 # Variable c_int '35092'
+GL_COMBINER_SCALE_NV = 34120 # Variable c_int '34120'
+GL_SGIS_multisample = 1 # Variable c_int '1'
+GL_PIXEL_MAP_I_TO_I_SIZE = 3248 # Variable c_int '3248'
+GL_ARB_map_buffer_alignment = 1 # Variable c_int '1'
+GL_VERTEX_PRECLIP_HINT_SGIX = 33775 # Variable c_int '33775'
+GL_TANGENT_ARRAY_POINTER_EXT = 33858 # Variable c_int '33858'
+GL_DOT4_ATI = 35175 # Variable c_int '35175'
+GL_VERTEX_ATTRIB_ARRAY12_NV = 34396 # Variable c_int '34396'
+GL_OFFSET_TEXTURE_2D_BIAS_NV = 34531 # Variable c_int '34531'
+GL_MIN_EXT = 32775 # Variable c_int '32775'
+GL_TEXTURE_UNSIGNED_REMAP_MODE_NV = 34959 # Variable c_int '34959'
+GL_POLYGON_OFFSET_BIAS_EXT = 32825 # Variable c_int '32825'
+GL_SECONDARY_COLOR_ARRAY_STRIDE = 33884 # Variable c_int '33884'
+GL_SAMPLE_SHADING = 35894 # Variable c_int '35894'
+GL_ARB_imaging = 1 # Variable c_int '1'
+GL_SGIX_fog_offset = 1 # Variable c_int '1'
+GL_RG32UI = 33340 # Variable c_int '33340'
+GL_CONVOLUTION_BORDER_MODE = 32787 # Variable c_int '32787'
+GL_NORMALIZE = 2977 # Variable c_int '2977'
+GL_GEOMETRY_OUTPUT_TYPE_ARB = 36316 # Variable c_int '36316'
+GL_TEXTURE_LO_SIZE_NV = 34588 # Variable c_int '34588'
+GL_SAMPLE_BUFFERS_SGIS = 32936 # Variable c_int '32936'
+GL_LINEAR_ATTENUATION = 4616 # Variable c_int '4616'
+GL_SCALED_RESOLVE_FASTEST_EXT = 37050 # Variable c_int '37050'
+GL_APPLE_rgb_422 = 1 # Variable c_int '1'
+GL_TRANSFORM_HINT_APPLE = 34225 # Variable c_int '34225'
+GL_LINE_TOKEN = 1794 # Variable c_int '1794'
+GL_REG_3_ATI = 35108 # Variable c_int '35108'
+GL_RGB16_EXTENDED_RANGE_SGIX = 34290 # Variable c_int '34290'
+GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_EXT = 35968 # Variable c_int '35968'
+GL_POST_COLOR_MATRIX_ALPHA_SCALE = 32951 # Variable c_int '32951'
+GL_FRAMEBUFFER_COMPLETE = 36053 # Variable c_int '36053'
+GL_DEPENDENT_RGB_TEXTURE_CUBE_MAP_NV = 34906 # Variable c_int '34906'
+GL_COPY_READ_BUFFER = 36662 # Variable c_int '36662'
+GL_MODELVIEW19_ARB = 34611 # Variable c_int '34611'
+GL_ENV_BLEND_EXT = 0 # Variable c_int '0'
+GL_FOG_COORDINATE_ARRAY_TYPE_EXT = 33876 # Variable c_int '33876'
+GL_ARB_occlusion_query2 = 1 # Variable c_int '1'
+GL_TEXTURE_MAG_SIZE_NV = 34591 # Variable c_int '34591'
+GL_MATRIX11_ARB = 35019 # Variable c_int '35019'
+GL_CURRENT_VERTEX_EXT = 34786 # Variable c_int '34786'
+GL_SHADER_IMAGE_ACCESS_BARRIER_BIT = 32 # Variable c_int '32'
+GL_NORMAL_ARRAY_PARALLEL_POINTERS_INTEL = 33782 # Variable c_int '33782'
+GL_RGBA_FLOAT16_ATI = 34842 # Variable c_int '34842'
+GL_SUN_vertex = 1 # Variable c_int '1'
+GL_NORMAL_ARRAY = 32885 # Variable c_int '32885'
+GL_SEPARATE_ATTRIBS = 35981 # Variable c_int '35981'
+GL_TEXTURE_RANGE_LENGTH_APPLE = 34231 # Variable c_int '34231'
+GL_VIEWPORT_SUBPIXEL_BITS = 33372 # Variable c_int '33372'
+GL_PIXEL_UNPACK_BUFFER_EXT = 35052 # Variable c_int '35052'
+GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_ARB = 36446 # Variable c_int '36446'
+GL_NICEST = 4354 # Variable c_int '4354'
+GL_VERTEX_PROGRAM_BINDING_NV = 34378 # Variable c_int '34378'
+GL_DRAW_BUFFER6_ARB = 34859 # Variable c_int '34859'
+GL_UNIFORM_BARRIER_BIT = 4 # Variable c_int '4'
+GL_ARB_draw_indirect = 1 # Variable c_int '1'
+GL_PROXY_TEXTURE_RECTANGLE_NV = 34039 # Variable c_int '34039'
+GL_MODELVIEW = 5888 # Variable c_int '5888'
+GL_INT_IMAGE_CUBE = 36955 # Variable c_int '36955'
+GL_C4UB_V3F = 10787 # Variable c_int '10787'
+GL_COLOR4_BIT_PGI = 131072 # Variable c_int '131072'
+GL_DEPTH_ATTACHMENT_EXT = 36096 # Variable c_int '36096'
+GL_FLOAT_MAT2x3 = 35685 # Variable c_int '35685'
+GL_CLAMP_TO_BORDER_ARB = 33069 # Variable c_int '33069'
+GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 34338 # Variable c_int '34338'
+GL_UNDEFINED_VERTEX = 33376 # Variable c_int '33376'
+GL_FLOAT_MAT2x4 = 35686 # Variable c_int '35686'
+GL_ALPHA_MAX_SGIX = 33569 # Variable c_int '33569'
+GL_MAX_ASYNC_HISTOGRAM_SGIX = 33581 # Variable c_int '33581'
+GL_BIAS_BIT_ATI = 8 # Variable c_int '8'
+GL_INTERLACE_OML = 35200 # Variable c_int '35200'
+GL_UNSIGNED_INT16_VEC2_NV = 36849 # Variable c_int '36849'
+GL_RG16F = 33327 # Variable c_int '33327'
+GL_TEXTURE_BINDING_BUFFER_ARB = 35884 # Variable c_int '35884'
+GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_SCALE_NV = 34899 # Variable c_int '34899'
+GL_PRIMITIVES_GENERATED = 35975 # Variable c_int '35975'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT = 34070 # Variable c_int '34070'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT = 36051 # Variable c_int '36051'
+GL_TEXTURE_2D_STACK_MESAX = 34650 # Variable c_int '34650'
+GL_TEXTURE_MATRIX = 2984 # Variable c_int '2984'
+GL_RED_SNORM = 36752 # Variable c_int '36752'
+GL_PROGRAM_ERROR_POSITION_ARB = 34379 # Variable c_int '34379'
+GL_DOT_PRODUCT_REFLECT_CUBE_MAP_NV = 34546 # Variable c_int '34546'
+GL_INVALID_INDEX = 4294967295L # Variable c_uint '4294967295u'
+GL_DOUBLE_MAT3x2_EXT = 36683 # Variable c_int '36683'
+GL_OFFSET_TEXTURE_2D_MATRIX_NV = 34529 # Variable c_int '34529'
+GL_SAMPLE_COVERAGE_VALUE_ARB = 32938 # Variable c_int '32938'
+GL_CURRENT_RASTER_SECONDARY_COLOR = 33887 # Variable c_int '33887'
+GL_ARRAY_OBJECT_OFFSET_ATI = 34663 # Variable c_int '34663'
+GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB = 34464 # Variable c_int '34464'
+GL_LUMINANCE32F_ARB = 34840 # Variable c_int '34840'
+GL_SGIS_texture4D = 1 # Variable c_int '1'
+GL_MAT_DIFFUSE_BIT_PGI = 4194304 # Variable c_int '4194304'
+GL_EXT_multisample = 1 # Variable c_int '1'
+GL_IMAGE_BINDING_NAME_EXT = 36666 # Variable c_int '36666'
+GL_TRANSPOSE_PROJECTION_MATRIX = 34020 # Variable c_int '34020'
+GL_TEXTURE_MAX_ANISOTROPY_EXT = 34046 # Variable c_int '34046'
+GL_SUBPIXEL_BITS = 3408 # Variable c_int '3408'
+GL_INTENSITY16UI_EXT = 36217 # Variable c_int '36217'
+GL_TRANSLATE_2D_NV = 37008 # Variable c_int '37008'
+GL_TEXTURE_COLOR_SAMPLES_NV = 36934 # Variable c_int '36934'
+GL_PRIMITIVE_RESTART_NV = 34136 # Variable c_int '34136'
+GL_FRAGMENT_LIGHT7_EXT = 33811 # Variable c_int '33811'
+GL_SMALL_CCW_ARC_TO_NV = 18 # Variable c_int '18'
+GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH = 36425 # Variable c_int '36425'
+GL_ATI_vertex_array_object = 1 # Variable c_int '1'
+GL_COMBINER_MAPPING_NV = 34115 # Variable c_int '34115'
+GL_UNIFORM_MATRIX_STRIDE = 35389 # Variable c_int '35389'
+GL_ALPHA_BITS = 3413 # Variable c_int '3413'
+GL_CLIENT_VERTEX_ARRAY_BIT = 2 # Variable c_int '2'
+GL_CONVOLUTION_FORMAT_EXT = 32791 # Variable c_int '32791'
+GL_TEXTURE_ENV_SHIFT_EXT = 0 # Variable c_int '0'
+GL_BGR_EXT = 32992 # Variable c_int '32992'
+GL_TEXTURE_MULTI_BUFFER_HINT_SGIX = 33070 # Variable c_int '33070'
+GL_VERTEX_ATTRIB_MAP2_COEFF_APPLE = 35335 # Variable c_int '35335'
+GL_INDEX_ARRAY_BUFFER_BINDING = 34969 # Variable c_int '34969'
+GL_TEXTURE_OUTPUT_ALPHA_ATIX = 34633 # Variable c_int '34633'
+GL_SLUMINANCE_EXT = 35910 # Variable c_int '35910'
+GL_SGIS_sharpen_texture = 1 # Variable c_int '1'
+GL_MAX_PROGRAM_TEXEL_OFFSET_NV = 35077 # Variable c_int '35077'
+GL_EXT_draw_range_elements = 1 # Variable c_int '1'
+GL_TEXTURE_LOD_BIAS = 34049 # Variable c_int '34049'
+GL_INDEX_ARRAY_POINTER_EXT = 32913 # Variable c_int '32913'
+GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_NV = 35976 # Variable c_int '35976'
+GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT = 35881 # Variable c_int '35881'
+GL_EXTERNAL_VIRTUAL_MEMORY_BUFFER_AMD = 37216 # Variable c_int '37216'
+GL_NV_point_sprite = 1 # Variable c_int '1'
+GL_POST_CONVOLUTION_RED_SCALE = 32796 # Variable c_int '32796'
+GL_SHADING_LANGUAGE_VERSION_ARB = 35724 # Variable c_int '35724'
+GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT = 35953 # Variable c_int '35953'
+GL_AMD_multi_draw_indirect = 1 # Variable c_int '1'
+GL_VERTEX_PROGRAM_TWO_SIDE_NV = 34371 # Variable c_int '34371'
+GL_POINT_DISTANCE_ATTENUATION_ARB = 33065 # Variable c_int '33065'
+GL_RGBA16_EXT = 32859 # Variable c_int '32859'
+GL_SINGLE_COLOR_EXT = 33273 # Variable c_int '33273'
+GL_Z4Y12Z4CB12Z4A12Z4Y12Z4CR12Z4A12_4224_NV = 36918 # Variable c_int '36918'
+GL_TEXTURE_CUBE_MAP_POSITIVE_Y_EXT = 34071 # Variable c_int '34071'
+GL_DEPTH_COMPONENT24 = 33190 # Variable c_int '33190'
+GL_TEXTURE_1D_ARRAY_EXT = 35864 # Variable c_int '35864'
+GL_DEBUG_SOURCE_SHADER_COMPILER_ARB = 33352 # Variable c_int '33352'
+GL_NORMAL_MAP = 34065 # Variable c_int '34065'
+GL_MAX_GENERAL_COMBINERS_NV = 34125 # Variable c_int '34125'
+GL_MAP2_TEXTURE_COORD_1 = 3507 # Variable c_int '3507'
+GL_TEXTURE_MAX_LEVEL_SGIS = 33085 # Variable c_int '33085'
+GL_MAX_OPTIMIZED_VERTEX_SHADER_INVARIANTS_EXT = 34764 # Variable c_int '34764'
+GL_ARB_vertex_buffer_object = 1 # Variable c_int '1'
+GL_EMBOSS_CONSTANT_NV = 34142 # Variable c_int '34142'
+GL_QUERY_RESULT = 34918 # Variable c_int '34918'
+GL_GREMEDY_frame_terminator = 1 # Variable c_int '1'
+GL_PROGRAM_NATIVE_TEMPORARIES_ARB = 34982 # Variable c_int '34982'
+GL_ATI_meminfo = 1 # Variable c_int '1'
+GL_R16_SNORM = 36760 # Variable c_int '36760'
+GL_TEXTURE_BLUE_SIZE_EXT = 32862 # Variable c_int '32862'
+GL_FENCE_CONDITION_NV = 34036 # Variable c_int '34036'
+GL_VERTEX_SHADER_OPTIMIZED_EXT = 34772 # Variable c_int '34772'
+GL_DOUBLE_VEC2_EXT = 36860 # Variable c_int '36860'
+GL_DOT_PRODUCT_TEXTURE_1D_NV = 34908 # Variable c_int '34908'
+GL_SOURCE2_RGB_ARB = 34178 # Variable c_int '34178'
+GL_TEXTURE10_ARB = 33994 # Variable c_int '33994'
+GL_OP_SUB_EXT = 34710 # Variable c_int '34710'
+GL_AMD_pinned_memory = 1 # Variable c_int '1'
+GL_COLOR_ATTACHMENT1_EXT = 36065 # Variable c_int '36065'
+GL_UTF8_NV = 37018 # Variable c_int '37018'
+GL_COLOR_ARRAY_LENGTH_NV = 36653 # Variable c_int '36653'
+GL_RGB16_SNORM = 36762 # Variable c_int '36762'
+GL_PROGRAM_BINARY_RETRIEVABLE_HINT = 33367 # Variable c_int '33367'
+GL_INTENSITY_FLOAT32_APPLE = 34839 # Variable c_int '34839'
+GL_MAX_VERTEX_UNIFORM_BLOCKS = 35371 # Variable c_int '35371'
+GL_DRAW_BUFFER15_ARB = 34868 # Variable c_int '34868'
+GL_MODELVIEW26_ARB = 34618 # Variable c_int '34618'
+GL_OUTPUT_TEXTURE_COORD30_EXT = 34747 # Variable c_int '34747'
+GL_COLOR_TABLE_FORMAT = 32984 # Variable c_int '32984'
+GL_MAX_ELEMENTS_VERTICES = 33000 # Variable c_int '33000'
+GL_OUTPUT_TEXTURE_COORD1_EXT = 34718 # Variable c_int '34718'
+GL_EXT_index_func = 1 # Variable c_int '1'
+GL_ELEMENT_ARRAY_UNIFIED_NV = 36639 # Variable c_int '36639'
+GL_COLOR_ARRAY_ADDRESS_NV = 36643 # Variable c_int '36643'
+GL_DOUBLE_MAT2x4_EXT = 36682 # Variable c_int '36682'
+GL_EDGE_FLAG_ARRAY_POINTER = 32915 # Variable c_int '32915'
+GL_MAP1_VERTEX_ATTRIB5_4_NV = 34405 # Variable c_int '34405'
+GL_WIDE_LINE_HINT_PGI = 107042 # Variable c_int '107042'
+GL_IBM_static_data = 1 # Variable c_int '1'
+GL_TEXTURE_MAX_CLAMP_T_SGIX = 33642 # Variable c_int '33642'
+GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_ARB = 36264 # Variable c_int '36264'
+GL_MINMAX_EXT = 32814 # Variable c_int '32814'
+GL_MAX_LIST_NESTING = 2865 # Variable c_int '2865'
+GL_POINT_SIZE_MIN_EXT = 33062 # Variable c_int '33062'
+GL_PACK_CMYK_HINT_EXT = 32782 # Variable c_int '32782'
+GL_OUTPUT_TEXTURE_COORD15_EXT = 34732 # Variable c_int '34732'
+GL_MAX_IMAGE_SAMPLES = 36973 # Variable c_int '36973'
+GL_SUBTRACT_ARB = 34023 # Variable c_int '34023'
+GL_INT64_VEC3_NV = 36842 # Variable c_int '36842'
+GL_LUMINANCE16_ALPHA16_EXT = 32840 # Variable c_int '32840'
+GL_UNPACK_CLIENT_STORAGE_APPLE = 34226 # Variable c_int '34226'
+GL_UNSIGNED_INT_IMAGE_1D_EXT = 36962 # Variable c_int '36962'
+GL_DRAW_BUFFER2_ARB = 34855 # Variable c_int '34855'
+GL_MAX_TEXTURE_STACK_DEPTH = 3385 # Variable c_int '3385'
+GL_TEXTURE_STENCIL_SIZE_EXT = 35057 # Variable c_int '35057'
+GL_FOG_DISTANCE_MODE_NV = 34138 # Variable c_int '34138'
+GL_COLOR_ARRAY = 32886 # Variable c_int '32886'
+GL_CONVOLUTION_2D = 32785 # Variable c_int '32785'
+GL_IBM_texture_mirrored_repeat = 1 # Variable c_int '1'
+GL_CON_0_ATI = 35137 # Variable c_int '35137'
+GL_ALWAYS_SOFT_HINT_PGI = 107021 # Variable c_int '107021'
+GL_ATTENUATION_EXT = 33613 # Variable c_int '33613'
+GL_RENDERBUFFER_SAMPLES = 36011 # Variable c_int '36011'
+GL_DRAW_INDIRECT_ADDRESS_NV = 36673 # Variable c_int '36673'
+GL_BLEND_SRC_ALPHA_EXT = 32971 # Variable c_int '32971'
+GL_HINT_BIT = 32768 # Variable c_int '32768'
+GL_MAX_PROGRAM_RESULT_COMPONENTS_NV = 35081 # Variable c_int '35081'
+GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS = 36383 # Variable c_int '36383'
+GL_COMBINER2_NV = 34130 # Variable c_int '34130'
+GL_FIELD_UPPER_NV = 36898 # Variable c_int '36898'
+GL_MAX_PROGRAM_OUTPUT_VERTICES_NV = 35879 # Variable c_int '35879'
+GL_PROGRAM_ERROR_POSITION_NV = 34379 # Variable c_int '34379'
+GL_MAX_PROGRAM_GENERIC_RESULTS_NV = 36262 # Variable c_int '36262'
+GL_OUTPUT_TEXTURE_COORD6_EXT = 34723 # Variable c_int '34723'
+GL_GREEN_INTEGER = 36245 # Variable c_int '36245'
+GL_COLOR_ARRAY_POINTER = 32912 # Variable c_int '32912'
+GL_TEXTURE_DEPTH_SIZE = 34890 # Variable c_int '34890'
+GL_FLOAT_MAT3x2 = 35687 # Variable c_int '35687'
+GL_RESAMPLE_DECIMATE_OML = 35209 # Variable c_int '35209'
+GL_CONSTANT_COLOR1_NV = 34091 # Variable c_int '34091'
+GL_TEXTURE_OUTPUT_RGB_ATIX = 34632 # Variable c_int '34632'
+GL_DRAW_BUFFER11_ATI = 34864 # Variable c_int '34864'
+GL_TEXTURE_UPDATE_BARRIER_BIT_EXT = 256 # Variable c_int '256'
+GL_OP_FLOOR_EXT = 34703 # Variable c_int '34703'
+GL_RENDERER = 7937 # Variable c_int '7937'
+GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY = 37123 # Variable c_int '37123'
+GL_HALF_BIAS_NEGATE_NV = 34107 # Variable c_int '34107'
+GL_REPLACEMENT_CODE_SUN = 33240 # Variable c_int '33240'
+GL_CLIENT_ATTRIB_STACK_DEPTH = 2993 # Variable c_int '2993'
+GL_SIGNED_LUMINANCE_ALPHA_NV = 34563 # Variable c_int '34563'
+GL_SIGNED_HILO_NV = 34553 # Variable c_int '34553'
+GL_SUCCESS_NV = 36911 # Variable c_int '36911'
+GL_COLOR_ARRAY_TYPE = 32898 # Variable c_int '32898'
+GL_COLOR_ARRAY_COUNT_EXT = 32900 # Variable c_int '32900'
+GL_TRANSFORM_FEEDBACK_BUFFER_SIZE_EXT = 35973 # Variable c_int '35973'
+GL_UNSIGNED_INT_VEC3_EXT = 36295 # Variable c_int '36295'
+GL_EXT_paletted_texture = 1 # Variable c_int '1'
+GL_TEXTURE_COMPONENTS = 4099 # Variable c_int '4099'
+GL_QUERY_NO_WAIT = 36372 # Variable c_int '36372'
+GL_ARB_texture_buffer_object = 1 # Variable c_int '1'
+GL_RENDERBUFFER_BLUE_SIZE_EXT = 36178 # Variable c_int '36178'
+GL_GEOMETRY_SHADER_EXT = 36313 # Variable c_int '36313'
+GL_ATI_pn_triangles = 1 # Variable c_int '1'
+GL_COLOR_ARRAY_SIZE_EXT = 32897 # Variable c_int '32897'
+GL_HALF_FLOAT_NV = 5131 # Variable c_int '5131'
+GL_INVERSE_NV = 34347 # Variable c_int '34347'
+GL_EDGE_FLAG_ARRAY_COUNT_EXT = 32909 # Variable c_int '32909'
+GL_TRANSLATE_X_NV = 37006 # Variable c_int '37006'
+GL_UNSIGNED_SHORT_5_5_5_1_EXT = 32820 # Variable c_int '32820'
+GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE_SGI = 32981 # Variable c_int '32981'
+GL_QUERY_BUFFER_BINDING_AMD = 37267 # Variable c_int '37267'
+GL_NV_bindless_texture = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_BUFFER_MODE = 35967 # Variable c_int '35967'
+GL_BITMAP_TOKEN = 1796 # Variable c_int '1796'
+GL_INT_IMAGE_2D_MULTISAMPLE_EXT = 36960 # Variable c_int '36960'
+GL_FEEDBACK_BUFFER_POINTER = 3568 # Variable c_int '3568'
+GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT = 35955 # Variable c_int '35955'
+GL_BEVEL_NV = 37030 # Variable c_int '37030'
+GL_MATERIAL_SIDE_HINT_PGI = 107052 # Variable c_int '107052'
+GL_CULL_VERTEX_EXT = 33194 # Variable c_int '33194'
+GL_INTENSITY_SNORM = 36883 # Variable c_int '36883'
+GL_PRIMARY_COLOR_EXT = 34167 # Variable c_int '34167'
+GL_SGIS_detail_texture = 1 # Variable c_int '1'
+GL_ADJACENT_PAIRS_NV = 37038 # Variable c_int '37038'
+GL_IMAGE_BINDING_LEVEL = 36667 # Variable c_int '36667'
+GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 34831 # Variable c_int '34831'
+GL_REND_screen_coordinates = 1 # Variable c_int '1'
+GL_R8 = 33321 # Variable c_int '33321'
+GL_MULTISAMPLE_BIT_ARB = 536870912 # Variable c_int '536870912'
+GL_TRANSFORM_FEEDBACK_BUFFER_START_EXT = 35972 # Variable c_int '35972'
+GL_HP_image_transform = 1 # Variable c_int '1'
+GL_BOUNDING_BOX_NV = 37005 # Variable c_int '37005'
+GL_SAMPLER_CUBE_SHADOW_EXT = 36293 # Variable c_int '36293'
+GL_VERTEX_ARRAY_POINTER_EXT = 32910 # Variable c_int '32910'
+GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET = 36447 # Variable c_int '36447'
+GL_SGIX_vertex_preclip = 1 # Variable c_int '1'
+GL_INT_SAMPLER_2D_RECT_EXT = 36301 # Variable c_int '36301'
+GL_MULT = 259 # Variable c_int '259'
+GL_STENCIL = 6146 # Variable c_int '6146'
+GL_DOT3_RGB_ARB = 34478 # Variable c_int '34478'
+GL_SMALL_CW_ARC_TO_NV = 20 # Variable c_int '20'
+GL_SYNC_CL_EVENT_COMPLETE_ARB = 33345 # Variable c_int '33345'
+GL_PIXEL_PACK_BUFFER_ARB = 35051 # Variable c_int '35051'
+GL_INVALID_FRAMEBUFFER_OPERATION_EXT = 1286 # Variable c_int '1286'
+GL_VIBRANCE_SCALE_NV = 34579 # Variable c_int '34579'
+GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT = 36182 # Variable c_int '36182'
+GL_ACTIVE_ATOMIC_COUNTER_BUFFERS = 37593 # Variable c_int '37593'
+GL_ALPHA_SIGNED_SGIX = 34274 # Variable c_int '34274'
+GL_MODELVIEW24_ARB = 34616 # Variable c_int '34616'
+GL_NORMAL_ARRAY_LIST_STRIDE_IBM = 103081 # Variable c_int '103081'
+GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_EXT = 35978 # Variable c_int '35978'
+GL_EXT_blend_logic_op = 1 # Variable c_int '1'
+GL_CLOSE_PATH_NV = 0 # Variable c_int '0'
+GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 34995 # Variable c_int '34995'
+GL_EXT_geometry_shader4 = 1 # Variable c_int '1'
+GL_ARB_vertex_type_2_10_10_10_rev = 1 # Variable c_int '1'
+GL_FRAGMENT_SHADER = 35632 # Variable c_int '35632'
+GL_FLOAT_RGB32_NV = 34953 # Variable c_int '34953'
+GL_SYNC_STATUS = 37140 # Variable c_int '37140'
+GL_EVAL_VERTEX_ATTRIB5_NV = 34507 # Variable c_int '34507'
+GL_MAX_IMAGE_UNITS_EXT = 36664 # Variable c_int '36664'
+GL_SGIX_ycrcb = 1 # Variable c_int '1'
+GL_ALPHA8_EXT = 32828 # Variable c_int '32828'
+GL_OUTPUT_POINT_SIZE_ATIX = 24846 # Variable c_int '24846'
+GL_STREAM_DRAW_ARB = 35040 # Variable c_int '35040'
+GL_ROUND_NV = 37028 # Variable c_int '37028'
+GL_VIEWPORT = 2978 # Variable c_int '2978'
+GL_MAX_FRAGMENT_INTERPOLATION_OFFSET = 36444 # Variable c_int '36444'
+GL_NV_texture_multisample = 1 # Variable c_int '1'
+GL_DEPTH_TEXTURE_MODE_ARB = 34891 # Variable c_int '34891'
+GL_UNPACK_COMPRESSED_BLOCK_HEIGHT = 37160 # Variable c_int '37160'
+GL_MAX_VERTEX_UNITS_ARB = 34468 # Variable c_int '34468'
+GL_BUMP_TEX_UNITS_ATI = 34680 # Variable c_int '34680'
+GL_RGB8I = 36239 # Variable c_int '36239'
+GL_ATTRIB_ARRAY_TYPE_NV = 34341 # Variable c_int '34341'
+GL_ATI_envmap_bumpmap = 1 # Variable c_int '1'
+GL_VERTEX_ARRAY_COUNT_EXT = 32893 # Variable c_int '32893'
+GL_BLEND_SRC = 3041 # Variable c_int '3041'
+GL_QUERY_COUNTER_BITS_ARB = 34916 # Variable c_int '34916'
+GL_DS_SCALE_NV = 34576 # Variable c_int '34576'
+GL_UNKNOWN_CONTEXT_RESET_ARB = 33365 # Variable c_int '33365'
+GL_MAX_TEXTURE_BUFFER_SIZE = 35883 # Variable c_int '35883'
+GL_TEXTURE_BINDING_RECTANGLE_NV = 34038 # Variable c_int '34038'
+GL_FOG_SPECULAR_TEXTURE_WIN = 33004 # Variable c_int '33004'
+GL_COPY_PIXEL_TOKEN = 1798 # Variable c_int '1798'
+GL_TEXTURE_BINDING_RECTANGLE_ARB = 34038 # Variable c_int '34038'
+GL_NV_texture_shader2 = 1 # Variable c_int '1'
+GL_EXT_packed_pixels = 1 # Variable c_int '1'
+GL_COLOR_LOGIC_OP = 3058 # Variable c_int '3058'
+GL_TEXTURE_MATERIAL_FACE_EXT = 33617 # Variable c_int '33617'
+GL_NV_conditional_render = 1 # Variable c_int '1'
+GL_ONE_EXT = 34782 # Variable c_int '34782'
+GL_DEPTH24_STENCIL8 = 35056 # Variable c_int '35056'
+GL_POST_COLOR_MATRIX_ALPHA_BIAS_SGI = 32955 # Variable c_int '32955'
+GL_FONT_X_MAX_BOUNDS_BIT_NV = 262144 # Variable c_int '262144'
+GL_MODELVIEW7_ARB = 34599 # Variable c_int '34599'
+GL_SAMPLE_BUFFERS_ARB = 32936 # Variable c_int '32936'
+GL_UNSIGNED_INT_SAMPLER_1D_ARRAY_EXT = 36310 # Variable c_int '36310'
+GL_MAX_TEXTURE_LOD_BIAS_EXT = 34045 # Variable c_int '34045'
+GL_TEXTURE_COMPRESSED_ARB = 34465 # Variable c_int '34465'
+GL_FUNC_ADD_EXT = 32774 # Variable c_int '32774'
+GL_GEOMETRY_SHADER_INVOCATIONS = 34943 # Variable c_int '34943'
+GL_TEXTURE16_ARB = 34000 # Variable c_int '34000'
+GL_COLOR_INDEX = 6400 # Variable c_int '6400'
+GL_MAP2_NORMAL = 3506 # Variable c_int '3506'
+GL_COLOR_MATRIX_SGI = 32945 # Variable c_int '32945'
+GL_MAX_EVAL_ORDER = 3376 # Variable c_int '3376'
+GL_SAMPLER_2D_RECT_SHADOW_ARB = 35684 # Variable c_int '35684'
+GL_TEXTURE_COMPARE_MODE = 34892 # Variable c_int '34892'
+GL_WRITE_PIXEL_DATA_RANGE_NV = 34936 # Variable c_int '34936'
+GL_WEIGHT_ARRAY_ARB = 34477 # Variable c_int '34477'
+GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE = 33301 # Variable c_int '33301'
+GL_TEXTURE_COORD_ARRAY_LIST_STRIDE_IBM = 103084 # Variable c_int '103084'
+GL_COMPRESSED_RGB_S3TC_DXT1_EXT = 33776 # Variable c_int '33776'
+GL_COMPRESSED_LUMINANCE_ARB = 34026 # Variable c_int '34026'
+GL_DEPTH_BOUNDS_EXT = 34961 # Variable c_int '34961'
+GL_RED_BIT_ATI = 1 # Variable c_int '1'
+GL_MAP_WRITE_BIT = 2 # Variable c_int '2'
+GL_SHADE_MODEL = 2900 # Variable c_int '2900'
+GL_GENERATE_MIPMAP_HINT_SGIS = 33170 # Variable c_int '33170'
+GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH = 35958 # Variable c_int '35958'
+GL_SGIX_texture_coordinate_clamp = 1 # Variable c_int '1'
+GL_RGBA_DXT5_S3TC = 33700 # Variable c_int '33700'
+GL_AMD_performance_monitor = 1 # Variable c_int '1'
+GL_NATIVE_GRAPHICS_BEGIN_HINT_PGI = 107011 # Variable c_int '107011'
+GL_EXT_stencil_clear_tag = 1 # Variable c_int '1'
+GL_TEXTURE_SRGB_DECODE_EXT = 35400 # Variable c_int '35400'
+GL_UNIFORM_BLOCK_INDEX = 35386 # Variable c_int '35386'
+GL_VERTEX_ATTRIB_ARRAY14_NV = 34398 # Variable c_int '34398'
+GL_MAT_AMBIENT_AND_DIFFUSE_BIT_PGI = 2097152 # Variable c_int '2097152'
+GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 34824 # Variable c_int '34824'
+GL_ARB_texture_compression_rgtc = 1 # Variable c_int '1'
+GL_LUMINANCE_ALPHA_SNORM = 36882 # Variable c_int '36882'
+GL_UNSIGNED_INT_SAMPLER_BUFFER = 36312 # Variable c_int '36312'
+GL_MAP1_VERTEX_ATTRIB14_4_NV = 34414 # Variable c_int '34414'
+GL_TRIANGLES_ADJACENCY_EXT = 12 # Variable c_int '12'
+GL_COLOR_INDEX8_EXT = 32997 # Variable c_int '32997'
+GL_LIST_BIT = 131072 # Variable c_int '131072'
+GL_IMAGE_BINDING_ACCESS = 36670 # Variable c_int '36670'
+GL_MAX_VERTEX_SHADER_INSTRUCTIONS_EXT = 34757 # Variable c_int '34757'
+GL_ONE_MINUS_SRC1_COLOR = 35066 # Variable c_int '35066'
+GL_TESS_GEN_SPACING = 36471 # Variable c_int '36471'
+GL_LINEAR = 9729 # Variable c_int '9729'
+GL_MINMAX_SINK = 32816 # Variable c_int '32816'
+GL_VERTEX_ARRAY = 32884 # Variable c_int '32884'
+GL_ARB_draw_elements_base_vertex = 1 # Variable c_int '1'
+GL_STRICT_DEPTHFUNC_HINT_PGI = 107030 # Variable c_int '107030'
+GL_STENCIL_INDEX = 6401 # Variable c_int '6401'
+GL_PROGRAM_TEMPORARIES_ARB = 34980 # Variable c_int '34980'
+GL_TEXTURE_GREEN_SIZE_EXT = 32861 # Variable c_int '32861'
+GL_ATOMIC_COUNTER_BUFFER_START = 37570 # Variable c_int '37570'
+GL_RGBA8UI = 36220 # Variable c_int '36220'
+GL_SEPARATE_ATTRIBS_NV = 35981 # Variable c_int '35981'
+GL_VIDEO_CAPTURE_FRAME_WIDTH_NV = 36920 # Variable c_int '36920'
+GL_COMPRESSED_INTENSITY_ARB = 34028 # Variable c_int '34028'
+GL_HIGH_FLOAT = 36338 # Variable c_int '36338'
+GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB = 34073 # Variable c_int '34073'
+GL_GREATER = 516 # Variable c_int '516'
+GL_PATH_GEN_COMPONENTS_NV = 37043 # Variable c_int '37043'
+GL_PROXY_HISTOGRAM_EXT = 32805 # Variable c_int '32805'
+GL_RGB4 = 32847 # Variable c_int '32847'
+GL_MAX_GEOMETRY_UNIFORM_COMPONENTS = 36319 # Variable c_int '36319'
+GL_RG8 = 33323 # Variable c_int '33323'
+GL_GREEN_MAX_CLAMP_INGR = 34149 # Variable c_int '34149'
+GL_MAX_TEXTURE_IMAGE_UNITS = 34930 # Variable c_int '34930'
+GL_LUMINANCE_ALPHA32F_ARB = 34841 # Variable c_int '34841'
+GL_EXT_copy_texture = 1 # Variable c_int '1'
+GL_FRONT_FACE = 2886 # Variable c_int '2886'
+GL_POST_COLOR_MATRIX_GREEN_BIAS_SGI = 32953 # Variable c_int '32953'
+GL_POST_CONVOLUTION_GREEN_BIAS_EXT = 32801 # Variable c_int '32801'
+GL_RESAMPLE_ZERO_FILL_SGIX = 33844 # Variable c_int '33844'
+GL_QUERY_RESULT_ARB = 34918 # Variable c_int '34918'
+GL_VERTEX_ATTRIB_ARRAY_STRIDE = 34340 # Variable c_int '34340'
+GL_QUERY_BUFFER_AMD = 37266 # Variable c_int '37266'
+GL_UNSIGNED_INT16_VEC3_NV = 36850 # Variable c_int '36850'
+GL_OPERAND0_RGB_ARB = 34192 # Variable c_int '34192'
+GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE = 33298 # Variable c_int '33298'
+GL_RED_INTEGER = 36244 # Variable c_int '36244'
+GL_CONVOLUTION_BORDER_MODE_EXT = 32787 # Variable c_int '32787'
+GL_REDUCE_EXT = 32790 # Variable c_int '32790'
+GL_MINMAX_SINK_EXT = 32816 # Variable c_int '32816'
+GL_OPERAND2_ALPHA_ARB = 34202 # Variable c_int '34202'
+GL_VERTEX_STREAM3_ATI = 34672 # Variable c_int '34672'
+GL_VERTEX_ARRAY_EXT = 32884 # Variable c_int '32884'
+GL_SUN_mesh_array = 1 # Variable c_int '1'
+GL_SEPARABLE_2D_EXT = 32786 # Variable c_int '32786'
+GL_ACCUM_CLEAR_VALUE = 2944 # Variable c_int '2944'
+GL_RGB_SCALE_EXT = 34163 # Variable c_int '34163'
+GL_PROXY_TEXTURE_1D_ARRAY_EXT = 35865 # Variable c_int '35865'
+GL_AMD_texture_texture4 = 1 # Variable c_int '1'
+GL_OBJECT_LINE_SGIS = 33271 # Variable c_int '33271'
+GL_PN_TRIANGLES_ATI = 34800 # Variable c_int '34800'
+GL_SAMPLER_1D_SHADOW_ARB = 35681 # Variable c_int '35681'
+GL_RENDERBUFFER_BINDING = 36007 # Variable c_int '36007'
+GL_TEXTURE_STACK_DEPTH = 2981 # Variable c_int '2981'
+GL_RGB5_EXT = 32848 # Variable c_int '32848'
+GL_AVERAGE_EXT = 33589 # Variable c_int '33589'
+GL_FACTOR_MAX_AMD = 36893 # Variable c_int '36893'
+GL_ARB_texture_compression = 1 # Variable c_int '1'
+GL_REPLACEMENT_CODE_ARRAY_POINTER_SUN = 34243 # Variable c_int '34243'
+GL_CONVOLUTION_1D = 32784 # Variable c_int '32784'
+GL_BLEND = 3042 # Variable c_int '3042'
+GL_FEEDBACK_BUFFER_TYPE = 3570 # Variable c_int '3570'
+GL_REGISTER_COMBINERS_NV = 34082 # Variable c_int '34082'
+GL_MAP1_TEXTURE_COORD_3 = 3477 # Variable c_int '3477'
+GL_R16UI = 33332 # Variable c_int '33332'
+GL_MAP1_TEXTURE_COORD_1 = 3475 # Variable c_int '3475'
+GL_POINT_SPRITE_NV = 34913 # Variable c_int '34913'
+GL_DEPENDENT_HILO_TEXTURE_2D_NV = 34904 # Variable c_int '34904'
+GL_NV_texture_compression_vtc = 1 # Variable c_int '1'
+GL_MAP1_TEXTURE_COORD_4 = 3478 # Variable c_int '3478'
+GL_NV_texture_shader3 = 1 # Variable c_int '1'
+GL_INT_SAMPLER_BUFFER_AMD = 36866 # Variable c_int '36866'
+GL_ONE_MINUS_SRC_COLOR = 769 # Variable c_int '769'
+GL_DOUBLE_MAT3x4_EXT = 36684 # Variable c_int '36684'
+GL_MAX_VERTEX_SHADER_LOCALS_EXT = 34761 # Variable c_int '34761'
+GL_INTENSITY12 = 32844 # Variable c_int '32844'
+GL_FUNC_SUBTRACT_EXT = 32778 # Variable c_int '32778'
+GL_INTENSITY16 = 32845 # Variable c_int '32845'
+GL_OCCLUSION_TEST_HP = 33125 # Variable c_int '33125'
+GL_TEXTURE9 = 33993 # Variable c_int '33993'
+GL_DRAW_BUFFER1_ATI = 34854 # Variable c_int '34854'
+GL_SAMPLE_MASK_EXT = 32928 # Variable c_int '32928'
+GL_PATCHES = 14 # Variable c_int '14'
+GL_LIST_MODE = 2864 # Variable c_int '2864'
+GL_MAP_TESSELLATION_NV = 34498 # Variable c_int '34498'
+GL_TIMESTAMP = 36392 # Variable c_int '36392'
+GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER = 37579 # Variable c_int '37579'
+GL_IMAGE_2D_EXT = 36941 # Variable c_int '36941'
+GL_ACTIVE_VARYINGS_NV = 35969 # Variable c_int '35969'
+GL_ARB_texture_cube_map = 1 # Variable c_int '1'
+GL_VERTEX_PROGRAM_POINT_SIZE = 34370 # Variable c_int '34370'
+GL_UNSIGNED_SHORT_8_8_REV_APPLE = 34235 # Variable c_int '34235'
+GL_Q = 8195 # Variable c_int '8195'
+GL_OPERAND2_RGB = 34194 # Variable c_int '34194'
+GL_MAP2_VERTEX_ATTRIB2_4_NV = 34418 # Variable c_int '34418'
+GL_COLOR_ARRAY_SIZE = 32897 # Variable c_int '32897'
+GL_GEOMETRY_VERTICES_OUT_ARB = 36314 # Variable c_int '36314'
+GL_TEXTURE6 = 33990 # Variable c_int '33990'
+GL_EXT_texture_env_dot3 = 1 # Variable c_int '1'
+GL_ATI_texture_env_combine3 = 1 # Variable c_int '1'
+GL_NV_depth_clamp = 1 # Variable c_int '1'
+GL_TEXTURE_SWIZZLE_B_EXT = 36420 # Variable c_int '36420'
+GL_DOUBLE_EXT = 5130 # Variable c_int '5130'
+GL_SLICE_ACCUM_SUN = 34252 # Variable c_int '34252'
+GL_PACK_SKIP_ROWS = 3331 # Variable c_int '3331'
+GL_MAX_DRAW_BUFFERS_ATI = 34852 # Variable c_int '34852'
+GL_MAX_TEXTURE_UNITS = 34018 # Variable c_int '34018'
+GL_LINEAR_MIPMAP_LINEAR = 9987 # Variable c_int '9987'
+GL_EXT_texture_shared_exponent = 1 # Variable c_int '1'
+GL_LOGIC_OP = 3057 # Variable c_int '3057'
+GL_PATH_FORMAT_SVG_NV = 36976 # Variable c_int '36976'
+GL_MAP1_COLOR_4 = 3472 # Variable c_int '3472'
+GL_GEOMETRY_SHADER = 36313 # Variable c_int '36313'
+GL_UNSIGNED_INT_IMAGE_CUBE = 36966 # Variable c_int '36966'
+GL_COMBINER3_NV = 34131 # Variable c_int '34131'
+GL_LUMINANCE8_EXT = 32832 # Variable c_int '32832'
+GL_SYNC_CL_EVENT_ARB = 33344 # Variable c_int '33344'
+GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS = 34925 # Variable c_int '34925'
+GL_TEXTURE_COORD_ARRAY_TYPE_EXT = 32905 # Variable c_int '32905'
+GL_TRANSFORM_FEEDBACK_VARYINGS_NV = 35971 # Variable c_int '35971'
+GL_BLEND_COLOR = 32773 # Variable c_int '32773'
+GL_DRAW_BUFFER3_ARB = 34856 # Variable c_int '34856'
+GL_MAX_VIEWPORT_DIMS = 3386 # Variable c_int '3386'
+GL_TEXTURE_COORD_ARRAY_STRIDE_EXT = 32906 # Variable c_int '32906'
+GL_LINE_STIPPLE = 2852 # Variable c_int '2852'
+GL_TRANSFORM_FEEDBACK_BUFFER_START_NV = 35972 # Variable c_int '35972'
+GL_QUADS = 7 # Variable c_int '7'
+GL_ONE_MINUS_CONSTANT_ALPHA = 32772 # Variable c_int '32772'
+GL_NEAREST_MIPMAP_LINEAR = 9986 # Variable c_int '9986'
+GL_SUBSAMPLE_DISTANCE_AMD = 34879 # Variable c_int '34879'
+GL_TRANSLATE_3D_NV = 37009 # Variable c_int '37009'
+GL_MULTISAMPLE_BIT_EXT = 536870912 # Variable c_int '536870912'
+GL_MODELVIEW14_ARB = 34606 # Variable c_int '34606'
+GL_FRACTIONAL_EVEN = 36476 # Variable c_int '36476'
+GL_ALPHA_MAX_CLAMP_INGR = 34151 # Variable c_int '34151'
+GL_NV_texture_expand_normal = 1 # Variable c_int '1'
+GL_DRAW_BUFFER14 = 34867 # Variable c_int '34867'
+GL_OPERAND1_ALPHA_ARB = 34201 # Variable c_int '34201'
+GL_FIRST_VERTEX_CONVENTION_EXT = 36429 # Variable c_int '36429'
+GL_REFLECTION_MAP = 34066 # Variable c_int '34066'
+GL_SECONDARY_COLOR_ARRAY_SIZE_EXT = 33882 # Variable c_int '33882'
+GL_SAMPLE_ALPHA_TO_COVERAGE = 32926 # Variable c_int '32926'
+GL_INTENSITY32F_ARB = 34839 # Variable c_int '34839'
+GL_TESS_CONTROL_PROGRAM_NV = 35102 # Variable c_int '35102'
+GL_ALLOW_DRAW_MEM_HINT_PGI = 107025 # Variable c_int '107025'
+GL_INCR = 7682 # Variable c_int '7682'
+GL_HISTOGRAM_WIDTH_EXT = 32806 # Variable c_int '32806'
+GL_SGIS_texture_border_clamp = 1 # Variable c_int '1'
+GL_TEXTURE_FETCH_BARRIER_BIT_EXT = 8 # Variable c_int '8'
+GL_ATI_vertex_attrib_array_object = 1 # Variable c_int '1'
+GL_MAP1_VERTEX_ATTRIB10_4_NV = 34410 # Variable c_int '34410'
+GL_MAP1_VERTEX_ATTRIB7_4_NV = 34407 # Variable c_int '34407'
+GL_MOV_ATI = 35169 # Variable c_int '35169'
+GL_VARIABLE_A_NV = 34083 # Variable c_int '34083'
+GL_ARB_compatibility = 1 # Variable c_int '1'
+GL_ALPHA_MIN_SGIX = 33568 # Variable c_int '33568'
+GL_SAMPLES_PASSED = 35092 # Variable c_int '35092'
+GL_PROVOKING_VERTEX = 36431 # Variable c_int '36431'
+GL_ARB_vertex_shader = 1 # Variable c_int '1'
+GL_STENCIL_TEST_TWO_SIDE_EXT = 35088 # Variable c_int '35088'
+GL_RGBA_FLOAT_MODE_ARB = 34848 # Variable c_int '34848'
+GL_CG_VERTEX_SHADER_EXT = 35086 # Variable c_int '35086'
+GL_LUMINANCE16I_EXT = 36236 # Variable c_int '36236'
+GL_COLOR_TABLE_INTENSITY_SIZE_SGI = 32991 # Variable c_int '32991'
+GL_ARB_fragment_program_shadow = 1 # Variable c_int '1'
+GL_PROGRAM_TEX_INDIRECTIONS_ARB = 34823 # Variable c_int '34823'
+GL_LUMINANCE16_SIGNED_SGIX = 34281 # Variable c_int '34281'
+GL_ATI_element_array = 1 # Variable c_int '1'
+GL_IMAGE_3D = 36942 # Variable c_int '36942'
+GL_MAP2_VERTEX_ATTRIB0_4_NV = 34416 # Variable c_int '34416'
+GL_TEXTURE_COLOR_TABLE_SGI = 32956 # Variable c_int '32956'
+GL_SGIX_reference_plane = 1 # Variable c_int '1'
+GL_OES_single_precision = 1 # Variable c_int '1'
+GL_CONVOLUTION_FORMAT = 32791 # Variable c_int '32791'
+GL_MAP1_VERTEX_ATTRIB1_4_NV = 34401 # Variable c_int '34401'
+GL_PROXY_TEXTURE_2D_STACK_MESAX = 34652 # Variable c_int '34652'
+GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS = 35394 # Variable c_int '35394'
+GL_FRAGMENT_DEPTH_EXT = 33874 # Variable c_int '33874'
+GL_TEXTURE_HEIGHT = 4097 # Variable c_int '4097'
+GL_DOUBLE_MAT2x3 = 36681 # Variable c_int '36681'
+GL_DEPTH_COMPONENT16_ARB = 33189 # Variable c_int '33189'
+GL_RESAMPLE_REPLICATE_SGIX = 33843 # Variable c_int '33843'
+GL_RGBA16I = 36232 # Variable c_int '36232'
+GL_RGBA16F = 34842 # Variable c_int '34842'
+GL_COMBINER_COMPONENT_USAGE_NV = 34116 # Variable c_int '34116'
+GL_DEPTH_TEXTURE_MODE = 34891 # Variable c_int '34891'
+GL_CULL_FRAGMENT_NV = 34535 # Variable c_int '34535'
+GL_REPLACE_EXT = 32866 # Variable c_int '32866'
+GL_TEXTURE_FIXED_SAMPLE_LOCATIONS = 37127 # Variable c_int '37127'
+GL_INCR_WRAP_EXT = 34055 # Variable c_int '34055'
+GL_COLOR_TABLE_LUMINANCE_SIZE_SGI = 32990 # Variable c_int '32990'
+GL_RED = 6403 # Variable c_int '6403'
+GL_MAX_RED_SGIS = 34215 # Variable c_int '34215'
+GL_ARB_shader_objects = 1 # Variable c_int '1'
+GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY = 36970 # Variable c_int '36970'
+GL_DEPTH_STENCIL_EXT = 34041 # Variable c_int '34041'
+GL_POLYGON_OFFSET_LINE = 10754 # Variable c_int '10754'
+GL_FUNC_REVERSE_SUBTRACT = 32779 # Variable c_int '32779'
+GL_RGB16_EXT = 32852 # Variable c_int '32852'
+GL_PRESERVE_ATI = 34658 # Variable c_int '34658'
+GL_DSDT_MAG_VIB_NV = 34551 # Variable c_int '34551'
+GL_NEGATIVE_Y_EXT = 34778 # Variable c_int '34778'
+GL_COLOR_TABLE_ALPHA_SIZE_EXT = 32989 # Variable c_int '32989'
+GL_COMPRESSED_RGBA_S3TC_DXT1_EXT = 33777 # Variable c_int '33777'
+GL_GREEN = 6404 # Variable c_int '6404'
+GL_RGBA32I_EXT = 36226 # Variable c_int '36226'
+GL_MAGNITUDE_SCALE_NV = 34578 # Variable c_int '34578'
+GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM = 36493 # Variable c_int '36493'
+GL_BACK_SECONDARY_COLOR_NV = 35960 # Variable c_int '35960'
+GL_LUMINANCE_FLOAT32_ATI = 34840 # Variable c_int '34840'
+GL_OPERAND1_ALPHA_EXT = 34201 # Variable c_int '34201'
+GL_VERTEX_ATTRIB_ARRAY5_NV = 34389 # Variable c_int '34389'
+GL_MAP2_TEXTURE_COORD_2 = 3508 # Variable c_int '3508'
+GL_ATOMIC_COUNTER_BARRIER_BIT = 4096 # Variable c_int '4096'
+GL_MAP2_TEXTURE_COORD_4 = 3510 # Variable c_int '3510'
+GL_SAMPLE_COVERAGE_VALUE = 32938 # Variable c_int '32938'
+GL_EXT_scene_marker = 1 # Variable c_int '1'
+GL_LUMINANCE_FLOAT32_APPLE = 34840 # Variable c_int '34840'
+GL_MAX_MODELVIEW_STACK_DEPTH = 3382 # Variable c_int '3382'
+GL_ARB_texture_storage = 1 # Variable c_int '1'
+GL_TEXTURE_LUMINANCE_SIZE_EXT = 32864 # Variable c_int '32864'
+GL_TRANSPOSE_AFFINE_2D_NV = 37014 # Variable c_int '37014'
+GL_RGBA16_EXTENDED_RANGE_SGIX = 34291 # Variable c_int '34291'
+GL_CON_1_ATI = 35138 # Variable c_int '35138'
+GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE = 37130 # Variable c_int '37130'
+GL_UNSIGNED_INT_ATOMIC_COUNTER = 37595 # Variable c_int '37595'
+GL_VERTEX_SOURCE_ATI = 34668 # Variable c_int '34668'
+GL_SGIS_generate_mipmap = 1 # Variable c_int '1'
+GL_RG32I = 33339 # Variable c_int '33339'
+GL_BUMP_ENVMAP_ATI = 34683 # Variable c_int '34683'
+GL_MATRIX29_ARB = 35037 # Variable c_int '35037'
+GL_COUNT_UP_NV = 37000 # Variable c_int '37000'
+GL_UNSIGNED_INT_8_8_8_8_REV = 33639 # Variable c_int '33639'
+GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 34064 # Variable c_int '34064'
+GL_OBJECT_SHADER_SOURCE_LENGTH_ARB = 35720 # Variable c_int '35720'
+GL_VERTEX_STREAM4_ATI = 34673 # Variable c_int '34673'
+GL_RESAMPLE_ZERO_FILL_OML = 35207 # Variable c_int '35207'
+GL_COLOR_ATTACHMENT5_EXT = 36069 # Variable c_int '36069'
+GL_UNPACK_IMAGE_HEIGHT = 32878 # Variable c_int '32878'
+GL_MAX_COMBINED_UNIFORM_BLOCKS = 35374 # Variable c_int '35374'
+GL_FRAGMENT_PROGRAM_NV = 34928 # Variable c_int '34928'
+GL_ARB_base_instance = 1 # Variable c_int '1'
+GL_INT16_VEC4_NV = 36839 # Variable c_int '36839'
+GL_TEXTURE_BUFFER_DATA_STORE_BINDING_ARB = 35885 # Variable c_int '35885'
+GL_OML_subsample = 1 # Variable c_int '1'
+GL_TEXTURE_LEQUAL_R_SGIX = 33180 # Variable c_int '33180'
+GL_COLOR_CLEAR_VALUE = 3106 # Variable c_int '3106'
+GL_DST_COLOR = 774 # Variable c_int '774'
+GL_DOT3_ATI = 35174 # Variable c_int '35174'
+GL_UNSIGNED_INT64_VEC2_NV = 36853 # Variable c_int '36853'
+GL_MAX_SAMPLES_EXT = 36183 # Variable c_int '36183'
+GL_DRAW_BUFFER5_ATI = 34858 # Variable c_int '34858'
+GL_INTEL_texture_scissor = 1 # Variable c_int '1'
+GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS = 37596 # Variable c_int '37596'
+GL_DRAW_BUFFER15_ATI = 34868 # Variable c_int '34868'
+GL_N3F_V3F = 10789 # Variable c_int '10789'
+GL_TRANSPOSE_CURRENT_MATRIX_ARB = 34999 # Variable c_int '34999'
+GL_V3F = 10785 # Variable c_int '10785'
+GL_DOUBLE_MAT3_EXT = 36679 # Variable c_int '36679'
+GL_S3_s3tc = 1 # Variable c_int '1'
+GL_INVALID_OPERATION = 1282 # Variable c_int '1282'
+GL_REFLECTION_MAP_EXT = 34066 # Variable c_int '34066'
+GL_PIXEL_BUFFER_BARRIER_BIT_EXT = 128 # Variable c_int '128'
+GL_LUMINANCE16 = 32834 # Variable c_int '32834'
+GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES = 35395 # Variable c_int '35395'
+GL_POST_CONVOLUTION_ALPHA_SCALE = 32799 # Variable c_int '32799'
+GL_LUMINANCE12 = 32833 # Variable c_int '32833'
+GL_PIXEL_TRANSFORM_2D_STACK_DEPTH_EXT = 33590 # Variable c_int '33590'
+GL_VIDEO_BUFFER_PITCH_NV = 36904 # Variable c_int '36904'
+GL_RG16_SNORM = 36761 # Variable c_int '36761'
+GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER = 35397 # Variable c_int '35397'
+GL_EXT_index_material = 1 # Variable c_int '1'
+GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT = 36263 # Variable c_int '36263'
+GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS = 37581 # Variable c_int '37581'
+GL_SOURCE1_ALPHA_EXT = 34185 # Variable c_int '34185'
+GL_MODULATE = 8448 # Variable c_int '8448'
+GL_RG_INTEGER = 33320 # Variable c_int '33320'
+GL_MAX_VERTEX_ATOMIC_COUNTERS = 37586 # Variable c_int '37586'
+GL_IMAGE_FORMAT_COMPATIBILITY_TYPE = 37063 # Variable c_int '37063'
+GL_SOURCE0_ALPHA_EXT = 34184 # Variable c_int '34184'
+GL_PATH_FOG_GEN_MODE_NV = 37036 # Variable c_int '37036'
+GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS = 37584 # Variable c_int '37584'
+GL_RENDERBUFFER_HEIGHT = 36163 # Variable c_int '36163'
+GL_TESS_EVALUATION_PROGRAM_NV = 35103 # Variable c_int '35103'
+GL_INTERLEAVED_ATTRIBS = 35980 # Variable c_int '35980'
+GL_TEXTURE_ALPHA_TYPE = 35859 # Variable c_int '35859'
+GL_SGIX_pixel_texture = 1 # Variable c_int '1'
+GL_NV_occlusion_query = 1 # Variable c_int '1'
+GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB = 34965 # Variable c_int '34965'
+GL_BLUE = 6405 # Variable c_int '6405'
+GL_INDEX_ARRAY = 32887 # Variable c_int '32887'
+GL_RGBA4_EXT = 32854 # Variable c_int '32854'
+GL_COLOR_ATTACHMENT2_EXT = 36066 # Variable c_int '36066'
+GL_COLOR_ATTACHMENT7 = 36071 # Variable c_int '36071'
+GL_HORIZONTAL_LINE_TO_NV = 6 # Variable c_int '6'
+GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS = 35968 # Variable c_int '35968'
+GL_MAP2_TEXTURE_COORD_3 = 3509 # Variable c_int '3509'
+GL_NV_parameter_buffer_object = 1 # Variable c_int '1'
+GL_TEXTURE_MATERIAL_PARAMETER_EXT = 33618 # Variable c_int '33618'
+GL_MAX_DEBUG_LOGGED_MESSAGES_AMD = 37188 # Variable c_int '37188'
+GL_C4F_N3F_V3F = 10790 # Variable c_int '10790'
+GL_CURRENT_BINORMAL_EXT = 33852 # Variable c_int '33852'
+GL_SGIX_async_pixel = 1 # Variable c_int '1'
+GL_T4F_V4F = 10792 # Variable c_int '10792'
+GL_STREAM_COPY = 35042 # Variable c_int '35042'
+GL_INT64_VEC2_NV = 36841 # Variable c_int '36841'
+GL_FLOAT_RG16_NV = 34950 # Variable c_int '34950'
+GL_NUM_SAMPLE_COUNTS = 37760 # Variable c_int '37760'
+GL_TEXTURE_BUFFER_DATA_STORE_BINDING = 35885 # Variable c_int '35885'
+GL_HISTOGRAM_BLUE_SIZE = 32810 # Variable c_int '32810'
+GL_SIGNED_ALPHA8_NV = 34566 # Variable c_int '34566'
+GL_EYE_PLANE = 9474 # Variable c_int '9474'
+GL_TEXTURE_LUMINANCE_TYPE_ARB = 35860 # Variable c_int '35860'
+GL_MAX_TEXTURE_COORDS_NV = 34929 # Variable c_int '34929'
+GL_SIGNED_RGB8_UNSIGNED_ALPHA8_NV = 34573 # Variable c_int '34573'
+GL_TEXTURE_2D_MULTISAMPLE_ARRAY = 37122 # Variable c_int '37122'
+GL_DRAW_FRAMEBUFFER_EXT = 36009 # Variable c_int '36009'
+GL_SAMPLER_2D_ARRAY_SHADOW_EXT = 36292 # Variable c_int '36292'
+GL_POINT_SMOOTH_HINT = 3153 # Variable c_int '3153'
+GL_EXT_histogram = 1 # Variable c_int '1'
+GL_VERTEX_ARRAY_SIZE = 32890 # Variable c_int '32890'
+GL_RGB8UI_EXT = 36221 # Variable c_int '36221'
+GL_FLOAT16_VEC3_NV = 36858 # Variable c_int '36858'
+GL_REG_0_ATI = 35105 # Variable c_int '35105'
+GL_CONVOLUTION_WIDTH = 32792 # Variable c_int '32792'
+GL_ORDER = 2561 # Variable c_int '2561'
+GL_VIBRANCE_BIAS_NV = 34585 # Variable c_int '34585'
+GL_VERTEX_ATTRIB_MAP1_DOMAIN_APPLE = 35333 # Variable c_int '35333'
+GL_INT8_VEC4_NV = 36835 # Variable c_int '36835'
+GL_ALPHA8UI_EXT = 36222 # Variable c_int '36222'
+GL_IMAGE_FORMAT_COMPATIBILITY_BY_CLASS = 37065 # Variable c_int '37065'
+GL_REFLECTION_MAP_ARB = 34066 # Variable c_int '34066'
+GL_STORAGE_SHARED_APPLE = 34239 # Variable c_int '34239'
+GL_SOURCE1_RGB_ARB = 34177 # Variable c_int '34177'
+GL_PN_TRIANGLES_POINT_MODE_CUBIC_ATI = 34806 # Variable c_int '34806'
+GL_NUM_FRAGMENT_REGISTERS_ATI = 35182 # Variable c_int '35182'
+GL_MATRIX4_NV = 34356 # Variable c_int '34356'
+GL_SIGNED_IDENTITY_NV = 34108 # Variable c_int '34108'
+GL_VERTEX23_BIT_PGI = 4 # Variable c_int '4'
+GL_INT_SAMPLER_2D_ARRAY_EXT = 36303 # Variable c_int '36303'
+GL_MAP1_VERTEX_ATTRIB15_4_NV = 34415 # Variable c_int '34415'
+GL_OBJECT_COMPILE_STATUS_ARB = 35713 # Variable c_int '35713'
+GL_LAYER_PROVOKING_VERTEX = 33374 # Variable c_int '33374'
+GL_TEXTURE11_ARB = 33995 # Variable c_int '33995'
+GL_FASTEST = 4353 # Variable c_int '4353'
+GL_EXT_vertex_shader = 1 # Variable c_int '1'
+GL_LUMINANCE8 = 32832 # Variable c_int '32832'
+GL_ARB_depth_texture = 1 # Variable c_int '1'
+GL_DEPTH_STENCIL_TO_RGBA_NV = 34926 # Variable c_int '34926'
+GL_TEXTURE_RED_TYPE = 35856 # Variable c_int '35856'
+GL_ATI_shader_texture_lod = 1 # Variable c_int '1'
+GL_COLOR_INDEX16_EXT = 32999 # Variable c_int '32999'
+GL_BUFFER_ACCESS_ARB = 35003 # Variable c_int '35003'
+GL_EXT_texture_env = 1 # Variable c_int '1'
+GL_OFFSET_TEXTURE_RECTANGLE_NV = 34380 # Variable c_int '34380'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB = 34070 # Variable c_int '34070'
+GL_POST_COLOR_MATRIX_GREEN_SCALE = 32949 # Variable c_int '32949'
+GL_INDEX_BIT_PGI = 524288 # Variable c_int '524288'
+GL_DRAW_BUFFER8_ATI = 34861 # Variable c_int '34861'
+GL_INT16_VEC2_NV = 36837 # Variable c_int '36837'
+GL_SAMPLE_MASK_VALUE_SGIS = 32938 # Variable c_int '32938'
+GL_CLIENT_PIXEL_STORE_BIT = 1 # Variable c_int '1'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 34072 # Variable c_int '34072'
+GL_MATRIX2_ARB = 35010 # Variable c_int '35010'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 34074 # Variable c_int '34074'
+GL_SGIS_pixel_texture = 1 # Variable c_int '1'
+GL_POLYGON_BIT = 8 # Variable c_int '8'
+GL_LERP_ATI = 35177 # Variable c_int '35177'
+GL_EXT_fog_coord = 1 # Variable c_int '1'
+GL_VERTEX_ARRAY_OBJECT_AMD = 37204 # Variable c_int '37204'
+GL_IMAGE_BINDING_LAYERED = 36668 # Variable c_int '36668'
+GL_PIXEL_TRANSFORM_2D_EXT = 33584 # Variable c_int '33584'
+GL_ACCUM_BLUE_BITS = 3418 # Variable c_int '3418'
+GL_SAMPLER_CUBE_ARB = 35680 # Variable c_int '35680'
+GL_POST_CONVOLUTION_ALPHA_SCALE_EXT = 32799 # Variable c_int '32799'
+GL_RIGHT = 1031 # Variable c_int '1031'
+GL_PROGRAM_OBJECT_ARB = 35648 # Variable c_int '35648'
+GL_FLOAT_R16_NV = 34948 # Variable c_int '34948'
+GL_COMPRESSED_SIGNED_RED_RGTC1 = 36284 # Variable c_int '36284'
+GL_TEXTURE_CUBE_MAP_ARRAY = 36873 # Variable c_int '36873'
+GL_MAX_SHADER_BUFFER_ADDRESS_NV = 36661 # Variable c_int '36661'
+GL_NATIVE_GRAPHICS_END_HINT_PGI = 107012 # Variable c_int '107012'
+GL_TEXTURE5_ARB = 33989 # Variable c_int '33989'
+GL_VERTEX_SHADER_LOCALS_EXT = 34771 # Variable c_int '34771'
+GL_PRESENT_TIME_NV = 36394 # Variable c_int '36394'
+GL_LUMINANCE_FLOAT16_ATI = 34846 # Variable c_int '34846'
+GL_SUN_global_alpha = 1 # Variable c_int '1'
+GL_BUMP_ROT_MATRIX_ATI = 34677 # Variable c_int '34677'
+GL_STANDARD_FONT_NAME_NV = 36978 # Variable c_int '36978'
+GL_RELATIVE_SMALL_CCW_ARC_TO_NV = 19 # Variable c_int '19'
+GL_UNIFORM_SIZE = 35384 # Variable c_int '35384'
+GL_FONT_Y_MAX_BOUNDS_BIT_NV = 524288 # Variable c_int '524288'
+GL_READ_ONLY_ARB = 35000 # Variable c_int '35000'
+GL_QUERY_RESULT_NO_WAIT_AMD = 37268 # Variable c_int '37268'
+GL_INTEL_parallel_arrays = 1 # Variable c_int '1'
+GL_OFFSET_TEXTURE_MATRIX_NV = 34529 # Variable c_int '34529'
+GL_FLOAT_MAT4x2 = 35689 # Variable c_int '35689'
+GL_SHADER_SOURCE_LENGTH = 35720 # Variable c_int '35720'
+GL_DOT3_RGBA = 34479 # Variable c_int '34479'
+GL_DRAW_BUFFER4_ARB = 34857 # Variable c_int '34857'
+GL_ARB_vertex_array_object = 1 # Variable c_int '1'
+GL_TEXTURE2_ARB = 33986 # Variable c_int '33986'
+GL_COMPRESSED_RG = 33318 # Variable c_int '33318'
+GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_ARB = 35881 # Variable c_int '35881'
+GL_NORMAL_ARRAY_TYPE_EXT = 32894 # Variable c_int '32894'
+GL_FRAGMENT_PROGRAM_BINDING_NV = 34931 # Variable c_int '34931'
+GL_TEXTURE_NORMAL_EXT = 34223 # Variable c_int '34223'
+GL_GLYPH_HAS_KERNING_BIT_NV = 256 # Variable c_int '256'
+GL_POLYGON_OFFSET_UNITS = 10752 # Variable c_int '10752'
+GL_MAX_COLOR_TEXTURE_SAMPLES = 37134 # Variable c_int '37134'
+GL_TEXTURE_BINDING_RECTANGLE_EXT = 34038 # Variable c_int '34038'
+GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS = 37583 # Variable c_int '37583'
+GL_SAMPLE_MASK_INVERT_EXT = 32939 # Variable c_int '32939'
+GL_OUT_OF_MEMORY = 1285 # Variable c_int '1285'
+GL_EXT_texture_env_add = 1 # Variable c_int '1'
+GL_TEXTURE_COORD_ARRAY_LIST_IBM = 103074 # Variable c_int '103074'
+GL_IMAGE_BINDING_FORMAT = 36974 # Variable c_int '36974'
+GL_EXT_texture_mirror_clamp = 1 # Variable c_int '1'
+GL_NV_multisample_filter_hint = 1 # Variable c_int '1'
+GL_NORMAL_ARRAY_STRIDE = 32895 # Variable c_int '32895'
+GL_FRAGMENT_PROGRAM_INTERPOLATION_OFFSET_BITS_NV = 36445 # Variable c_int '36445'
+GL_COMPRESSED_LUMINANCE_ALPHA_ARB = 34027 # Variable c_int '34027'
+GL_BUFFER_MAP_LENGTH = 37152 # Variable c_int '37152'
+GL_TRANSPOSE_PROJECTION_MATRIX_ARB = 34020 # Variable c_int '34020'
+GL_CURRENT_TIME_NV = 36392 # Variable c_int '36392'
+GL_MESA_pack_invert = 1 # Variable c_int '1'
+GL_LUMINANCE12_ALPHA12_EXT = 32839 # Variable c_int '32839'
+GL_EVAL_2D_NV = 34496 # Variable c_int '34496'
+GL_GEOMETRY_OUTPUT_TYPE = 35096 # Variable c_int '35096'
+GL_RASTERIZER_DISCARD = 35977 # Variable c_int '35977'
+GL_ATIX_texture_env_route = 1 # Variable c_int '1'
+GL_MAP2_VERTEX_ATTRIB11_4_NV = 34427 # Variable c_int '34427'
+GL_COLOR_INDEX1_EXT = 32994 # Variable c_int '32994'
+GL_R1UI_N3F_V3F_SUN = 34247 # Variable c_int '34247'
+GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS = 36665 # Variable c_int '36665'
+GL_RENDERBUFFER_SAMPLES_EXT = 36011 # Variable c_int '36011'
+GL_MODELVIEW12_ARB = 34604 # Variable c_int '34604'
+GL_LINES_ADJACENCY_EXT = 10 # Variable c_int '10'
+GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 34341 # Variable c_int '34341'
+GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER = 35396 # Variable c_int '35396'
+GL_SAMPLER_2D_RECT_ARB = 35683 # Variable c_int '35683'
+GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT = 36059 # Variable c_int '36059'
+GL_DRAW_BUFFER2_ATI = 34855 # Variable c_int '34855'
+GL_MAP2_VERTEX_ATTRIB12_4_NV = 34428 # Variable c_int '34428'
+GL_TRANSFORM_FEEDBACK_VARYINGS_EXT = 35971 # Variable c_int '35971'
+GL_NV_half_float = 1 # Variable c_int '1'
+GL_EDGE_FLAG_ARRAY = 32889 # Variable c_int '32889'
+GL_INT_SAMPLER_2D_MULTISAMPLE = 37129 # Variable c_int '37129'
+GL_LUMINANCE4_EXT = 32831 # Variable c_int '32831'
+GL_PALETTE4_R5_G6_B5_OES = 35730 # Variable c_int '35730'
+GL_UNPACK_CONSTANT_DATA_SUNX = 33237 # Variable c_int '33237'
+GL_WEIGHT_ARRAY_TYPE_ARB = 34473 # Variable c_int '34473'
+GL_MAX_CUBE_MAP_TEXTURE_SIZE_EXT = 34076 # Variable c_int '34076'
+GL_UNSIGNED_INT8_VEC2_NV = 36845 # Variable c_int '36845'
+GL_UNSIGNED_INT64_NV = 5135 # Variable c_int '5135'
+GL_PROGRAM_RESULT_COMPONENTS_NV = 35079 # Variable c_int '35079'
+GL_W_EXT = 34776 # Variable c_int '34776'
+GL_VARIANT_ARRAY_POINTER_EXT = 34793 # Variable c_int '34793'
+GL_PATH_TERMINAL_DASH_CAP_NV = 36989 # Variable c_int '36989'
+GL_PROXY_TEXTURE_1D = 32867 # Variable c_int '32867'
+GL_UNIFORM_BUFFER_EXT = 36334 # Variable c_int '36334'
+GL_ARB_transform_feedback3 = 1 # Variable c_int '1'
+GL_PATH_FILL_MASK_NV = 36993 # Variable c_int '36993'
+GL_DSDT_MAG_NV = 34550 # Variable c_int '34550'
+GL_TRANSFORM_FEEDBACK_BARRIER_BIT_EXT = 2048 # Variable c_int '2048'
+GL_TRIANGLE_FAN = 6 # Variable c_int '6'
+GL_COLOR_TABLE_BLUE_SIZE_SGI = 32988 # Variable c_int '32988'
+GL_RGBA_SIGNED_SGIX = 34273 # Variable c_int '34273'
+GL_MODELVIEW3_ARB = 34595 # Variable c_int '34595'
+GL_VIEWPORT_BIT = 2048 # Variable c_int '2048'
+GL_PACK_ROW_BYTES_APPLE = 35349 # Variable c_int '35349'
+GL_TEXTURE_MAX_CLAMP_R_SGIX = 33643 # Variable c_int '33643'
+GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT = 34069 # Variable c_int '34069'
+GL_MATRIX30_ARB = 35038 # Variable c_int '35038'
+GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS = 36480 # Variable c_int '36480'
+GL_SAMPLE_ALPHA_TO_MASK_EXT = 32926 # Variable c_int '32926'
+GL_BUFFER_ACCESS_FLAGS = 37151 # Variable c_int '37151'
+GL_ARB_draw_buffers_blend = 1 # Variable c_int '1'
+GL_PREVIOUS_EXT = 34168 # Variable c_int '34168'
+GL_UNIFORM_BUFFER_SIZE = 35370 # Variable c_int '35370'
+GL_TEXTURE_IMMUTABLE_FORMAT = 37167 # Variable c_int '37167'
+GL_FENCE_APPLE = 35339 # Variable c_int '35339'
+GL_FRAME_NV = 36390 # Variable c_int '36390'
+GL_RED_BITS = 3410 # Variable c_int '3410'
+GL_TEXTURE17_ARB = 34001 # Variable c_int '34001'
+GL_MODELVIEW2_ARB = 34594 # Variable c_int '34594'
+GL_MAP2_VERTEX_ATTRIB5_4_NV = 34421 # Variable c_int '34421'
+GL_TEXTURE_BUFFER_FORMAT = 35886 # Variable c_int '35886'
+GL_IDENTITY_NV = 34346 # Variable c_int '34346'
+GL_UNSIGNED_SHORT_4_4_4_4_EXT = 32819 # Variable c_int '32819'
+GL_TEXTURE_COORD_ARRAY_POINTER = 32914 # Variable c_int '32914'
+GL_ATOMIC_COUNTER_BUFFER_BINDING = 37569 # Variable c_int '37569'
+GL_MAX_SUBROUTINES = 36327 # Variable c_int '36327'
+GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT = 36048 # Variable c_int '36048'
+GL_ARB_multisample = 1 # Variable c_int '1'
+GL_MAGNITUDE_BIAS_NV = 34584 # Variable c_int '34584'
+GL_INT_IMAGE_2D_ARRAY = 36958 # Variable c_int '36958'
+GL_ARB_sample_shading = 1 # Variable c_int '1'
+GL_TEXTURE_GEN_S = 3168 # Variable c_int '3168'
+GL_VERTEX_ARRAY_TYPE_EXT = 32891 # Variable c_int '32891'
+GL_TRANSLATE_Y_NV = 37007 # Variable c_int '37007'
+GL_VARIANT_DATATYPE_EXT = 34789 # Variable c_int '34789'
+GL_BGRA = 32993 # Variable c_int '32993'
+GL_ACTIVE_UNIFORM_BLOCKS = 35382 # Variable c_int '35382'
+GL_GEOMETRY_SHADER_ARB = 36313 # Variable c_int '36313'
+GL_SHADER_OBJECT_ARB = 35656 # Variable c_int '35656'
+GL_EXT_422_pixels = 1 # Variable c_int '1'
+GL_RGB_SNORM = 36754 # Variable c_int '36754'
+GL_RGB16I = 36233 # Variable c_int '36233'
+GL_CURRENT_MATRIX_INDEX_ARB = 34885 # Variable c_int '34885'
+GL_ARB_blend_func_extended = 1 # Variable c_int '1'
+GL_MOVE_TO_RESETS_NV = 37045 # Variable c_int '37045'
+GL_PATH_FILL_MODE_NV = 36992 # Variable c_int '36992'
+GL_SMOOTH_LINE_WIDTH_RANGE = 2850 # Variable c_int '2850'
+GL_TEXTURE_GEN_R = 3170 # Variable c_int '3170'
+GL_IMAGE_BINDING_LAYER = 36669 # Variable c_int '36669'
+GL_TEXTURE_2D_MULTISAMPLE = 37120 # Variable c_int '37120'
+GL_DEBUG_SEVERITY_LOW_AMD = 37192 # Variable c_int '37192'
+GL_ARB_window_pos = 1 # Variable c_int '1'
+GL_OPERAND0_ALPHA = 34200 # Variable c_int '34200'
+GL_LAST_VERTEX_CONVENTION = 36430 # Variable c_int '36430'
+GL_COLOR_ATTACHMENT4_EXT = 36068 # Variable c_int '36068'
+GL_EDGE_FLAG_ARRAY_STRIDE_EXT = 32908 # Variable c_int '32908'
+GL_TRACK_MATRIX_TRANSFORM_NV = 34377 # Variable c_int '34377'
+GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB = 34040 # Variable c_int '34040'
+GL_FOG_COORDINATE_ARRAY_STRIDE_EXT = 33877 # Variable c_int '33877'
+GL_MAX_FRAGMENT_LIGHTS_EXT = 33796 # Variable c_int '33796'
+GL_OUTPUT_TEXTURE_COORD26_EXT = 34743 # Variable c_int '34743'
+GL_POST_TEXTURE_FILTER_SCALE_SGIX = 33146 # Variable c_int '33146'
+GL_TEXTURE_GEN_Q = 3171 # Variable c_int '3171'
+GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW_ARB = 36877 # Variable c_int '36877'
+GL_MAX_EXT = 32776 # Variable c_int '32776'
+GL_POST_COLOR_MATRIX_RED_BIAS = 32952 # Variable c_int '32952'
+GL_CONDITION_SATISFIED = 37148 # Variable c_int '37148'
+GL_SUB_ATI = 35173 # Variable c_int '35173'
+GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT = 1 # Variable c_int '1'
+GL_UNSIGNED_NORMALIZED_ARB = 35863 # Variable c_int '35863'
+GL_GENERIC_ATTRIB_NV = 35965 # Variable c_int '35965'
+GL_SAMPLES_ARB = 32937 # Variable c_int '32937'
+GL_SECONDARY_COLOR_ARRAY_POINTER = 33885 # Variable c_int '33885'
+GL_BGR_INTEGER_EXT = 36250 # Variable c_int '36250'
+GL_FRONT_AND_BACK = 1032 # Variable c_int '1032'
+GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS = 36486 # Variable c_int '36486'
+GL_MATRIX12_ARB = 35020 # Variable c_int '35020'
+GL_CLIP_NEAR_HINT_PGI = 107040 # Variable c_int '107040'
+GL_INTERLACE_READ_OML = 35201 # Variable c_int '35201'
+GL_OUTPUT_TEXTURE_COORD18_EXT = 34735 # Variable c_int '34735'
+GL_PREVIOUS_ARB = 34168 # Variable c_int '34168'
+GL_TEXTURE_1D_ARRAY = 35864 # Variable c_int '35864'
+GL_CURRENT_VERTEX_ATTRIB_ARB = 34342 # Variable c_int '34342'
+GL_FRAGMENT_COLOR_MATERIAL_FACE_EXT = 33794 # Variable c_int '33794'
+GL_READ_FRAMEBUFFER_BINDING = 36010 # Variable c_int '36010'
+GL_VERTEX_SHADER_ARB = 35633 # Variable c_int '35633'
+GL_FRAMEBUFFER_ATTACHMENT_LAYERED = 36263 # Variable c_int '36263'
+GL_PIXEL_PACK_BUFFER_EXT = 35051 # Variable c_int '35051'
+GL_PATH_STROKE_WIDTH_NV = 36981 # Variable c_int '36981'
+GL_COORD_REPLACE = 34914 # Variable c_int '34914'
+GL_CURRENT_WEIGHT_ARB = 34472 # Variable c_int '34472'
+GL_USE_MISSING_GLYPH_NV = 37034 # Variable c_int '37034'
+GL_SURFACE_STATE_NV = 34539 # Variable c_int '34539'
+GL_ARB_sampler_objects = 1 # Variable c_int '1'
+GL_RGBA2 = 32853 # Variable c_int '32853'
+GL_POINT = 6912 # Variable c_int '6912'
+GL_RGBA4 = 32854 # Variable c_int '32854'
+GL_MULTISAMPLE_BIT = 536870912 # Variable c_int '536870912'
+GL_MAX_VERTEX_ATTRIBS_ARB = 34921 # Variable c_int '34921'
+GL_RGBA8 = 32856 # Variable c_int '32856'
+GL_ALPHA16UI_EXT = 36216 # Variable c_int '36216'
+GL_R1UI_T2F_V3F_SUN = 34249 # Variable c_int '34249'
+GL_INFO_LOG_LENGTH = 35716 # Variable c_int '35716'
+GL_ACCUM_ADJACENT_PAIRS_NV = 37037 # Variable c_int '37037'
+GL_EVAL_VERTEX_ATTRIB10_NV = 34512 # Variable c_int '34512'
+GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT = 36286 # Variable c_int '36286'
+GL_DRAW_BUFFER10_ATI = 34863 # Variable c_int '34863'
+GL_RESET_NOTIFICATION_STRATEGY_ARB = 33366 # Variable c_int '33366'
+GL_ARB_shader_subroutine = 1 # Variable c_int '1'
+GL_EXT_framebuffer_sRGB = 1 # Variable c_int '1'
+GL_COMBINE_RGB_ARB = 34161 # Variable c_int '34161'
+GL_LUMINANCE_ALPHA_FLOAT16_ATI = 34847 # Variable c_int '34847'
+GL_SRGB8 = 35905 # Variable c_int '35905'
+GL_TEXTURE13_ARB = 33997 # Variable c_int '33997'
+GL_QUERY_RESULT_NV = 34918 # Variable c_int '34918'
+GL_SRGB_ALPHA_EXT = 35906 # Variable c_int '35906'
+GL_CUBIC_CURVE_TO_NV = 12 # Variable c_int '12'
+GL_RESCALE_NORMAL = 32826 # Variable c_int '32826'
+GL_FIELDS_NV = 36391 # Variable c_int '36391'
+GL_POINT_SIZE_GRANULARITY = 2835 # Variable c_int '2835'
+GL_LOCAL_CONSTANT_EXT = 34755 # Variable c_int '34755'
+GL_PERSPECTIVE_CORRECTION_HINT = 3152 # Variable c_int '3152'
+GL_VERSION_2_0 = 1 # Variable c_int '1'
+GL_VERSION_2_1 = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY11_NV = 34395 # Variable c_int '34395'
+GL_GREEN_BIAS = 3353 # Variable c_int '3353'
+GL_COMPRESSED_RGBA_FXT1_3DFX = 34481 # Variable c_int '34481'
+GL_MAP_READ_BIT = 1 # Variable c_int '1'
+GL_ALPHA_INTEGER_EXT = 36247 # Variable c_int '36247'
+GL_PROXY_TEXTURE_CUBE_MAP_ARB = 34075 # Variable c_int '34075'
+GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = 34940 # Variable c_int '34940'
+GL_MATRIX9_ARB = 35017 # Variable c_int '35017'
+GL_FLOAT_RGBA_MODE_NV = 34958 # Variable c_int '34958'
+GL_VERTEX_ARRAY_LIST_STRIDE_IBM = 103080 # Variable c_int '103080'
+GL_VERTEX_ARRAY_ADDRESS_NV = 36641 # Variable c_int '36641'
+GL_PALETTE4_RGBA8_OES = 35729 # Variable c_int '35729'
+GL_NUM_PASSES_ATI = 35184 # Variable c_int '35184'
+GL_LINE_BIT = 4 # Variable c_int '4'
+GL_TEXTURE20_ARB = 34004 # Variable c_int '34004'
+GL_ARB_texture_query_lod = 1 # Variable c_int '1'
+GL_OP_NEGATE_EXT = 34691 # Variable c_int '34691'
+GL_DEBUG_TYPE_OTHER_ARB = 33361 # Variable c_int '33361'
+GL_T2F_N3F_V3F = 10795 # Variable c_int '10795'
+GL_COMBINER4_NV = 34132 # Variable c_int '34132'
+GL_TRANSFORM_BIT = 4096 # Variable c_int '4096'
+GL_RELEASED_APPLE = 35353 # Variable c_int '35353'
+GL_CURRENT_OCCLUSION_QUERY_ID_NV = 34917 # Variable c_int '34917'
+GL_INTENSITY16I_EXT = 36235 # Variable c_int '36235'
+GL_MAP1_VERTEX_ATTRIB3_4_NV = 34403 # Variable c_int '34403'
+GL_MODELVIEW9_ARB = 34601 # Variable c_int '34601'
+GL_VERTEX_ATTRIB_ARRAY_ADDRESS_NV = 36640 # Variable c_int '36640'
+GL_CULL_VERTEX_EYE_POSITION_EXT = 33195 # Variable c_int '33195'
+GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = 35917 # Variable c_int '35917'
+GL_UNSIGNED_INT_8_8_8_8 = 32821 # Variable c_int '32821'
+GL_TEXTURE_GEN_T = 3169 # Variable c_int '3169'
+GL_MAX_ELEMENTS_VERTICES_EXT = 33000 # Variable c_int '33000'
+GL_OBJECT_DISTANCE_TO_POINT_SGIS = 33265 # Variable c_int '33265'
+GL_RGB_S3TC = 33696 # Variable c_int '33696'
+GL_SAMPLE_SHADING_ARB = 35894 # Variable c_int '35894'
+GL_ARB_texture_border_clamp = 1 # Variable c_int '1'
+GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_NV = 35968 # Variable c_int '35968'
+GL_SIGNED_NORMALIZED = 36764 # Variable c_int '36764'
+GL_ALPHA16 = 32830 # Variable c_int '32830'
+GL_DEPTH_CLAMP_NV = 34383 # Variable c_int '34383'
+GL_POLYGON_SMOOTH = 2881 # Variable c_int '2881'
+GL_POINT_FADE_THRESHOLD_SIZE_ARB = 33064 # Variable c_int '33064'
+GL_CONVOLUTION_WIDTH_EXT = 32792 # Variable c_int '32792'
+GL_TRANSPOSE_MODELVIEW_MATRIX = 34019 # Variable c_int '34019'
+GL_MAX_OPTIMIZED_VERTEX_SHADER_LOCALS_EXT = 34766 # Variable c_int '34766'
+GL_UNSIGNED_INT_SAMPLER_2D_ARRAY = 36311 # Variable c_int '36311'
+GL_INT_SAMPLER_2D_RECT = 36301 # Variable c_int '36301'
+GL_POINT_SIZE_MIN = 33062 # Variable c_int '33062'
+GL_RGBA12 = 32858 # Variable c_int '32858'
+GL_EVAL_VERTEX_ATTRIB13_NV = 34515 # Variable c_int '34515'
+GL_PATH_INITIAL_END_CAP_NV = 36983 # Variable c_int '36983'
+GL_ARB_texture_buffer_object_rgb32 = 1 # Variable c_int '1'
+GL_RGBA16 = 32859 # Variable c_int '32859'
+GL_MAP1_NORMAL = 3474 # Variable c_int '3474'
+GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT = 34062 # Variable c_int '34062'
+GL_YCBCR_422_APPLE = 34233 # Variable c_int '34233'
+GL_DOT_PRODUCT_TEXTURE_RECTANGLE_NV = 34382 # Variable c_int '34382'
+GL_ARB_texture_env_dot3 = 1 # Variable c_int '1'
+GL_COMPRESSED_RGB_FXT1_3DFX = 34480 # Variable c_int '34480'
+GL_HALF_BIT_ATI = 8 # Variable c_int '8'
+GL_NV_float_buffer = 1 # Variable c_int '1'
+GL_RELATIVE_LARGE_CCW_ARC_TO_NV = 23 # Variable c_int '23'
+GL_MAP2_VERTEX_ATTRIB14_4_NV = 34430 # Variable c_int '34430'
+GL_RGB5_A1 = 32855 # Variable c_int '32855'
+GL_DEPTH_ATTACHMENT = 36096 # Variable c_int '36096'
+GL_TEXTURE_ALPHA_SIZE = 32863 # Variable c_int '32863'
+GL_SECONDARY_COLOR_NV = 34093 # Variable c_int '34093'
+GL_MATRIX_MODE = 2976 # Variable c_int '2976'
+GL_QUERY_COUNTER_BITS = 34916 # Variable c_int '34916'
+GL_PERFORMANCE_MONITOR_AMD = 37202 # Variable c_int '37202'
+GL_CIRCULAR_CW_ARC_TO_NV = 250 # Variable c_int '250'
+GL_FOG_HINT = 3156 # Variable c_int '3156'
+GL_EXT_texture_swizzle = 1 # Variable c_int '1'
+GL_COMP_BIT_ATI = 2 # Variable c_int '2'
+GL_TEXTURE_GEQUAL_R_SGIX = 33181 # Variable c_int '33181'
+GL_FRAGMENT_DEPTH = 33874 # Variable c_int '33874'
+GL_SCALE_BY_ONE_HALF_NV = 34112 # Variable c_int '34112'
+GL_PROGRAM_INSTRUCTIONS_ARB = 34976 # Variable c_int '34976'
+GL_OFFSET_HILO_PROJECTIVE_TEXTURE_RECTANGLE_NV = 34903 # Variable c_int '34903'
+GL_DEPTH_COMPONENT32_SGIX = 33191 # Variable c_int '33191'
+GL_SUN_convolution_border_modes = 1 # Variable c_int '1'
+GL_ATTACHED_SHADERS = 35717 # Variable c_int '35717'
+GL_UNSIGNED_INT64_AMD = 35778 # Variable c_int '35778'
+GL_VERTEX4_BIT_PGI = 8 # Variable c_int '8'
+GL_VERTEX_ATTRIB_MAP2_ORDER_APPLE = 35336 # Variable c_int '35336'
+GL_DEPENDENT_GB_TEXTURE_2D_NV = 34538 # Variable c_int '34538'
+GL_UNSIGNED_INT_SAMPLER_3D_EXT = 36307 # Variable c_int '36307'
+GL_FOG_COORD_ARRAY_LENGTH_NV = 36658 # Variable c_int '36658'
+GL_RGB10_A2 = 32857 # Variable c_int '32857'
+GL_ACTIVE_SUBROUTINE_MAX_LENGTH = 36424 # Variable c_int '36424'
+GL_SAMPLE_BUFFERS_3DFX = 34483 # Variable c_int '34483'
+GL_QUADRATIC_ATTENUATION = 4617 # Variable c_int '4617'
+GL_MAX_VERTEX_IMAGE_UNIFORMS = 37066 # Variable c_int '37066'
+GL_READ_FRAMEBUFFER_EXT = 36008 # Variable c_int '36008'
+GL_ARB_vertex_array_bgra = 1 # Variable c_int '1'
+GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS = 36490 # Variable c_int '36490'
+GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 37133 # Variable c_int '37133'
+GL_MAP1_VERTEX_ATTRIB13_4_NV = 34413 # Variable c_int '34413'
+GL_CURRENT_NORMAL = 2818 # Variable c_int '2818'
+GL_RASTER_POSITION_UNCLIPPED_IBM = 103010 # Variable c_int '103010'
+GL_MAX_VERTEX_STREAMS = 36465 # Variable c_int '36465'
+GL_SAMPLE_ALPHA_TO_ONE_ARB = 32927 # Variable c_int '32927'
+GL_MAX_FRAGMENT_INPUT_COMPONENTS = 37157 # Variable c_int '37157'
+GL_FONT_UNDERLINE_POSITION_BIT_NV = 67108864 # Variable c_int '67108864'
+GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB = 33346 # Variable c_int '33346'
+GL_PIXEL_MAP_I_TO_A_SIZE = 3253 # Variable c_int '3253'
+GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB = 35661 # Variable c_int '35661'
+GL_SMOOTH_POINT_SIZE_GRANULARITY = 2835 # Variable c_int '2835'
+GL_CLAMP_VERTEX_COLOR = 35098 # Variable c_int '35098'
+GL_DOUBLE_VEC2 = 36860 # Variable c_int '36860'
+GL_INVARIANT_DATATYPE_EXT = 34795 # Variable c_int '34795'
+GL_TRANSPOSE_COLOR_MATRIX_ARB = 34022 # Variable c_int '34022'
+GL_MAP2_INDEX = 3505 # Variable c_int '3505'
+GL_EVAL_TRIANGULAR_2D_NV = 34497 # Variable c_int '34497'
+GL_DOUBLE_VEC3 = 36861 # Variable c_int '36861'
+GL_MAX_MAP_TESSELLATION_NV = 34518 # Variable c_int '34518'
+GL_AUX0 = 1033 # Variable c_int '1033'
+GL_IMAGE_BINDING_LAYER_EXT = 36669 # Variable c_int '36669'
+GL_NOTEQUAL = 517 # Variable c_int '517'
+GL_TEXTURE_COORD_ARRAY = 32888 # Variable c_int '32888'
+GL_TEXTURE_SWIZZLE_RGBA_EXT = 36422 # Variable c_int '36422'
+GL_COLOR_TABLE_GREEN_SIZE_SGI = 32987 # Variable c_int '32987'
+GL_VIDEO_COLOR_CONVERSION_MATRIX_NV = 36905 # Variable c_int '36905'
+GL_FLOAT_32_UNSIGNED_INT_24_8_REV = 36269 # Variable c_int '36269'
+GL_COMPRESSED_ALPHA_ARB = 34025 # Variable c_int '34025'
+GL_INT_SAMPLER_1D_ARRAY = 36302 # Variable c_int '36302'
+GL_DATA_BUFFER_AMD = 37201 # Variable c_int '37201'
+GL_GLYPH_HORIZONTAL_BEARING_X_BIT_NV = 4 # Variable c_int '4'
+GL_SEPARATE_SPECULAR_COLOR_EXT = 33274 # Variable c_int '33274'
+GL_TEXTURE_RED_SIZE = 32860 # Variable c_int '32860'
+GL_VIDEO_CAPTURE_TO_422_SUPPORTED_NV = 36902 # Variable c_int '36902'
+GL_ARB_draw_instanced = 1 # Variable c_int '1'
+GL_STENCIL_INDEX8 = 36168 # Variable c_int '36168'
+GL_OUTPUT_TEXTURE_COORD3_EXT = 34720 # Variable c_int '34720'
+GL_MODELVIEW11_ARB = 34603 # Variable c_int '34603'
+GL_WIN_specular_fog = 1 # Variable c_int '1'
+GL_CURRENT_ATTRIB_NV = 34342 # Variable c_int '34342'
+GL_GPU_MEMORY_INFO_EVICTION_COUNT_NVX = 36938 # Variable c_int '36938'
+GL_MAX_PROGRAM_LOOP_DEPTH_NV = 35063 # Variable c_int '35063'
+GL_CURRENT_QUERY_ARB = 34917 # Variable c_int '34917'
+GL_COMPRESSED_RED = 33317 # Variable c_int '33317'
+GL_RGBA12_EXT = 32858 # Variable c_int '32858'
+GL_NO_ERROR = 0 # Variable c_int '0'
+GL_TEXTURE_BINDING_CUBE_MAP_ARRAY = 36874 # Variable c_int '36874'
+GL_OFFSET_PROJECTIVE_TEXTURE_2D_SCALE_NV = 34897 # Variable c_int '34897'
+GL_TEXTURE15 = 33999 # Variable c_int '33999'
+GL_TEXTURE_FLOAT_COMPONENTS_NV = 34956 # Variable c_int '34956'
+GL_MAP2_GRID_DOMAIN = 3538 # Variable c_int '3538'
+GL_CONVOLUTION_BORDER_COLOR = 33108 # Variable c_int '33108'
+GL_OUTPUT_TEXTURE_COORD11_EXT = 34728 # Variable c_int '34728'
+GL_PATH_STROKE_MASK_NV = 36996 # Variable c_int '36996'
+GL_APPLE_specular_vector = 1 # Variable c_int '1'
+GL_SAMPLER_CUBE_MAP_ARRAY_ARB = 36876 # Variable c_int '36876'
+GL_TEXTURE_COMPRESSION_HINT_ARB = 34031 # Variable c_int '34031'
+GL_TEXTURE_SHARED_SIZE = 35903 # Variable c_int '35903'
+GL_COLOR = 6144 # Variable c_int '6144'
+GL_TEXTURE10 = 33994 # Variable c_int '33994'
+GL_ARB_seamless_cube_map = 1 # Variable c_int '1'
+GL_LUMINANCE8_ALPHA8 = 32837 # Variable c_int '32837'
+GL_RED_MAX_CLAMP_INGR = 34148 # Variable c_int '34148'
+GL_COMBINER_CD_DOT_PRODUCT_NV = 34118 # Variable c_int '34118'
+GL_PACK_COMPRESSED_BLOCK_SIZE = 37166 # Variable c_int '37166'
+GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 35660 # Variable c_int '35660'
+GL_DOUBLE_VEC4_EXT = 36862 # Variable c_int '36862'
+GL_TESS_CONTROL_PROGRAM_PARAMETER_BUFFER_NV = 35956 # Variable c_int '35956'
+GL_SPOT_EXPONENT = 4613 # Variable c_int '4613'
+GL_Z4Y12Z4CB12Z4Y12Z4CR12_422_NV = 36917 # Variable c_int '36917'
+GL_SHORT = 5122 # Variable c_int '5122'
+GL_FRAGMENT_LIGHTING_EXT = 33792 # Variable c_int '33792'
+GL_CURRENT_SECONDARY_COLOR_EXT = 33881 # Variable c_int '33881'
+GL_PERFMON_RESULT_AVAILABLE_AMD = 35780 # Variable c_int '35780'
+GL_MAP2_VERTEX_ATTRIB1_4_NV = 34417 # Variable c_int '34417'
+GL_STENCIL_BACK_FUNC_ATI = 34816 # Variable c_int '34816'
+GL_STATIC_READ_ARB = 35045 # Variable c_int '35045'
+GL_MAX_VERTEX_UNIFORM_COMPONENTS = 35658 # Variable c_int '35658'
+GL_IMAGE_1D = 36940 # Variable c_int '36940'
+GL_SAMPLE_ALPHA_TO_MASK_SGIS = 32926 # Variable c_int '32926'
+GL_IMAGE_1D_ARRAY_EXT = 36946 # Variable c_int '36946'
+GL_NV_gpu_shader5 = 1 # Variable c_int '1'
+GL_TEXTURE_ENV0_EXT = 0 # Variable c_int '0'
+GL_COMBINER_CD_OUTPUT_NV = 34123 # Variable c_int '34123'
+GL_ARB_shader_precision = 1 # Variable c_int '1'
+GL_TEXTURE_BINDING_CUBE_MAP_ARRAY_ARB = 36874 # Variable c_int '36874'
+GL_UNSIGNED_INT_10F_11F_11F_REV = 35899 # Variable c_int '35899'
+GL_KTX_STENCIL_REGION = 3 # Variable c_int '3'
+GL_TEXTURE_SHADER_NV = 34526 # Variable c_int '34526'
+GL_STATIC_DRAW = 35044 # Variable c_int '35044'
+GL_ARB_sync = 1 # Variable c_int '1'
+GL_RENDERBUFFER = 36161 # Variable c_int '36161'
+GL_VERTEX_ATTRIB_ARRAY_UNIFIED_NV = 36638 # Variable c_int '36638'
+GL_RED_SCALE = 3348 # Variable c_int '3348'
+GL_TEXTURE_BORDER_VALUES_NV = 34586 # Variable c_int '34586'
+GL_VERTEX_STATE_PROGRAM_NV = 34337 # Variable c_int '34337'
+GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE = 33299 # Variable c_int '33299'
+GL_INTENSITY16_EXT = 32845 # Variable c_int '32845'
+GL_VBO_FREE_MEMORY_ATI = 34811 # Variable c_int '34811'
+GL_INDEX_ARRAY_TYPE_EXT = 32901 # Variable c_int '32901'
+GL_TRANSFORM_FEEDBACK_BUFFER_MODE_EXT = 35967 # Variable c_int '35967'
+GL_SOURCE0_ALPHA_ARB = 34184 # Variable c_int '34184'
+GL_PER_STAGE_CONSTANTS_NV = 34101 # Variable c_int '34101'
+GL_SAMPLER_3D = 35679 # Variable c_int '35679'
+GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 34830 # Variable c_int '34830'
+GL_DOT3_RGBA_ARB = 34479 # Variable c_int '34479'
+GL_YCBAYCR8A_4224_NV = 36914 # Variable c_int '36914'
+GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET = 36446 # Variable c_int '36446'
+GL_OR_INVERTED = 5389 # Variable c_int '5389'
+GL_REDUCE = 32790 # Variable c_int '32790'
+GL_TEXTURE_GREEN_SIZE = 32861 # Variable c_int '32861'
+GL_COLOR_TABLE_INTENSITY_SIZE_EXT = 32991 # Variable c_int '32991'
+GL_PIXEL_MAG_FILTER_EXT = 33585 # Variable c_int '33585'
+GL_HISTOGRAM_GREEN_SIZE_EXT = 32809 # Variable c_int '32809'
+GL_UNPACK_COMPRESSED_BLOCK_WIDTH = 37159 # Variable c_int '37159'
+GL_TEXTURE9_ARB = 33993 # Variable c_int '33993'
+GL_MAX_ASYNC_TEX_IMAGE_SGIX = 33631 # Variable c_int '33631'
+GL_POINT_SPRITE_CULL_CENTER_ATIX = 24756 # Variable c_int '24756'
+GL_CW = 2304 # Variable c_int '2304'
+GL_INTENSITY4 = 32842 # Variable c_int '32842'
+GL_COLOR_ATTACHMENT7_EXT = 36071 # Variable c_int '36071'
+GL_NV_gpu_program5 = 1 # Variable c_int '1'
+GL_INTENSITY8 = 32843 # Variable c_int '32843'
+GL_DEPTH_STENCIL_TO_BGRA_NV = 34927 # Variable c_int '34927'
+GL_TEXTURE_COORD_ARRAY_ADDRESS_NV = 36645 # Variable c_int '36645'
+GL_TEXTURE_BLUE_TYPE = 35858 # Variable c_int '35858'
+GL_REFLECTION_MAP_NV = 34066 # Variable c_int '34066'
+GL_SIGNED_LUMINANCE8_ALPHA8_NV = 34564 # Variable c_int '34564'
+GL_TEXTURE_BINDING_2D_ARRAY = 35869 # Variable c_int '35869'
+GL_VERTEX_ATTRIB_ARRAY_DIVISOR = 35070 # Variable c_int '35070'
+GL_RGB = 6407 # Variable c_int '6407'
+GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS = 37580 # Variable c_int '37580'
+GL_INTENSITY_EXT = 32841 # Variable c_int '32841'
+GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = 36055 # Variable c_int '36055'
+GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_NV = 36447 # Variable c_int '36447'
+GL_UNSIGNED_SHORT_8_8_APPLE = 34234 # Variable c_int '34234'
+GL_SAMPLE_COVERAGE_ARB = 32928 # Variable c_int '32928'
+GL_RGB_EXTENDED_RANGE_SGIX = 34284 # Variable c_int '34284'
+GL_INTENSITY8_SNORM = 36887 # Variable c_int '36887'
+GL_MODELVIEW21_ARB = 34613 # Variable c_int '34613'
+GL_SELECTION_BUFFER_POINTER = 3571 # Variable c_int '3571'
+GL_SWIZZLE_STR_DR_ATI = 35192 # Variable c_int '35192'
+GL_COLOR_TABLE_RED_SIZE_EXT = 32986 # Variable c_int '32986'
+GL_MAP_COLOR = 3344 # Variable c_int '3344'
+GL_MAX_MULTISAMPLE_COVERAGE_MODES_NV = 36369 # Variable c_int '36369'
+GL_IMAGE_2D_RECT = 36943 # Variable c_int '36943'
+GL_SGIX_blend_alpha_minmax = 1 # Variable c_int '1'
+GL_OBJECT_BUFFER_SIZE_ATI = 34660 # Variable c_int '34660'
+GL_SAMPLES = 32937 # Variable c_int '32937'
+GL_LUMINANCE_ALPHA_FLOAT16_APPLE = 34847 # Variable c_int '34847'
+GL_FRAMEBUFFER_BINDING_EXT = 36006 # Variable c_int '36006'
+GL_APPLE_element_array = 1 # Variable c_int '1'
+GL_SMOOTH_QUADRATIC_CURVE_TO_NV = 14 # Variable c_int '14'
+GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 34370 # Variable c_int '34370'
+GL_UNSIGNED_INT_VEC2 = 36294 # Variable c_int '36294'
+GL_UNSIGNED_INT_VEC3 = 36295 # Variable c_int '36295'
+GL_UNSIGNED_INT_VEC4 = 36296 # Variable c_int '36296'
+GL_UNSIGNED_SHORT_5_6_5 = 33635 # Variable c_int '33635'
+GL_ANY_SAMPLES_PASSED = 35887 # Variable c_int '35887'
+GL_COLOR_ARRAY_EXT = 32886 # Variable c_int '32886'
+GL_RGBA16UI_EXT = 36214 # Variable c_int '36214'
+GL_RED_INTEGER_EXT = 36244 # Variable c_int '36244'
+GL_BUFFER_SERIALIZED_MODIFY_APPLE = 35346 # Variable c_int '35346'
+GL_R1UI_V3F_SUN = 34244 # Variable c_int '34244'
+GL_MAX_VARYING_COMPONENTS_EXT = 35659 # Variable c_int '35659'
+GL_STATIC_COPY_ARB = 35046 # Variable c_int '35046'
+GL_PATH_COMPUTED_LENGTH_NV = 37024 # Variable c_int '37024'
+GL_APPLE_transform_hint = 1 # Variable c_int '1'
+GL_LUMINANCE_INTEGER_EXT = 36252 # Variable c_int '36252'
+GL_HISTOGRAM_RED_SIZE_EXT = 32808 # Variable c_int '32808'
+GL_RGBA_MODE = 3121 # Variable c_int '3121'
+GL_REG_1_ATI = 35106 # Variable c_int '35106'
+GL_ARB_vertex_blend = 1 # Variable c_int '1'
+GL_NEGATIVE_Z_EXT = 34779 # Variable c_int '34779'
+GL_PROGRAM_NATIVE_INSTRUCTIONS_ARB = 34978 # Variable c_int '34978'
+GL_RGB32UI = 36209 # Variable c_int '36209'
+GL_MAX_PROGRAM_LOCAL_PARAMETERS_ARB = 34996 # Variable c_int '34996'
+GL_TEXTURE4_ARB = 33988 # Variable c_int '33988'
+GL_PROXY_TEXTURE_RECTANGLE = 34039 # Variable c_int '34039'
+GL_POST_COLOR_MATRIX_ALPHA_BIAS = 32955 # Variable c_int '32955'
+GL_STENCIL_BACK_FAIL_ATI = 34817 # Variable c_int '34817'
+GL_ALPHA16_SNORM = 36888 # Variable c_int '36888'
+GL_TRANSFORM_FEEDBACK_BUFFER_MODE_NV = 35967 # Variable c_int '35967'
+GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_NV = 36446 # Variable c_int '36446'
+GL_MATRIX_INDEX_ARRAY_TYPE_ARB = 34887 # Variable c_int '34887'
+GL_REG_5_ATI = 35110 # Variable c_int '35110'
+GL_ARB_shading_language_packing = 1 # Variable c_int '1'
+GL_QUERY_BY_REGION_NO_WAIT_NV = 36374 # Variable c_int '36374'
+GL_EXT_texture_cube_map = 1 # Variable c_int '1'
+GL_POINT_SIZE_RANGE = 2834 # Variable c_int '2834'
+GL_PIXEL_COUNTER_BITS_NV = 34916 # Variable c_int '34916'
+GL_PN_TRIANGLES_POINT_MODE_LINEAR_ATI = 34805 # Variable c_int '34805'
+GL_TEXTURE8 = 33992 # Variable c_int '33992'
+GL_MAP2_TANGENT_EXT = 33861 # Variable c_int '33861'
+GL_DEBUG_CALLBACK_USER_PARAM_ARB = 33349 # Variable c_int '33349'
+GL_TEXTURE4 = 33988 # Variable c_int '33988'
+GL_TEXTURE5 = 33989 # Variable c_int '33989'
+GL_TEXTURE7 = 33991 # Variable c_int '33991'
+GL_TEXTURE0 = 33984 # Variable c_int '33984'
+GL_CONTEXT_PROFILE_MASK = 37158 # Variable c_int '37158'
+GL_TEXTURE_INDEX_SIZE_EXT = 33005 # Variable c_int '33005'
+GL_FLOAT_VEC2_ARB = 35664 # Variable c_int '35664'
+GL_BOOL_VEC4 = 35673 # Variable c_int '35673'
+GL_COMBINER0_NV = 34128 # Variable c_int '34128'
+GL_RENDERBUFFER_BINDING_EXT = 36007 # Variable c_int '36007'
+GL_BOOL_VEC3 = 35672 # Variable c_int '35672'
+GL_BOOL_VEC2 = 35671 # Variable c_int '35671'
+GL_SAMPLER_BUFFER_EXT = 36290 # Variable c_int '36290'
+GL_VERTEX_ATTRIB_ARRAY0_NV = 34384 # Variable c_int '34384'
+GL_OBJECT_VALIDATE_STATUS_ARB = 35715 # Variable c_int '35715'
+GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS = 36485 # Variable c_int '36485'
+GL_COLOR_MATERIAL_PARAMETER = 2902 # Variable c_int '2902'
+GL_MODULATE_ADD_ATIX = 34628 # Variable c_int '34628'
+GL_INDEX_MODE = 3120 # Variable c_int '3120'
+GL_MAX_VARYING_VECTORS = 36348 # Variable c_int '36348'
+GL_CLIP_FAR_HINT_PGI = 107041 # Variable c_int '107041'
+GL_ONE = 1 # Variable c_int '1'
+GL_EXT_misc_attribute = 1 # Variable c_int '1'
+GL_MAX_PROGRAM_GENERIC_ATTRIBS_NV = 36261 # Variable c_int '36261'
+GL_NAMED_STRING_TYPE_ARB = 36330 # Variable c_int '36330'
+GL_OP_ROUND_EXT = 34704 # Variable c_int '34704'
+GL_VECTOR_EXT = 34751 # Variable c_int '34751'
+GL_R1UI_C3F_V3F_SUN = 34246 # Variable c_int '34246'
+GL_NV_fog_distance = 1 # Variable c_int '1'
+GL_TEXTURE_2D_ARRAY_EXT = 35866 # Variable c_int '35866'
+GL_OUTPUT_VERTEX_EXT = 34714 # Variable c_int '34714'
+GL_TRIANGLE_STRIP = 5 # Variable c_int '5'
+GL_MESA_resize_buffers = 1 # Variable c_int '1'
+GL_DEPTH_CLAMP_NEAR_AMD = 36894 # Variable c_int '36894'
+GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI = 34819 # Variable c_int '34819'
+GL_UNSIGNED_INT8_VEC3_NV = 36846 # Variable c_int '36846'
+GL_FRONT_LEFT = 1024 # Variable c_int '1024'
+GL_RELATIVE_SMALL_CW_ARC_TO_NV = 21 # Variable c_int '21'
+GL_DRAW_PIXELS_APPLE = 35338 # Variable c_int '35338'
+GL_CLAMP = 10496 # Variable c_int '10496'
+GL_PERCENTAGE_AMD = 35779 # Variable c_int '35779'
+GL_TEXTURE_FETCH_BARRIER_BIT = 8 # Variable c_int '8'
+GL_EMBOSS_LIGHT_NV = 34141 # Variable c_int '34141'
+GL_RESCALE_NORMAL_EXT = 32826 # Variable c_int '32826'
+GL_OUTPUT_TEXTURE_COORD14_EXT = 34731 # Variable c_int '34731'
+GL_INDEX_OFFSET = 3347 # Variable c_int '3347'
+GL_POST_TEXTURE_FILTER_BIAS_SGIX = 33145 # Variable c_int '33145'
+GL_INTENSITY = 32841 # Variable c_int '32841'
+GL_EXT_convolution = 1 # Variable c_int '1'
+GL_R1UI_C4F_N3F_V3F_SUN = 34248 # Variable c_int '34248'
+GL_DEBUG_CATEGORY_OTHER_AMD = 37200 # Variable c_int '37200'
+GL_VERTEX_ARRAY_BINDING = 34229 # Variable c_int '34229'
+GL_TIMEOUT_EXPIRED = 37147 # Variable c_int '37147'
+GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 37132 # Variable c_int '37132'
+GL_COMBINER_AB_DOT_PRODUCT_NV = 34117 # Variable c_int '34117'
+GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER = 36060 # Variable c_int '36060'
+GL_SUN_triangle_list = 1 # Variable c_int '1'
+GL_VERTEX_ARRAY_BUFFER_BINDING_ARB = 34966 # Variable c_int '34966'
+GL_STENCIL_FUNC = 2962 # Variable c_int '2962'
+GL_MIN = 32775 # Variable c_int '32775'
+GL_TRANSPOSE_PROGRAM_MATRIX_EXT = 36398 # Variable c_int '36398'
+GL_CURRENT_MATRIX_STACK_DEPTH_ARB = 34368 # Variable c_int '34368'
+GL_DRAW_BUFFER8_ARB = 34861 # Variable c_int '34861'
+GL_INVERT = 5386 # Variable c_int '5386'
+GL_BACK = 1029 # Variable c_int '1029'
+GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT = 36049 # Variable c_int '36049'
+GL_PRIMITIVE_RESTART_INDEX_NV = 34137 # Variable c_int '34137'
+GL_TABLE_TOO_LARGE = 32817 # Variable c_int '32817'
+GL_PROXY_TEXTURE_CUBE_MAP_EXT = 34075 # Variable c_int '34075'
+GL_MATRIX18_ARB = 35026 # Variable c_int '35026'
+GL_INT = 5124 # Variable c_int '5124'
+GL_ATOMIC_COUNTER_BUFFER = 37568 # Variable c_int '37568'
+GL_ENV_MODULATE_EXT = 0 # Variable c_int '0'
+GL_ALLOW_DRAW_OBJ_HINT_PGI = 107022 # Variable c_int '107022'
+GL_COMPRESSED_SLUMINANCE = 35914 # Variable c_int '35914'
+GL_ARB_half_float_pixel = 1 # Variable c_int '1'
+GL_BACK_LEFT = 1026 # Variable c_int '1026'
+GL_MINOR_VERSION = 33308 # Variable c_int '33308'
+GL_PIXEL_MAP_G_TO_G_SIZE = 3255 # Variable c_int '3255'
+GL_COMPRESSED_RGBA_S3TC_DXT5_EXT = 33779 # Variable c_int '33779'
+GL_DEBUG_LOGGED_MESSAGES_AMD = 37189 # Variable c_int '37189'
+GL_LAST_VIDEO_CAPTURE_STATUS_NV = 36903 # Variable c_int '36903'
+GL_TEXTURE_COMPARE_MODE_ARB = 34892 # Variable c_int '34892'
+GL_VIDEO_CAPTURE_FRAME_HEIGHT_NV = 36921 # Variable c_int '36921'
+GL_TEXTURE_INTERNAL_FORMAT = 4099 # Variable c_int '4099'
+GL_COMPRESSED_RG_RGTC2 = 36285 # Variable c_int '36285'
+GL_BGR_INTEGER = 36250 # Variable c_int '36250'
+GL_ARB_get_program_binary = 1 # Variable c_int '1'
+GL_AMD_draw_buffers_blend = 1 # Variable c_int '1'
+GL_EXPAND_NEGATE_NV = 34105 # Variable c_int '34105'
+GL_APPLE_texture_range = 1 # Variable c_int '1'
+GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV = 34080 # Variable c_int '34080'
+GL_PROXY_TEXTURE_1D_STACK_MESAX = 34651 # Variable c_int '34651'
+GL_SYNC_FENCE = 37142 # Variable c_int '37142'
+GL_MODELVIEW0_EXT = 5888 # Variable c_int '5888'
+GL_EXT_texture_array = 1 # Variable c_int '1'
+GL_SECONDARY_COLOR_ARRAY_LIST_IBM = 103077 # Variable c_int '103077'
+GL_RGB8_SNORM = 36758 # Variable c_int '36758'
+GL_FOG_END = 2916 # Variable c_int '2916'
+GL_UNPACK_SKIP_PIXELS = 3316 # Variable c_int '3316'
+GL_OPERAND1_RGB_ARB = 34193 # Variable c_int '34193'
+GL_COLOR_MATRIX_STACK_DEPTH_SGI = 32946 # Variable c_int '32946'
+GL_WIN_swap_hint = 1 # Variable c_int '1'
+GL_ARB_texture_rg = 1 # Variable c_int '1'
+GL_CONSTANT_COLOR = 32769 # Variable c_int '32769'
+GL_DOUBLE_VEC4 = 36862 # Variable c_int '36862'
+GL_OFFSET_TEXTURE_BIAS_NV = 34531 # Variable c_int '34531'
+GL_DEPTH_COMPONENT32_ARB = 33191 # Variable c_int '33191'
+GL_LO_BIAS_NV = 34581 # Variable c_int '34581'
+GL_ARB_fragment_shader = 1 # Variable c_int '1'
+GL_LUMINANCE_EXTENDED_RANGE_SGIX = 34287 # Variable c_int '34287'
+GL_PACK_RESAMPLE_OML = 35204 # Variable c_int '35204'
+GL_LINE_STIPPLE_REPEAT = 2854 # Variable c_int '2854'
+GL_EIGHTH_BIT_ATI = 32 # Variable c_int '32'
+GL_EVAL_VERTEX_ATTRIB8_NV = 34510 # Variable c_int '34510'
+GL_GREMEDY_string_marker = 1 # Variable c_int '1'
+GL_CURRENT_SECONDARY_COLOR = 33881 # Variable c_int '33881'
+GL_DEPTH_COMPONENT32F_NV = 36267 # Variable c_int '36267'
+GL_ARB_framebuffer_object = 1 # Variable c_int '1'
+GL_RGBA16UI = 36214 # Variable c_int '36214'
+GL_ARB_texture_non_power_of_two = 1 # Variable c_int '1'
+GL_TEXTURE_CUBE_MAP_ARB = 34067 # Variable c_int '34067'
+GL_INTENSITY12_EXT = 32844 # Variable c_int '32844'
+GL_OUTPUT_TEXTURE_COORD5_EXT = 34722 # Variable c_int '34722'
+GL_MAX_OPTIMIZED_VERTEX_SHADER_VARIANTS_EXT = 34763 # Variable c_int '34763'
+GL_EXT_secondary_color = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY8_NV = 34392 # Variable c_int '34392'
+GL_MAX_DRAW_BUFFERS = 34852 # Variable c_int '34852'
+GL_IMAGE_CUBE_MAP_ARRAY = 36948 # Variable c_int '36948'
+GL_LIGHT_MODEL_SPECULAR_VECTOR_APPLE = 34224 # Variable c_int '34224'
+GL_R32UI = 33334 # Variable c_int '33334'
+GL_SECONDARY_COLOR_ARRAY = 33886 # Variable c_int '33886'
+GL_RGBA8_EXT = 32856 # Variable c_int '32856'
+GL_FLOAT_32_UNSIGNED_INT_24_8_REV_NV = 36269 # Variable c_int '36269'
+GL_TEXTURE_ENV_MODE = 8704 # Variable c_int '8704'
+GL_CURRENT_INDEX = 2817 # Variable c_int '2817'
+GL_ARB_texture_rectangle = 1 # Variable c_int '1'
+GL_SGI_texture_color_table = 1 # Variable c_int '1'
+GL_PATCH_DEFAULT_INNER_LEVEL = 36467 # Variable c_int '36467'
+GL_ENV_SUBTRACT_EXT = 0 # Variable c_int '0'
+GL_MOVE_TO_NV = 2 # Variable c_int '2'
+GL_TESS_EVALUATION_PROGRAM_PARAMETER_BUFFER_NV = 35957 # Variable c_int '35957'
+GL_BLEND_EQUATION_ALPHA_EXT = 34877 # Variable c_int '34877'
+GL_COLOR_TABLE_ALPHA_SIZE = 32989 # Variable c_int '32989'
+GL_E_TIMES_F_NV = 34097 # Variable c_int '34097'
+GL_RGB16I_EXT = 36233 # Variable c_int '36233'
+GL_COLOR_ATTACHMENT9_EXT = 36073 # Variable c_int '36073'
+GL_ALPHA16_EXTENDED_RANGE_SGIX = 34292 # Variable c_int '34292'
+GL_TEXT_FRAGMENT_SHADER_ATI = 33280 # Variable c_int '33280'
+GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB = 34350 # Variable c_int '34350'
+GL_FRAMEBUFFER_BARRIER_BIT = 1024 # Variable c_int '1024'
+GL_MAJOR_VERSION = 33307 # Variable c_int '33307'
+GL_INTENSITY16_EXTENDED_RANGE_SGIX = 34294 # Variable c_int '34294'
+GL_SWIZZLE_STQ_ATI = 35191 # Variable c_int '35191'
+GL_ARB_shader_atomic_counters = 1 # Variable c_int '1'
+GL_LUMINANCE32UI_EXT = 36212 # Variable c_int '36212'
+GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB = 34828 # Variable c_int '34828'
+GL_CONVOLUTION_HEIGHT_EXT = 32793 # Variable c_int '32793'
+GL_MATRIX2_NV = 34354 # Variable c_int '34354'
+GL_PROXY_TEXTURE_3D = 32880 # Variable c_int '32880'
+GL_ALL_BARRIER_BITS_EXT = 4294967295L # Variable c_uint '4294967295u'
+GL_VERTEX_ARRAY_RANGE_POINTER_APPLE = 34081 # Variable c_int '34081'
+GL_UNIFORM_BUFFER_BINDING = 35368 # Variable c_int '35368'
+GL_UNIFORM_TYPE = 35383 # Variable c_int '35383'
+GL_RENDERBUFFER_RED_SIZE_EXT = 36176 # Variable c_int '36176'
+GL_EXT_coordinate_frame = 1 # Variable c_int '1'
+GL_ONE_MINUS_SRC1_ALPHA = 35067 # Variable c_int '35067'
+GL_EXT_pixel_transform_color_table = 1 # Variable c_int '1'
+GL_DRAW_BUFFER14_ATI = 34867 # Variable c_int '34867'
+GL_COMMAND_BARRIER_BIT_EXT = 64 # Variable c_int '64'
+GL_WEIGHT_ARRAY_BUFFER_BINDING_ARB = 34974 # Variable c_int '34974'
+GL_LUMINANCE8_ALPHA8_SNORM = 36886 # Variable c_int '36886'
+GL_POINT_BIT = 2 # Variable c_int '2'
+GL_EXT_gpu_program_parameters = 1 # Variable c_int '1'
+GL_DRAW_BUFFER7_ATI = 34860 # Variable c_int '34860'
+GL_SIGNED_LUMINANCE8_NV = 34562 # Variable c_int '34562'
+GL_RGBA16I_EXT = 36232 # Variable c_int '36232'
+GL_GLOBAL_ALPHA_SUN = 33241 # Variable c_int '33241'
+GL_FRONT_RIGHT = 1025 # Variable c_int '1025'
+GL_MAP_INVALIDATE_BUFFER_BIT = 8 # Variable c_int '8'
+GL_MODELVIEW4_ARB = 34596 # Variable c_int '34596'
+GL_UNSIGNED_INT_5_9_9_9_REV = 35902 # Variable c_int '35902'
+GL_DEPTH_TEST = 2929 # Variable c_int '2929'
+GL_DRAW_BUFFER9_ARB = 34862 # Variable c_int '34862'
+GL_OPERAND3_ALPHA_NV = 34203 # Variable c_int '34203'
+GL_TEXTURE19_ARB = 34003 # Variable c_int '34003'
+GL_IMAGE_BINDING_LAYERED_EXT = 36668 # Variable c_int '36668'
+GL_SGIX_list_priority = 1 # Variable c_int '1'
+GL_ARB_draw_buffers = 1 # Variable c_int '1'
+GL_COLOR_TABLE_WIDTH = 32985 # Variable c_int '32985'
+GL_LUMINANCE4 = 32831 # Variable c_int '32831'
+GL_SECONDARY_COLOR_ARRAY_POINTER_EXT = 33885 # Variable c_int '33885'
+GL_NV_evaluators = 1 # Variable c_int '1'
+GL_CONSTANT_ALPHA_EXT = 32771 # Variable c_int '32771'
+GL_FUNC_SUBTRACT = 32778 # Variable c_int '32778'
+GL_VERTEX_PROGRAM_TWO_SIDE = 34371 # Variable c_int '34371'
+GL_MAX_TESS_GEN_LEVEL = 36478 # Variable c_int '36478'
+GL_SAMPLER_BUFFER = 36290 # Variable c_int '36290'
+GL_SRC_ALPHA_SATURATE = 776 # Variable c_int '776'
+GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING = 33296 # Variable c_int '33296'
+GL_TEXTURE_COORD_ARRAY_TYPE = 32905 # Variable c_int '32905'
+GL_VIDEO_CAPTURE_FIELD_UPPER_HEIGHT_NV = 36922 # Variable c_int '36922'
+GL_CLAMP_TO_BORDER = 33069 # Variable c_int '33069'
+GL_COLOR_ATTACHMENT15 = 36079 # Variable c_int '36079'
+GL_COLOR_ATTACHMENT14 = 36078 # Variable c_int '36078'
+GL_DEPTH_RANGE = 2928 # Variable c_int '2928'
+GL_COLOR_ATTACHMENT11 = 36075 # Variable c_int '36075'
+GL_CLAMP_TO_EDGE = 33071 # Variable c_int '33071'
+GL_COLOR_ATTACHMENT13 = 36077 # Variable c_int '36077'
+GL_COLOR_ATTACHMENT12 = 36076 # Variable c_int '36076'
+GL_NEAREST = 9728 # Variable c_int '9728'
+GL_ARB_debug_output = 1 # Variable c_int '1'
+GL_AMD_stencil_operation_extended = 1 # Variable c_int '1'
+GL_COLOR_ARRAY_LIST_IBM = 103072 # Variable c_int '103072'
+GL_TEXTURE_BINDING_RENDERBUFFER_NV = 36435 # Variable c_int '36435'
+GL_MAX_RENDERBUFFER_SIZE_EXT = 34024 # Variable c_int '34024'
+GL_MAX_RATIONAL_EVAL_ORDER_NV = 34519 # Variable c_int '34519'
+GL_RENDERBUFFER_GREEN_SIZE = 36177 # Variable c_int '36177'
+GL_MAX_DUAL_SOURCE_DRAW_BUFFERS = 35068 # Variable c_int '35068'
+GL_LUMINANCE16_EXTENDED_RANGE_SGIX = 34293 # Variable c_int '34293'
+GL_RESTART_PATH_NV = 240 # Variable c_int '240'
+GL_PIXEL_MAP_S_TO_S_SIZE = 3249 # Variable c_int '3249'
+GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 36054 # Variable c_int '36054'
+GL_SWIZZLE_STRQ_ATI = 35194 # Variable c_int '35194'
+GL_VIDEO_BUFFER_BINDING_NV = 36897 # Variable c_int '36897'
+GL_NV_vertex_buffer_unified_memory = 1 # Variable c_int '1'
+GL_IMPLEMENTATION_COLOR_READ_FORMAT_OES = 35739 # Variable c_int '35739'
+GL_UNSIGNED_INT_10_10_10_2_EXT = 32822 # Variable c_int '32822'
+GL_RENDERBUFFER_EXT = 36161 # Variable c_int '36161'
+GL_DYNAMIC_DRAW_ARB = 35048 # Variable c_int '35048'
+GL_NV_vertex_program1_1 = 1 # Variable c_int '1'
+GL_CONTINUOUS_AMD = 36871 # Variable c_int '36871'
+GL_POINT_SMOOTH = 2832 # Variable c_int '2832'
+GL_DEPTH_CLEAR_VALUE = 2931 # Variable c_int '2931'
+GL_UNSIGNED_INT_SAMPLER_BUFFER_EXT = 36312 # Variable c_int '36312'
+GL_GEOMETRY_INPUT_TYPE = 35095 # Variable c_int '35095'
+GL_OP_MULTIPLY_MATRIX_EXT = 34712 # Variable c_int '34712'
+GL_NV_packed_depth_stencil = 1 # Variable c_int '1'
+GL_SRC_ALPHA = 770 # Variable c_int '770'
+GL_PROGRAM_ERROR_STRING_NV = 34932 # Variable c_int '34932'
+GL_MAX_PROGRAM_TEXTURE_GATHER_COMPONENTS_ARB = 36767 # Variable c_int '36767'
+GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE = 36048 # Variable c_int '36048'
+GL_CURRENT_BIT = 1 # Variable c_int '1'
+GL_PROXY_TEXTURE_COLOR_TABLE_SGI = 32957 # Variable c_int '32957'
+GL_RGBA32F_ARB = 34836 # Variable c_int '34836'
+GL_RGB_SIGNED_SGIX = 34272 # Variable c_int '34272'
+GL_VERTEX_PRECLIP_SGIX = 33774 # Variable c_int '33774'
+GL_BLEND_COLOR_EXT = 32773 # Variable c_int '32773'
+GL_SIGNED_RGBA8_NV = 34556 # Variable c_int '34556'
+GL_PRIMITIVE_RESTART_INDEX = 36766 # Variable c_int '36766'
+GL_COLOR_SUM = 33880 # Variable c_int '33880'
+GL_SAMPLER_2D_SHADOW = 35682 # Variable c_int '35682'
+GL_RESAMPLE_DECIMATE_SGIX = 33840 # Variable c_int '33840'
+GL_DEBUG_SOURCE_API_ARB = 33350 # Variable c_int '33350'
+GL_ONE_MINUS_DST_COLOR = 775 # Variable c_int '775'
+GL_LUMINANCE_SIGNED_SGIX = 34275 # Variable c_int '34275'
+GL_UNDEFINED_APPLE = 35356 # Variable c_int '35356'
+GL_KTX_BACK_REGION = 1 # Variable c_int '1'
+GL_SAMPLER_2D_RECT_SHADOW = 35684 # Variable c_int '35684'
+GL_ACCUM_ALPHA_BITS = 3419 # Variable c_int '3419'
+GL_FLOAT = 5126 # Variable c_int '5126'
+GL_NUM_INSTRUCTIONS_TOTAL_ATI = 35186 # Variable c_int '35186'
+GL_POINT_SIZE_MAX_EXT = 33063 # Variable c_int '33063'
+GL_COLOR_BUFFER_BIT = 16384 # Variable c_int '16384'
+GL_UNPACK_RESAMPLE_SGIX = 33839 # Variable c_int '33839'
+GL_SPOT_CUTOFF = 4614 # Variable c_int '4614'
+GL_IBM_multimode_draw_arrays = 1 # Variable c_int '1'
+GL_AMD_vertex_shader_viewport_index = 1 # Variable c_int '1'
+GL_LUMINANCE12_ALPHA4_EXT = 32838 # Variable c_int '32838'
+GL_INDEX_ARRAY_BUFFER_BINDING_ARB = 34969 # Variable c_int '34969'
+GL_INVALID_VALUE = 1281 # Variable c_int '1281'
+GL_EVAL_VERTEX_ATTRIB1_NV = 34503 # Variable c_int '34503'
+GL_FONT_UNITS_PER_EM_BIT_NV = 1048576 # Variable c_int '1048576'
+GL_NEAREST_MIPMAP_NEAREST = 9984 # Variable c_int '9984'
+GL_COMPRESSED_SLUMINANCE_EXT = 35914 # Variable c_int '35914'
+GL_SLUMINANCE8_EXT = 35911 # Variable c_int '35911'
+GL_DUP_LAST_CUBIC_CURVE_TO_NV = 244 # Variable c_int '244'
+GL_R8I = 33329 # Variable c_int '33329'
+GL_COMBINER1_NV = 34129 # Variable c_int '34129'
+GL_SWIZZLE_STR_ATI = 35190 # Variable c_int '35190'
+GL_CONTEXT_COMPATIBILITY_PROFILE_BIT = 2 # Variable c_int '2'
+GL_LINK_STATUS = 35714 # Variable c_int '35714'
+GL_ARB_vertex_program = 1 # Variable c_int '1'
+GL_MATRIX0_NV = 34352 # Variable c_int '34352'
+GL_FLOAT_VEC3_ARB = 35665 # Variable c_int '35665'
+GL_FONT_DESCENDER_BIT_NV = 4194304 # Variable c_int '4194304'
+GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY = 37125 # Variable c_int '37125'
+GL_SOURCE1_ALPHA_ARB = 34185 # Variable c_int '34185'
+GL_ARB_texture_rgb10_a2ui = 1 # Variable c_int '1'
+GL_MAP2_VERTEX_ATTRIB9_4_NV = 34425 # Variable c_int '34425'
+GL_ELEMENT_ARRAY_POINTER_APPLE = 35342 # Variable c_int '35342'
+GL_RGBA8I_EXT = 36238 # Variable c_int '36238'
+GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN = 35976 # Variable c_int '35976'
+GL_FRAGMENT_LIGHT_MODEL_LOCAL_VIEWER_EXT = 33800 # Variable c_int '33800'
+GL_MAT_SHININESS_BIT_PGI = 33554432 # Variable c_int '33554432'
+GL_INT8_VEC2_NV = 36833 # Variable c_int '36833'
+GL_INTENSITY_FLOAT32_ATI = 34839 # Variable c_int '34839'
+GL_TEXTURE_COORD_ARRAY_SIZE = 32904 # Variable c_int '32904'
+GL_AND_INVERTED = 5380 # Variable c_int '5380'
+GL_TEXTURE_POINT_SPRITE_ATIX = 24754 # Variable c_int '24754'
+GL_TRANSFORM_FEEDBACK_RECORD_NV = 35974 # Variable c_int '35974'
+GL_WAIT_FAILED = 37149 # Variable c_int '37149'
+GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB = 34466 # Variable c_int '34466'
+GL_SECONDARY_COLOR_ARRAY_TYPE = 33883 # Variable c_int '33883'
+GL_EXT_timer_query = 1 # Variable c_int '1'
+GL_DOUBLE_MAT4x3 = 36686 # Variable c_int '36686'
+GL_GEOMETRY_INPUT_TYPE_ARB = 36315 # Variable c_int '36315'
+GL_FOG_OFFSET_VALUE_SGIX = 33177 # Variable c_int '33177'
+GL_NORMAL_ARRAY_POINTER = 32911 # Variable c_int '32911'
+GL_POLYGON_OFFSET_POINT = 10753 # Variable c_int '10753'
+GL_STATIC_DRAW_ARB = 35044 # Variable c_int '35044'
+GL_PERTURB_EXT = 34222 # Variable c_int '34222'
+GL_LUMINANCE12_EXT = 32833 # Variable c_int '32833'
+GL_COMBINE_ALPHA = 34162 # Variable c_int '34162'
+GL_RECT_NV = 246 # Variable c_int '246'
+GL_OUTPUT_TEXTURE_COORD31_EXT = 34748 # Variable c_int '34748'
+GL_LUMINANCE4_ALPHA4_EXT = 32835 # Variable c_int '32835'
+GL_ALPHA_TEST_FUNC = 3009 # Variable c_int '3009'
+GL_VERTEX_ATTRIB_MAP1_COEFF_APPLE = 35331 # Variable c_int '35331'
+GL_AMD_seamless_cubemap_per_texture = 1 # Variable c_int '1'
+GL_DEPTH_COMPONENT16 = 33189 # Variable c_int '33189'
+GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB = 34076 # Variable c_int '34076'
+GL_MAX_SAMPLE_MASK_WORDS = 36441 # Variable c_int '36441'
+GL_UNSIGNALED = 37144 # Variable c_int '37144'
+GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = 34047 # Variable c_int '34047'
+GL_RGB32I = 36227 # Variable c_int '36227'
+GL_SLUMINANCE = 35910 # Variable c_int '35910'
+GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH = 35381 # Variable c_int '35381'
+GL_BGRA_INTEGER = 36251 # Variable c_int '36251'
+GL_ALPHA12_EXT = 32829 # Variable c_int '32829'
+GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = 3387 # Variable c_int '3387'
+GL_FALSE = 0 # Variable c_int '0'
+GL_COLOR_ARRAY_BUFFER_BINDING_ARB = 34968 # Variable c_int '34968'
+GL_MODELVIEW1_ARB = 34058 # Variable c_int '34058'
+GL_ONE_MINUS_SRC_ALPHA = 771 # Variable c_int '771'
+GL_COMPRESSED_SLUMINANCE_ALPHA_EXT = 35915 # Variable c_int '35915'
+GL_PROGRAM_BINDING_ARB = 34423 # Variable c_int '34423'
+GL_SOURCE2_RGB_EXT = 34178 # Variable c_int '34178'
+GL_UNSIGNED_INT_IMAGE_1D_ARRAY = 36968 # Variable c_int '36968'
+GL_TEXTURE_BINDING_CUBE_MAP_ARB = 34068 # Variable c_int '34068'
+GL_MAX_GEOMETRY_BINDABLE_UNIFORMS_EXT = 36324 # Variable c_int '36324'
+GL_MAX_PROGRAM_ENV_PARAMETERS_ARB = 34997 # Variable c_int '34997'
+GL_COLOR_ATTACHMENT3 = 36067 # Variable c_int '36067'
+GL_MAX_PROGRAM_TEXTURE_GATHER_COMPONENTS = 36767 # Variable c_int '36767'
+GL_UNSIGNED_INT8_VEC4_NV = 36847 # Variable c_int '36847'
+GL_MAX_INTENSITY_SGIS = 34299 # Variable c_int '34299'
+GL_NV_explicit_multisample = 1 # Variable c_int '1'
+GL_MAP2_GRID_SEGMENTS = 3539 # Variable c_int '3539'
+GL_UNPACK_COMPRESSED_BLOCK_DEPTH = 37161 # Variable c_int '37161'
+GL_EXT_texture_perturb_normal = 1 # Variable c_int '1'
+GL_TEXTURE_ENV_MODE_ALPHA_EXT = 0 # Variable c_int '0'
+GL_NV_fragment_program2 = 1 # Variable c_int '1'
+GL_NV_fragment_program4 = 1 # Variable c_int '1'
+GL_EXT_point_parameters = 1 # Variable c_int '1'
+GL_RGB4_EXT = 32847 # Variable c_int '32847'
+GL_AMD_shader_stencil_export = 1 # Variable c_int '1'
+GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB = 33358 # Variable c_int '33358'
+GL_OUTPUT_COLOR0_EXT = 34715 # Variable c_int '34715'
+GL_DISCRETE_AMD = 36870 # Variable c_int '36870'
+GL_ARB_depth_clamp = 1 # Variable c_int '1'
+GL_ALPHA16_EXT = 32830 # Variable c_int '32830'
+GL_POINT_SPRITE_ARB = 34913 # Variable c_int '34913'
+GL_EYE_RADIAL_NV = 34139 # Variable c_int '34139'
+GL_EYE_LINEAR = 9216 # Variable c_int '9216'
+GL_DYNAMIC_COPY_ARB = 35050 # Variable c_int '35050'
+GL_MAP1_GRID_SEGMENTS = 3537 # Variable c_int '3537'
+GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT = 35380 # Variable c_int '35380'
+GL_ATTRIB_STACK_DEPTH = 2992 # Variable c_int '2992'
+GL_MAX_PROGRAM_PARAMETER_BUFFER_BINDINGS_NV = 36256 # Variable c_int '36256'
+GL_FLOAT_MAT4_ARB = 35676 # Variable c_int '35676'
+GL_NEGATIVE_ONE_EXT = 34783 # Variable c_int '34783'
+GL_UNSIGNED_INT_S8_S8_8_8_NV = 34522 # Variable c_int '34522'
+GL_MAX_RECTANGLE_TEXTURE_SIZE_NV = 34040 # Variable c_int '34040'
+GL_PHONG_HINT_WIN = 33003 # Variable c_int '33003'
+GL_MAP2_BINORMAL_EXT = 33863 # Variable c_int '33863'
+GL_TEXTURE_LUMINANCE_SIZE = 32864 # Variable c_int '32864'
+GL_BLUE_BIAS = 3355 # Variable c_int '3355'
+GL_PATH_STENCIL_DEPTH_OFFSET_UNITS_NV = 37054 # Variable c_int '37054'
+GL_COLOR_ATTACHMENT0_EXT = 36064 # Variable c_int '36064'
+GL_MAX_FRAGMENT_UNIFORM_COMPONENTS = 35657 # Variable c_int '35657'
+GL_UNIFORM_BLOCK_NAME_LENGTH = 35393 # Variable c_int '35393'
+GL_FRAMEBUFFER_DEFAULT = 33304 # Variable c_int '33304'
+GL_UNSIGNED_INT_24_8_NV = 34042 # Variable c_int '34042'
+GL_GPU_ADDRESS_NV = 36660 # Variable c_int '36660'
+GL_TEXTURE_BINDING_RECTANGLE = 34038 # Variable c_int '34038'
+GL_LINE_SMOOTH_HINT = 3154 # Variable c_int '3154'
+GL_COMMAND_BARRIER_BIT = 64 # Variable c_int '64'
+GL_FRONT = 1028 # Variable c_int '1028'
+GL_UNSIGNED_INT_5_9_9_9_REV_EXT = 35902 # Variable c_int '35902'
+GL_CULL_VERTEX_IBM = 103050 # Variable c_int '103050'
+GL_SELECT = 7170 # Variable c_int '7170'
+GL_AMBIENT = 4608 # Variable c_int '4608'
+GL_SECONDARY_COLOR_ARRAY_LENGTH_NV = 36657 # Variable c_int '36657'
+GL_PATH_STENCIL_DEPTH_OFFSET_FACTOR_NV = 37053 # Variable c_int '37053'
+GL_MAX_FRAGMENT_UNIFORM_VECTORS = 36349 # Variable c_int '36349'
+GL_EXT_blend_minmax = 1 # Variable c_int '1'
+GL_MAX_DEBUG_LOGGED_MESSAGES_ARB = 37188 # Variable c_int '37188'
+GL_SAMPLE_COVERAGE_INVERT_ARB = 32939 # Variable c_int '32939'
+GL_NUM_EXTENSIONS = 33309 # Variable c_int '33309'
+GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED_NV = 36387 # Variable c_int '36387'
+GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS = 37582 # Variable c_int '37582'
+GL_PURGEABLE_APPLE = 35357 # Variable c_int '35357'
+GL_FRAMEBUFFER_BINDING = 36006 # Variable c_int '36006'
+GL_NORMAL_ARRAY_BUFFER_BINDING = 34967 # Variable c_int '34967'
+GL_OPERAND1_ALPHA = 34201 # Variable c_int '34201'
+GL_SET = 5391 # Variable c_int '5391'
+GL_NORMAL_MAP_EXT = 34065 # Variable c_int '34065'
+GL_DOT_PRODUCT_CONST_EYE_REFLECT_CUBE_MAP_NV = 34547 # Variable c_int '34547'
+GL_MAX_CONVOLUTION_HEIGHT = 32795 # Variable c_int '32795'
+GL_POST_CONVOLUTION_RED_BIAS_EXT = 32800 # Variable c_int '32800'
+GL_MAT_AMBIENT_BIT_PGI = 1048576 # Variable c_int '1048576'
+GL_UNSIGNED_INT_SAMPLER_1D_ARRAY = 36310 # Variable c_int '36310'
+GL_DEPTH_FUNC = 2932 # Variable c_int '2932'
+GL_POST_TEXTURE_FILTER_BIAS_RANGE_SGIX = 33147 # Variable c_int '33147'
+GL_FRAGMENT_LIGHT_MODEL_TWO_SIDE_EXT = 33801 # Variable c_int '33801'
+GL_RESAMPLE_REPLICATE_OML = 35206 # Variable c_int '35206'
+GL_INVALID_ENUM = 1280 # Variable c_int '1280'
+GL_HALF_APPLE = 5131 # Variable c_int '5131'
+GL_MAX_VERTEX_VARYING_COMPONENTS_EXT = 36318 # Variable c_int '36318'
+GL_COLOR_MATRIX_STACK_DEPTH = 32946 # Variable c_int '32946'
+GL_TEXTURE_WIDTH = 4096 # Variable c_int '4096'
+GL_STREAM_READ = 35041 # Variable c_int '35041'
+GL_UNSIGNED_INT_IMAGE_CUBE_EXT = 36966 # Variable c_int '36966'
+GL_MATRIX5_ARB = 35013 # Variable c_int '35013'
+GL_DEPTH_BUFFER_FLOAT_MODE_NV = 36271 # Variable c_int '36271'
+GL_AMD_vertex_shader_tessellator = 1 # Variable c_int '1'
+GL_DEPTH_COMPONENT = 6402 # Variable c_int '6402'
+GL_SPARE0_NV = 34094 # Variable c_int '34094'
+GL_FEEDBACK_BUFFER_SIZE = 3569 # Variable c_int '3569'
+GL_SYSTEM_FONT_NAME_NV = 36979 # Variable c_int '36979'
+GL_MULTISAMPLE_COVERAGE_MODES_NV = 36370 # Variable c_int '36370'
+GL_PRESENT_DURATION_NV = 36395 # Variable c_int '36395'
+GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 34941 # Variable c_int '34941'
+GL_OBJECT_BUFFER_USAGE_ATI = 34661 # Variable c_int '34661'
+GL_ARRAY_ELEMENT_LOCK_FIRST_EXT = 33192 # Variable c_int '33192'
+GL_PREFER_DOUBLEBUFFER_HINT_PGI = 107000 # Variable c_int '107000'
+GL_TEXTURE_COORD_ARRAY_SIZE_EXT = 32904 # Variable c_int '32904'
+GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT = 32 # Variable c_int '32'
+GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE = 33297 # Variable c_int '33297'
+GL_HI_SCALE_NV = 34574 # Variable c_int '34574'
+GL_TEXTURE_MIN_FILTER = 10241 # Variable c_int '10241'
+GL_SAMPLER_CUBE_SHADOW = 36293 # Variable c_int '36293'
+GL_STACK_UNDERFLOW = 1284 # Variable c_int '1284'
+GL_MAP2_VERTEX_ATTRIB3_4_NV = 34419 # Variable c_int '34419'
+GL_AUX1 = 1034 # Variable c_int '1034'
+GL_TEXTURE_BINDING_CUBE_MAP_EXT = 34068 # Variable c_int '34068'
+GL_AUX3 = 1036 # Variable c_int '1036'
+GL_AUX2 = 1035 # Variable c_int '1035'
+GL_VERTEX_ARRAY_RANGE_APPLE = 34077 # Variable c_int '34077'
+GL_BLUE_SCALE = 3354 # Variable c_int '3354'
+GL_MAP1_TANGENT_EXT = 33860 # Variable c_int '33860'
+GL_COLOR_ATTACHMENT6_EXT = 36070 # Variable c_int '36070'
+GL_EXT_cmyka = 1 # Variable c_int '1'
+GL_PRIMARY_COLOR_ARB = 34167 # Variable c_int '34167'
+GL_ADD = 260 # Variable c_int '260'
+GL_POINT_SPRITE = 34913 # Variable c_int '34913'
+GL_WRAP_BORDER_SUN = 33236 # Variable c_int '33236'
+GL_CIRCULAR_TANGENT_ARC_TO_NV = 252 # Variable c_int '252'
+GL_MODELVIEW_STACK_DEPTH = 2979 # Variable c_int '2979'
+GL_PATH_OBJECT_BOUNDING_BOX_NV = 37002 # Variable c_int '37002'
+GL_FONT_MAX_ADVANCE_WIDTH_BIT_NV = 16777216 # Variable c_int '16777216'
+GL_FLOAT_MAT4x3 = 35690 # Variable c_int '35690'
+GL_OP_MIN_EXT = 34699 # Variable c_int '34699'
+GL_ARB_timer_query = 1 # Variable c_int '1'
+GL_MIRRORED_REPEAT_ARB = 33648 # Variable c_int '33648'
+GL_INTERLEAVED_ATTRIBS_NV = 35980 # Variable c_int '35980'
+GL_VERTEX_ATTRIB_ARRAY_POINTER = 34373 # Variable c_int '34373'
+GL_IMAGE_1D_ARRAY = 36946 # Variable c_int '36946'
+GL_COMBINER5_NV = 34133 # Variable c_int '34133'
+GL_FOG_PATCHY_FACTOR_SGIX = 0 # Variable c_int '0'
+GL_UNPACK_ALIGNMENT = 3317 # Variable c_int '3317'
+GL_ARB_uniform_buffer_object = 1 # Variable c_int '1'
+GL_PROXY_POST_CONVOLUTION_COLOR_TABLE = 32980 # Variable c_int '32980'
+GL_ARB_texture_swizzle = 1 # Variable c_int '1'
+GL_VERTEX_ARRAY_PARALLEL_POINTERS_INTEL = 33781 # Variable c_int '33781'
+GL_NV_gpu_program_fp64 = 1 # Variable c_int '1'
+GL_LARGE_CW_ARC_TO_NV = 24 # Variable c_int '24'
+GL_TEXTURE_RECTANGLE_NV = 34037 # Variable c_int '34037'
+GL_ATTRIB_ARRAY_SIZE_NV = 34339 # Variable c_int '34339'
+GL_LOAD = 257 # Variable c_int '257'
+GL_NUM_FRAGMENT_CONSTANTS_ATI = 35183 # Variable c_int '35183'
+GL_WEIGHT_ARRAY_POINTER_ARB = 34476 # Variable c_int '34476'
+GL_EXT_stencil_wrap = 1 # Variable c_int '1'
+GL_RGB32F_ARB = 34837 # Variable c_int '34837'
+GL_INTERLACE_READ_INGR = 34152 # Variable c_int '34152'
+GL_RG8_SNORM = 36757 # Variable c_int '36757'
+GL_FRAGMENT_LIGHT_MODEL_NORMAL_INTERPOLATION_EXT = 33803 # Variable c_int '33803'
+GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY_ARB = 36879 # Variable c_int '36879'
+GL_MATRIX28_ARB = 35036 # Variable c_int '35036'
+GL_POST_CONVOLUTION_GREEN_BIAS = 32801 # Variable c_int '32801'
+GL_TEXTURE_RESIDENT = 32871 # Variable c_int '32871'
+GL_ELEMENT_ARRAY_BARRIER_BIT_EXT = 2 # Variable c_int '2'
+GL_UNSIGNED_INT_SAMPLER_RENDERBUFFER_NV = 36440 # Variable c_int '36440'
+GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB = 34069 # Variable c_int '34069'
+GL_DEBUG_SEVERITY_MEDIUM_ARB = 37191 # Variable c_int '37191'
+GL_POLYGON_STIPPLE = 2882 # Variable c_int '2882'
+GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 34371 # Variable c_int '34371'
+GL_DEBUG_TYPE_PORTABILITY_ARB = 33359 # Variable c_int '33359'
+GL_FLOAT16_VEC4_NV = 36859 # Variable c_int '36859'
+GL_UNSIGNED_INT64_VEC3_NV = 36854 # Variable c_int '36854'
+GL_OP_DOT3_EXT = 34692 # Variable c_int '34692'
+GL_PROGRAM_BINARY_FORMATS = 34815 # Variable c_int '34815'
+GL_LUMINANCE12_ALPHA12 = 32839 # Variable c_int '32839'
+GL_LOW_INT = 36339 # Variable c_int '36339'
+GL_SCALE_BY_FOUR_NV = 34111 # Variable c_int '34111'
+GL_LUMINANCE16UI_EXT = 36218 # Variable c_int '36218'
+GL_DOUBLE_MAT2x4 = 36682 # Variable c_int '36682'
+GL_BINORMAL_ARRAY_POINTER_EXT = 33859 # Variable c_int '33859'
+GL_PALETTE8_RGBA4_OES = 35736 # Variable c_int '35736'
+GL_MULTISAMPLE = 32925 # Variable c_int '32925'
+GL_RG8UI = 33336 # Variable c_int '33336'
+GL_MAX_VERTEX_OUTPUT_COMPONENTS = 37154 # Variable c_int '37154'
+GL_KEEP = 7680 # Variable c_int '7680'
+GL_UNSIGNED_INT_24_8_EXT = 34042 # Variable c_int '34042'
+GL_DECR = 7683 # Variable c_int '7683'
+GL_ARRAY_OBJECT_BUFFER_ATI = 34662 # Variable c_int '34662'
+GL_POINT_TOKEN = 1793 # Variable c_int '1793'
+GL_SIGNED_NEGATE_NV = 34109 # Variable c_int '34109'
+GL_CON_6_ATI = 35143 # Variable c_int '35143'
+GL_PROGRAM_STRING_NV = 34344 # Variable c_int '34344'
+GL_CURRENT_PROGRAM = 35725 # Variable c_int '35725'
+GL_COLOR_ATTACHMENT10 = 36074 # Variable c_int '36074'
+GL_APPLE_pixel_buffer = 1 # Variable c_int '1'
+GL_MAP2_VERTEX_ATTRIB8_4_NV = 34424 # Variable c_int '34424'
+GL_MATRIX_EXT = 34752 # Variable c_int '34752'
+GL_OR = 5383 # Variable c_int '5383'
+GL_FRAGMENT_SHADER_ATI = 35104 # Variable c_int '35104'
+GL_APPLE_fence = 1 # Variable c_int '1'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER = 36052 # Variable c_int '36052'
+GL_STATIC_READ = 35045 # Variable c_int '35045'
+GL_FLOAT_R_NV = 34944 # Variable c_int '34944'
+GL_LUMINANCE16_ALPHA16_SIGNED_SGIX = 34283 # Variable c_int '34283'
+GL_EYE_PLANE_ABSOLUTE_NV = 34140 # Variable c_int '34140'
+GL_MAP2_VERTEX_4 = 3512 # Variable c_int '3512'
+GL_PATH_GEN_COLOR_FORMAT_NV = 37042 # Variable c_int '37042'
+GL_SAMPLER_1D_ARRAY = 36288 # Variable c_int '36288'
+GL_POST_CONVOLUTION_BLUE_BIAS = 32802 # Variable c_int '32802'
+GL_EXT_vertex_array_bgra = 1 # Variable c_int '1'
+GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI = 34808 # Variable c_int '34808'
+GL_TRANSFORM_FEEDBACK_BUFFER_NV = 35982 # Variable c_int '35982'
+GL_LINE_LOOP = 2 # Variable c_int '2'
+GL_PACK_INVERT_MESA = 34648 # Variable c_int '34648'
+GL_DSDT8_MAG8_INTENSITY8_NV = 34571 # Variable c_int '34571'
+GL_TEXTURE6_ARB = 33990 # Variable c_int '33990'
+GL_PROGRAM_ALU_INSTRUCTIONS_ARB = 34821 # Variable c_int '34821'
+GL_TEXTURE_RECTANGLE_EXT = 34037 # Variable c_int '34037'
+GL_COLOR_INDEX2_EXT = 32995 # Variable c_int '32995'
+GL_BACK_RIGHT = 1027 # Variable c_int '1027'
+GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS = 35379 # Variable c_int '35379'
+GL_INT_SAMPLER_CUBE_EXT = 36300 # Variable c_int '36300'
+GL_EXT_blend_equation_separate = 1 # Variable c_int '1'
+GL_TEXTURE_LOD_BIAS_EXT = 34049 # Variable c_int '34049'
+GL_ALPHA_TEST = 3008 # Variable c_int '3008'
+GL_PATH_END_CAPS_NV = 36982 # Variable c_int '36982'
+GL_CIRCULAR_CCW_ARC_TO_NV = 248 # Variable c_int '248'
+GL_SLUMINANCE8_ALPHA8 = 35909 # Variable c_int '35909'
+GL_UNSIGNED_INT_SAMPLER_BUFFER_AMD = 36867 # Variable c_int '36867'
+GL_LUMINANCE4_ALPHA4 = 32835 # Variable c_int '32835'
+GL_UNIFORM_OFFSET = 35387 # Variable c_int '35387'
+GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB = 34998 # Variable c_int '34998'
+GL_TEXTURE1 = 33985 # Variable c_int '33985'
+GL_VERTEX_SHADER_INVARIANTS_EXT = 34769 # Variable c_int '34769'
+GL_OBJECT_PLANE = 9473 # Variable c_int '9473'
+GL_PATH_FORMAT_PS_NV = 36977 # Variable c_int '36977'
+GL_LUMINANCE_FLOAT16_APPLE = 34846 # Variable c_int '34846'
+GL_TEXTURE30_ARB = 34014 # Variable c_int '34014'
+GL_UNSIGNED_INT_SAMPLER_CUBE = 36308 # Variable c_int '36308'
+GL_FRAMEBUFFER_BARRIER_BIT_EXT = 1024 # Variable c_int '1024'
+GL_EXT_texture_rectangle = 1 # Variable c_int '1'
+GL_TIME_ELAPSED = 35007 # Variable c_int '35007'
+GL_SAMPLES_3DFX = 34484 # Variable c_int '34484'
+GL_FUNC_ADD = 32774 # Variable c_int '32774'
+GL_EXT_pixel_transform = 1 # Variable c_int '1'
+GL_UPPER_LEFT = 36002 # Variable c_int '36002'
+GL_IMAGE_2D_RECT_EXT = 36943 # Variable c_int '36943'
+GL_COMBINE_ALPHA_ARB = 34162 # Variable c_int '34162'
+GL_BUFFER_ACCESS = 35003 # Variable c_int '35003'
+GL_EYE_POINT_SGIS = 33268 # Variable c_int '33268'
+GL_TEXTURE2 = 33986 # Variable c_int '33986'
+GL_ATI_texture_mirror_once = 1 # Variable c_int '1'
+GL_LINES_ADJACENCY = 10 # Variable c_int '10'
+GL_POLYGON_OFFSET_FACTOR_EXT = 32824 # Variable c_int '32824'
+GL_MVP_MATRIX_EXT = 34787 # Variable c_int '34787'
+GL_NORMAL_ARRAY_COUNT_EXT = 32896 # Variable c_int '32896'
+GL_SHADER_COMPILER = 36346 # Variable c_int '36346'
+GL_VERTEX_ARRAY_STRIDE = 32892 # Variable c_int '32892'
+GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT = 36050 # Variable c_int '36050'
+GL_DOT_PRODUCT_PASS_THROUGH_NV = 34907 # Variable c_int '34907'
+GL_EXT_packed_depth_stencil = 1 # Variable c_int '1'
+GL_MIN_FRAGMENT_INTERPOLATION_OFFSET_NV = 36443 # Variable c_int '36443'
+GL_OCCLUSION_TEST_RESULT_HP = 33126 # Variable c_int '33126'
+GL_TEXTURE_BUFFER_ARB = 35882 # Variable c_int '35882'
+GL_MAP1_VERTEX_ATTRIB4_4_NV = 34404 # Variable c_int '34404'
+GL_TEXTURE3 = 33987 # Variable c_int '33987'
+GL_OUTPUT_TEXTURE_COORD22_EXT = 34739 # Variable c_int '34739'
+GL_ARB_provoking_vertex = 1 # Variable c_int '1'
+GL_APPLE_float_pixels = 1 # Variable c_int '1'
+GL_OUTPUT_TEXTURE_COORD16_EXT = 34733 # Variable c_int '34733'
+GL_HISTOGRAM_RED_SIZE = 32808 # Variable c_int '32808'
+GL_QUERY_NO_WAIT_NV = 36372 # Variable c_int '36372'
+GL_VOLATILE_APPLE = 35354 # Variable c_int '35354'
+GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV = 34521 # Variable c_int '34521'
+GL_ADD_ATI = 35171 # Variable c_int '35171'
+GL_LINE_SMOOTH = 2848 # Variable c_int '2848'
+GL_ARB_shading_language_100 = 1 # Variable c_int '1'
+GL_NUM_PROGRAM_BINARY_FORMATS = 34814 # Variable c_int '34814'
+GL_SURFACE_MAPPED_NV = 34560 # Variable c_int '34560'
+GL_TEXTURE7_ARB = 33991 # Variable c_int '33991'
+GL_SAMPLES_EXT = 32937 # Variable c_int '32937'
+GL_DEBUG_CATEGORY_DEPRECATION_AMD = 37195 # Variable c_int '37195'
+GL_SKIP_MISSING_GLYPH_NV = 37033 # Variable c_int '37033'
+GL_STENCIL_BACK_FUNC = 34816 # Variable c_int '34816'
+GL_POLYGON_SMOOTH_HINT = 3155 # Variable c_int '3155'
+GL_INDEX = 33314 # Variable c_int '33314'
+GL_PALETTE8_RGBA8_OES = 35734 # Variable c_int '35734'
+GL_R11F_G11F_B10F = 35898 # Variable c_int '35898'
+GL_TEXTURE31_ARB = 34015 # Variable c_int '34015'
+GL_MEDIUM_FLOAT = 36337 # Variable c_int '36337'
+GL_FRAGMENT_FOG_SGIX = 0 # Variable c_int '0'
+GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY = 36879 # Variable c_int '36879'
+GL_MAX_PROGRAM_TOTAL_OUTPUT_COMPONENTS_NV = 35880 # Variable c_int '35880'
+GL_IBM_rasterpos_clip = 1 # Variable c_int '1'
+GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_EXT = 35983 # Variable c_int '35983'
+GL_TEXTURE_COMPARE_OPERATOR_SGIX = 33179 # Variable c_int '33179'
+GL_ARB_transform_feedback_instanced = 1 # Variable c_int '1'
+GL_OBJECT_TYPE = 37138 # Variable c_int '37138'
+GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT = 34073 # Variable c_int '34073'
+GL_MATRIX0_ARB = 35008 # Variable c_int '35008'
+GL_EXT_blend_func_separate = 1 # Variable c_int '1'
+GL_DOMAIN = 2562 # Variable c_int '2562'
+GL_TEXTURE_PRIORITY_EXT = 32870 # Variable c_int '32870'
+GL_COMBINER7_NV = 34135 # Variable c_int '34135'
+GL_EXT_compiled_vertex_array = 1 # Variable c_int '1'
+GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS = 35978 # Variable c_int '35978'
+GL_FLOAT16_VEC2_NV = 36857 # Variable c_int '36857'
+GL_RGB10_EXT = 32850 # Variable c_int '32850'
+GL_MAX_TRACK_MATRICES_NV = 34351 # Variable c_int '34351'
+GL_APPLE_flush_buffer_range = 1 # Variable c_int '1'
+GL_COLOR_TABLE_INTENSITY_SIZE = 32991 # Variable c_int '32991'
+GL_INVERSE_TRANSPOSE_NV = 34349 # Variable c_int '34349'
+GL_DRAW_FRAMEBUFFER_BINDING = 36006 # Variable c_int '36006'
+GL_OUTPUT_TEXTURE_COORD13_EXT = 34730 # Variable c_int '34730'
+GL_TEXTURE_FOG_SGIX = 0 # Variable c_int '0'
+GL_EMBOSS_MAP_NV = 34143 # Variable c_int '34143'
+GL_BOOL_ARB = 35670 # Variable c_int '35670'
+GL_MATRIX22_ARB = 35030 # Variable c_int '35030'
+GL_PROGRAM_MATRIX_EXT = 36397 # Variable c_int '36397'
+GL_TRIANGLES = 4 # Variable c_int '4'
+GL_SAMPLER_2D_ARRAY_SHADOW = 36292 # Variable c_int '36292'
+GL_COLOR_ATTACHMENT12_EXT = 36076 # Variable c_int '36076'
+GL_STENCIL_OP_VALUE_AMD = 34636 # Variable c_int '34636'
+GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 34975 # Variable c_int '34975'
+GL_FRAGMENT_COLOR_MATERIAL_PARAMETER_EXT = 33795 # Variable c_int '33795'
+GL_ATI_texture_compression_3dc = 1 # Variable c_int '1'
+GL_ASYNC_MARKER_SGIX = 33577 # Variable c_int '33577'
+GL_READ_PIXEL_DATA_RANGE_NV = 34937 # Variable c_int '34937'
+GL_NORMAL_ARRAY_STRIDE_EXT = 32895 # Variable c_int '32895'
+GL_VIDEO_CAPTURE_FIELD_LOWER_HEIGHT_NV = 36923 # Variable c_int '36923'
+GL_SRGB8_ALPHA8 = 35907 # Variable c_int '35907'
+GL_UNSIGNED_INT_VEC2_EXT = 36294 # Variable c_int '36294'
+GL_GLOBAL_ALPHA_FACTOR_SUN = 33242 # Variable c_int '33242'
+GL_LUMINANCE8UI_EXT = 36224 # Variable c_int '36224'
+GL_NORMAL_MAP_NV = 34065 # Variable c_int '34065'
+GL_WRITE_ONLY_ARB = 35001 # Variable c_int '35001'
+GL_SAMPLER_2D_ARRAY = 36289 # Variable c_int '36289'
+GL_DRAW_BUFFER13_ATI = 34866 # Variable c_int '34866'
+GL_NV_light_max_exponent = 1 # Variable c_int '1'
+GL_ALPHA16F_ARB = 34844 # Variable c_int '34844'
+GL_COLOR_TABLE_SGI = 32976 # Variable c_int '32976'
+GL_MIRRORED_REPEAT = 33648 # Variable c_int '33648'
+GL_VERTEX_STREAM1_ATI = 34670 # Variable c_int '34670'
+GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI = 34807 # Variable c_int '34807'
+GL_MESAX_texture_stack = 1 # Variable c_int '1'
+GL_PIXEL_MAP_B_TO_B = 3192 # Variable c_int '3192'
+GL_MIN_ALPHA_SGIS = 34220 # Variable c_int '34220'
+GL_SIGNED_LUMINANCE_NV = 34561 # Variable c_int '34561'
+GL_VERTEX_STREAM7_ATI = 34676 # Variable c_int '34676'
+GL_TEXTURE_BUFFER_EXT = 35882 # Variable c_int '35882'
+GL_NV_texgen_emboss = 1 # Variable c_int '1'
+GL_SGIX_texture_range = 1 # Variable c_int '1'
+GL_EVAL_VERTEX_ATTRIB9_NV = 34511 # Variable c_int '34511'
+GL_IBM_cull_vertex = 1 # Variable c_int '1'
+GL_PALETTE8_RGB5_A1_OES = 35737 # Variable c_int '35737'
+GL_SECONDARY_COLOR_ARRAY_LIST_STRIDE_IBM = 103087 # Variable c_int '103087'
+GL_GREEN_MIN_CLAMP_INGR = 34145 # Variable c_int '34145'
+GL_COLOR_TABLE_RED_SIZE = 32986 # Variable c_int '32986'
+GL_REPLACEMENT_CODE_ARRAY_SUN = 34240 # Variable c_int '34240'
+GL_VERTEX_ATTRIB_MAP2_DOMAIN_APPLE = 35337 # Variable c_int '35337'
+GL_TEXTURE_POINT_ONE_COORD_ATIX = 24753 # Variable c_int '24753'
+GL_SGIX_depth_texture = 1 # Variable c_int '1'
+GL_ARB_internalformat_query = 1 # Variable c_int '1'
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_EXT = 34072 # Variable c_int '34072'
+GL_OPERAND2_ALPHA_EXT = 34202 # Variable c_int '34202'
+GL_HISTOGRAM_SINK_EXT = 32813 # Variable c_int '32813'
+GL_AMD_name_gen_delete = 1 # Variable c_int '1'
+GL_DRAW_BUFFER1_ARB = 34854 # Variable c_int '34854'
+GL_OUTPUT_TEXTURE_COORD27_EXT = 34744 # Variable c_int '34744'
+GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY = 36972 # Variable c_int '36972'
+GL_IMAGE_CUBE = 36944 # Variable c_int '36944'
+GL_NV_register_combiners2 = 1 # Variable c_int '1'
+GL_MAX_OPTIMIZED_VERTEX_SHADER_LOCAL_CONSTANTS_EXT = 34765 # Variable c_int '34765'
+GL_Z6Y10Z6CB10Z6Y10Z6CR10_422_NV = 36915 # Variable c_int '36915'
+GL_PRIMARY_COLOR_NV = 34092 # Variable c_int '34092'
+GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE = 37592 # Variable c_int '37592'
+GL_TEXTURE_CUBE_MAP_EXT = 34067 # Variable c_int '34067'
+GL_INDEX_LOGIC_OP = 3057 # Variable c_int '3057'
+GL_ARRAY_BUFFER_ARB = 34962 # Variable c_int '34962'
+GL_X_EXT = 34773 # Variable c_int '34773'
+GL_OPERAND0_ALPHA_EXT = 34200 # Variable c_int '34200'
+GL_RGB_SCALE = 34163 # Variable c_int '34163'
+GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT = 1 # Variable c_int '1'
+GL_SAMPLER_1D_ARB = 35677 # Variable c_int '35677'
+GL_BINORMAL_ARRAY_EXT = 33850 # Variable c_int '33850'
+GL_MATRIX8_ARB = 35016 # Variable c_int '35016'
+GL_RGBA_INTEGER_MODE_EXT = 36254 # Variable c_int '36254'
+GL_COPY = 5379 # Variable c_int '5379'
+GL_MAD_ATI = 35176 # Variable c_int '35176'
+GL_MAX_PROGRAM_NATIVE_TEMPORARIES_ARB = 34983 # Variable c_int '34983'
+GL_OP_SET_GE_EXT = 34700 # Variable c_int '34700'
+GL_RGB_FLOAT16_ATI = 34843 # Variable c_int '34843'
+GL_ACTIVE_VERTEX_UNITS_ARB = 34469 # Variable c_int '34469'
+GL_NUM_GENERAL_COMBINERS_NV = 34126 # Variable c_int '34126'
+GL_TRANSFORM_FEEDBACK_BINDING = 36389 # Variable c_int '36389'
+GL_SGIX_shadow = 1 # Variable c_int '1'
+GL_TEXTURE_BINDING_BUFFER_EXT = 35884 # Variable c_int '35884'
+GL_CURRENT_RASTER_INDEX = 2821 # Variable c_int '2821'
+GL_TEXTURE_DEPTH_SIZE_ARB = 34890 # Variable c_int '34890'
+GL_MODELVIEW_PROJECTION_NV = 34345 # Variable c_int '34345'
+GL_COMPRESSED_SRGB = 35912 # Variable c_int '35912'
+GL_OFFSET_HILO_TEXTURE_2D_NV = 34900 # Variable c_int '34900'
+GL_TEXTURE_DEPTH_TYPE = 35862 # Variable c_int '35862'
+GL_COMPRESSED_SLUMINANCE_ALPHA = 35915 # Variable c_int '35915'
+GL_ACTIVE_TEXTURE_ARB = 34016 # Variable c_int '34016'
+GL_DRAW_INDIRECT_UNIFIED_NV = 36672 # Variable c_int '36672'
+GL_COMPRESSED_TEXTURE_FORMATS_ARB = 34467 # Variable c_int '34467'
+GL_PATH_JOIN_STYLE_NV = 36985 # Variable c_int '36985'
+GL_DEPTH_COMPONENT24_SGIX = 33190 # Variable c_int '33190'
+GL_CURRENT_RASTER_COLOR = 2820 # Variable c_int '2820'
+GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB = 34975 # Variable c_int '34975'
+GL_FOG_COORDINATE_ARRAY_LIST_IBM = 103076 # Variable c_int '103076'
+GL_RENDERBUFFER_GREEN_SIZE_EXT = 36177 # Variable c_int '36177'
+GL_PROXY_TEXTURE_2D_ARRAY = 35867 # Variable c_int '35867'
+GL_HISTOGRAM_FORMAT = 32807 # Variable c_int '32807'
+GL_STENCIL_TEST = 2960 # Variable c_int '2960'
+GL_TEXTURE23_ARB = 34007 # Variable c_int '34007'
+GL_COLOR_SUM_CLAMP_NV = 34127 # Variable c_int '34127'
+GL_INT_IMAGE_1D_EXT = 36951 # Variable c_int '36951'
+GL_REG_4_ATI = 35109 # Variable c_int '35109'
+GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = 35722 # Variable c_int '35722'
+GL_MAX_DEBUG_MESSAGE_LENGTH_ARB = 37187 # Variable c_int '37187'
+GL_MAX_GEOMETRY_PROGRAM_INVOCATIONS_NV = 36442 # Variable c_int '36442'
+GL_PIXEL_MAP_R_TO_R_SIZE = 3254 # Variable c_int '3254'
+GL_PROJECTION_STACK_DEPTH = 2980 # Variable c_int '2980'
+GL_QUAD_STRIP = 8 # Variable c_int '8'
+GL_TEXTURE_RENDERBUFFER_NV = 36437 # Variable c_int '36437'
+GL_ACCUM = 256 # Variable c_int '256'
+GL_FRAGMENT_LIGHT_MODEL_AMBIENT_EXT = 33802 # Variable c_int '33802'
+GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 34920 # Variable c_int '34920'
+GL_PROXY_TEXTURE_1D_ARRAY = 35865 # Variable c_int '35865'
+GL_MINMAX_FORMAT_EXT = 32815 # Variable c_int '32815'
+GL_CURRENT_VERTEX_ATTRIB = 34342 # Variable c_int '34342'
+GL_KTX_buffer_region = 1 # Variable c_int '1'
+GL_TEXTURE_BINDING_2D_ARRAY_EXT = 35869 # Variable c_int '35869'
+GL_ALPHA_EXTENDED_RANGE_SGIX = 34286 # Variable c_int '34286'
+GL_TEXTURE_COORD_ARRAY_COUNT_EXT = 32907 # Variable c_int '32907'
+GL_MAX_ARRAY_TEXTURE_LAYERS_EXT = 35071 # Variable c_int '35071'
+GL_FRAMEBUFFER_ATTACHMENT_LAYERED_ARB = 36263 # Variable c_int '36263'
+GL_STENCIL_BACK_PASS_DEPTH_FAIL_ATI = 34818 # Variable c_int '34818'
+GL_SHADER_INCLUDE_ARB = 36270 # Variable c_int '36270'
+GL_NUM_COMPATIBLE_SUBROUTINES = 36426 # Variable c_int '36426'
+GL_INT_IMAGE_1D_ARRAY = 36957 # Variable c_int '36957'
+GL_POST_CONVOLUTION_GREEN_SCALE_EXT = 32797 # Variable c_int '32797'
+GL_STENCIL_BUFFER_BIT = 1024 # Variable c_int '1024'
+GL_ALPHA16I_EXT = 36234 # Variable c_int '36234'
+GL_MIRROR_CLAMP_EXT = 34626 # Variable c_int '34626'
+GL_MAX_TEXTURE_BUFFER_SIZE_EXT = 35883 # Variable c_int '35883'
+GL_MODELVIEW5_ARB = 34597 # Variable c_int '34597'
+GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS = 36489 # Variable c_int '36489'
+GL_DEPTH_CLAMP_FAR_AMD = 36895 # Variable c_int '36895'
+GL_ARB_copy_buffer = 1 # Variable c_int '1'
+GL_ARB_occlusion_query = 1 # Variable c_int '1'
+GL_PROXY_HISTOGRAM = 32805 # Variable c_int '32805'
+GL_SGI_color_table = 1 # Variable c_int '1'
+GL_CONST_EYE_NV = 34533 # Variable c_int '34533'
+GL_STORAGE_CLIENT_APPLE = 34228 # Variable c_int '34228'
+GL_DEPTH_SCALE = 3358 # Variable c_int '3358'
+GL_RENDERBUFFER_COVERAGE_SAMPLES_NV = 36011 # Variable c_int '36011'
+GL_PACK_ALIGNMENT = 3333 # Variable c_int '3333'
+GL_LIGHTING = 2896 # Variable c_int '2896'
+GL_OP_ADD_EXT = 34695 # Variable c_int '34695'
+GL_READ_WRITE_ARB = 35002 # Variable c_int '35002'
+GL_RGB32UI_EXT = 36209 # Variable c_int '36209'
+GL_CURRENT_RASTER_DISTANCE = 2825 # Variable c_int '2825'
+GL_PATH_MITER_LIMIT_NV = 36986 # Variable c_int '36986'
+GL_SAMPLER_CUBE_MAP_ARRAY = 36876 # Variable c_int '36876'
+GL_EVAL_VERTEX_ATTRIB0_NV = 34502 # Variable c_int '34502'
+GL_FRAMEBUFFER_SRGB = 36281 # Variable c_int '36281'
+GL_MAX_VIEWPORTS = 33371 # Variable c_int '33371'
+GL_VERTEX_ARRAY_RANGE_POINTER_NV = 34081 # Variable c_int '34081'
+GL_NORMAL_ARRAY_LIST_IBM = 103071 # Variable c_int '103071'
+GL_NV_depth_range_unclamped = 1 # Variable c_int '1'
+GL_SGIX_shadow_ambient = 1 # Variable c_int '1'
+GL_DRAW_PIXEL_TOKEN = 1797 # Variable c_int '1797'
+GL_HP_occlusion_test = 1 # Variable c_int '1'
+GL_MITER_TRUNCATE_NV = 37032 # Variable c_int '37032'
+GL_INTENSITY4_EXT = 32842 # Variable c_int '32842'
+GL_NV_present_video = 1 # Variable c_int '1'
+GL_POLYGON_STIPPLE_BIT = 16 # Variable c_int '16'
+GL_MAX_FRAGMENT_UNIFORM_BLOCKS = 35373 # Variable c_int '35373'
+GL_SGIX_texture_multi_buffer = 1 # Variable c_int '1'
+GL_RGB8I_EXT = 36239 # Variable c_int '36239'
+GL_PIXEL_MAP_I_TO_I = 3184 # Variable c_int '3184'
+GL_EXT_texture3D = 1 # Variable c_int '1'
+GL_OPERAND3_RGB_NV = 34195 # Variable c_int '34195'
+GL_RGB_FLOAT16_APPLE = 34843 # Variable c_int '34843'
+GL_NV_gpu_program4 = 1 # Variable c_int '1'
+GL_COMPRESSED_RGB_ARB = 34029 # Variable c_int '34029'
+GL_ARC_TO_NV = 254 # Variable c_int '254'
+GL_SGIS_texture_edge_clamp = 1 # Variable c_int '1'
+GL_CONSTANT_ARB = 34166 # Variable c_int '34166'
+GL_TEXTURE_1D_STACK_MESAX = 34649 # Variable c_int '34649'
+GL_NV_depth_buffer_float = 1 # Variable c_int '1'
+GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX = 36937 # Variable c_int '36937'
+GL_ARB_multitexture = 1 # Variable c_int '1'
+GL_VERTEX_ATTRIB_ARRAY_NORMALIZED = 34922 # Variable c_int '34922'
+GL_UNSIGNED_INT_IMAGE_1D_ARRAY_EXT = 36968 # Variable c_int '36968'
+GL_OP_POWER_EXT = 34707 # Variable c_int '34707'
+GL_DOT_PRODUCT_NV = 34540 # Variable c_int '34540'
+GL_CUBIC_EXT = 33588 # Variable c_int '33588'
+GL_FRAMEBUFFER_INCOMPLETE_LAYER_COUNT_EXT = 36265 # Variable c_int '36265'
+GL_EXT_index_texture = 1 # Variable c_int '1'
+GL_NO_RESET_NOTIFICATION_ARB = 33377 # Variable c_int '33377'
+GL_TEXTURE_COMPRESSION_HINT = 34031 # Variable c_int '34031'
+GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER = 34033 # Variable c_int '34033'
+GL_ARRAY_ELEMENT_LOCK_COUNT_EXT = 33193 # Variable c_int '33193'
+GL_COLOR_TABLE_GREEN_SIZE_EXT = 32987 # Variable c_int '32987'
+GL_TRIANGLE_STRIP_ADJACENCY_ARB = 13 # Variable c_int '13'
+GL_MAX_VERTEX_UNIFORM_VECTORS = 36347 # Variable c_int '36347'
+GL_LUMINANCE_ALPHA_FLOAT32_ATI = 34841 # Variable c_int '34841'
+GL_POST_CONVOLUTION_GREEN_SCALE = 32797 # Variable c_int '32797'
+GL_COLOR_FLOAT_APPLE = 35343 # Variable c_int '35343'
+GL_TRANSPOSE_COLOR_MATRIX = 34022 # Variable c_int '34022'
+GL_OPERAND2_RGB_EXT = 34194 # Variable c_int '34194'
+GL_MAX_VERTEX_STREAMS_ATI = 34667 # Variable c_int '34667'
+GL_MAX_COMBINED_ATOMIC_COUNTERS = 37591 # Variable c_int '37591'
+GL_SGIX_sprite = 1 # Variable c_int '1'
+GL_SHADER_OPERATION_NV = 34527 # Variable c_int '34527'
+GL_POST_COLOR_MATRIX_BLUE_BIAS_SGI = 32954 # Variable c_int '32954'
+GL_SCREEN_COORDINATES_REND = 33936 # Variable c_int '33936'
+GL_MAX_PROGRAM_ATTRIB_COMPONENTS_NV = 35080 # Variable c_int '35080'
+GL_CONSTANT = 34166 # Variable c_int '34166'
+GL_SHADER_CONSISTENT_NV = 34525 # Variable c_int '34525'
+GL_PIXEL_CUBIC_WEIGHT_EXT = 33587 # Variable c_int '33587'
+GL_EXT_framebuffer_object = 1 # Variable c_int '1'
+GL_ARB_gpu_shader5 = 1 # Variable c_int '1'
+GL_PATH_STENCIL_REF_NV = 37048 # Variable c_int '37048'
+GL_OUTPUT_TEXTURE_COORD12_EXT = 34729 # Variable c_int '34729'
+GL_CON_3_ATI = 35140 # Variable c_int '35140'
+GL_SHADER_TYPE = 35663 # Variable c_int '35663'
+GL_VERSION = 7938 # Variable c_int '7938'
+GL_DEPTH_COMPONENT32F = 36012 # Variable c_int '36012'
+GL_ATIX_point_sprites = 1 # Variable c_int '1'
+GL_COLOR_ARRAY_STRIDE = 32899 # Variable c_int '32899'
+GL_DRAW_BUFFER11_ARB = 34864 # Variable c_int '34864'
+GL_CLAMP_TO_BORDER_SGIS = 33069 # Variable c_int '33069'
+GL_INNOCENT_CONTEXT_RESET_ARB = 33364 # Variable c_int '33364'
+GL_ALPHA16_SIGNED_SGIX = 34280 # Variable c_int '34280'
+GL_MAX_ELEMENTS_INDICES = 33001 # Variable c_int '33001'
+GL_BUMP_ROT_MATRIX_SIZE_ATI = 34678 # Variable c_int '34678'
+GL_SCALAR_EXT = 34750 # Variable c_int '34750'
+GL_VERTICAL_LINE_TO_NV = 8 # Variable c_int '8'
+GL_GEOMETRY_VERTICES_OUT = 35094 # Variable c_int '35094'
+GL_RGB8 = 32849 # Variable c_int '32849'
+GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS = 37068 # Variable c_int '37068'
+GL_CLIENT_ACTIVE_TEXTURE_ARB = 34017 # Variable c_int '34017'
+GL_UNIFORM_ARRAY_STRIDE = 35388 # Variable c_int '35388'
+GL_TEXTURE_SAMPLES = 37126 # Variable c_int '37126'
+GL_SIGNED_HILO16_NV = 34554 # Variable c_int '34554'
+GL_RGB5 = 32848 # Variable c_int '32848'
+GL_APPLE_vertex_array_object = 1 # Variable c_int '1'
+GL_CULL_FACE = 2884 # Variable c_int '2884'
+GL_POST_COLOR_MATRIX_GREEN_BIAS = 32953 # Variable c_int '32953'
+GL_VERTEX_ID_NV = 35963 # Variable c_int '35963'
+GL_OP_DOT4_EXT = 34693 # Variable c_int '34693'
+GL_AMD_conservative_depth = 1 # Variable c_int '1'
+GL_ARB_texture_float = 1 # Variable c_int '1'
+GL_NORMAL_BIT_PGI = 134217728 # Variable c_int '134217728'
+GL_GREEN_BIT_ATI = 2 # Variable c_int '2'
+GL_EYE_LINE_SGIS = 33270 # Variable c_int '33270'
+GL_PROXY_TEXTURE_CUBE_MAP = 34075 # Variable c_int '34075'
+GL_ARB_texture_env_combine = 1 # Variable c_int '1'
+GL_OES_read_format = 1 # Variable c_int '1'
+GL_RG16I = 33337 # Variable c_int '33337'
+GL_EXT_framebuffer_multisample_blit_scaled = 1 # Variable c_int '1'
+GL_OP_MADD_EXT = 34696 # Variable c_int '34696'
+GL_TEXTURE_BINDING_1D_ARRAY = 35868 # Variable c_int '35868'
+GL_ARB_texture_gather = 1 # Variable c_int '1'
+GL_ARB_shading_language_include = 1 # Variable c_int '1'
+GL_COLOR_INDEXES = 5635 # Variable c_int '5635'
+GL_RGBA16_SIGNED_SGIX = 34279 # Variable c_int '34279'
+GL_MAX_ASYNC_READ_PIXELS_SGIX = 33633 # Variable c_int '33633'
+GL_EVAL_VERTEX_ATTRIB4_NV = 34506 # Variable c_int '34506'
+GL_NEVER = 512 # Variable c_int '512'
+GL_BLEND_DST = 3040 # Variable c_int '3040'
+GL_ATI_vertex_streams = 1 # Variable c_int '1'
+GL_NUM_FILL_STREAMS_NV = 36393 # Variable c_int '36393'
+GL_DECR_WRAP_EXT = 34056 # Variable c_int '34056'
+GL_INT16_NV = 36836 # Variable c_int '36836'
+GL_STENCIL_BACK_WRITEMASK = 36005 # Variable c_int '36005'
+GL_DOT_PRODUCT_TEXTURE_3D_NV = 34543 # Variable c_int '34543'
+GL_COLOR_INDEX12_EXT = 32998 # Variable c_int '32998'
+GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_ARB = 36447 # Variable c_int '36447'
+GL_EXT_texture_lod_bias = 1 # Variable c_int '1'
+GL_MAX_PROGRAM_PATCH_ATTRIBS_NV = 34520 # Variable c_int '34520'
+GL_COLOR_TABLE_BIAS_SGI = 32983 # Variable c_int '32983'
+GL_STREAM_COPY_ARB = 35042 # Variable c_int '35042'
+GL_COLOR_TABLE_RED_SIZE_SGI = 32986 # Variable c_int '32986'
+GL_TEXTURE25_ARB = 34009 # Variable c_int '34009'
+GL_INDEX_ARRAY_STRIDE = 32902 # Variable c_int '32902'
+GL_NV_vdpau_interop = 1 # Variable c_int '1'
+GL_COMPRESSED_RGBA_ARB = 34030 # Variable c_int '34030'
+GL_MAP2_VERTEX_3 = 3511 # Variable c_int '3511'
+GL_TEXTURE_SWIZZLE_RGBA = 36422 # Variable c_int '36422'
+GL_MIRRORED_REPEAT_IBM = 33648 # Variable c_int '33648'
+GL_DEPTH_COMPONENT32 = 33191 # Variable c_int '33191'
+GL_RGBA = 6408 # Variable c_int '6408'
+GL_READ_FRAMEBUFFER = 36008 # Variable c_int '36008'
+GL_EXT_texture_filter_anisotropic = 1 # Variable c_int '1'
+GL_TESSELLATION_FACTOR_AMD = 36869 # Variable c_int '36869'
+GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH_EXT = 35958 # Variable c_int '35958'
+GL_ABGR_EXT = 32768 # Variable c_int '32768'
+GL_TEXTURE_CUBE_MAP_ARRAY_ARB = 36873 # Variable c_int '36873'
+GL_FOG_COORDINATE_EXT = 33873 # Variable c_int '33873'
+GL_MAP2_COLOR_4 = 3504 # Variable c_int '3504'
+GL_VENDOR = 7936 # Variable c_int '7936'
+GL_NORMAL_ARRAY_EXT = 32885 # Variable c_int '32885'
+GL_TEXTURE_2D_ARRAY = 35866 # Variable c_int '35866'
+GL_ACCUM_BUFFER_BIT = 512 # Variable c_int '512'
+GL_OUTPUT_TEXTURE_COORD29_EXT = 34746 # Variable c_int '34746'
+GL_TEXTURE_BINDING_2D = 32873 # Variable c_int '32873'
+GL_RGBA16F_ARB = 34842 # Variable c_int '34842'
+GL_ISOLINES = 36474 # Variable c_int '36474'
+GL_SAMPLER_1D = 35677 # Variable c_int '35677'
+GL_ACTIVE_PROGRAM = 33369 # Variable c_int '33369'
+GL_R8UI = 33330 # Variable c_int '33330'
+GL_PACK_RESAMPLE_SGIX = 33838 # Variable c_int '33838'
+GL_SINGLE_COLOR = 33273 # Variable c_int '33273'
+GL_COMPRESSED_SRGB_ALPHA_EXT = 35913 # Variable c_int '35913'
+GL_MODELVIEW22_ARB = 34614 # Variable c_int '34614'
+GL_GREEN_INTEGER_EXT = 36245 # Variable c_int '36245'
+GL_TESS_GEN_POINT_MODE = 36473 # Variable c_int '36473'
+GL_TESS_GEN_MODE = 36470 # Variable c_int '36470'
+GL_UNSIGNED_INT64_VEC4_NV = 36855 # Variable c_int '36855'
+GL_RELATIVE_LARGE_CW_ARC_TO_NV = 25 # Variable c_int '25'
+GL_OUTPUT_TEXTURE_COORD9_EXT = 34726 # Variable c_int '34726'
+GL_SGIX_ir_instrument1 = 1 # Variable c_int '1'
+GL_BUFFER_OBJECT_APPLE = 34227 # Variable c_int '34227'
+GL_MAX = 32776 # Variable c_int '32776'
+GL_LUMINANCE = 6409 # Variable c_int '6409'
+GL_PROXY_TEXTURE_CUBE_MAP_ARRAY = 36875 # Variable c_int '36875'
+GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI = 34801 # Variable c_int '34801'
+GL_LINEAR_MIPMAP_NEAREST = 9985 # Variable c_int '9985'
+GL_IMAGE_BUFFER_EXT = 36945 # Variable c_int '36945'
+GL_COLOR_TABLE_SCALE_SGI = 32982 # Variable c_int '32982'
+GL_SEPARATE_ATTRIBS_EXT = 35981 # Variable c_int '35981'
+GL_AMD_blend_minmax_factor = 1 # Variable c_int '1'
+GL_FULL_RANGE_EXT = 34785 # Variable c_int '34785'
+GL_SAMPLE_MASK_SGIS = 32928 # Variable c_int '32928'
+GL_AUTO_NORMAL = 3456 # Variable c_int '3456'
+GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS = 35881 # Variable c_int '35881'
+GL_QUERY_BY_REGION_WAIT_NV = 36373 # Variable c_int '36373'
+GL_ALPHA = 6406 # Variable c_int '6406'
+GL_VERTEX_WEIGHTING_EXT = 34057 # Variable c_int '34057'
+GL_SAMPLER_1D_SHADOW = 35681 # Variable c_int '35681'
+GL_OFFSET_TEXTURE_SCALE_NV = 34530 # Variable c_int '34530'
+GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_EXT = 35979 # Variable c_int '35979'
+GL_UNSIGNED_INT_IMAGE_2D_RECT = 36965 # Variable c_int '36965'
+GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV = 34099 # Variable c_int '34099'
+GL_DEPTH32F_STENCIL8 = 36013 # Variable c_int '36013'
+GL_NORMAL_MAP_ARB = 34065 # Variable c_int '34065'
+GL_LINES_ADJACENCY_ARB = 10 # Variable c_int '10'
+GL_RESTART_SUN = 1 # Variable c_int '1'
+GL_WRITE_ONLY = 35001 # Variable c_int '35001'
+GL_TEXTURE_COORD_NV = 35961 # Variable c_int '35961'
+GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER = 37575 # Variable c_int '37575'
+GL_ALPHA32I_EXT = 36228 # Variable c_int '36228'
+GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE = 32981 # Variable c_int '32981'
+GL_STENCIL_ATTACHMENT = 36128 # Variable c_int '36128'
+GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB = 36493 # Variable c_int '36493'
+GL_NVX_gpu_memory_info = 1 # Variable c_int '1'
+GL_SAMPLER_2D = 35678 # Variable c_int '35678'
+GL_PATH_GEN_COEFF_NV = 37041 # Variable c_int '37041'
+GL_MAP1_BINORMAL_EXT = 33862 # Variable c_int '33862'
+GL_SAMPLE_COVERAGE = 32928 # Variable c_int '32928'
+GL_NV_framebuffer_multisample_coverage = 1 # Variable c_int '1'
+GL_RGB12_EXT = 32851 # Variable c_int '32851'
+GL_TEXTURE_3D_BINDING_EXT = 32874 # Variable c_int '32874'
+GL_SHININESS = 5633 # Variable c_int '5633'
+GL_DRAW_FRAMEBUFFER = 36009 # Variable c_int '36009'
+GL_COLOR_TABLE_WIDTH_EXT = 32985 # Variable c_int '32985'
+GL_ARB_shading_language_420pack = 1 # Variable c_int '1'
+GL_RGB10_A2UI = 36975 # Variable c_int '36975'
+GLenum = c_uint
+GLbitfield = c_uint
+GLuint = c_uint
+GLint = c_int
+GLsizei = c_int
+GLboolean = c_ubyte
+GLbyte = c_byte
+GLshort = c_short
+GLubyte = c_ubyte
+GLushort = c_ushort
+GLulong = c_ulong
+GLfloat = c_float
+GLclampf = c_float
+GLdouble = c_double
+GLclampd = c_double
+GLvoid = None
+int64_t = c_int64
+GLint64EXT = int64_t
+uint64_t = c_uint64
+GLuint64EXT = uint64_t
+GLint64 = GLint64EXT
+GLuint64 = GLuint64EXT
+class __GLsync(Structure):
+    pass
+GLsync = POINTER(__GLsync)
+GLchar = c_char
+glAccum = _libraries['libGL.so.1'].glAccum
+glAccum.restype = None
+glAccum.argtypes = [GLenum, GLfloat]
+glAlphaFunc = _libraries['libGL.so.1'].glAlphaFunc
+glAlphaFunc.restype = None
+glAlphaFunc.argtypes = [GLenum, GLclampf]
+glAreTexturesResident = _libraries['libGL.so.1'].glAreTexturesResident
+glAreTexturesResident.restype = GLboolean
+glAreTexturesResident.argtypes = [GLsizei, POINTER(GLuint), POINTER(GLboolean)]
+glArrayElement = _libraries['libGL.so.1'].glArrayElement
+glArrayElement.restype = None
+glArrayElement.argtypes = [GLint]
+glBegin = _libraries['libGL.so.1'].glBegin
+glBegin.restype = None
+glBegin.argtypes = [GLenum]
+glBindTexture = _libraries['libGL.so.1'].glBindTexture
+glBindTexture.restype = None
+glBindTexture.argtypes = [GLenum, GLuint]
+glBitmap = _libraries['libGL.so.1'].glBitmap
+glBitmap.restype = None
+glBitmap.argtypes = [GLsizei, GLsizei, GLfloat, GLfloat, GLfloat, GLfloat, POINTER(GLubyte)]
+glBlendFunc = _libraries['libGL.so.1'].glBlendFunc
+glBlendFunc.restype = None
+glBlendFunc.argtypes = [GLenum, GLenum]
+glCallList = _libraries['libGL.so.1'].glCallList
+glCallList.restype = None
+glCallList.argtypes = [GLuint]
+glCallLists = _libraries['libGL.so.1'].glCallLists
+glCallLists.restype = None
+glCallLists.argtypes = [GLsizei, GLenum, POINTER(GLvoid)]
+glClear = _libraries['libGL.so.1'].glClear
+glClear.restype = None
+glClear.argtypes = [GLbitfield]
+glClearAccum = _libraries['libGL.so.1'].glClearAccum
+glClearAccum.restype = None
+glClearAccum.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glClearColor = _libraries['libGL.so.1'].glClearColor
+glClearColor.restype = None
+glClearColor.argtypes = [GLclampf, GLclampf, GLclampf, GLclampf]
+glClearDepth = _libraries['libGL.so.1'].glClearDepth
+glClearDepth.restype = None
+glClearDepth.argtypes = [GLclampd]
+glClearIndex = _libraries['libGL.so.1'].glClearIndex
+glClearIndex.restype = None
+glClearIndex.argtypes = [GLfloat]
+glClearStencil = _libraries['libGL.so.1'].glClearStencil
+glClearStencil.restype = None
+glClearStencil.argtypes = [GLint]
+glClipPlane = _libraries['libGL.so.1'].glClipPlane
+glClipPlane.restype = None
+glClipPlane.argtypes = [GLenum, POINTER(GLdouble)]
+glColor3b = _libraries['libGL.so.1'].glColor3b
+glColor3b.restype = None
+glColor3b.argtypes = [GLbyte, GLbyte, GLbyte]
+glColor3bv = _libraries['libGL.so.1'].glColor3bv
+glColor3bv.restype = None
+glColor3bv.argtypes = [POINTER(GLbyte)]
+glColor3d = _libraries['libGL.so.1'].glColor3d
+glColor3d.restype = None
+glColor3d.argtypes = [GLdouble, GLdouble, GLdouble]
+glColor3dv = _libraries['libGL.so.1'].glColor3dv
+glColor3dv.restype = None
+glColor3dv.argtypes = [POINTER(GLdouble)]
+glColor3f = _libraries['libGL.so.1'].glColor3f
+glColor3f.restype = None
+glColor3f.argtypes = [GLfloat, GLfloat, GLfloat]
+glColor3fv = _libraries['libGL.so.1'].glColor3fv
+glColor3fv.restype = None
+glColor3fv.argtypes = [POINTER(GLfloat)]
+glColor3i = _libraries['libGL.so.1'].glColor3i
+glColor3i.restype = None
+glColor3i.argtypes = [GLint, GLint, GLint]
+glColor3iv = _libraries['libGL.so.1'].glColor3iv
+glColor3iv.restype = None
+glColor3iv.argtypes = [POINTER(GLint)]
+glColor3s = _libraries['libGL.so.1'].glColor3s
+glColor3s.restype = None
+glColor3s.argtypes = [GLshort, GLshort, GLshort]
+glColor3sv = _libraries['libGL.so.1'].glColor3sv
+glColor3sv.restype = None
+glColor3sv.argtypes = [POINTER(GLshort)]
+glColor3ub = _libraries['libGL.so.1'].glColor3ub
+glColor3ub.restype = None
+glColor3ub.argtypes = [GLubyte, GLubyte, GLubyte]
+glColor3ubv = _libraries['libGL.so.1'].glColor3ubv
+glColor3ubv.restype = None
+glColor3ubv.argtypes = [POINTER(GLubyte)]
+glColor3ui = _libraries['libGL.so.1'].glColor3ui
+glColor3ui.restype = None
+glColor3ui.argtypes = [GLuint, GLuint, GLuint]
+glColor3uiv = _libraries['libGL.so.1'].glColor3uiv
+glColor3uiv.restype = None
+glColor3uiv.argtypes = [POINTER(GLuint)]
+glColor3us = _libraries['libGL.so.1'].glColor3us
+glColor3us.restype = None
+glColor3us.argtypes = [GLushort, GLushort, GLushort]
+glColor3usv = _libraries['libGL.so.1'].glColor3usv
+glColor3usv.restype = None
+glColor3usv.argtypes = [POINTER(GLushort)]
+glColor4b = _libraries['libGL.so.1'].glColor4b
+glColor4b.restype = None
+glColor4b.argtypes = [GLbyte, GLbyte, GLbyte, GLbyte]
+glColor4bv = _libraries['libGL.so.1'].glColor4bv
+glColor4bv.restype = None
+glColor4bv.argtypes = [POINTER(GLbyte)]
+glColor4d = _libraries['libGL.so.1'].glColor4d
+glColor4d.restype = None
+glColor4d.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble]
+glColor4dv = _libraries['libGL.so.1'].glColor4dv
+glColor4dv.restype = None
+glColor4dv.argtypes = [POINTER(GLdouble)]
+glColor4f = _libraries['libGL.so.1'].glColor4f
+glColor4f.restype = None
+glColor4f.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glColor4fv = _libraries['libGL.so.1'].glColor4fv
+glColor4fv.restype = None
+glColor4fv.argtypes = [POINTER(GLfloat)]
+glColor4i = _libraries['libGL.so.1'].glColor4i
+glColor4i.restype = None
+glColor4i.argtypes = [GLint, GLint, GLint, GLint]
+glColor4iv = _libraries['libGL.so.1'].glColor4iv
+glColor4iv.restype = None
+glColor4iv.argtypes = [POINTER(GLint)]
+glColor4s = _libraries['libGL.so.1'].glColor4s
+glColor4s.restype = None
+glColor4s.argtypes = [GLshort, GLshort, GLshort, GLshort]
+glColor4sv = _libraries['libGL.so.1'].glColor4sv
+glColor4sv.restype = None
+glColor4sv.argtypes = [POINTER(GLshort)]
+glColor4ub = _libraries['libGL.so.1'].glColor4ub
+glColor4ub.restype = None
+glColor4ub.argtypes = [GLubyte, GLubyte, GLubyte, GLubyte]
+glColor4ubv = _libraries['libGL.so.1'].glColor4ubv
+glColor4ubv.restype = None
+glColor4ubv.argtypes = [POINTER(GLubyte)]
+glColor4ui = _libraries['libGL.so.1'].glColor4ui
+glColor4ui.restype = None
+glColor4ui.argtypes = [GLuint, GLuint, GLuint, GLuint]
+glColor4uiv = _libraries['libGL.so.1'].glColor4uiv
+glColor4uiv.restype = None
+glColor4uiv.argtypes = [POINTER(GLuint)]
+glColor4us = _libraries['libGL.so.1'].glColor4us
+glColor4us.restype = None
+glColor4us.argtypes = [GLushort, GLushort, GLushort, GLushort]
+glColor4usv = _libraries['libGL.so.1'].glColor4usv
+glColor4usv.restype = None
+glColor4usv.argtypes = [POINTER(GLushort)]
+glColorMask = _libraries['libGL.so.1'].glColorMask
+glColorMask.restype = None
+glColorMask.argtypes = [GLboolean, GLboolean, GLboolean, GLboolean]
+glColorMaterial = _libraries['libGL.so.1'].glColorMaterial
+glColorMaterial.restype = None
+glColorMaterial.argtypes = [GLenum, GLenum]
+glColorPointer = _libraries['libGL.so.1'].glColorPointer
+glColorPointer.restype = None
+glColorPointer.argtypes = [GLint, GLenum, GLsizei, POINTER(GLvoid)]
+glCopyPixels = _libraries['libGL.so.1'].glCopyPixels
+glCopyPixels.restype = None
+glCopyPixels.argtypes = [GLint, GLint, GLsizei, GLsizei, GLenum]
+glCopyTexImage1D = _libraries['libGL.so.1'].glCopyTexImage1D
+glCopyTexImage1D.restype = None
+glCopyTexImage1D.argtypes = [GLenum, GLint, GLenum, GLint, GLint, GLsizei, GLint]
+glCopyTexImage2D = _libraries['libGL.so.1'].glCopyTexImage2D
+glCopyTexImage2D.restype = None
+glCopyTexImage2D.argtypes = [GLenum, GLint, GLenum, GLint, GLint, GLsizei, GLsizei, GLint]
+glCopyTexSubImage1D = _libraries['libGL.so.1'].glCopyTexSubImage1D
+glCopyTexSubImage1D.restype = None
+glCopyTexSubImage1D.argtypes = [GLenum, GLint, GLint, GLint, GLint, GLsizei]
+glCopyTexSubImage2D = _libraries['libGL.so.1'].glCopyTexSubImage2D
+glCopyTexSubImage2D.restype = None
+glCopyTexSubImage2D.argtypes = [GLenum, GLint, GLint, GLint, GLint, GLint, GLsizei, GLsizei]
+glCullFace = _libraries['libGL.so.1'].glCullFace
+glCullFace.restype = None
+glCullFace.argtypes = [GLenum]
+glDeleteLists = _libraries['libGL.so.1'].glDeleteLists
+glDeleteLists.restype = None
+glDeleteLists.argtypes = [GLuint, GLsizei]
+glDeleteTextures = _libraries['libGL.so.1'].glDeleteTextures
+glDeleteTextures.restype = None
+glDeleteTextures.argtypes = [GLsizei, POINTER(GLuint)]
+glDepthFunc = _libraries['libGL.so.1'].glDepthFunc
+glDepthFunc.restype = None
+glDepthFunc.argtypes = [GLenum]
+glDepthMask = _libraries['libGL.so.1'].glDepthMask
+glDepthMask.restype = None
+glDepthMask.argtypes = [GLboolean]
+glDepthRange = _libraries['libGL.so.1'].glDepthRange
+glDepthRange.restype = None
+glDepthRange.argtypes = [GLclampd, GLclampd]
+glDisable = _libraries['libGL.so.1'].glDisable
+glDisable.restype = None
+glDisable.argtypes = [GLenum]
+glDisableClientState = _libraries['libGL.so.1'].glDisableClientState
+glDisableClientState.restype = None
+glDisableClientState.argtypes = [GLenum]
+glDrawArrays = _libraries['libGL.so.1'].glDrawArrays
+glDrawArrays.restype = None
+glDrawArrays.argtypes = [GLenum, GLint, GLsizei]
+glDrawBuffer = _libraries['libGL.so.1'].glDrawBuffer
+glDrawBuffer.restype = None
+glDrawBuffer.argtypes = [GLenum]
+glDrawElements = _libraries['libGL.so.1'].glDrawElements
+glDrawElements.restype = None
+glDrawElements.argtypes = [GLenum, GLsizei, GLenum, POINTER(GLvoid)]
+glDrawPixels = _libraries['libGL.so.1'].glDrawPixels
+glDrawPixels.restype = None
+glDrawPixels.argtypes = [GLsizei, GLsizei, GLenum, GLenum, POINTER(GLvoid)]
+glEdgeFlag = _libraries['libGL.so.1'].glEdgeFlag
+glEdgeFlag.restype = None
+glEdgeFlag.argtypes = [GLboolean]
+glEdgeFlagPointer = _libraries['libGL.so.1'].glEdgeFlagPointer
+glEdgeFlagPointer.restype = None
+glEdgeFlagPointer.argtypes = [GLsizei, POINTER(GLvoid)]
+glEdgeFlagv = _libraries['libGL.so.1'].glEdgeFlagv
+glEdgeFlagv.restype = None
+glEdgeFlagv.argtypes = [POINTER(GLboolean)]
+glEnable = _libraries['libGL.so.1'].glEnable
+glEnable.restype = None
+glEnable.argtypes = [GLenum]
+glEnableClientState = _libraries['libGL.so.1'].glEnableClientState
+glEnableClientState.restype = None
+glEnableClientState.argtypes = [GLenum]
+glEnd = _libraries['libGL.so.1'].glEnd
+glEnd.restype = None
+glEnd.argtypes = []
+glEndList = _libraries['libGL.so.1'].glEndList
+glEndList.restype = None
+glEndList.argtypes = []
+glEvalCoord1d = _libraries['libGL.so.1'].glEvalCoord1d
+glEvalCoord1d.restype = None
+glEvalCoord1d.argtypes = [GLdouble]
+glEvalCoord1dv = _libraries['libGL.so.1'].glEvalCoord1dv
+glEvalCoord1dv.restype = None
+glEvalCoord1dv.argtypes = [POINTER(GLdouble)]
+glEvalCoord1f = _libraries['libGL.so.1'].glEvalCoord1f
+glEvalCoord1f.restype = None
+glEvalCoord1f.argtypes = [GLfloat]
+glEvalCoord1fv = _libraries['libGL.so.1'].glEvalCoord1fv
+glEvalCoord1fv.restype = None
+glEvalCoord1fv.argtypes = [POINTER(GLfloat)]
+glEvalCoord2d = _libraries['libGL.so.1'].glEvalCoord2d
+glEvalCoord2d.restype = None
+glEvalCoord2d.argtypes = [GLdouble, GLdouble]
+glEvalCoord2dv = _libraries['libGL.so.1'].glEvalCoord2dv
+glEvalCoord2dv.restype = None
+glEvalCoord2dv.argtypes = [POINTER(GLdouble)]
+glEvalCoord2f = _libraries['libGL.so.1'].glEvalCoord2f
+glEvalCoord2f.restype = None
+glEvalCoord2f.argtypes = [GLfloat, GLfloat]
+glEvalCoord2fv = _libraries['libGL.so.1'].glEvalCoord2fv
+glEvalCoord2fv.restype = None
+glEvalCoord2fv.argtypes = [POINTER(GLfloat)]
+glEvalMesh1 = _libraries['libGL.so.1'].glEvalMesh1
+glEvalMesh1.restype = None
+glEvalMesh1.argtypes = [GLenum, GLint, GLint]
+glEvalMesh2 = _libraries['libGL.so.1'].glEvalMesh2
+glEvalMesh2.restype = None
+glEvalMesh2.argtypes = [GLenum, GLint, GLint, GLint, GLint]
+glEvalPoint1 = _libraries['libGL.so.1'].glEvalPoint1
+glEvalPoint1.restype = None
+glEvalPoint1.argtypes = [GLint]
+glEvalPoint2 = _libraries['libGL.so.1'].glEvalPoint2
+glEvalPoint2.restype = None
+glEvalPoint2.argtypes = [GLint, GLint]
+glFeedbackBuffer = _libraries['libGL.so.1'].glFeedbackBuffer
+glFeedbackBuffer.restype = None
+glFeedbackBuffer.argtypes = [GLsizei, GLenum, POINTER(GLfloat)]
+glFinish = _libraries['libGL.so.1'].glFinish
+glFinish.restype = None
+glFinish.argtypes = []
+glFlush = _libraries['libGL.so.1'].glFlush
+glFlush.restype = None
+glFlush.argtypes = []
+glFogf = _libraries['libGL.so.1'].glFogf
+glFogf.restype = None
+glFogf.argtypes = [GLenum, GLfloat]
+glFogfv = _libraries['libGL.so.1'].glFogfv
+glFogfv.restype = None
+glFogfv.argtypes = [GLenum, POINTER(GLfloat)]
+glFogi = _libraries['libGL.so.1'].glFogi
+glFogi.restype = None
+glFogi.argtypes = [GLenum, GLint]
+glFogiv = _libraries['libGL.so.1'].glFogiv
+glFogiv.restype = None
+glFogiv.argtypes = [GLenum, POINTER(GLint)]
+glFrontFace = _libraries['libGL.so.1'].glFrontFace
+glFrontFace.restype = None
+glFrontFace.argtypes = [GLenum]
+glFrustum = _libraries['libGL.so.1'].glFrustum
+glFrustum.restype = None
+glFrustum.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble]
+glGenLists = _libraries['libGL.so.1'].glGenLists
+glGenLists.restype = GLuint
+glGenLists.argtypes = [GLsizei]
+glGenTextures = _libraries['libGL.so.1'].glGenTextures
+glGenTextures.restype = None
+glGenTextures.argtypes = [GLsizei, POINTER(GLuint)]
+glGetBooleanv = _libraries['libGL.so.1'].glGetBooleanv
+glGetBooleanv.restype = None
+glGetBooleanv.argtypes = [GLenum, POINTER(GLboolean)]
+glGetClipPlane = _libraries['libGL.so.1'].glGetClipPlane
+glGetClipPlane.restype = None
+glGetClipPlane.argtypes = [GLenum, POINTER(GLdouble)]
+glGetDoublev = _libraries['libGL.so.1'].glGetDoublev
+glGetDoublev.restype = None
+glGetDoublev.argtypes = [GLenum, POINTER(GLdouble)]
+glGetError = _libraries['libGL.so.1'].glGetError
+glGetError.restype = GLenum
+glGetError.argtypes = []
+glGetFloatv = _libraries['libGL.so.1'].glGetFloatv
+glGetFloatv.restype = None
+glGetFloatv.argtypes = [GLenum, POINTER(GLfloat)]
+glGetIntegerv = _libraries['libGL.so.1'].glGetIntegerv
+glGetIntegerv.restype = None
+glGetIntegerv.argtypes = [GLenum, POINTER(GLint)]
+glGetLightfv = _libraries['libGL.so.1'].glGetLightfv
+glGetLightfv.restype = None
+glGetLightfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glGetLightiv = _libraries['libGL.so.1'].glGetLightiv
+glGetLightiv.restype = None
+glGetLightiv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glGetMapdv = _libraries['libGL.so.1'].glGetMapdv
+glGetMapdv.restype = None
+glGetMapdv.argtypes = [GLenum, GLenum, POINTER(GLdouble)]
+glGetMapfv = _libraries['libGL.so.1'].glGetMapfv
+glGetMapfv.restype = None
+glGetMapfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glGetMapiv = _libraries['libGL.so.1'].glGetMapiv
+glGetMapiv.restype = None
+glGetMapiv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glGetMaterialfv = _libraries['libGL.so.1'].glGetMaterialfv
+glGetMaterialfv.restype = None
+glGetMaterialfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glGetMaterialiv = _libraries['libGL.so.1'].glGetMaterialiv
+glGetMaterialiv.restype = None
+glGetMaterialiv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glGetPixelMapfv = _libraries['libGL.so.1'].glGetPixelMapfv
+glGetPixelMapfv.restype = None
+glGetPixelMapfv.argtypes = [GLenum, POINTER(GLfloat)]
+glGetPixelMapuiv = _libraries['libGL.so.1'].glGetPixelMapuiv
+glGetPixelMapuiv.restype = None
+glGetPixelMapuiv.argtypes = [GLenum, POINTER(GLuint)]
+glGetPixelMapusv = _libraries['libGL.so.1'].glGetPixelMapusv
+glGetPixelMapusv.restype = None
+glGetPixelMapusv.argtypes = [GLenum, POINTER(GLushort)]
+glGetPointerv = _libraries['libGL.so.1'].glGetPointerv
+glGetPointerv.restype = None
+glGetPointerv.argtypes = [GLenum, POINTER(POINTER(GLvoid))]
+glGetPolygonStipple = _libraries['libGL.so.1'].glGetPolygonStipple
+glGetPolygonStipple.restype = None
+glGetPolygonStipple.argtypes = [POINTER(GLubyte)]
+glGetString = _libraries['libGL.so.1'].glGetString
+glGetString.restype = POINTER(GLubyte)
+glGetString.argtypes = [GLenum]
+glGetTexEnvfv = _libraries['libGL.so.1'].glGetTexEnvfv
+glGetTexEnvfv.restype = None
+glGetTexEnvfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glGetTexEnviv = _libraries['libGL.so.1'].glGetTexEnviv
+glGetTexEnviv.restype = None
+glGetTexEnviv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glGetTexGendv = _libraries['libGL.so.1'].glGetTexGendv
+glGetTexGendv.restype = None
+glGetTexGendv.argtypes = [GLenum, GLenum, POINTER(GLdouble)]
+glGetTexGenfv = _libraries['libGL.so.1'].glGetTexGenfv
+glGetTexGenfv.restype = None
+glGetTexGenfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glGetTexGeniv = _libraries['libGL.so.1'].glGetTexGeniv
+glGetTexGeniv.restype = None
+glGetTexGeniv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glGetTexImage = _libraries['libGL.so.1'].glGetTexImage
+glGetTexImage.restype = None
+glGetTexImage.argtypes = [GLenum, GLint, GLenum, GLenum, POINTER(GLvoid)]
+glGetTexLevelParameterfv = _libraries['libGL.so.1'].glGetTexLevelParameterfv
+glGetTexLevelParameterfv.restype = None
+glGetTexLevelParameterfv.argtypes = [GLenum, GLint, GLenum, POINTER(GLfloat)]
+glGetTexLevelParameteriv = _libraries['libGL.so.1'].glGetTexLevelParameteriv
+glGetTexLevelParameteriv.restype = None
+glGetTexLevelParameteriv.argtypes = [GLenum, GLint, GLenum, POINTER(GLint)]
+glGetTexParameterfv = _libraries['libGL.so.1'].glGetTexParameterfv
+glGetTexParameterfv.restype = None
+glGetTexParameterfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glGetTexParameteriv = _libraries['libGL.so.1'].glGetTexParameteriv
+glGetTexParameteriv.restype = None
+glGetTexParameteriv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glHint = _libraries['libGL.so.1'].glHint
+glHint.restype = None
+glHint.argtypes = [GLenum, GLenum]
+glIndexMask = _libraries['libGL.so.1'].glIndexMask
+glIndexMask.restype = None
+glIndexMask.argtypes = [GLuint]
+glIndexPointer = _libraries['libGL.so.1'].glIndexPointer
+glIndexPointer.restype = None
+glIndexPointer.argtypes = [GLenum, GLsizei, POINTER(GLvoid)]
+glIndexd = _libraries['libGL.so.1'].glIndexd
+glIndexd.restype = None
+glIndexd.argtypes = [GLdouble]
+glIndexdv = _libraries['libGL.so.1'].glIndexdv
+glIndexdv.restype = None
+glIndexdv.argtypes = [POINTER(GLdouble)]
+glIndexf = _libraries['libGL.so.1'].glIndexf
+glIndexf.restype = None
+glIndexf.argtypes = [GLfloat]
+glIndexfv = _libraries['libGL.so.1'].glIndexfv
+glIndexfv.restype = None
+glIndexfv.argtypes = [POINTER(GLfloat)]
+glIndexi = _libraries['libGL.so.1'].glIndexi
+glIndexi.restype = None
+glIndexi.argtypes = [GLint]
+glIndexiv = _libraries['libGL.so.1'].glIndexiv
+glIndexiv.restype = None
+glIndexiv.argtypes = [POINTER(GLint)]
+glIndexs = _libraries['libGL.so.1'].glIndexs
+glIndexs.restype = None
+glIndexs.argtypes = [GLshort]
+glIndexsv = _libraries['libGL.so.1'].glIndexsv
+glIndexsv.restype = None
+glIndexsv.argtypes = [POINTER(GLshort)]
+glIndexub = _libraries['libGL.so.1'].glIndexub
+glIndexub.restype = None
+glIndexub.argtypes = [GLubyte]
+glIndexubv = _libraries['libGL.so.1'].glIndexubv
+glIndexubv.restype = None
+glIndexubv.argtypes = [POINTER(GLubyte)]
+glInitNames = _libraries['libGL.so.1'].glInitNames
+glInitNames.restype = None
+glInitNames.argtypes = []
+glInterleavedArrays = _libraries['libGL.so.1'].glInterleavedArrays
+glInterleavedArrays.restype = None
+glInterleavedArrays.argtypes = [GLenum, GLsizei, POINTER(GLvoid)]
+glIsEnabled = _libraries['libGL.so.1'].glIsEnabled
+glIsEnabled.restype = GLboolean
+glIsEnabled.argtypes = [GLenum]
+glIsList = _libraries['libGL.so.1'].glIsList
+glIsList.restype = GLboolean
+glIsList.argtypes = [GLuint]
+glIsTexture = _libraries['libGL.so.1'].glIsTexture
+glIsTexture.restype = GLboolean
+glIsTexture.argtypes = [GLuint]
+glLightModelf = _libraries['libGL.so.1'].glLightModelf
+glLightModelf.restype = None
+glLightModelf.argtypes = [GLenum, GLfloat]
+glLightModelfv = _libraries['libGL.so.1'].glLightModelfv
+glLightModelfv.restype = None
+glLightModelfv.argtypes = [GLenum, POINTER(GLfloat)]
+glLightModeli = _libraries['libGL.so.1'].glLightModeli
+glLightModeli.restype = None
+glLightModeli.argtypes = [GLenum, GLint]
+glLightModeliv = _libraries['libGL.so.1'].glLightModeliv
+glLightModeliv.restype = None
+glLightModeliv.argtypes = [GLenum, POINTER(GLint)]
+glLightf = _libraries['libGL.so.1'].glLightf
+glLightf.restype = None
+glLightf.argtypes = [GLenum, GLenum, GLfloat]
+glLightfv = _libraries['libGL.so.1'].glLightfv
+glLightfv.restype = None
+glLightfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glLighti = _libraries['libGL.so.1'].glLighti
+glLighti.restype = None
+glLighti.argtypes = [GLenum, GLenum, GLint]
+glLightiv = _libraries['libGL.so.1'].glLightiv
+glLightiv.restype = None
+glLightiv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glLineStipple = _libraries['libGL.so.1'].glLineStipple
+glLineStipple.restype = None
+glLineStipple.argtypes = [GLint, GLushort]
+glLineWidth = _libraries['libGL.so.1'].glLineWidth
+glLineWidth.restype = None
+glLineWidth.argtypes = [GLfloat]
+glListBase = _libraries['libGL.so.1'].glListBase
+glListBase.restype = None
+glListBase.argtypes = [GLuint]
+glLoadIdentity = _libraries['libGL.so.1'].glLoadIdentity
+glLoadIdentity.restype = None
+glLoadIdentity.argtypes = []
+glLoadMatrixd = _libraries['libGL.so.1'].glLoadMatrixd
+glLoadMatrixd.restype = None
+glLoadMatrixd.argtypes = [POINTER(GLdouble)]
+glLoadMatrixf = _libraries['libGL.so.1'].glLoadMatrixf
+glLoadMatrixf.restype = None
+glLoadMatrixf.argtypes = [POINTER(GLfloat)]
+glLoadName = _libraries['libGL.so.1'].glLoadName
+glLoadName.restype = None
+glLoadName.argtypes = [GLuint]
+glLogicOp = _libraries['libGL.so.1'].glLogicOp
+glLogicOp.restype = None
+glLogicOp.argtypes = [GLenum]
+glMap1d = _libraries['libGL.so.1'].glMap1d
+glMap1d.restype = None
+glMap1d.argtypes = [GLenum, GLdouble, GLdouble, GLint, GLint, POINTER(GLdouble)]
+glMap1f = _libraries['libGL.so.1'].glMap1f
+glMap1f.restype = None
+glMap1f.argtypes = [GLenum, GLfloat, GLfloat, GLint, GLint, POINTER(GLfloat)]
+glMap2d = _libraries['libGL.so.1'].glMap2d
+glMap2d.restype = None
+glMap2d.argtypes = [GLenum, GLdouble, GLdouble, GLint, GLint, GLdouble, GLdouble, GLint, GLint, POINTER(GLdouble)]
+glMap2f = _libraries['libGL.so.1'].glMap2f
+glMap2f.restype = None
+glMap2f.argtypes = [GLenum, GLfloat, GLfloat, GLint, GLint, GLfloat, GLfloat, GLint, GLint, POINTER(GLfloat)]
+glMapGrid1d = _libraries['libGL.so.1'].glMapGrid1d
+glMapGrid1d.restype = None
+glMapGrid1d.argtypes = [GLint, GLdouble, GLdouble]
+glMapGrid1f = _libraries['libGL.so.1'].glMapGrid1f
+glMapGrid1f.restype = None
+glMapGrid1f.argtypes = [GLint, GLfloat, GLfloat]
+glMapGrid2d = _libraries['libGL.so.1'].glMapGrid2d
+glMapGrid2d.restype = None
+glMapGrid2d.argtypes = [GLint, GLdouble, GLdouble, GLint, GLdouble, GLdouble]
+glMapGrid2f = _libraries['libGL.so.1'].glMapGrid2f
+glMapGrid2f.restype = None
+glMapGrid2f.argtypes = [GLint, GLfloat, GLfloat, GLint, GLfloat, GLfloat]
+glMaterialf = _libraries['libGL.so.1'].glMaterialf
+glMaterialf.restype = None
+glMaterialf.argtypes = [GLenum, GLenum, GLfloat]
+glMaterialfv = _libraries['libGL.so.1'].glMaterialfv
+glMaterialfv.restype = None
+glMaterialfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glMateriali = _libraries['libGL.so.1'].glMateriali
+glMateriali.restype = None
+glMateriali.argtypes = [GLenum, GLenum, GLint]
+glMaterialiv = _libraries['libGL.so.1'].glMaterialiv
+glMaterialiv.restype = None
+glMaterialiv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glMatrixMode = _libraries['libGL.so.1'].glMatrixMode
+glMatrixMode.restype = None
+glMatrixMode.argtypes = [GLenum]
+glMultMatrixd = _libraries['libGL.so.1'].glMultMatrixd
+glMultMatrixd.restype = None
+glMultMatrixd.argtypes = [POINTER(GLdouble)]
+glMultMatrixf = _libraries['libGL.so.1'].glMultMatrixf
+glMultMatrixf.restype = None
+glMultMatrixf.argtypes = [POINTER(GLfloat)]
+glNewList = _libraries['libGL.so.1'].glNewList
+glNewList.restype = None
+glNewList.argtypes = [GLuint, GLenum]
+glNormal3b = _libraries['libGL.so.1'].glNormal3b
+glNormal3b.restype = None
+glNormal3b.argtypes = [GLbyte, GLbyte, GLbyte]
+glNormal3bv = _libraries['libGL.so.1'].glNormal3bv
+glNormal3bv.restype = None
+glNormal3bv.argtypes = [POINTER(GLbyte)]
+glNormal3d = _libraries['libGL.so.1'].glNormal3d
+glNormal3d.restype = None
+glNormal3d.argtypes = [GLdouble, GLdouble, GLdouble]
+glNormal3dv = _libraries['libGL.so.1'].glNormal3dv
+glNormal3dv.restype = None
+glNormal3dv.argtypes = [POINTER(GLdouble)]
+glNormal3f = _libraries['libGL.so.1'].glNormal3f
+glNormal3f.restype = None
+glNormal3f.argtypes = [GLfloat, GLfloat, GLfloat]
+glNormal3fv = _libraries['libGL.so.1'].glNormal3fv
+glNormal3fv.restype = None
+glNormal3fv.argtypes = [POINTER(GLfloat)]
+glNormal3i = _libraries['libGL.so.1'].glNormal3i
+glNormal3i.restype = None
+glNormal3i.argtypes = [GLint, GLint, GLint]
+glNormal3iv = _libraries['libGL.so.1'].glNormal3iv
+glNormal3iv.restype = None
+glNormal3iv.argtypes = [POINTER(GLint)]
+glNormal3s = _libraries['libGL.so.1'].glNormal3s
+glNormal3s.restype = None
+glNormal3s.argtypes = [GLshort, GLshort, GLshort]
+glNormal3sv = _libraries['libGL.so.1'].glNormal3sv
+glNormal3sv.restype = None
+glNormal3sv.argtypes = [POINTER(GLshort)]
+glNormalPointer = _libraries['libGL.so.1'].glNormalPointer
+glNormalPointer.restype = None
+glNormalPointer.argtypes = [GLenum, GLsizei, POINTER(GLvoid)]
+glOrtho = _libraries['libGL.so.1'].glOrtho
+glOrtho.restype = None
+glOrtho.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble]
+glPassThrough = _libraries['libGL.so.1'].glPassThrough
+glPassThrough.restype = None
+glPassThrough.argtypes = [GLfloat]
+glPixelMapfv = _libraries['libGL.so.1'].glPixelMapfv
+glPixelMapfv.restype = None
+glPixelMapfv.argtypes = [GLenum, GLsizei, POINTER(GLfloat)]
+glPixelMapuiv = _libraries['libGL.so.1'].glPixelMapuiv
+glPixelMapuiv.restype = None
+glPixelMapuiv.argtypes = [GLenum, GLsizei, POINTER(GLuint)]
+glPixelMapusv = _libraries['libGL.so.1'].glPixelMapusv
+glPixelMapusv.restype = None
+glPixelMapusv.argtypes = [GLenum, GLsizei, POINTER(GLushort)]
+glPixelStoref = _libraries['libGL.so.1'].glPixelStoref
+glPixelStoref.restype = None
+glPixelStoref.argtypes = [GLenum, GLfloat]
+glPixelStorei = _libraries['libGL.so.1'].glPixelStorei
+glPixelStorei.restype = None
+glPixelStorei.argtypes = [GLenum, GLint]
+glPixelTransferf = _libraries['libGL.so.1'].glPixelTransferf
+glPixelTransferf.restype = None
+glPixelTransferf.argtypes = [GLenum, GLfloat]
+glPixelTransferi = _libraries['libGL.so.1'].glPixelTransferi
+glPixelTransferi.restype = None
+glPixelTransferi.argtypes = [GLenum, GLint]
+glPixelZoom = _libraries['libGL.so.1'].glPixelZoom
+glPixelZoom.restype = None
+glPixelZoom.argtypes = [GLfloat, GLfloat]
+glPointSize = _libraries['libGL.so.1'].glPointSize
+glPointSize.restype = None
+glPointSize.argtypes = [GLfloat]
+glPolygonMode = _libraries['libGL.so.1'].glPolygonMode
+glPolygonMode.restype = None
+glPolygonMode.argtypes = [GLenum, GLenum]
+glPolygonOffset = _libraries['libGL.so.1'].glPolygonOffset
+glPolygonOffset.restype = None
+glPolygonOffset.argtypes = [GLfloat, GLfloat]
+glPolygonStipple = _libraries['libGL.so.1'].glPolygonStipple
+glPolygonStipple.restype = None
+glPolygonStipple.argtypes = [POINTER(GLubyte)]
+glPopAttrib = _libraries['libGL.so.1'].glPopAttrib
+glPopAttrib.restype = None
+glPopAttrib.argtypes = []
+glPopClientAttrib = _libraries['libGL.so.1'].glPopClientAttrib
+glPopClientAttrib.restype = None
+glPopClientAttrib.argtypes = []
+glPopMatrix = _libraries['libGL.so.1'].glPopMatrix
+glPopMatrix.restype = None
+glPopMatrix.argtypes = []
+glPopName = _libraries['libGL.so.1'].glPopName
+glPopName.restype = None
+glPopName.argtypes = []
+glPrioritizeTextures = _libraries['libGL.so.1'].glPrioritizeTextures
+glPrioritizeTextures.restype = None
+glPrioritizeTextures.argtypes = [GLsizei, POINTER(GLuint), POINTER(GLclampf)]
+glPushAttrib = _libraries['libGL.so.1'].glPushAttrib
+glPushAttrib.restype = None
+glPushAttrib.argtypes = [GLbitfield]
+glPushClientAttrib = _libraries['libGL.so.1'].glPushClientAttrib
+glPushClientAttrib.restype = None
+glPushClientAttrib.argtypes = [GLbitfield]
+glPushMatrix = _libraries['libGL.so.1'].glPushMatrix
+glPushMatrix.restype = None
+glPushMatrix.argtypes = []
+glPushName = _libraries['libGL.so.1'].glPushName
+glPushName.restype = None
+glPushName.argtypes = [GLuint]
+glRasterPos2d = _libraries['libGL.so.1'].glRasterPos2d
+glRasterPos2d.restype = None
+glRasterPos2d.argtypes = [GLdouble, GLdouble]
+glRasterPos2dv = _libraries['libGL.so.1'].glRasterPos2dv
+glRasterPos2dv.restype = None
+glRasterPos2dv.argtypes = [POINTER(GLdouble)]
+glRasterPos2f = _libraries['libGL.so.1'].glRasterPos2f
+glRasterPos2f.restype = None
+glRasterPos2f.argtypes = [GLfloat, GLfloat]
+glRasterPos2fv = _libraries['libGL.so.1'].glRasterPos2fv
+glRasterPos2fv.restype = None
+glRasterPos2fv.argtypes = [POINTER(GLfloat)]
+glRasterPos2i = _libraries['libGL.so.1'].glRasterPos2i
+glRasterPos2i.restype = None
+glRasterPos2i.argtypes = [GLint, GLint]
+glRasterPos2iv = _libraries['libGL.so.1'].glRasterPos2iv
+glRasterPos2iv.restype = None
+glRasterPos2iv.argtypes = [POINTER(GLint)]
+glRasterPos2s = _libraries['libGL.so.1'].glRasterPos2s
+glRasterPos2s.restype = None
+glRasterPos2s.argtypes = [GLshort, GLshort]
+glRasterPos2sv = _libraries['libGL.so.1'].glRasterPos2sv
+glRasterPos2sv.restype = None
+glRasterPos2sv.argtypes = [POINTER(GLshort)]
+glRasterPos3d = _libraries['libGL.so.1'].glRasterPos3d
+glRasterPos3d.restype = None
+glRasterPos3d.argtypes = [GLdouble, GLdouble, GLdouble]
+glRasterPos3dv = _libraries['libGL.so.1'].glRasterPos3dv
+glRasterPos3dv.restype = None
+glRasterPos3dv.argtypes = [POINTER(GLdouble)]
+glRasterPos3f = _libraries['libGL.so.1'].glRasterPos3f
+glRasterPos3f.restype = None
+glRasterPos3f.argtypes = [GLfloat, GLfloat, GLfloat]
+glRasterPos3fv = _libraries['libGL.so.1'].glRasterPos3fv
+glRasterPos3fv.restype = None
+glRasterPos3fv.argtypes = [POINTER(GLfloat)]
+glRasterPos3i = _libraries['libGL.so.1'].glRasterPos3i
+glRasterPos3i.restype = None
+glRasterPos3i.argtypes = [GLint, GLint, GLint]
+glRasterPos3iv = _libraries['libGL.so.1'].glRasterPos3iv
+glRasterPos3iv.restype = None
+glRasterPos3iv.argtypes = [POINTER(GLint)]
+glRasterPos3s = _libraries['libGL.so.1'].glRasterPos3s
+glRasterPos3s.restype = None
+glRasterPos3s.argtypes = [GLshort, GLshort, GLshort]
+glRasterPos3sv = _libraries['libGL.so.1'].glRasterPos3sv
+glRasterPos3sv.restype = None
+glRasterPos3sv.argtypes = [POINTER(GLshort)]
+glRasterPos4d = _libraries['libGL.so.1'].glRasterPos4d
+glRasterPos4d.restype = None
+glRasterPos4d.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble]
+glRasterPos4dv = _libraries['libGL.so.1'].glRasterPos4dv
+glRasterPos4dv.restype = None
+glRasterPos4dv.argtypes = [POINTER(GLdouble)]
+glRasterPos4f = _libraries['libGL.so.1'].glRasterPos4f
+glRasterPos4f.restype = None
+glRasterPos4f.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glRasterPos4fv = _libraries['libGL.so.1'].glRasterPos4fv
+glRasterPos4fv.restype = None
+glRasterPos4fv.argtypes = [POINTER(GLfloat)]
+glRasterPos4i = _libraries['libGL.so.1'].glRasterPos4i
+glRasterPos4i.restype = None
+glRasterPos4i.argtypes = [GLint, GLint, GLint, GLint]
+glRasterPos4iv = _libraries['libGL.so.1'].glRasterPos4iv
+glRasterPos4iv.restype = None
+glRasterPos4iv.argtypes = [POINTER(GLint)]
+glRasterPos4s = _libraries['libGL.so.1'].glRasterPos4s
+glRasterPos4s.restype = None
+glRasterPos4s.argtypes = [GLshort, GLshort, GLshort, GLshort]
+glRasterPos4sv = _libraries['libGL.so.1'].glRasterPos4sv
+glRasterPos4sv.restype = None
+glRasterPos4sv.argtypes = [POINTER(GLshort)]
+glReadBuffer = _libraries['libGL.so.1'].glReadBuffer
+glReadBuffer.restype = None
+glReadBuffer.argtypes = [GLenum]
+glReadPixels = _libraries['libGL.so.1'].glReadPixels
+glReadPixels.restype = None
+glReadPixels.argtypes = [GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, POINTER(GLvoid)]
+glRectd = _libraries['libGL.so.1'].glRectd
+glRectd.restype = None
+glRectd.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble]
+glRectdv = _libraries['libGL.so.1'].glRectdv
+glRectdv.restype = None
+glRectdv.argtypes = [POINTER(GLdouble), POINTER(GLdouble)]
+glRectf = _libraries['libGL.so.1'].glRectf
+glRectf.restype = None
+glRectf.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glRectfv = _libraries['libGL.so.1'].glRectfv
+glRectfv.restype = None
+glRectfv.argtypes = [POINTER(GLfloat), POINTER(GLfloat)]
+glRecti = _libraries['libGL.so.1'].glRecti
+glRecti.restype = None
+glRecti.argtypes = [GLint, GLint, GLint, GLint]
+glRectiv = _libraries['libGL.so.1'].glRectiv
+glRectiv.restype = None
+glRectiv.argtypes = [POINTER(GLint), POINTER(GLint)]
+glRects = _libraries['libGL.so.1'].glRects
+glRects.restype = None
+glRects.argtypes = [GLshort, GLshort, GLshort, GLshort]
+glRectsv = _libraries['libGL.so.1'].glRectsv
+glRectsv.restype = None
+glRectsv.argtypes = [POINTER(GLshort), POINTER(GLshort)]
+glRenderMode = _libraries['libGL.so.1'].glRenderMode
+glRenderMode.restype = GLint
+glRenderMode.argtypes = [GLenum]
+glRotated = _libraries['libGL.so.1'].glRotated
+glRotated.restype = None
+glRotated.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble]
+glRotatef = _libraries['libGL.so.1'].glRotatef
+glRotatef.restype = None
+glRotatef.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glScaled = _libraries['libGL.so.1'].glScaled
+glScaled.restype = None
+glScaled.argtypes = [GLdouble, GLdouble, GLdouble]
+glScalef = _libraries['libGL.so.1'].glScalef
+glScalef.restype = None
+glScalef.argtypes = [GLfloat, GLfloat, GLfloat]
+glScissor = _libraries['libGL.so.1'].glScissor
+glScissor.restype = None
+glScissor.argtypes = [GLint, GLint, GLsizei, GLsizei]
+glSelectBuffer = _libraries['libGL.so.1'].glSelectBuffer
+glSelectBuffer.restype = None
+glSelectBuffer.argtypes = [GLsizei, POINTER(GLuint)]
+glShadeModel = _libraries['libGL.so.1'].glShadeModel
+glShadeModel.restype = None
+glShadeModel.argtypes = [GLenum]
+glStencilFunc = _libraries['libGL.so.1'].glStencilFunc
+glStencilFunc.restype = None
+glStencilFunc.argtypes = [GLenum, GLint, GLuint]
+glStencilMask = _libraries['libGL.so.1'].glStencilMask
+glStencilMask.restype = None
+glStencilMask.argtypes = [GLuint]
+glStencilOp = _libraries['libGL.so.1'].glStencilOp
+glStencilOp.restype = None
+glStencilOp.argtypes = [GLenum, GLenum, GLenum]
+glTexCoord1d = _libraries['libGL.so.1'].glTexCoord1d
+glTexCoord1d.restype = None
+glTexCoord1d.argtypes = [GLdouble]
+glTexCoord1dv = _libraries['libGL.so.1'].glTexCoord1dv
+glTexCoord1dv.restype = None
+glTexCoord1dv.argtypes = [POINTER(GLdouble)]
+glTexCoord1f = _libraries['libGL.so.1'].glTexCoord1f
+glTexCoord1f.restype = None
+glTexCoord1f.argtypes = [GLfloat]
+glTexCoord1fv = _libraries['libGL.so.1'].glTexCoord1fv
+glTexCoord1fv.restype = None
+glTexCoord1fv.argtypes = [POINTER(GLfloat)]
+glTexCoord1i = _libraries['libGL.so.1'].glTexCoord1i
+glTexCoord1i.restype = None
+glTexCoord1i.argtypes = [GLint]
+glTexCoord1iv = _libraries['libGL.so.1'].glTexCoord1iv
+glTexCoord1iv.restype = None
+glTexCoord1iv.argtypes = [POINTER(GLint)]
+glTexCoord1s = _libraries['libGL.so.1'].glTexCoord1s
+glTexCoord1s.restype = None
+glTexCoord1s.argtypes = [GLshort]
+glTexCoord1sv = _libraries['libGL.so.1'].glTexCoord1sv
+glTexCoord1sv.restype = None
+glTexCoord1sv.argtypes = [POINTER(GLshort)]
+glTexCoord2d = _libraries['libGL.so.1'].glTexCoord2d
+glTexCoord2d.restype = None
+glTexCoord2d.argtypes = [GLdouble, GLdouble]
+glTexCoord2dv = _libraries['libGL.so.1'].glTexCoord2dv
+glTexCoord2dv.restype = None
+glTexCoord2dv.argtypes = [POINTER(GLdouble)]
+glTexCoord2f = _libraries['libGL.so.1'].glTexCoord2f
+glTexCoord2f.restype = None
+glTexCoord2f.argtypes = [GLfloat, GLfloat]
+glTexCoord2fv = _libraries['libGL.so.1'].glTexCoord2fv
+glTexCoord2fv.restype = None
+glTexCoord2fv.argtypes = [POINTER(GLfloat)]
+glTexCoord2i = _libraries['libGL.so.1'].glTexCoord2i
+glTexCoord2i.restype = None
+glTexCoord2i.argtypes = [GLint, GLint]
+glTexCoord2iv = _libraries['libGL.so.1'].glTexCoord2iv
+glTexCoord2iv.restype = None
+glTexCoord2iv.argtypes = [POINTER(GLint)]
+glTexCoord2s = _libraries['libGL.so.1'].glTexCoord2s
+glTexCoord2s.restype = None
+glTexCoord2s.argtypes = [GLshort, GLshort]
+glTexCoord2sv = _libraries['libGL.so.1'].glTexCoord2sv
+glTexCoord2sv.restype = None
+glTexCoord2sv.argtypes = [POINTER(GLshort)]
+glTexCoord3d = _libraries['libGL.so.1'].glTexCoord3d
+glTexCoord3d.restype = None
+glTexCoord3d.argtypes = [GLdouble, GLdouble, GLdouble]
+glTexCoord3dv = _libraries['libGL.so.1'].glTexCoord3dv
+glTexCoord3dv.restype = None
+glTexCoord3dv.argtypes = [POINTER(GLdouble)]
+glTexCoord3f = _libraries['libGL.so.1'].glTexCoord3f
+glTexCoord3f.restype = None
+glTexCoord3f.argtypes = [GLfloat, GLfloat, GLfloat]
+glTexCoord3fv = _libraries['libGL.so.1'].glTexCoord3fv
+glTexCoord3fv.restype = None
+glTexCoord3fv.argtypes = [POINTER(GLfloat)]
+glTexCoord3i = _libraries['libGL.so.1'].glTexCoord3i
+glTexCoord3i.restype = None
+glTexCoord3i.argtypes = [GLint, GLint, GLint]
+glTexCoord3iv = _libraries['libGL.so.1'].glTexCoord3iv
+glTexCoord3iv.restype = None
+glTexCoord3iv.argtypes = [POINTER(GLint)]
+glTexCoord3s = _libraries['libGL.so.1'].glTexCoord3s
+glTexCoord3s.restype = None
+glTexCoord3s.argtypes = [GLshort, GLshort, GLshort]
+glTexCoord3sv = _libraries['libGL.so.1'].glTexCoord3sv
+glTexCoord3sv.restype = None
+glTexCoord3sv.argtypes = [POINTER(GLshort)]
+glTexCoord4d = _libraries['libGL.so.1'].glTexCoord4d
+glTexCoord4d.restype = None
+glTexCoord4d.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble]
+glTexCoord4dv = _libraries['libGL.so.1'].glTexCoord4dv
+glTexCoord4dv.restype = None
+glTexCoord4dv.argtypes = [POINTER(GLdouble)]
+glTexCoord4f = _libraries['libGL.so.1'].glTexCoord4f
+glTexCoord4f.restype = None
+glTexCoord4f.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glTexCoord4fv = _libraries['libGL.so.1'].glTexCoord4fv
+glTexCoord4fv.restype = None
+glTexCoord4fv.argtypes = [POINTER(GLfloat)]
+glTexCoord4i = _libraries['libGL.so.1'].glTexCoord4i
+glTexCoord4i.restype = None
+glTexCoord4i.argtypes = [GLint, GLint, GLint, GLint]
+glTexCoord4iv = _libraries['libGL.so.1'].glTexCoord4iv
+glTexCoord4iv.restype = None
+glTexCoord4iv.argtypes = [POINTER(GLint)]
+glTexCoord4s = _libraries['libGL.so.1'].glTexCoord4s
+glTexCoord4s.restype = None
+glTexCoord4s.argtypes = [GLshort, GLshort, GLshort, GLshort]
+glTexCoord4sv = _libraries['libGL.so.1'].glTexCoord4sv
+glTexCoord4sv.restype = None
+glTexCoord4sv.argtypes = [POINTER(GLshort)]
+glTexCoordPointer = _libraries['libGL.so.1'].glTexCoordPointer
+glTexCoordPointer.restype = None
+glTexCoordPointer.argtypes = [GLint, GLenum, GLsizei, POINTER(GLvoid)]
+glTexEnvf = _libraries['libGL.so.1'].glTexEnvf
+glTexEnvf.restype = None
+glTexEnvf.argtypes = [GLenum, GLenum, GLfloat]
+glTexEnvfv = _libraries['libGL.so.1'].glTexEnvfv
+glTexEnvfv.restype = None
+glTexEnvfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glTexEnvi = _libraries['libGL.so.1'].glTexEnvi
+glTexEnvi.restype = None
+glTexEnvi.argtypes = [GLenum, GLenum, GLint]
+glTexEnviv = _libraries['libGL.so.1'].glTexEnviv
+glTexEnviv.restype = None
+glTexEnviv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glTexGend = _libraries['libGL.so.1'].glTexGend
+glTexGend.restype = None
+glTexGend.argtypes = [GLenum, GLenum, GLdouble]
+glTexGendv = _libraries['libGL.so.1'].glTexGendv
+glTexGendv.restype = None
+glTexGendv.argtypes = [GLenum, GLenum, POINTER(GLdouble)]
+glTexGenf = _libraries['libGL.so.1'].glTexGenf
+glTexGenf.restype = None
+glTexGenf.argtypes = [GLenum, GLenum, GLfloat]
+glTexGenfv = _libraries['libGL.so.1'].glTexGenfv
+glTexGenfv.restype = None
+glTexGenfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glTexGeni = _libraries['libGL.so.1'].glTexGeni
+glTexGeni.restype = None
+glTexGeni.argtypes = [GLenum, GLenum, GLint]
+glTexGeniv = _libraries['libGL.so.1'].glTexGeniv
+glTexGeniv.restype = None
+glTexGeniv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glTexImage1D = _libraries['libGL.so.1'].glTexImage1D
+glTexImage1D.restype = None
+glTexImage1D.argtypes = [GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, POINTER(GLvoid)]
+glTexImage2D = _libraries['libGL.so.1'].glTexImage2D
+glTexImage2D.restype = None
+glTexImage2D.argtypes = [GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, POINTER(GLvoid)]
+glTexParameterf = _libraries['libGL.so.1'].glTexParameterf
+glTexParameterf.restype = None
+glTexParameterf.argtypes = [GLenum, GLenum, GLfloat]
+glTexParameterfv = _libraries['libGL.so.1'].glTexParameterfv
+glTexParameterfv.restype = None
+glTexParameterfv.argtypes = [GLenum, GLenum, POINTER(GLfloat)]
+glTexParameteri = _libraries['libGL.so.1'].glTexParameteri
+glTexParameteri.restype = None
+glTexParameteri.argtypes = [GLenum, GLenum, GLint]
+glTexParameteriv = _libraries['libGL.so.1'].glTexParameteriv
+glTexParameteriv.restype = None
+glTexParameteriv.argtypes = [GLenum, GLenum, POINTER(GLint)]
+glTexSubImage1D = _libraries['libGL.so.1'].glTexSubImage1D
+glTexSubImage1D.restype = None
+glTexSubImage1D.argtypes = [GLenum, GLint, GLint, GLsizei, GLenum, GLenum, POINTER(GLvoid)]
+glTexSubImage2D = _libraries['libGL.so.1'].glTexSubImage2D
+glTexSubImage2D.restype = None
+glTexSubImage2D.argtypes = [GLenum, GLint, GLint, GLint, GLsizei, GLsizei, GLenum, GLenum, POINTER(GLvoid)]
+glTranslated = _libraries['libGL.so.1'].glTranslated
+glTranslated.restype = None
+glTranslated.argtypes = [GLdouble, GLdouble, GLdouble]
+glTranslatef = _libraries['libGL.so.1'].glTranslatef
+glTranslatef.restype = None
+glTranslatef.argtypes = [GLfloat, GLfloat, GLfloat]
+glVertex2d = _libraries['libGL.so.1'].glVertex2d
+glVertex2d.restype = None
+glVertex2d.argtypes = [GLdouble, GLdouble]
+glVertex2dv = _libraries['libGL.so.1'].glVertex2dv
+glVertex2dv.restype = None
+glVertex2dv.argtypes = [POINTER(GLdouble)]
+glVertex2f = _libraries['libGL.so.1'].glVertex2f
+glVertex2f.restype = None
+glVertex2f.argtypes = [GLfloat, GLfloat]
+glVertex2fv = _libraries['libGL.so.1'].glVertex2fv
+glVertex2fv.restype = None
+glVertex2fv.argtypes = [POINTER(GLfloat)]
+glVertex2i = _libraries['libGL.so.1'].glVertex2i
+glVertex2i.restype = None
+glVertex2i.argtypes = [GLint, GLint]
+glVertex2iv = _libraries['libGL.so.1'].glVertex2iv
+glVertex2iv.restype = None
+glVertex2iv.argtypes = [POINTER(GLint)]
+glVertex2s = _libraries['libGL.so.1'].glVertex2s
+glVertex2s.restype = None
+glVertex2s.argtypes = [GLshort, GLshort]
+glVertex2sv = _libraries['libGL.so.1'].glVertex2sv
+glVertex2sv.restype = None
+glVertex2sv.argtypes = [POINTER(GLshort)]
+glVertex3d = _libraries['libGL.so.1'].glVertex3d
+glVertex3d.restype = None
+glVertex3d.argtypes = [GLdouble, GLdouble, GLdouble]
+glVertex3dv = _libraries['libGL.so.1'].glVertex3dv
+glVertex3dv.restype = None
+glVertex3dv.argtypes = [POINTER(GLdouble)]
+glVertex3f = _libraries['libGL.so.1'].glVertex3f
+glVertex3f.restype = None
+glVertex3f.argtypes = [GLfloat, GLfloat, GLfloat]
+glVertex3fv = _libraries['libGL.so.1'].glVertex3fv
+glVertex3fv.restype = None
+glVertex3fv.argtypes = [POINTER(GLfloat)]
+glVertex3i = _libraries['libGL.so.1'].glVertex3i
+glVertex3i.restype = None
+glVertex3i.argtypes = [GLint, GLint, GLint]
+glVertex3iv = _libraries['libGL.so.1'].glVertex3iv
+glVertex3iv.restype = None
+glVertex3iv.argtypes = [POINTER(GLint)]
+glVertex3s = _libraries['libGL.so.1'].glVertex3s
+glVertex3s.restype = None
+glVertex3s.argtypes = [GLshort, GLshort, GLshort]
+glVertex3sv = _libraries['libGL.so.1'].glVertex3sv
+glVertex3sv.restype = None
+glVertex3sv.argtypes = [POINTER(GLshort)]
+glVertex4d = _libraries['libGL.so.1'].glVertex4d
+glVertex4d.restype = None
+glVertex4d.argtypes = [GLdouble, GLdouble, GLdouble, GLdouble]
+glVertex4dv = _libraries['libGL.so.1'].glVertex4dv
+glVertex4dv.restype = None
+glVertex4dv.argtypes = [POINTER(GLdouble)]
+glVertex4f = _libraries['libGL.so.1'].glVertex4f
+glVertex4f.restype = None
+glVertex4f.argtypes = [GLfloat, GLfloat, GLfloat, GLfloat]
+glVertex4fv = _libraries['libGL.so.1'].glVertex4fv
+glVertex4fv.restype = None
+glVertex4fv.argtypes = [POINTER(GLfloat)]
+glVertex4i = _libraries['libGL.so.1'].glVertex4i
+glVertex4i.restype = None
+glVertex4i.argtypes = [GLint, GLint, GLint, GLint]
+glVertex4iv = _libraries['libGL.so.1'].glVertex4iv
+glVertex4iv.restype = None
+glVertex4iv.argtypes = [POINTER(GLint)]
+glVertex4s = _libraries['libGL.so.1'].glVertex4s
+glVertex4s.restype = None
+glVertex4s.argtypes = [GLshort, GLshort, GLshort, GLshort]
+glVertex4sv = _libraries['libGL.so.1'].glVertex4sv
+glVertex4sv.restype = None
+glVertex4sv.argtypes = [POINTER(GLshort)]
+glVertexPointer = _libraries['libGL.so.1'].glVertexPointer
+glVertexPointer.restype = None
+glVertexPointer.argtypes = [GLint, GLenum, GLsizei, POINTER(GLvoid)]
+glViewport = _libraries['libGL.so.1'].glViewport
+glViewport.restype = None
+glViewport.argtypes = [GLint, GLint, GLsizei, GLsizei]
+ptrdiff_t = c_long
+GLintptr = ptrdiff_t
+GLsizeiptr = ptrdiff_t
+GLcharARB = c_char
+GLhandleARB = c_uint
+GLintptrARB = ptrdiff_t
+GLsizeiptrARB = ptrdiff_t
+GLhalf = c_ushort
+GLvdpauSurfaceNV = GLintptr
+glewInit = _libraries['libGLEW.so.1.8'].glewInit
+glewInit.restype = GLenum
+glewInit.argtypes = []
+glewIsSupported = _libraries['libGLEW.so.1.8'].glewIsSupported
+glewIsSupported.restype = GLboolean
+glewIsSupported.argtypes = [STRING]
+glewExperimental = (GLboolean).in_dll(_libraries['libGLEW.so.1.8'], 'glewExperimental')
+glewGetExtension = _libraries['libGLEW.so.1.8'].glewGetExtension
+glewGetExtension.restype = GLboolean
+glewGetExtension.argtypes = [STRING]
+glewGetErrorString = _libraries['libGLEW.so.1.8'].glewGetErrorString
+glewGetErrorString.restype = POINTER(GLubyte)
+glewGetErrorString.argtypes = [GLenum]
+glewGetString = _libraries['libGLEW.so.1.8'].glewGetString
+glewGetString.restype = POINTER(GLubyte)
+glewGetString.argtypes = [GLenum]
+__GLsync._fields_ = [
+]
+__all__ = ['GL_INDEX_CLEAR_VALUE', 'GL_POINT_SPRITE_CULL_CLIP_ATIX',
+           'GLsizei', 'GL_OUTPUT_TEXTURE_COORD20_EXT',
+           'GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB',
+           'glMultMatrixd', 'GL_PROVOKING_VERTEX_EXT',
+           'GL_UNSIGNED_INT_IMAGE_2D_ARRAY_EXT',
+           'GL_SGIX_tag_sample_buffer', 'GL_SAMPLE_ALPHA_TO_ONE_SGIS',
+           'GL_NV_point_sprite', 'GL_SUNX_constant_data',
+           'GL_SOURCE1_ALPHA', 'GL_DITHER',
+           'GL_SHADING_LANGUAGE_VERSION_ARB', 'GL_SAMPLER_2D_ARB',
+           'GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE', 'GL_COMBINE_EXT',
+           'GLboolean', 'GL_MAP2_VERTEX_ATTRIB4_4_NV',
+           'GL_INT_IMAGE_2D_MULTISAMPLE', 'GL_FOG_COORD_ARRAY',
+           'GL_HISTOGRAM_FORMAT_EXT', 'GL_INDEX_ARRAY_TYPE',
+           'GL_PROXY_TEXTURE_2D_MULTISAMPLE',
+           'GL_BACK_NORMALS_HINT_PGI', 'GL_TEXTURE_MAX_LOD',
+           'GL_LINE_STRIP_ADJACENCY_ARB', 'GL_PATH_ERROR_POSITION_NV',
+           'GL_RGBA_INTEGER_EXT', 'GL_SRGB8_EXT',
+           'GL_ALPHA_FLOAT32_ATI', 'GL_MIRROR_CLAMP_TO_EDGE_EXT',
+           'GLchar', 'GL_SAMPLER_2D_RECT', 'GL_RGB9_E5',
+           'GL_PROGRAM_NATIVE_INSTRUCTIONS_ARB',
+           'GL_DEPENDENT_RGB_TEXTURE_3D_NV',
+           'GL_DEBUG_SOURCE_API_ARB', 'GL_TEXTURE_COMPRESSED',
+           'GL_PIXEL_PACK_BUFFER_BINDING_EXT', 'GL_TEXTURE18_ARB',
+           'GL_IMAGE_1D_EXT', 'GL_ALL_BARRIER_BITS', 'GL_RGBA32UI',
+           'GL_SOURCE2_ALPHA_EXT',
+           'GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT',
+           'GL_TEXTURE_MIN_LOD', 'glFogfv',
+           'GL_PALETTE8_R5_G6_B5_OES',
+           'GL_PROXY_TEXTURE_RECTANGLE_EXT',
+           'GL_MAX_GEOMETRY_VARYING_COMPONENTS_ARB',
+           'GL_MODELVIEW6_ARB', 'GL_FONT_Y_MIN_BOUNDS_BIT_NV',
+           'GL_UNSIGNED_INT8_NV', 'GL_HISTOGRAM_LUMINANCE_SIZE_EXT',
+           'GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_Y',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_X',
+           'GL_GLYPH_VERTICAL_BEARING_X_BIT_NV', 'GL_BLEND_EQUATION',
+           'GL_SRC0_RGB', 'GL_EYE_DISTANCE_TO_LINE_SGIS',
+           'GL_TEXTURE21_ARB', 'GL_PATH_DASH_CAPS_NV',
+           'GL_TIMEOUT_IGNORED',
+           'GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_GEOMETRY_SHADER',
+           'GL_PATH_COORD_COUNT_NV', 'GL_SAMPLER_1D_ARRAY_EXT',
+           'GL_BACK_SECONDARY_COLOR_NV', 'GL_PGI_misc_hints',
+           'GL_ARB_shader_texture_lod', 'GL_DEPTH_BIAS', 'glColor4bv',
+           'GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_ARB',
+           'GL_TEXTURE_BINDING_BUFFER', 'GL_TEXTURE_DEPTH_TYPE_ARB',
+           'GL_BUFFER_USAGE', 'GL_TEXTURE_GEN_MODE',
+           'glTexSubImage1D', 'GL_DEPTH32F_STENCIL8_NV',
+           'GL_SGIX_async_histogram', 'GL_PIXEL_MAP_G_TO_G',
+           'GL_LUMINANCE', 'GL_MATRIX_INDEX_ARRAY_STRIDE_ARB',
+           'GL_RENDER', 'GL_MAX_TEXTURE_COORDS',
+           'GL_MIRRORED_REPEAT_IBM',
+           'GL_ATOMIC_COUNTER_BUFFER_DATA_SIZE', 'GL_RGBA2_EXT',
+           'GL_NV_texture_env_combine4',
+           'GL_TEXTURE_BINDING_2D_MULTISAMPLE',
+           'GL_MATRIX_PALETTE_ARB', 'GL_PROGRAM_FORMAT_ARB',
+           'glVertex2fv', 'glTexCoord1d',
+           'GL_ATTRIB_ARRAY_POINTER_NV',
+           'GL_TRIANGLE_STRIP_ADJACENCY',
+           'GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS',
+           'GL_TRANSFORM_FEEDBACK_BUFFER', 'glPopAttrib',
+           'glColorMaterial', 'GL_BGRA_EXT', 'GL_MATRIX19_ARB',
+           'GL_RENDERBUFFER_INTERNAL_FORMAT_EXT', 'glColor3b',
+           'GL_FLOAT_RGBA32_NV', 'GL_COLOR_TABLE_ALPHA_SIZE_SGI',
+           'GL_CLAMP_TO_EDGE_EXT',
+           'GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT',
+           'GL_TEXTURE_COORD_ARRAY_LENGTH_NV',
+           'GL_COLOR_ATTACHMENT15_EXT', 'GL_SPARE1_NV',
+           'GL_CURRENT_RASTER_TEXTURE_COORDS', 'glColor3i',
+           'GL_RENDERBUFFER_FREE_MEMORY_ATI', 'GL_EXP',
+           'GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING_ARB',
+           'GL_LINE_STRIP_ADJACENCY', 'GL_PATH_STENCIL_VALUE_MASK_NV',
+           'GL_POINT_SIZE', 'GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB',
+           'GL_SGIX_flush_raster', 'GL_TEXTURE_COMPARE_FUNC',
+           'GL_CMYK_EXT', 'GL_RGB12', 'GL_TIME_ELAPSED_EXT',
+           'GL_BLEND_DST_ALPHA_EXT', 'GL_RGB16',
+           'GL_TEXTURE_COMPARE_FAIL_VALUE_ARB',
+           'GL_POLYGON_OFFSET_FILL', 'GL_TRACK_MATRIX_NV',
+           'GL_FIRST_VERTEX_CONVENTION', 'GL_COUNT_DOWN_NV',
+           'GL_NV_tessellation_program5', 'GL_DOUBLEBUFFER',
+           'GL_MINMAX_FORMAT', 'GL_MAX_CLIP_PLANES',
+           'GL_FOG_COORDINATE_ARRAY_STRIDE', 'GL_ALL_COMPLETED_NV',
+           'GL_EXT_shared_texture_palette', 'GL_CONSTANT_BORDER',
+           'GL_EXT_packed_float', 'GL_RGB9_E5_EXT',
+           'GL_VERTEX_ATTRIB_MAP1_ORDER_APPLE', 'GL_OML_subsample',
+           'GL_TEXTURE_SWIZZLE_G_EXT',
+           'GL_PROGRAM_TEX_INSTRUCTIONS_ARB', 'GL_DOUBLE_MAT4',
+           'GL_IMAGE_2D_ARRAY_EXT',
+           'GL_MAX_VERTEX_SHADER_INVARIANTS_EXT', 'GL_DOUBLE_MAT3',
+           'GL_COMPILE_AND_EXECUTE', 'GL_NV_fragment_program2',
+           'GL_FEEDBACK_BUFFER_POINTER', 'GL_MATRIX9_ARB',
+           'GL_GREEN_BITS', 'GL_FENCE_CONDITION_NV', 'glFogi',
+           'GL_SHADING_LANGUAGE_VERSION', 'GL_SGIX_framezoom',
+           'GL_R1UI_T2F_N3F_V3F_SUN', 'GL_NV_texture_barrier',
+           'glIndexf', 'GL_UNSIGNED_SHORT_1_5_5_5_REV',
+           'GL_COMBINE_ALPHA_EXT', 'GL_RGB5_A1_EXT', 'GL_MATRIX1_ARB',
+           'GL_LUMINANCE_ALPHA32I_EXT', 'GL_TRIANGLES_ADJACENCY_ARB',
+           'GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB',
+           'GL_CONTEXT_CORE_PROFILE_BIT',
+           'GL_SMOOTH_QUADRATIC_CURVE_TO_NV', 'GL_QUAD_MESH_SUN',
+           'GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS',
+           'GL_FRAGMENT_SHADER_DERIVATIVE_HINT', 'GL_TEXTURE_DEPTH',
+           'GL_ARB_blend_func_extended',
+           'GL_EXT_separate_shader_objects', 'GL_EXT_422_pixels',
+           'GL_NORMAL_MAP_ARB', 'GL_TEXTURE_BASE_LEVEL',
+           'glStencilOp', 'GL_RGB_FLOAT16_APPLE',
+           'GL_PIXEL_MAP_I_TO_I', 'GL_DRAW_BUFFER6',
+           'GL_DRAW_BUFFER7', 'GL_DRAW_BUFFER4', 'GL_RGB16F',
+           'GL_DRAW_BUFFER2', 'GL_POST_COLOR_MATRIX_BLUE_SCALE',
+           'GL_DRAW_BUFFER0', 'GL_DRAW_BUFFER1', 'GL_LIGHT1',
+           'GL_LIGHT0', 'GL_LIGHT3', 'GL_LIGHT2', 'GL_LIGHT5',
+           'GL_LIGHT4', 'GL_DRAW_BUFFER8', 'GL_LIGHT6',
+           'GL_VERTEX_STREAM2_ATI', 'GL_PN_TRIANGLES_NORMAL_MODE_ATI',
+           'GL_QUADRATIC_ATTENUATION', 'GL_SMOOTH_LINE_WIDTH_RANGE',
+           'GL_TEXTURE_CUBE_MAP_SEAMLESS',
+           'GL_LAST_VERTEX_CONVENTION', 'GL_TEXTURE_RECTANGLE',
+           'glIndexs', 'GL_VERTEX_PROGRAM_ARB', 'GL_COMPRESSED_ALPHA',
+           'GL_FILL', 'GL_LUMINANCE_ALPHA32UI_EXT', 'GL_DEPTH_BUFFER',
+           'GL_INT_IMAGE_1D', 'GL_SRC_COLOR',
+           'GL_COVERAGE_SAMPLES_NV', 'GL_SAMPLER_BINDING',
+           'GL_FLOAT_RGB_NV', 'GL_PATH_CLIENT_LENGTH_NV',
+           'GL_ATI_map_object_buffer', 'glStencilMask',
+           'GL_ARB_robustness', 'GL_NV_pixel_data_range',
+           'GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTER_INDICES',
+           'GL_EXT_framebuffer_blit', 'GL_SAMPLE_BUFFERS',
+           'GL_RELATIVE_SMOOTH_CUBIC_CURVE_TO_NV',
+           'GL_AMD_seamless_cubemap_per_texture', 'GL_RGBA_INTEGER',
+           'GL_CONVOLUTION_FILTER_SCALE_EXT',
+           'GL_COLOR_ATTACHMENT11_EXT',
+           'GL_ACTIVE_ATTRIBUTE_MAX_LENGTH',
+           'GL_MATRIX_INDEX_ARRAY_SIZE_ARB',
+           'GL_TEXTURE_FREE_MEMORY_ATI', 'GL_COLOR_MATRIX',
+           'GL_VERTEX_WEIGHT_ARRAY_EXT', 'GL_PASS_THROUGH_TOKEN',
+           'GL_CG_FRAGMENT_SHADER_EXT', 'GL_MAP1_VERTEX_ATTRIB2_4_NV',
+           'GL_COLOR_ARRAY_LENGTH_NV', 'GL_ELEMENT_ARRAY_ADDRESS_NV',
+           'GL_CON_2_ATI', 'GL_CURRENT_PALETTE_MATRIX_ARB',
+           'GL_NUM_INPUT_INTERPOLATOR_COMPONENTS_ATI',
+           'GL_COUNTER_RANGE_AMD',
+           'GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_EXT',
+           'GL_COMPRESSED_RED_GREEN_RGTC2_EXT',
+           'GL_STENCIL_BACK_PASS_DEPTH_FAIL',
+           'GL_INT_SAMPLER_CUBE_MAP_ARRAY', 'GL_UNIFORM_BUFFER',
+           'GL_VARIABLE_E_NV', 'GL_EDGE_FLAG_ARRAY_STRIDE_EXT',
+           'GL_SGIS_texture_filter4', 'GL_MULTISAMPLE_ARB',
+           'glColor4fv', 'GL_NV_geometry_shader4',
+           'GL_IMPLEMENTATION_COLOR_READ_TYPE_OES',
+           'GL_TEXTURE_ALPHA_TYPE_ARB', 'glRasterPos2iv',
+           'GL_LUMINANCE16F_ARB', 'GL_VERTEX_ATTRIB_MAP1_SIZE_APPLE',
+           'glTexCoord2sv', 'GL_HP_convolution_border_modes',
+           'glLogicOp', 'GL_VERTEX_ATTRIB_ARRAY_INTEGER',
+           'glGetPixelMapuiv', 'GL_MODELVIEW18_ARB', 'GL_HI_SCALE_NV',
+           'GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE',
+           'GL_RGBA_EXTENDED_RANGE_SGIX',
+           'GL_MAX_VERTEX_UNIFORM_BLOCKS', 'GL_R32I',
+           'GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT', 'GL_R32F',
+           'GL_SAMPLE_ALPHA_TO_ONE_EXT',
+           'GL_MAX_VERTEX_SHADER_VARIANTS_EXT',
+           'GL_MAX_PIXEL_TRANSFORM_2D_STACK_DEPTH_EXT',
+           'GL_MIN_RED_SGIS', 'GL_LUMINANCE12_ALPHA4',
+           'GL_VERTEX_ARRAY_BUFFER_BINDING', 'GL_MAX_LIST_NESTING',
+           'GL_OPERAND0_RGB_EXT', 'GL_PIXEL_MAP_R_TO_R',
+           'GL_INGR_interlace_read',
+           'GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB',
+           'GL_UNSIGNED_SHORT_5_6_5_REV', 'GL_TEXTURE_BORDER',
+           'GL_REPLICATE_BORDER', 'GL_DUP_FIRST_CUBIC_CURVE_TO_NV',
+           'GL_ELEMENT_ARRAY_ATI', 'GL_CMYKA_EXT',
+           'GL_PROXY_TEXTURE_2D_EXT', 'GL_MATRIX20_ARB', 'GL_FALSE',
+           'GL_FLOAT_MAT2', 'GL_FLOAT_MAT3', 'GL_DEPTH',
+           'GL_LUMINANCE_ALPHA_EXTENDED_RANGE_SGIX', 'GL_FLOAT_MAT4',
+           'GL_MAP2_VERTEX_ATTRIB9_4_NV',
+           'GL_POST_COLOR_MATRIX_ALPHA_SCALE_SGI',
+           'GL_ARB_instanced_arrays', 'GL_SRGB8_ALPHA8_EXT',
+           'GL_COLOR_ATTACHMENT8_EXT', 'GL_BUMP_TARGET_ATI',
+           'GL_MAX_TESS_PATCH_COMPONENTS',
+           'GL_COMPRESSED_SLUMINANCE_ALPHA_EXT',
+           'GL_COLOR_ARRAY_LIST_STRIDE_IBM', 'GL_T2F_C4UB_V3F',
+           'GL_TEXTURE_SWIZZLE_A_EXT', 'GL_RG8I', 'GL_RGBA8I',
+           'GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV',
+           'GL_PROGRAM_PARAMETERS_ARB', 'GL_SRC1_ALPHA',
+           'GL_ARB_cl_event', 'GL_MODELVIEW30_ARB',
+           'GL_SAMPLE_ALPHA_TO_ONE', 'GL_STENCIL_TAG_BITS_EXT',
+           'GL_TEXTURE8_ARB', 'GL_ALPHA_BIAS',
+           'GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV',
+           'GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB',
+           'GL_CURRENT_TANGENT_EXT', 'GL_HILO16_NV', 'GL_ABGR_EXT',
+           'GL_TRANSFORM_FEEDBACK_NV', 'GL_INT_IMAGE_CUBE_EXT',
+           'GL_MULTISAMPLE_EXT', 'GL_FOG_COORDINATE_ARRAY',
+           'GL_NV_primitive_restart',
+           'GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_CONTROL_SHADER',
+           'GL_MATRIX1_NV',
+           'GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER',
+           'GL_TEXTURE_BINDING_3D', 'GL_RELATIVE_LINE_TO_NV',
+           'GL_VERTEX_ATTRIB_MAP2_SIZE_APPLE', 'GL_OP_CLAMP_EXT',
+           'GL_WIDE_LINE_HINT_PGI', 'GLvoid', 'GL_DOUBLE_MAT3x4_EXT',
+           'GL_FOG_COORDINATE_SOURCE_EXT', 'GL_OBJECT_TYPE_ARB',
+           'GL_TEXTURE', 'GL_DOUBLE_MAT4x2_EXT',
+           'GL_MAX_PROJECTION_STACK_DEPTH', 'glAccum', 'GL_CND_ATI',
+           'GL_MAX_CLIP_DISTANCES', 'GL_CULL_MODES_NV',
+           'GL_PERSPECTIVE_CORRECTION_HINT',
+           'GL_IMAGE_2D_MULTISAMPLE_ARRAY', 'GL_CLIP_DISTANCE_NV',
+           'glFogf', 'GL_ARB_depth_buffer_float',
+           'GL_NV_explicit_multisample', 'glCopyTexSubImage2D',
+           'glTexCoord4iv', 'GL_ACTIVE_UNIFORMS', 'glTexCoord2dv',
+           'GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET', 'GL_DOT2_ADD_ATI',
+           'GL_BIAS_BY_NEGATIVE_ONE_HALF_NV',
+           'GL_EVAL_VERTEX_ATTRIB3_NV',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_EXT', 'GL_IBM_static_data',
+           'GL_PIXEL_TRANSFORM_2D_MATRIX_EXT',
+           'GL_PIXEL_UNPACK_BUFFER_BINDING_ARB',
+           'glewIsExtensionSupported', 'GL_PARTIAL_SUCCESS_NV',
+           'glVertex4iv', 'GL_NUM_COMPRESSED_TEXTURE_FORMATS',
+           'GL_YCBCR_MESA', 'GL_NORMAL_ARRAY_BUFFER_BINDING_ARB',
+           'GL_SECONDARY_COLOR_ARRAY_EXT',
+           'GL_SCALED_RESOLVE_FASTEST_EXT',
+           'GL_OBJECT_LINK_STATUS_ARB', 'GLEW_VERSION',
+           'GL_MULTISAMPLE_FILTER_HINT_NV', 'GL_BLEND_EQUATION_RGB',
+           'GL_UNSIGNED_INT_8_8_8_8_EXT', 'GL_ALPHA_FLOAT16_APPLE',
+           'GL_TEXTURE_ENV_MODE_ALPHA_EXT',
+           'GL_DEBUG_CATEGORY_OTHER_AMD', 'GL_RASTERIZER_DISCARD_NV',
+           'GL_TEXTURE_MAX_LEVEL', 'GL_EDGE_FLAG_ARRAY_POINTER_EXT',
+           'GL_SOURCE3_ALPHA_NV', 'GL_SOURCE0_ALPHA',
+           'GL_MAP2_VERTEX_3', 'GL_TRANSFORM_FEEDBACK_BARRIER_BIT',
+           'GL_TEXTURE_COMPARE_FUNC_ARB', 'GL_OML_interlace',
+           'GL_MAX_IMAGE_UNITS',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER_EXT',
+           'GL_CLAMP_VERTEX_COLOR_ARB', 'GL_STENCIL_BUFFER',
+           'GL_ALPHA8', 'GL_GEOMETRY_PROGRAM_PARAMETER_BUFFER_NV',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_Z',
+           'GL_ATI_text_fragment_shader', 'GL_FRAGMENT_COLOR_EXT',
+           'GL_TEXTURE_APPLICATION_MODE_EXT',
+           'GL_PROGRAM_ATTRIBS_ARB', 'GL_INT_IMAGE_BUFFER',
+           'GL_DOUBLE_MAT2x4_EXT', 'GL_STENCIL_CLEAR_TAG_VALUE_EXT',
+           'GL_MODELVIEW28_ARB', 'GL_FLOAT_RG_NV', 'GL_BYTE',
+           'GL_RGBA_SIGNED_COMPONENTS_EXT', 'glLightiv',
+           'GL_FENCE_STATUS_NV', 'GLushort', 'GLint',
+           'GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE', 'GL_LINE',
+           'GL_PIXEL_BUFFER_BARRIER_BIT',
+           'GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT',
+           'GL_INTENSITY16_SIGNED_SGIX', 'GL_LUMINANCE16_EXT',
+           'GL_PATH_DASH_ARRAY_COUNT_NV', 'GL_DRAW_BUFFER4_ATI',
+           'GL_DYNAMIC_COPY_ARB', 'GL_RG32F', 'GL_MATRIX3_NV',
+           'GL_MESAX_texture_stack',
+           'GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE',
+           'GL_OUTPUT_TEXTURE_COORD19_EXT', 'GL_YCBCR_422_APPLE',
+           'GL_UNSIGNED_INT_IMAGE_2D_RECT',
+           'GL_VERTEX_ARRAY_RANGE_LENGTH_NV', 'GL_RGBA32UI_EXT',
+           'GL_CONVOLUTION_FILTER_SCALE', 'GL_BLUE_INTEGER',
+           'GLuint64', 'GL_DYNAMIC_COPY', 'GL_PREVIOUS_ARB',
+           'GL_GEOMETRY_PROGRAM_NV', 'GL_SYNC_FLAGS',
+           'GL_SAMPLE_MASK_VALUE_NV', 'glEvalPoint1',
+           'GL_PATCH_DEFAULT_OUTER_LEVEL', 'GL_DOUBLE_MAT2x3_EXT',
+           'GL_MAX_TEXTURE_IMAGE_UNITS_ARB',
+           'GL_PATH_FILL_BOUNDING_BOX_NV',
+           'GL_VIDEO_COLOR_CONVERSION_MIN_NV',
+           'GL_UNSIGNED_BYTE_2_3_3_REV',
+           'GL_RENDERBUFFER_INTERNAL_FORMAT',
+           'GL_EXT_stencil_two_side', 'GL_COLOR_ARRAY_TYPE_EXT',
+           'GL_BOOL_VEC2_ARB', 'GL_TRACK_MATRIX_TRANSFORM_NV',
+           'GL_CLIENT_ACTIVE_TEXTURE', 'GL_DRAW_BUFFER3_ARB',
+           'GL_RGBA_FLOAT16_APPLE', 'glEdgeFlag',
+           'GL_PIXEL_MAP_G_TO_G_SIZE', 'GL_DEBUG_LOGGED_MESSAGES_ARB',
+           'GLubyte', 'GL_BUFFER_FLUSHING_UNMAP_APPLE',
+           'GL_FEEDBACK_BUFFER_SIZE', 'GL_DOUBLE_MAT3x4',
+           'GL_BUFFER_MAPPED_ARB', 'GL_OPERAND2_ALPHA', 'GL_ZERO_EXT',
+           'GL_FOG_DENSITY', 'GL_BUFFER_MAP_POINTER_ARB',
+           'GL_MOVE_TO_CONTINUES_NV',
+           'GL_TEXTURE_COORD_ARRAY_POINTER', 'glGetTexGendv',
+           'GL_CONSTANT_ATTENUATION', 'GL_OUTPUT_TEXTURE_COORD25_EXT',
+           'GL_MAX_SHININESS_NV', 'GL_CONVOLUTION_HINT_SGIX',
+           'GL_ADD_SIGNED_ARB', 'GL_FRAGMENT_SHADER_ATI',
+           'GL_ARB_tessellation_shader', 'GL_EXT_draw_buffers2',
+           'GL_SAMPLE_COVERAGE', 'GL_INT_IMAGE_2D', 'GL_HI_BIAS_NV',
+           'GL_RESAMPLE_ZERO_FILL_OML',
+           'GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING_ARB',
+           'GL_EVAL_VERTEX_ATTRIB7_NV', 'GL_INT_VEC4_ARB',
+           'GL_SAMPLES_SGIS', 'GL_ARB_window_pos',
+           'GL_COLOR_SAMPLES_NV', 'GL_HILO8_NV',
+           'GL_TEXTURE_2D_STACK_BINDING_MESAX',
+           'GL_PACK_COMPRESSED_BLOCK_HEIGHT',
+           'GL_VERTEX_ARRAY_STRIDE_EXT',
+           'GL_DISTANCE_ATTENUATION_EXT', 'GL_COLOR_ATTACHMENT5',
+           'GL_COLOR_ATTACHMENT4', 'GL_MAX_VARYING_FLOATS_ARB',
+           'GL_COLOR_ATTACHMENT6', 'GL_COLOR_ATTACHMENT1',
+           'GL_COLOR_ATTACHMENT0', 'GL_COLOR_ATTACHMENT3',
+           'GL_COLOR_ATTACHMENT2', 'GL_ARB_shadow_ambient',
+           'GL_COLOR_ATTACHMENT9', 'GL_COLOR_ATTACHMENT8',
+           'GL_TEXTURE_RANGE_POINTER_APPLE', 'GL_MIRROR_CLAMP_ATI',
+           'GL_PACK_IMAGE_HEIGHT', 'GL_MATRIX5_NV', 'glCallLists',
+           'GL_PIXEL_MAP_B_TO_B_SIZE',
+           'GL_READ_PIXEL_DATA_RANGE_LENGTH_NV', 'GL_DEPTH_WRITEMASK',
+           'GL_PATCH_VERTICES', 'GL_CULL_FACE_MODE',
+           'GL_POST_CONVOLUTION_COLOR_TABLE', 'GL_LUMINANCE4_EXT',
+           'GL_PROGRAM_TARGET_NV',
+           'GL_VERTEX_PROGRAM_PARAMETER_BUFFER_NV',
+           'GL_FRAGMENT_COLOR_MATERIAL_EXT',
+           'GL_POST_TEXTURE_FILTER_SCALE_RANGE_SGIX',
+           'GL_MAX_PROGRAM_GENERIC_RESULTS_NV', 'GL_BOOL',
+           'GL_MIN_MAP_BUFFER_ALIGNMENT',
+           'GL_ATIX_vertex_shader_output_point_size',
+           'GL_TEXTURE_BLUE_TYPE', 'GL_TEXTURE24_ARB',
+           'GL_OFFSET_PROJECTIVE_TEXTURE_2D_NV', 'GL_DOUBLE_MAT2',
+           'GL_EXT_index_texture', 'GL_SIGNED_HILO8_NV',
+           'GL_PGI_vertex_hints', 'GL_COLOR_ARRAY_POINTER',
+           'glRasterPos3f', 'GL_COMBINE_RGB_EXT', 'GL_T2F_V3F',
+           'glPixelStoref',
+           'GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_EXT',
+           'GL_YCBYCR8_422_NV', 'GL_NUM_VIDEO_CAPTURE_STREAMS_NV',
+           'GL_COLOR_SUM', 'GL_MAX_PROGRAM_MATRICES_ARB', 'GL_ALWAYS',
+           'GL_ARB_sampler_objects', 'GL_EXT_texture_integer',
+           'GL_NORMAL_MAP', 'GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB',
+           'GL_VERTEX_SHADER', 'GL_MODELVIEW1_EXT', 'glScissor',
+           'GL_FLOAT_MAT3_ARB', 'GL_TRANSPOSE_AFFINE_3D_NV',
+           'GL_INTERLACE_SGIX',
+           'GL_FRAMEBUFFER_INCOMPLETE_LAYER_COUNT_ARB',
+           'GL_HISTOGRAM_WIDTH', 'GL_PIXEL_COUNT_NV',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_BINDING', 'GL_BLUE_BIAS',
+           'GL_SAMPLE_POSITION_NV', 'GL_DEBUG_TYPE_ERROR_ARB',
+           'GL_DRAW_BUFFER10_ARB', 'GL_DOUBLE_MAT4_EXT',
+           'GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE',
+           'GL_FRAMEBUFFER_EXT', 'GL_UNSIGNED_INT16_NV',
+           'GL_DEBUG_SEVERITY_MEDIUM_AMD', 'GL_ARB_depth_clamp',
+           'GL_RGBA32I_EXT', 'GL_MULTISAMPLE_BIT',
+           'GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB', 'GL_NONE',
+           'GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER',
+           'GL_DRAW_BUFFER10', 'GL_MATRIX7_NV', 'GL_WIN_specular_fog',
+           'GL_TEXTURE_LUMINANCE_TYPE', 'GL_RG16UI',
+           'GL_SWIZZLE_STRQ_DQ_ATI', 'GL_VARIANT_VALUE_EXT',
+           'GL_SIGNED_INTENSITY_NV',
+           'GL_MAX_RECTANGLE_TEXTURE_SIZE_EXT', 'glTexParameterf',
+           'GL_COUNTER_TYPE_AMD', 'GL_MAP2_VERTEX_ATTRIB1_4_NV',
+           'GL_MAX_PROGRAM_TEMPORARIES_ARB',
+           'GL_FOG_COORD_ARRAY_STRIDE', 'GL_VERTEX_STREAM0_ATI',
+           'GL_STENCIL_BACK_REF', 'GLclampf', 'GL_TEXTURE9_ARB',
+           'GLclampd', 'GL_LINE_RESET_TOKEN', 'GL_COLOR_SUM_ARB',
+           'GL_COMBINE_RGB', 'GL_SGIX_blend_alpha_minmax',
+           'GL_TEXTURE0_ARB', 'GL_STEREO', 'GL_MATRIX21_ARB',
+           'GL_STATIC_COPY_ARB', 'glColor4ub',
+           'GL_NV_fragment_program_option',
+           'GL_ARB_explicit_attrib_location',
+           'GL_QUADRATIC_CURVE_TO_NV', 'GL_EXT_blend_color',
+           'glGetLightfv', 'GL_UNSIGNED_INT_SAMPLER_CUBE_EXT',
+           'GL_SAMPLER_3D_ARB', 'GL_DISCARD_ATI', 'GL_MEDIUM_INT',
+           'GL_TEXTURE_CUBE_MAP', 'GL_REG_2_ATI',
+           'GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY',
+           'GL_MAX_ELEMENTS_INDICES_EXT', 'GL_CLIP_PLANE1',
+           'GL_CLIP_PLANE0', 'GL_CLIP_PLANE3', 'GL_CLIP_PLANE2',
+           'GL_CLIP_PLANE5', 'GL_CLIP_PLANE4', 'GL_R16UI',
+           'GL_PROXY_POST_CONVOLUTION_COLOR_TABLE_SGI',
+           'GL_VERTEX_BLEND_ARB', 'GL_NORMAL_ARRAY_TYPE',
+           'GL_TEXTURE_BUFFER', 'GL_ENV_REVERSE_BLEND_EXT',
+           'GL_OUTPUT_TEXTURE_COORD4_EXT',
+           'GL_PACK_COMPRESSED_BLOCK_WIDTH',
+           'GL_COLOR_ATTACHMENT10_EXT', 'GL_OPERAND1_ALPHA_ARB',
+           'glEdgeFlagPointer', 'GL_CON_4_ATI', 'GL_POINTS',
+           'GL_AMD_sample_positions',
+           'GL_RENDERBUFFER_DEPTH_SIZE_EXT', 'glRasterPos3s',
+           'GL_SYNC_STATUS', 'glDeleteTextures',
+           'GL_RENDERBUFFER_BLUE_SIZE', 'GL_UNIFORM_NAME_LENGTH',
+           'GL_PATH_TERMINAL_END_CAP_NV', 'glShadeModel',
+           'GL_POLYGON', 'GL_SCISSOR_BOX', 'GL_MAP1_INDEX',
+           'GL_COMBINER_SUM_OUTPUT_NV', 'GL_LINE_WIDTH_GRANULARITY',
+           'GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB',
+           'GL_TEXTURE_SWIZZLE_R_EXT',
+           'GL_VERTEX_ARRAY_BINDING_APPLE', 'glVertex4i',
+           'GL_OP_MUL_EXT', 'GL_ADD_SIGNED', 'GL_MAX_3D_TEXTURE_SIZE',
+           'GL_DONT_CARE', 'glCallList',
+           'GL_LUMINANCE_ALPHA_FLOAT32_APPLE',
+           'GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING',
+           'GL_SIGNED_RGB_UNSIGNED_ALPHA_NV',
+           'GL_POST_COLOR_MATRIX_GREEN_SCALE_SGI',
+           'GL_TEXTURE_COORD_ARRAY_SIZE',
+           'GL_CURRENT_VERTEX_WEIGHT_EXT', 'GL_R16F',
+           'GL_UNSIGNED_INT_VEC3_EXT', 'GL_MODELVIEW0_MATRIX_EXT',
+           'GL_SAMPLER_RENDERBUFFER_NV', 'GL_TEXTURE13_ARB',
+           'GL_PATH_STENCIL_DEPTH_OFFSET_FACTOR_NV',
+           'GL_UNIFORM_BLOCK_BINDING',
+           'GL_LOCAL_CONSTANT_DATATYPE_EXT', 'GL_Z_EXT',
+           'GL_MAX_PROGRAM_OUTPUT_VERTICES_NV', 'GL_LINE_WIDTH',
+           'GL_FILE_NAME_NV', 'GL_ATIX_texture_env_combine3',
+           'GL_RGBA_FLOAT32_APPLE', 'GL_DYNAMIC_READ_ARB',
+           'GL_LEQUAL', 'GL_INTENSITY16F_ARB',
+           'GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT',
+           'GL_ARB_transform_feedback2',
+           'GL_UNSIGNED_SHORT_8_8_REV_MESA', 'GL_RED_MIN_CLAMP_INGR',
+           'GL_COMBINE_ARB', 'GL_UNSIGNED_INVERT_NV',
+           'GL_PIXEL_MAP_A_TO_A_SIZE', 'GL_RGBA_S3TC',
+           'GL_LIGHT_MODEL_AMBIENT', 'GL_HISTOGRAM',
+           'GL_INTERPOLATE_ARB', 'glCullFace', 'GL_EXT_bgra',
+           'GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT',
+           'GL_VERTEX_ARRAY_SIZE_EXT', 'glColor3d',
+           'GL_EXT_blend_minmax',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB',
+           'GL_TEXTURE_COMPRESSION_HINT',
+           'GL_RELATIVE_VERTICAL_LINE_TO_NV',
+           'GL_ATI_fragment_shader',
+           'GL_MAX_DEBUG_LOGGED_MESSAGES_ARB',
+           'GL_REPLACEMENT_CODE_ARRAY_TYPE_SUN',
+           'GL_ATI_pn_triangles', 'GL_PIXEL_PACK_BUFFER_BINDING_ARB',
+           'GL_MAP1_VERTEX_ATTRIB0_4_NV', 'GL_OP_FRAC_EXT',
+           'GL_ALLOW_DRAW_FRG_HINT_PGI', 'GL_LUMINANCE6_ALPHA2',
+           'GL_SCALE_BY_TWO_NV', 'GL_MATRIX10_ARB', 'GL_SRGB8_ALPHA8',
+           'GL_RG_SNORM', 'GL_C3F_V3F', 'glIsList',
+           'GL_OP_EXP_BASE_2_EXT', 'GL_COMBINER_BIAS_NV',
+           'GL_MODELVIEW20_ARB', 'GL_AUX_BUFFERS', 'glVertex2d',
+           'GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT', 'GL_ITALIC_BIT_NV',
+           'GL_OPERAND2_RGB_ARB', 'GL_IMPLEMENTATION_COLOR_READ_TYPE',
+           'GL_IMAGE_3D_EXT', 'GL_UNSIGNED_SHORT_4_4_4_4_REV',
+           'GL_TRIANGULAR_NV', 'GL_UNPACK_COMPRESSED_BLOCK_SIZE',
+           'GL_COLOR_ATTACHMENT6_EXT', 'GL_INT_SAMPLER_2D_EXT',
+           'GL_SMOOTH', 'GL_FLOAT16_VEC2_NV', 'GL_DISCARD_NV',
+           'GL_MAX_UNIFORM_BLOCK_SIZE', 'GL_NV_shader_atomic_float',
+           'GL_MODELVIEW27_ARB', 'glColor4dv',
+           'GL_MAX_PROGRAM_PARAMETERS_ARB',
+           'GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_APPLE',
+           'GL_CURRENT_TEXTURE_COORDS', 'GL_STATIC_READ',
+           'GL_LUMINANCE8I_EXT', 'GL_VERTEX_ATTRIB_MAP2_APPLE',
+           'GL_UNPACK_ROW_BYTES_APPLE', 'glewIsSupported',
+           'glVertex3s', 'GL_VIDEO_CAPTURE_FIELD_LOWER_HEIGHT_NV',
+           'GL_MAX_COLOR_ATTACHMENTS_EXT',
+           'GL_IMAGE_BINDING_LEVEL_EXT', 'GL_MAX_CONVOLUTION_HEIGHT',
+           'glLightModelfv', 'GL_INT_IMAGE_CUBE_MAP_ARRAY',
+           'GL_BOOL_VEC3_ARB', 'GL_UNPACK_RESAMPLE_OML', 'glColor4s',
+           'GL_CONVOLUTION_2D_EXT', 'glColor3f',
+           'GL_ARB_texture_border_clamp', 'GL_VIEWPORT_BOUNDS_RANGE',
+           'GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION',
+           'GL_LUMINANCE_ALPHA16F_ARB',
+           'GL_SHARED_TEXTURE_PALETTE_EXT',
+           'GL_ACTIVE_STENCIL_FACE_EXT', 'GL_LUMINANCE_ALPHA',
+           'GL_MAX_CONVOLUTION_WIDTH',
+           'GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV',
+           'GL_PIXEL_UNPACK_BUFFER_BINDING', 'GL_HILO_NV',
+           'GL_ENV_REPLACE_EXT', 'GL_COMPRESSED_INTENSITY',
+           'GL_ALPHA_EXTENDED_RANGE_SGIX', 'glVertex4s',
+           'GL_TRANSFORM_FEEDBACK_VARYINGS',
+           'GL_ELEMENT_ARRAY_LENGTH_NV', 'GL_TRANSPOSE_NV',
+           'glIsEnabled', 'GL_SGIX_fragment_specular_lighting',
+           'GL_VERTEX_STREAM5_ATI',
+           'GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS',
+           'GL_MAX_GEOMETRY_SHADER_INVOCATIONS',
+           'GL_ALPHA_INTEGER_EXT', 'GL_COMPRESSED_SIGNED_RG_RGTC2',
+           'GL_INT_VEC2_ARB', 'GL_CURRENT_COLOR',
+           'GL_COLOR_ATTACHMENT2_EXT',
+           'GL_TEXTURE_FILTER_CONTROL_EXT', 'GL_DSDT8_MAG8_NV',
+           'GL_SET', 'GL_COMPRESSED_RED_RGTC1_EXT',
+           'GL_INVALID_FRAMEBUFFER_OPERATION', 'GLintptr',
+           'GL_RGB_INTEGER_EXT', 'GL_MAX_TRANSFORM_FEEDBACK_BUFFERS',
+           'GL_INT_IMAGE_2D_MULTISAMPLE_EXT',
+           'GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING', 'GLuint',
+           'GL_RGB10', 'GL_MAX_ARRAY_TEXTURE_LAYERS',
+           'glEvalCoord1fv', 'GL_DT_BIAS_NV',
+           'GL_EXT_texture_sRGB_decode', 'GL_IMAGE_BINDING_NAME',
+           'GL_TEXTURE_POINT_MODE_ATIX', 'GL_MAX_SERVER_WAIT_TIMEOUT',
+           'GL_MODULATE_SUBTRACT_ATI', 'GLEW_VERSION_MINOR',
+           'glAlphaFunc', 'GL_NOR', 'GL_EXT_texture_snorm',
+           'GL_TEXTURE_UPDATE_BARRIER_BIT',
+           'GL_COLOR_TABLE_LUMINANCE_SIZE_EXT', 'GL_FLAT',
+           'GL_DU8DV8_ATI', 'GL_RGB_FLOAT32_APPLE',
+           'GL_DRAW_BUFFER6_ATI', 'GL_RGBA8UI_EXT', 'glStencilFunc',
+           'GL_PATH_COMPUTED_LENGTH_NV', 'glTexCoord3dv',
+           'GL_VERTEX_ARRAY_STORAGE_HINT_APPLE', 'GL_RGB2_EXT',
+           'GL_UNPACK_LSB_FIRST', 'GL_STENCIL_INDEX8',
+           'GL_ARB_texture_env_crossbar', 'GL_PATH_STENCIL_FUNC_NV',
+           'GL_SOURCE1_RGB', 'GL_TEXTURE_INTENSITY_TYPE_ARB',
+           'GL_NUM_PASSES_ATI', 'GL_UNSIGNED_INT_VEC4_EXT',
+           'GL_CURRENT_FOG_COORDINATE_EXT', 'GL_ACTIVE_TEXTURE',
+           'GL_POST_CONVOLUTION_BLUE_BIAS_EXT',
+           'GL_IBM_vertex_array_lists', 'uint64_t',
+           'GL_NV_parameter_buffer_object', 'GL_ALPHA_INTEGER',
+           'GL_GREEN_SCALE', 'GL_MATRIX17_ARB', 'GL_PROJECTION',
+           'GL_DEPTH_FUNC', 'GL_UNSIGNED_INT_SAMPLER_3D', 'glColor4i',
+           'GL_EXT_shader_image_load_store', 'glTexGeniv',
+           'GL_COLOR_INDEX4_EXT', 'GL_INT_VEC3', 'GL_INT_VEC2',
+           'GL_RELATIVE_ARC_TO_NV', 'glVertex2iv', 'GL_STENCIL_FAIL',
+           'glRasterPos2i', 'GL_TEXTURE_STORAGE_HINT_APPLE',
+           'glVertex3d', 'GL_VERSION_4_2', 'GL_VERSION_4_0',
+           'GL_VERSION_4_1', 'GL_COLOR_TABLE',
+           'GL_SAMPLE_MASK_INVERT_SGIS',
+           'GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT',
+           'GL_PACK_SKIP_IMAGES_EXT', 'glPushAttrib',
+           'GL_FRAMEBUFFER_UNSUPPORTED', 'GL_RED_BIAS',
+           'GL_COMBINER_INPUT_NV',
+           'GL_MAX_PROGRAM_NATIVE_INSTRUCTIONS_ARB',
+           'GL_KTX_FRONT_REGION', 'GL_MAX_PROGRAM_LOOP_COUNT_NV',
+           'GL_PROGRAM_LENGTH_ARB', 'GL_R8', 'GL_RENDER_MODE',
+           'GL_EDGE_FLAG_ARRAY_BUFFER_BINDING',
+           'GL_ARB_viewport_array', 'GL_ARB_separate_shader_objects',
+           'GL_MAX_CUBE_MAP_TEXTURE_SIZE',
+           'GL_OFFSET_HILO_TEXTURE_RECTANGLE_NV',
+           'GL_CONSTANT_COLOR_EXT', 'GL_RENDERBUFFER_WIDTH',
+           'GL_FRAGMENT_SHADER_BIT',
+           'GL_MAX_VERTEX_VARYING_COMPONENTS_EXT',
+           'GL_MAP2_VERTEX_ATTRIB13_4_NV', 'GL_STORAGE_CACHED_APPLE',
+           'GL_ARB_texture_env_add', 'GL_TEXTURE_BLUE_SIZE',
+           'GL_HISTOGRAM_GREEN_SIZE', 'GL_FLOAT16_NV',
+           'GL_OFFSET_TEXTURE_RECTANGLE_SCALE_NV',
+           'GL_NV_video_capture', 'GLsizeiptrARB',
+           'GL_COLOR_ARRAY_PARALLEL_POINTERS_INTEL',
+           'GL_VERTEX_ATTRIB_ARRAY2_NV', 'GL_ARB_matrix_palette',
+           'glGetBooleanv', 'GL_OBJECT_BUFFER_SIZE_ATI',
+           'glMaterialfv', 'GL_DOT_PRODUCT_AFFINE_DEPTH_REPLACE_NV',
+           'GL_FOG_COLOR', 'GL_DRAW_BUFFER11', 'GL_DRAW_BUFFER12',
+           'GL_DRAW_BUFFER13', 'GL_UNSIGNED_INT_10_10_10_2',
+           'GL_DRAW_BUFFER15', 'GL_INT_IMAGE_3D',
+           'GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB',
+           'GL_SGIX_vertex_preclip', 'GL_SUBTRACT_ARB',
+           'GL_VERTEX_STREAM6_ATI', 'GL_SKIP_DECODE_EXT',
+           'GL_BLUE_INTEGER_EXT', 'GL_EXT_vertex_attrib_64bit',
+           'GL_CONSTANT_ALPHA',
+           'GL_GLYPH_HORIZONTAL_BEARING_Y_BIT_NV',
+           'GL_VERTEX_ARRAY_RANGE_VALID_NV', 'GL_R16I',
+           'GL_ASYNC_READ_PIXELS_SGIX', 'GL_IMAGE_BINDING_ACCESS_EXT',
+           'GL_OBJECT_INFO_LOG_LENGTH_ARB', 'GL_ARB_geometry_shader4',
+           'GL_FRAGMENT_PROGRAM_ARB', 'GLEW_ERROR_NO_GL_VERSION',
+           'GL_CULL_VERTEX_EYE_POSITION_EXT',
+           'GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER',
+           'GL_COMPARE_R_TO_TEXTURE', 'GL_TEXTURE_WRAP_R_EXT',
+           'GL_PREVIOUS', 'GL_ACTIVE_VARYING_MAX_LENGTH_NV',
+           'GL_ALPHA_SNORM', 'GL_MAX_IMAGE_SAMPLES_EXT',
+           'GL_PROXY_COLOR_TABLE', 'GL_PIXEL_UNPACK_BUFFER_ARB',
+           'GL_STENCIL_CLEAR_VALUE', 'GL_INTENSITY_FLOAT16_APPLE',
+           'GL_IMAGE_CUBE_MAP_ARRAY_EXT', 'GL_DIFFUSE',
+           'GL_MULTISAMPLE_COVERAGE_MODES_NV',
+           'GL_ENV_REVERSE_SUBTRACT_EXT', 'GL_SOURCE2_RGB',
+           'glNormal3iv', 'GL_EYE_DISTANCE_TO_POINT_SGIS',
+           'GL_APPLE_object_purgeable', 'GL_TEXTURE_3D_EXT',
+           'GL_COLOR_ARRAY_STRIDE_EXT', 'glColor3us',
+           'GL_INGR_color_clamp', 'GL_KTX_Z_REGION',
+           'GL_TEXTURE_GEN_S', 'GL_ARB_texture_cube_map_array',
+           'GL_VERTEX_ATTRIB_ARRAY4_NV', 'GL_INCR_WRAP',
+           'GL_EXTENDED_RANGE_SGIS', 'GL_MAX_RENDERBUFFER_SIZE',
+           'GL_FRAGMENT_PROGRAM_PARAMETER_BUFFER_NV',
+           'GL_NEXT_VIDEO_CAPTURE_BUFFER_STATUS_NV', 'glColor3uiv',
+           'GL_AMD_debug_output', 'GL_RENDERBUFFER_ALPHA_SIZE',
+           'GL_TEXTURE_2D_BINDING_EXT', 'GL_COLOR_TABLE_BIAS_SGI',
+           'GL_SQUARE_NV', 'GL_TEXTURE_GREEN_TYPE_ARB',
+           'GL_LIGHT_MODEL_TWO_SIDE', 'glListBase', 'GL_DECR_WRAP',
+           'glTexCoord4s', 'GL_OP_SET_LT_EXT',
+           'GL_MAP2_VERTEX_ATTRIB6_4_NV', 'GL_BOLD_BIT_NV',
+           'GL_HIGH_INT', 'GL_COMPILE', 'GL_SAMPLE_POSITION',
+           'GL_EXT_provoking_vertex',
+           'GL_MAX_FRAGMENT_ATOMIC_COUNTERS',
+           'GL_ARB_shader_image_load_store',
+           'GL_GUILTY_CONTEXT_RESET_ARB',
+           'GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_NV',
+           'GL_INCR', 'GL_EXT_texture_compression_dxt1',
+           'GL_MODELVIEW15_ARB', 'GL_CON_0_ATI',
+           'GL_MIN_SAMPLE_SHADING_VALUE',
+           'GL_TEXTURE_BUFFER_FORMAT_ARB', 'GL_MAP_ATTRIB_V_ORDER_NV',
+           'GL_UNPACK_SKIP_ROWS', 'GL_EXT_transform_feedback',
+           'GL_PROGRAM_ERROR_STRING_ARB',
+           'GL_COLOR_ALPHA_PAIRING_ATI', 'glVertexPointer',
+           'GL_PROGRAM_RESIDENT_NV', 'GL_DEPTH_CLAMP',
+           'GL_LUMINANCE_ALPHA_INTEGER_EXT', 'GL_BLEND_DST_ALPHA',
+           'GL_INT_SAMPLER_CUBE', 'glRasterPos4fv',
+           'GL_CURRENT_QUERY', 'GL_MODELVIEW1_MATRIX_EXT',
+           'GL_DRAW_BUFFER3_ATI', 'GL_COMPRESSED_RGBA_BPTC_UNORM',
+           'GL_EXP2', 'GL_TEXTURE28_ARB', 'GL_TRIANGLE_LIST_SUN',
+           'GL_COPY_INVERTED', 'GL_TEXTURE_PRIORITY',
+           'GL_INT_IMAGE_2D_RECT', 'GL_STATIC_ATI',
+           'GL_MAX_GEOMETRY_INPUT_COMPONENTS',
+           'GL_SHADER_BINARY_FORMATS',
+           'GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT',
+           'GL_MAP2_VERTEX_ATTRIB3_4_NV',
+           'GL_DEBUG_CATEGORY_API_ERROR_AMD', 'GL_INDEX_ARRAY_EXT',
+           'GL_UNSIGNED_INT_8_8_S8_S8_REV_NV',
+           'GL_PIXEL_MIN_FILTER_EXT', 'GL_PALETTE4_RGB5_A1_OES',
+           'GL_FOG_COORDINATE_ARRAY_EXT', 'glTexCoord1f',
+           'GL_NATIVE_GRAPHICS_HANDLE_PGI',
+           'GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB',
+           'GL_TEXTURE_SWIZZLE_R', 'GL_PIXEL_UNPACK_BUFFER',
+           'GL_CONSTANT_COLOR0_NV', 'GL_LOCAL_CONSTANT_VALUE_EXT',
+           'GL_POINT_DISTANCE_ATTENUATION',
+           'GL_TEXTURE_BUFFER_DATA_STORE_BINDING',
+           'GL_UNSIGNED_BYTE_3_3_2_EXT', 'GL_OPERAND0_ALPHA_ARB',
+           'GL_READ_WRITE_ARB', 'GL_REPLACE_OLDEST_SUN',
+           'GL_LUMINANCE16_ALPHA16_EXTENDED_RANGE_SGIX',
+           'GL_AMBIENT_AND_DIFFUSE', 'GL_TEXTURE_1D_BINDING_EXT',
+           'glLightfv', 'GL_UTF16_NV', 'glColor3bv', 'GL_MATRIX7_ARB',
+           'GL_VERTEX_SHADER_BIT',
+           'GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI', 'GL_ZERO',
+           'GL_APPLE_vertex_array_range',
+           'GL_TRANSPOSE_MODELVIEW_MATRIX',
+           'GL_AMD_query_buffer_object', 'GL_TESS_CONTROL_SHADER_BIT',
+           'GL_SCISSOR_BIT', 'GL_STORAGE_PRIVATE_APPLE',
+           'GL_TRANSFORM_FEEDBACK_ATTRIBS_NV', 'GL_READ_ONLY',
+           'GL_MAX_OPTIMIZED_VERTEX_SHADER_LOCALS_EXT',
+           'GL_SGI_color_matrix', 'GL_MAX_FRAGMENT_IMAGE_UNIFORMS',
+           'GL_MAP1_GRID_DOMAIN', 'GL_TEXTURE_COVERAGE_SAMPLES_NV',
+           'GL_RETAINED_APPLE', 'GL_ATI_draw_buffers',
+           'GL_EXT_texture_sRGB', 'GL_INVARIANT_EXT', 'GL_FIXED',
+           'GL_APPLE_row_bytes', 'GL_TEXTURE_COORD_ARRAY_EXT',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB',
+           'GL_PIXEL_MAP_I_TO_R_SIZE', 'GL_FLOAT_RGB16_NV',
+           'GL_SAMPLE_COVERAGE_VALUE_ARB', 'GL_RGBA_FLOAT32_ATI',
+           'GL_T2F_C3F_V3F', 'GL_VERTEX_ATTRIB_ARRAY5_NV',
+           'GL_FLOAT_RGBA16_NV', 'GL_HISTOGRAM_BLUE_SIZE_EXT',
+           'GL_COMPRESSED_RED', 'GL_MINMAX',
+           'GL_RESAMPLE_REPLICATE_SGIX', 'GL_SIGNED_RGB_NV',
+           'GL_RGBA16_SNORM', 'GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB',
+           'GL_RGB16F_ARB', 'GL_COMBINER_MUX_SUM_NV',
+           'GL_RELATIVE_HORIZONTAL_LINE_TO_NV',
+           'GL_ATI_texture_float', 'GL_LIST_INDEX', 'glRectsv',
+           'GL_OP_RECIP_EXT', 'GL_COPY_PIXEL_TOKEN',
+           'GL_FRAGMENT_NORMAL_EXT', 'GL_TEXTURE_BORDER_COLOR',
+           'glMap2d', 'glMap2f', 'GL_PROXY_TEXTURE_1D_EXT',
+           'GL_MATRIX31_ARB', 'GL_RGBA12', 'GL_MIN_INTENSITY_SGIS',
+           'glMatrixMode', 'GL_RGB_FLOAT32_ATI',
+           'GL_UNSIGNED_INT_IMAGE_1D',
+           'GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT',
+           'GL_ELEMENT_ARRAY_BARRIER_BIT', 'GL_ALPHA_TEST_REF',
+           'GL_MAX_PROGRAM_NATIVE_PARAMETERS_ARB',
+           'GL_MAX_MAP_TESSELLATION_NV', 'GL_ALPHA_MIN_CLAMP_INGR',
+           'glGetError', 'GL_ARB_shader_stencil_export',
+           'glGetTexEnviv', 'GL_COMPILE_STATUS', 'GL_LOGIC_OP_MODE',
+           'GL_PREVIOUS_TEXTURE_INPUT_NV',
+           'GL_OUTPUT_TEXTURE_COORD17_EXT', 'GL_MATRIX16_ARB',
+           'glEvalCoord1f', 'GL_ALPHA_FLOAT32_APPLE',
+           'GL_MAX_ALPHA_SGIS',
+           'GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB',
+           'glGetPixelMapusv', 'GL_PATH_OBJECT_BOUNDING_BOX_NV',
+           'GL_READ_WRITE', 'GL_UNSIGNED_BYTE', 'GLuint64EXT',
+           'GL_TESSELLATION_MODE_AMD', 'GL_INT_SAMPLER_BUFFER_EXT',
+           'GL_FONT_MAX_ADVANCE_WIDTH_BIT_NV', 'GL_QUADS',
+           'GL_NV_vertex_program3', 'GL_NV_vertex_program2',
+           'GL_NV_vertex_program4', 'GL_COLOR_INDEX12_EXT',
+           'GL_NV_texgen_emboss', 'GL_R16',
+           'GL_AMD_transform_feedback3_lines_triangles',
+           'GL_DRAW_BUFFER0_ATI', 'GL_CURRENT_SAMPLE_COUNT_QUERY_NV',
+           'GL_SGIS_fog_function', 'GL_SIGNED_RGBA_NV',
+           'GL_PIXEL_PACK_BUFFER', 'GL_VERSION_1_5', 'GL_VERSION_1_4',
+           'GL_VERSION_1_3', 'GL_VERSION_1_2', 'GL_VERSION_1_1',
+           'GL_OUTPUT_FOG_EXT', 'GL_COLOR_MATRIX_STACK_DEPTH',
+           'GL_HISTOGRAM_ALPHA_SIZE_EXT', 'GL_DRAW_BUFFER5',
+           'GL_PROXY_TEXTURE_CUBE_MAP_ARRAY_ARB',
+           'GL_CURRENT_MATRIX_NV', 'glTexCoord3sv',
+           'GL_MAX_VERTEX_BINDABLE_UNIFORMS_EXT',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_SIZE', 'GL_DRAW_BUFFER',
+           'GL_FONT_UNDERLINE_THICKNESS_BIT_NV', 'GL_DRAW_BUFFER3',
+           'GL_VERSION_3_1', 'GL_VERSION_3_0', 'GL_VERSION_3_3',
+           'GL_STENCIL_INDEX1', 'GL_VERTEX_ATTRIB_ARRAY6_NV',
+           'GL_PATH_COMMAND_COUNT_NV', 'GL_STENCIL_INDEX4',
+           'GL_POINT_FADE_THRESHOLD_SIZE',
+           'GL_EVAL_VERTEX_ATTRIB12_NV',
+           'GL_MAX_COLOR_MATRIX_STACK_DEPTH', 'GL_DEPTH_BITS',
+           'GL_SGIX_interlace', 'GL_DEPENDENT_HILO_TEXTURE_2D_NV',
+           'GL_PROGRAM_ERROR_STRING_NV', 'GL_RGB8UI',
+           'GL_TEXTURE27_ARB', 'GL_VERTEX_SHADER_EXT',
+           'GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB',
+           'GL_ATOMIC_COUNTER_BARRIER_BIT_EXT',
+           'GL_VERTEX_PROGRAM_POINT_SIZE_NV',
+           'GL_ARB_texture_env_dot3', 'GL_TEXTURE26_ARB',
+           'GL_EXT_framebuffer_multisample', 'GL_ARB_gpu_shader5',
+           'GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB', 'glGetTexGeniv',
+           'GL_BLEND_DST_RGB', 'GL_MAP1_VERTEX_4',
+           'GL_MIRROR_CLAMP_TO_EDGE_ATI', 'GL_MAP1_VERTEX_3',
+           'GL_SAMPLE_PATTERN_EXT',
+           'GL_VERTEX_ATTRIB_ARRAY_INTEGER_EXT', 'GL_CLEAR',
+           'GL_LIGHT7', 'GL_CURRENT_RASTER_POSITION_VALID',
+           'GL_BUMP_NUM_TEX_UNITS_ATI', 'GL_HISTOGRAM_LUMINANCE_SIZE',
+           'GL_TEXTURE22_ARB', 'GL_COLOR_ATTACHMENT3_EXT',
+           'GL_DRAW_BUFFER9', 'GL_PIXEL_PACK_BUFFER_BINDING',
+           'GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB',
+           'GL_CURRENT_MATRIX_STACK_DEPTH_ARB',
+           'GL_INT_IMAGE_1D_ARRAY_EXT',
+           'GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS', 'GL_MAP_STENCIL',
+           'GL_POINT_SIZE_MAX_ARB', 'GL_MITER_REVERT_NV',
+           'GL_SGIS_point_line_texgen',
+           'GL_UNKNOWN_CONTEXT_RESET_ARB',
+           'GL_IMAGE_BINDING_FORMAT_EXT',
+           'GL_TEXTURE_BUFFER_DATA_STORE_BINDING_EXT',
+           'GL_VARIABLE_B_NV', 'GL_SELECTION_BUFFER_SIZE',
+           'GL_MAP2_VERTEX_ATTRIB14_4_NV', 'GL_INTENSITY_SIGNED_SGIX',
+           'glTexParameteriv',
+           'GL_NV_framebuffer_multisample_coverage', 'GL_HALF_APPLE',
+           'GL_ARB_texture_compression', 'GL_RGBA16_EXT',
+           'GL_UNSIGNED_INT_10F_11F_11F_REV_EXT', 'GL_VARIABLE_F_NV',
+           'GL_OUTPUT_TEXTURE_COORD24_EXT',
+           'GL_CURRENT_RASTER_POSITION',
+           'GL_VERTEX_ATTRIB_ARRAY_SIZE', 'GL_INT8_NV',
+           'GL_MAX_GEOMETRY_IMAGE_UNIFORMS',
+           'GL_WEIGHT_ARRAY_STRIDE_ARB',
+           'GL_MAX_PROGRAM_ATTRIB_COMPONENTS_NV', 'GL_MATRIX6_ARB',
+           'GL_ATI_separate_stencil', 'GL_CURRENT_WEIGHT_ARB',
+           'GL_SHADOW_ATTENUATION_EXT', 'GL_RGB16UI',
+           'GL_NV_vertex_program2_option', 'GL_PATH_DASH_OFFSET_NV',
+           'GL_EXT_texture_buffer_object',
+           'GL_DOT_PRODUCT_DEPTH_REPLACE_NV', 'GL_FLOAT_VEC2',
+           'GL_FOG_INDEX', 'GL_DEPTH_COMPONENT32F_NV',
+           'GL_DRAW_INDIRECT_LENGTH_NV', 'GL_SPARE0_NV',
+           'GL_FLOAT_VEC4', 'GL_R11F_G11F_B10F_EXT',
+           'GL_FLOAT_RGB32_NV', 'GL_FACTOR_MIN_AMD', 'GL_COEFF',
+           'GL_PROXY_TEXTURE_2D_ARRAY_EXT', 'GL_SOURCE2_ALPHA',
+           'GL_TEXTURE_RECTANGLE_NV', 'GL_PATH_GEN_MODE_NV',
+           'GL_BUFFER_MAP_OFFSET', 'GL_BUFFER_SIZE',
+           'GL_TRANSPOSE_PROJECTION_MATRIX_ARB',
+           'GL_MAP1_VERTEX_ATTRIB9_4_NV', 'GL_BUFFER_SIZE_ARB',
+           'GL_COLOR_SUM_EXT', 'GL_UNIFORM_BUFFER_START',
+           'GL_VARIABLE_D_NV', 'GL_RGBA4_S3TC',
+           'GL_AUX_DEPTH_STENCIL_APPLE', 'GL_CLAMP_READ_COLOR_ARB',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_SIZE_NV', 'GL_LOWER_LEFT',
+           'GL_TEXTURE_DEPTH_EXT', 'GL_SMOOTH_CUBIC_CURVE_TO_NV',
+           'GL_MAX_TEXTURE_STACK_DEPTH',
+           'GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT',
+           'GL_UNSIGNED_INT_SAMPLER_2D', 'GL_SUN_read_video_pixels',
+           'GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT',
+           'GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS',
+           'GL_LUMINANCE_ALPHA8I_EXT',
+           'GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT',
+           'GL_OES_compressed_paletted_texture',
+           'GL_TEXTURE_COORD_ARRAY_STRIDE',
+           'GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT', 'GLEW_OK',
+           'GL_R', 'GL_S', 'GL_T', 'GL_MAX_PROGRAM_LOOP_DEPTH_NV',
+           'GL_NV_shader_buffer_load', 'GL_PATH_STROKE_COVER_MODE_NV',
+           'GL_DOUBLE', 'glIndexsv', 'GL_FOG_HINT', 'GL_MATRIX26_ARB',
+           'ptrdiff_t', 'GL_VIDEO_BUFFER_PITCH_NV',
+           'GL_MAP_ATTRIB_U_ORDER_NV',
+           'GL_POST_COLOR_MATRIX_RED_SCALE_SGI',
+           'GL_OP_RECIP_SQRT_EXT', 'GL_EXT_texture_env_combine',
+           'GL_SAMPLER_2D_ARRAY_EXT', 'GL_COMP_BIT_ATI',
+           'GL_MAX_TEXTURE_UNITS_ARB',
+           'GL_REPLACEMENT_CODE_ARRAY_STRIDE_SUN',
+           'GL_GEOMETRY_OUTPUT_TYPE_EXT', 'GL_NOOP', 'glTexCoord1i',
+           'GL_LIGHT_MODEL_COLOR_CONTROL_EXT', 'GL_CONTEXT_FLAGS',
+           'GL_PROGRAM_LENGTH_NV', 'GL_INVALID_ENUM',
+           'GL_TEXCOORD3_BIT_PGI', 'GL_BLEND_DST_RGB_EXT',
+           'GL_INTENSITY16_SNORM', 'GL_MATRIX24_ARB',
+           'GL_ALL_SHADER_BITS', 'glPointSize',
+           'GL_DRAW_BUFFER14_ARB', 'GL_TEXTURE_BINDING_1D',
+           'GL_ARB_map_buffer_range', 'GL_TEXTURE_GEQUAL_R_SGIX',
+           'GL_COLOR_FLOAT_APPLE', 'GL_MATRIX27_ARB',
+           'GL_POINT_SIZE_MAX', 'GL_POST_COLOR_MATRIX_GREEN_SCALE',
+           'GL_MODELVIEW_MATRIX', 'GL_FIELD_LOWER_NV',
+           'GL_QUERY_WAIT', 'GL_INDEX_BITS', 'GL_TEXTURE15_ARB',
+           'GL_OUTPUT_TEXTURE_COORD2_EXT',
+           'GL_LUMINANCE_ALPHA_SIGNED_SGIX',
+           'GL_DEBUG_SEVERITY_MEDIUM_ARB',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB',
+           'GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_ARB',
+           'GL_MAX_TEXTURE_LOD_BIAS', 'GL_ALIASED_LINE_WIDTH_RANGE',
+           'glEvalCoord2d', 'GL_FUNC_ADD_EXT', 'GL_SGIX_resample',
+           'GL_DEPTH_COMPONENT32_SGIX', 'GL_EXT_light_texture',
+           'GL_ARB_point_sprite', 'GL_FRAGMENT_MATERIAL_EXT',
+           'GL_SUN_convolution_border_modes', 'GL_HISTOGRAM_EXT',
+           'GL_VERSION_1_2_1', 'GL_DEPENDENT_AR_TEXTURE_2D_NV',
+           'GL_UNSIGNED_INT_SAMPLER_2D_EXT',
+           'GL_RENDERBUFFER_WIDTH_EXT', 'glColor4uiv',
+           'GL_EDGE_FLAG_ARRAY_ADDRESS_NV', 'GL_CURRENT_MATRIX_ARB',
+           'GL_UNSIGNED_INT64_VEC3_NV', 'GL_NORMAL_MAP_NV',
+           'GL_STREAM_READ_ARB', 'GL_EXTENSIONS',
+           'GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI',
+           'GL_VERTEX_PROGRAM_NV', 'GL_ALPHA16UI_EXT',
+           'GL_WEIGHT_SUM_UNITY_ARB', 'GL_RENDERBUFFER_HEIGHT_EXT',
+           'GL_POLYGON_TOKEN', 'glVertex4sv',
+           'GL_SMOOTH_LINE_WIDTH_GRANULARITY', 'GL_MESA_window_pos',
+           'GL_BUFFER_UPDATE_BARRIER_BIT_EXT', 'GL_SRGB',
+           'GL_NORMAL_ARRAY_POINTER', 'GL_ONE_MINUS_CONSTANT_COLOR',
+           'GL_MAX_COLOR_MATRIX_STACK_DEPTH_SGI',
+           'GL_INT_IMAGE_CUBE_MAP_ARRAY_EXT',
+           'GL_CG_VERTEX_SHADER_EXT',
+           'GL_MAX_TESS_CONTROL_INPUT_COMPONENTS', 'GL_ENV_ADD_EXT',
+           'GL_REPLACE_MIDDLE_SUN', 'glScaled', 'glDrawArrays',
+           'glColor3ui', 'GL_UNSIGNED_INT_SAMPLER_2D_RECT',
+           'GL_SCALED_RESOLVE_NICEST_EXT',
+           'GL_FOG_COORDINATE_ARRAY_POINTER_EXT',
+           'GL_SWIZZLE_STQ_ATI', 'GL_LUMINANCE16UI_EXT',
+           'GL_MODELVIEW1_ARB', 'GL_LUMINANCE_ALPHA16UI_EXT',
+           'glClear', 'GL_RELATIVE_QUADRATIC_CURVE_TO_NV',
+           'GL_ELEMENT_ARRAY_TYPE_APPLE',
+           'GL_FOG_COORD_ARRAY_LENGTH_NV', 'GL_PALETTE8_RGB8_OES',
+           'GL_MUL_ATI', 'GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME',
+           'glTexCoord1s', 'GL_TEXTURE_BINDING_CUBE_MAP_ARRAY',
+           'GL_BLEND_SRC_ALPHA', 'GL_UNSIGNED_INT_IMAGE_2D',
+           'GL_INTERPOLATE_EXT', 'glTranslatef', 'glTranslated',
+           'GL_AND_REVERSE', 'GL_MAX_INTEGER_SAMPLES',
+           'GL_EVAL_VERTEX_ATTRIB11_NV', 'GL_CLAMP_FRAGMENT_COLOR',
+           'glTexImage1D', 'GL_QUERY_RESULT_AVAILABLE',
+           'GL_FORMAT_SUBSAMPLE_24_24_OML', 'GL_TEXTURE_RED_TYPE_ARB',
+           'GL_PROGRAM_STRING_ARB',
+           'GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT',
+           'GL_UNSIGNED_INT_24_8_EXT', 'GL_FOG_MODE', 'GL_ALPHA_TEST',
+           'GL_RGBA8_SNORM', 'GL_CLAMP_TO_EDGE_SGIS',
+           'GL_COLOR3_BIT_PGI', 'GL_INT_SAMPLER_3D',
+           'GL_MAX_FRAGMENT_BINDABLE_UNIFORMS_EXT',
+           'GL_WEIGHT_ARRAY_ARB',
+           'GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS_EXT',
+           'GL_AND', 'GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD',
+           'GL_IMAGE_2D_MULTISAMPLE_EXT', 'GL_BLUE_MIN_CLAMP_INGR',
+           'GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE',
+           'GL_PASS_THROUGH_NV', 'GL_ACCUM_GREEN_BITS',
+           'GL_SGIS_color_range', 'glVertex3iv',
+           'GL_LINE_STRIP_ADJACENCY_EXT', 'glTexGenfv',
+           'glTexCoord4dv', 'GL_INT_SAMPLER_1D_ARRAY_EXT',
+           'GL_STATIC_COPY', 'GL_COMPRESSED_SIGNED_RED_RGTC1_EXT',
+           'glMateriali', 'GL_FOG_COORD_ARRAY_ADDRESS_NV',
+           'GL_COORD_REPLACE_ARB', 'GL_ARB_texture_compression_bptc',
+           'GL_SAMPLER_2D_SHADOW_ARB', 'GL_ELEMENT_ARRAY_TYPE_ATI',
+           'GL_ONE_MINUS_DST_ALPHA', 'glMaterialf',
+           'GL_COMPRESSED_RGB_S3TC_DXT1_EXT', 'GL_BINORMAL_ARRAY_EXT',
+           'GL_PROGRAM_STRING_NV', 'GL_EXT_texture_compression_rgtc',
+           'GL_TEXTURE_SHARED_SIZE_EXT',
+           'GL_SYNC_GPU_COMMANDS_COMPLETE',
+           'GL_SMOOTH_POINT_SIZE_RANGE', 'GL_ELEMENT_ARRAY_BUFFER',
+           'GL_UNIFORM_BARRIER_BIT_EXT', 'GL_ALPHA_FLOAT16_ATI',
+           'GL_ALIASED_POINT_SIZE_RANGE', 'GL_COMPRESSED_SRGB_EXT',
+           'GL_EXT_fragment_lighting',
+           'GL_POINT_SPRITE_CULL_MODE_ATIX', 'GL_NEGATIVE_X_EXT',
+           'GL_MAP_WRITE_BIT',
+           'GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX',
+           'GL_PIXEL_MAP_S_TO_S_SIZE', 'GL_MODULATE_SIGNED_ADD_ATIX',
+           'GL_MAX_NAME_STACK_DEPTH', 'glEnd',
+           'GL_MAX_PROGRAM_PARAMETER_BUFFER_SIZE_NV',
+           'GL_ALPHA_MAX_SGIX', 'GL_GEOMETRY_VERTICES_OUT_EXT',
+           'GL_MAX_GEOMETRY_OUTPUT_VERTICES', 'GL_MATRIX15_ARB',
+           'GL_SAMPLER_2D_ARRAY_SHADOW_EXT', 'GL_DEPTH_BUFFER_BIT',
+           'GL_VIDEO_COLOR_CONVERSION_OFFSET_NV',
+           'GL_UNSIGNED_INT_SAMPLER_2D_RECT_EXT',
+           'GL_MODELVIEW29_ARB', 'GL_DRAW_INDIRECT_BUFFER',
+           'GL_SGIX_fog_offset', 'GL_MATRIX_INDEX_ARRAY_ARB',
+           'GL_PERTURB_EXT', 'GL_TEXTURE1_ARB', 'glGetFloatv',
+           'glewExperimental', 'GL_FLOAT_CLEAR_COLOR_VALUE_NV',
+           'GL_TANGENT_ARRAY_EXT',
+           'GL_IMPLEMENTATION_COLOR_READ_FORMAT',
+           'GL_MAX_PROGRAM_ENV_PARAMETERS_ARB', 'glNormal3fv',
+           'GL_MAX_SPOT_EXPONENT_NV', 'GL_ARRAY_BUFFER_BINDING_ARB',
+           'GL_COLOR_TABLE_BIAS', 'GL_NV_transform_feedback',
+           'GL_VARIANT_ARRAY_TYPE_EXT',
+           'GL_TEXTURE_RENDERBUFFER_DATA_STORE_BINDING_NV',
+           'GL_DEPTH_STENCIL_NV', 'GL_COMPRESSED_TEXTURE_FORMATS',
+           'GL_PERFMON_RESULT_SIZE_AMD',
+           'GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY',
+           'GL_DEBUG_SEVERITY_HIGH_ARB', 'GL_TEXTURE20',
+           'GL_PIXEL_COUNT_AVAILABLE_NV', 'GL_SAMPLE_COUNT_NV',
+           'GL_DEPTH_COMPONENT24_ARB', 'GL_MAT_COLOR_INDEXES_BIT_PGI',
+           'GL_PRIMITIVES_GENERATED_EXT',
+           'GL_TESS_CONTROL_OUTPUT_VERTICES',
+           'GL_RENDERBUFFER_STENCIL_SIZE_EXT', 'GL_FLOAT_R_NV',
+           'GL_RGBA8', 'GL_MAX_PIXEL_MAP_TABLE',
+           'GL_EXT_polygon_offset', 'GL_STENCIL_INDEX1_EXT',
+           'GL_STATIC_VERTEX_ARRAY_IBM', 'GL_POINT_TOKEN',
+           'GL_T4F_C4F_N3F_V4F', 'glRasterPos3sv', 'GL_TEXTURE30',
+           'GL_TEXTURE31', 'GL_UNSIGNED_INT_SAMPLER_1D',
+           'GL_VERTEX_ATTRIB_ARRAY9_NV',
+           'GL_EXT_texture_compression_s3tc',
+           'GL_POST_COLOR_MATRIX_BLUE_SCALE_SGI',
+           'GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS',
+           'GL_TEXTURE_ENV_COLOR', 'GL_BUFFER_MAP_POINTER',
+           'GL_MAP1_VERTEX_ATTRIB11_4_NV', 'GL_RGB_422_APPLE',
+           'GL_MODELVIEW23_ARB', 'GLbitfield',
+           'GL_STENCIL_ATTACHMENT_EXT', 'GL_SAMPLER_1D_ARRAY',
+           'GL_STENCIL_REF', 'GL_LUMINANCE_ALPHA8UI_EXT',
+           'GL_NORMAL_MAP_EXT', 'GL_ACTIVE_SUBROUTINE_UNIFORMS',
+           'GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING_ARB',
+           'GL_ALWAYS_FAST_HINT_PGI', 'GL_BLEND_EQUATION_RGB_EXT',
+           'GL_APPLE_pixel_buffer', 'glLightf',
+           'GL_COPY_WRITE_BUFFER', 'GL_INDEX_ARRAY_COUNT_EXT',
+           'glPushMatrix', 'GL_OPERAND0_RGB',
+           'GL_MAX_TEXTURE_BUFFER_SIZE_ARB', 'GL_EXT_texture_object',
+           'GL_NATIVE_GRAPHICS_BEGIN_HINT_PGI',
+           'GL_LIGHT_MODEL_COLOR_CONTROL', 'GL_GLYPH_HEIGHT_BIT_NV',
+           'GL_FEEDBACK', 'glVertex2i', 'GL_SGIX_pixel_texture_bits',
+           'GL_TEXCOORD1_BIT_PGI', 'GL_EXT_texture',
+           'GL_MAX_ATTRIB_STACK_DEPTH', 'GL_RGBA4_DXT5_S3TC',
+           'GL_EVAL_TRIANGULAR_2D_NV', 'GL_MODELVIEW13_ARB',
+           'GL_ACTIVE_ATTRIBUTES', 'GL_FORCE_BLUE_TO_ONE_NV',
+           'GL_RELATIVE_MOVE_TO_NV', 'GL_PIXEL_MAP_I_TO_G',
+           'GL_INTERLEAVED_ATTRIBS_EXT', 'GL_TEXTURE29_ARB',
+           'GL_PIXEL_MAP_I_TO_B', 'GL_PIXEL_MAP_I_TO_A',
+           'GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTERS',
+           'GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS',
+           'GL_FORMAT_SUBSAMPLE_244_244_OML', 'GL_STATIC_DRAW_ARB',
+           'GL_POINT_SPRITE_NV', 'GL_SUN_slice_accum',
+           'GL_PROGRAM_SEPARABLE', 'GL_PIXEL_MAP_I_TO_R',
+           'GL_MAX_3D_TEXTURE_SIZE_EXT',
+           'GL_COLOR_ARRAY_BUFFER_BINDING', 'GL_MIN_LUMINANCE_SGIS',
+           'GL_TEXTURE_MIN_LOD_SGIS',
+           'GL_VERTEX_ARRAY_RANGE_LENGTH_APPLE',
+           'GL_ARB_texture_multisample', 'GL_INT64_NV',
+           'GL_OP_LOG_BASE_2_EXT', 'GL_NOTEQUAL',
+           'GL_EDGE_FLAG_ARRAY_STRIDE', 'glMapGrid2d', 'glMapGrid2f',
+           'GL_TEXTURE_MAG_FILTER', 'GL_SINGLE_COLOR',
+           'GL_MAX_VERTEX_SHADER_INSTRUCTIONS_EXT',
+           'GL_CONVOLUTION_FILTER_BIAS', 'GL_ALPHA_SCALE',
+           'GL_COLOR_MATERIAL_FACE', 'GL_TEXTURE_LIGHT_EXT',
+           'glTexCoord4fv', 'GL_TEXTURE_RECTANGLE_EXT',
+           'GL_PROGRAM_POINT_SIZE_ARB', 'GL_VERSION',
+           'GL_STREAM_READ', 'GL_SAMPLER_CUBE',
+           'GL_EVAL_FRACTIONAL_TESSELLATION_NV',
+           'GL_OBJECT_ACTIVE_UNIFORMS_ARB',
+           'GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV',
+           'GL_GLYPH_WIDTH_BIT_NV', 'GL_PROGRAM_OBJECT_ARB',
+           'GL_SIGNED_RGB8_NV', 'GL_INT_2_10_10_10_REV',
+           'GL_TANGENT_ARRAY_STRIDE_EXT', 'GL_MAX_BLUE_SGIS',
+           'GL_LEFT', 'GL_NV_vertex_array_range',
+           'GL_MAX_PROGRAM_NATIVE_ATTRIBS_ARB',
+           'GL_POST_COLOR_MATRIX_BLUE_BIAS',
+           'GL_DEPTH24_STENCIL8_EXT', 'glTexEnvf', 'GL_OP_SET_GE_EXT',
+           'GL_VERTEX_ARRAY',
+           'GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS',
+           'GL_COMPRESSED_SRGB_S3TC_DXT1_EXT', 'glClearAccum',
+           'GL_MIN_BLUE_SGIS', 'GL_PROXY_TEXTURE_3D_EXT',
+           'GL_PROJECTION_MATRIX', 'GL_MATRIX4_ARB',
+           'GL_PROGRAM_NATIVE_ATTRIBS_ARB', 'glTexEnvi',
+           'glRasterPos4dv', 'GL_BGR', 'GL_INT_SAMPLER_1D_ARRAY',
+           'GL_MAX_TEXTURE_SIZE', 'GL_FRAMEBUFFER_ATTACHMENT_LAYERED',
+           'GL_SGIX_clipmap', 'GL_ALPHA8_SNORM',
+           'GL_MESA_ycbcr_texture', 'GL_ALPHA32F_ARB',
+           'GL_ARRAY_BUFFER', 'GLintptrARB',
+           'GL_MAX_GEOMETRY_VARYING_COMPONENTS_EXT', 'GL_OR_REVERSE',
+           'GL_IGNORE_BORDER', 'GL_TEXTURE_COMPRESSED_IMAGE_SIZE',
+           'GL_UNSIGNED_INT_SAMPLER_2D_ARRAY_EXT', 'GL_TEXTURE_1D',
+           'GL_MAX_VARYING_COMPONENTS', 'glGetMapiv',
+           'GL_NAME_STACK_DEPTH', 'GL_BLEND_SRC_RGB',
+           'GL_MATRIX14_ARB', 'GL_ALPHA8I_EXT',
+           'GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS',
+           'GL_TRIANGLE_STRIP_ADJACENCY_EXT', 'GLEW_VERSION_MAJOR',
+           'GL_TEXTURE_LOD_BIAS_EXT',
+           'GL_FRAGMENT_LIGHT_MODEL_LOCAL_VIEWER_EXT',
+           'GL_CURRENT_MATRIX_STACK_DEPTH_NV', 'GL_SIGNED_ALPHA_NV',
+           'GL_WEIGHT_ARRAY_BUFFER_BINDING',
+           'GL_SGIX_texture_lod_bias', 'GL_PROGRAM_POINT_SIZE_EXT',
+           'GL_NUM_SHADER_BINARY_FORMATS',
+           'GL_CLAMP_FRAGMENT_COLOR_ARB', 'GL_ATTRIB_ARRAY_STRIDE_NV',
+           'GL_EXT_clip_volume_hint', 'glRasterPos3d',
+           'GL_UNPACK_IMAGE_HEIGHT_EXT',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE_NV',
+           'GL_MAX_VIEWPORT_DIMS', 'GL_LARGE_CCW_ARC_TO_NV',
+           'GL_TEXTURE_CUBE_MAP_SEAMLESS_ARB', 'GL_DRAW_BUFFER13_ARB',
+           'glLightModelf', 'GL_INT_SAMPLER_2D', 'glColor3s',
+           'GL_SAMPLER_2D_MULTISAMPLE', 'glDisable',
+           'GLEW_VERSION_MICRO', 'GL_DOUBLE_MAT3x2',
+           'GL_MAP1_VERTEX_ATTRIB6_4_NV',
+           'GL_STENCIL_PASS_DEPTH_FAIL',
+           'GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY', 'GL_PIXEL_MAP_A_TO_A',
+           'GL_SGIS_texture_select', 'GL_NV_texture_shader',
+           'GL_TEXTURE_CONSTANT_DATA_SUNX', 'GL_IMAGE_2D_MULTISAMPLE',
+           'GL_TEXTURE_ALPHA_SIZE_EXT',
+           'GL_MAX_GEOMETRY_UNIFORM_BLOCKS', 'GL_LUMINANCE8_SNORM',
+           'GL_FOG_COORDINATE_SOURCE', 'GL_EXPAND_NORMAL_NV',
+           'GL_ARB_fragment_program', 'GL_CURRENT_ATTRIB_NV',
+           'GL_MAT_SPECULAR_BIT_PGI', 'GL_OML_resample',
+           'glTexCoord3i', 'GL_MAX_PROGRAM_IF_DEPTH_NV',
+           'GL_APPLE_ycbcr_422', 'GL_POINT_FADE_THRESHOLD_SIZE_EXT',
+           'GL_FIXED_ONLY', 'GL_OP_MAX_EXT',
+           'GL_TRANSPOSE_TEXTURE_MATRIX_ARB',
+           'GL_SLUMINANCE8_ALPHA8_EXT', 'glTexCoord3d',
+           'GL_POLYGON_MODE', 'GL_PROXY_TEXTURE_RECTANGLE_ARB',
+           'GL_HALF_FLOAT', 'GL_SGIX_texture_add_env',
+           'GL_RGBA_SNORM', 'GL_CONVOLUTION_BORDER_MODE',
+           'GL_SET_AMD', 'GL_CON_6_ATI', 'GL_LIGHTING_BIT',
+           'GL_NV_vertex_program',
+           'GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD', 'GL_NAND',
+           'GL_ARB_color_buffer_float', 'GL_UNIFORM_BLOCK_DATA_SIZE',
+           'glAreTexturesResident', 'GL_HP_texture_lighting',
+           'GL_STRICT_SCISSOR_HINT_PGI', 'GL_UNIFORM_IS_ROW_MAJOR',
+           'GL_PRIMITIVE_ID_NV',
+           'GL_FRAGMENT_INTERPOLATION_OFFSET_BITS',
+           'GL_INTENSITY8I_EXT', 'glRasterPos4sv',
+           'GL_CONVOLUTION_1D_EXT', 'GL_ASYNC_HISTOGRAM_SGIX',
+           'GL_SLUMINANCE_ALPHA_EXT', 'GLEW_GET_FUN',
+           'GL_PATH_FORMAT_PS_NV',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_NV', 'GL_LIST_BASE',
+           'GL_MIN_FRAGMENT_INTERPOLATION_OFFSET',
+           'GL_COLOR_WRITEMASK', 'GL_MATRIX23_ARB', 'glColor4b',
+           'GL_EXT_texture_edge_clamp',
+           'GL_ACTIVE_ATOMIC_COUNTER_BUFFERS',
+           'GL_MAP2_VERTEX_ATTRIB10_4_NV', 'GL_LIGHT_ENV_MODE_EXT',
+           'GL_PROGRAM_NATIVE_PARAMETERS_ARB', 'GL_TEXTURE_WRAP_R',
+           'GL_TEXTURE_WRAP_S', 'GL_TEXTURE_WRAP_T',
+           'GL_INDEX_ARRAY_LIST_STRIDE_IBM', 'GL_DST_ALPHA',
+           'GL_INT_SAMPLER_3D_EXT',
+           'GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_NV',
+           'GL_PROGRAM_BINARY_LENGTH', 'GL_EVAL_BIT',
+           'GL_INT_SAMPLER_2D_ARRAY', 'GLEW_NO_ERROR',
+           'GL_TEXTURE_BLUE_TYPE_ARB', 'GL_ATI_vertex_streams',
+           'GL_COMPRESSED_RGB', 'GL_TIME_ELAPSED', 'GL_DUDV_ATI',
+           'GL_SRC1_COLOR', 'GL_POST_COLOR_MATRIX_GREEN_BIAS_SGI',
+           'GL_PRIMARY_COLOR', 'GL_OUTPUT_TEXTURE_COORD11_EXT',
+           'GL_CULL_VERTEX_OBJECT_POSITION_EXT', 'GL_TEXTURE12_ARB',
+           'GL_RESAMPLE_ZERO_FILL_SGIX',
+           'GL_LUMINANCE_ALPHA_FLOAT16_APPLE', 'GL_BLUE_BITS',
+           'glViewport', 'GL_OUTPUT_COLOR1_EXT', 'GL_SAMPLE_MASK_NV',
+           'GL_FLOAT_RG32_NV', 'GL_LUMINANCE16_ALPHA16',
+           'GL_PACK_SWAP_BYTES', 'GL_EXT_cmyka', 'GL_EQUAL',
+           'GL_PROGRAM_ATTRIB_COMPONENTS_NV', 'GL_TEXTURE_SWIZZLE_G',
+           'GL_SAMPLES_3DFX', 'GL_MIN_SAMPLE_SHADING_VALUE_ARB',
+           'GL_INTENSITY8UI_EXT', 'GL_TEXTURE_SWIZZLE_B',
+           'GL_TEXTURE_SWIZZLE_A', 'GL_SECONDARY_COLOR_ARRAY_SIZE',
+           'GL_LOW_FLOAT', 'GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB',
+           'GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY_EXT',
+           'GL_EXT_pixel_transform', 'GL_MIRROR_CLAMP_TO_BORDER_EXT',
+           'GL_INT_SAMPLER_BUFFER', 'GL_INT_SAMPLER_1D_EXT',
+           'GL_MAX_GEOMETRY_OUTPUT_VERTICES_ARB', 'glArrayElement',
+           'GL_SAMPLE_COUNT_BITS_NV',
+           'GL_SPARE0_PLUS_SECONDARY_COLOR_NV',
+           'GL_EXT_rescale_normal', 'GL_ARB_pixel_buffer_object',
+           'GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW', 'GL_COMBINE_ALPHA_ARB',
+           'GL_VERTEX_ARRAY_LENGTH_NV', 'glEvalCoord1dv',
+           'glTexCoord2s', 'glRecti', 'GL_LINE_STRIP',
+           'GL_ASYNC_TEX_IMAGE_SGIX', 'GL_PACK_ROW_LENGTH', 'glRectf',
+           'GL_VARIABLE_G_NV', 'GL_DRAW_BUFFER0_ARB',
+           'GL_OPERAND1_RGB', 'glColor4d',
+           'GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_ARB', 'glRotatef',
+           'glBindTexture', 'GL_VARIABLE_C_NV',
+           'GL_HISTOGRAM_ALPHA_SIZE', 'GL_RED_MAX_CLAMP_INGR',
+           'GL_INTENSITY_FLOAT16_ATI', 'GL_BITMAP', 'GL_DYNAMIC_READ',
+           'GL_COMPRESSED_LUMINANCE',
+           'GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT',
+           'GL_Z6Y10Z6CB10Z6A10Z6Y10Z6CR10Z6A10_4224_NV',
+           'GL_TEXTURE_MAX_CLAMP_S_SGIX', 'GL_MAX_GREEN_SGIS',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT',
+           'GL_INDEX_ARRAY_LENGTH_NV', 'GL_LUMINANCE6_ALPHA2_EXT',
+           'GL_DEPTH_STENCIL', 'GL_CONSTANT_EXT',
+           'GL_EXT_direct_state_access',
+           'GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_NV',
+           'GL_CONVOLUTION_BORDER_MODE_EXT', 'GL_SAMPLER_OBJECT_AMD',
+           'GL_UNIFORM_BUFFER_BINDING_EXT', 'GL_ARRAY_BUFFER_BINDING',
+           'GL_TEXTURE_INTENSITY_SIZE', 'GL_DEPTH_COMPONENT32F',
+           'GL_RGB16_SIGNED_SGIX',
+           'GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX',
+           'GL_SYNC_CONDITION', 'glGetTexLevelParameterfv',
+           'GL_ACTIVE_UNIFORM_MAX_LENGTH', 'GL_HISTOGRAM_SINK',
+           'GL_TEXTURE_DT_SIZE_NV', 'GL_MAP_INVALIDATE_RANGE_BIT',
+           'GL_TEXTURE23', 'GL_TEXTURE22', 'GL_TEXTURE21',
+           'GL_OES_byte_coordinates', 'GL_TEXTURE27', 'GL_TEXTURE26',
+           'GL_TEXTURE25', 'GL_TEXTURE24', 'GL_DOUBLE_MAT2_EXT',
+           'GL_R8_SNORM', 'GL_TEXTURE29', 'GL_TEXTURE28',
+           'GL_ELEMENT_ARRAY_BUFFER_BINDING', 'GL_VERTEX_STREAM3_ATI',
+           'GL_TRIANGLES_ADJACENCY', 'GL_PIXEL_MODE_BIT',
+           'GL_MAX_ASYNC_READ_PIXELS_SGIX', 'GL_IMAGE_2D_ARRAY',
+           'GL_INT_VEC3_ARB', 'GL_TEXTURE_1D_STACK_BINDING_MESAX',
+           'GL_SYNC_X11_FENCE_EXT', 'GL_READ_BUFFER',
+           'GL_ELEMENT_ARRAY_APPLE', 'GL_PACK_SKIP_PIXELS',
+           'GL_EXT_vertex_array', 'GL_ARB_half_float_vertex',
+           'GL_BLEND_EQUATION_EXT', 'GL_GEOMETRY_OUTPUT_TYPE_ARB',
+           'GL_TESS_CONTROL_SHADER', 'glGetMaterialfv',
+           'GL_INVARIANT_VALUE_EXT', 'GL_FIXED_ONLY_ARB',
+           'GL_SUN_mesh_array', 'GL_GEQUAL',
+           'GL_FRAMEBUFFER_SRGB_EXT', 'GL_MODELVIEW8_ARB',
+           'GL_MAX_CONVOLUTION_HEIGHT_EXT', 'GL_NV_copy_image',
+           'GL_DSDT8_NV', 'GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT',
+           'GL_NEGATE_BIT_ATI', 'GL_INTENSITY32UI_EXT',
+           'GL_TRANSFORM_FEEDBACK', 'glColor4f', 'GL_VARIANT_EXT',
+           'GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION_EXT',
+           'GL_SHADOW_AMBIENT_SGIX', 'GL_EDGE_FLAG_ARRAY_EXT',
+           'GL_PALETTE4_RGBA4_OES', 'glTexGenf',
+           'GL_COMPRESSED_RED_RGTC1', 'GL_UNSIGNED_INT_24_8',
+           'GL_NV_vertex_attrib_integer_64bit', 'glTexGeni',
+           'GL_TEXTURE_BUFFER_ARB', 'GL_Z4Y12Z4CB12Z4CR12_444_NV',
+           'GL_INDEX_WRITEMASK', 'GL_INTERPOLATE',
+           'GL_DOUBLE_MAT4x3_EXT', 'GL_DYNAMIC_DRAW',
+           'GL_MIN_PBUFFER_VIEWPORT_DIMS_APPLE', 'glLightModeli',
+           'GL_DOT_PRODUCT_DIFFUSE_CUBE_MAP_NV', 'glTexCoord3s',
+           'GLcharARB', 'GL_MULTISAMPLE_SGIS',
+           'GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS',
+           'GL_TEXTURE_INTENSITY_SIZE_EXT', 'GL_MAX_LIGHTS',
+           'GL_UNPACK_ROW_LENGTH', 'GL_OBJECT_ATTACHED_OBJECTS_ARB',
+           'GL_CURRENT_PROGRAM', 'GL_RELATIVE_CUBIC_CURVE_TO_NV',
+           'glRasterPos2dv', 'GL_SAMPLE_ALPHA_TO_MASK_SGIS',
+           'GL_PROGRAM_PARAMETER_NV',
+           'GL_DEBUG_CATEGORY_PERFORMANCE_AMD',
+           'GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB',
+           'GL_EXT_texture_compression_latc', 'GL_IMAGE_1D_ARRAY_EXT',
+           'GL_VERTEX_ATTRIB_ARRAY7_NV',
+           'GL_EDGE_FLAG_ARRAY_BUFFER_BINDING_ARB',
+           'GL_EVAL_VERTEX_ATTRIB14_NV', 'GL_NV_gpu_shader5',
+           'GL_PN_TRIANGLES_ATI', 'GLhalf', 'GL_STREAM_DRAW',
+           'GL_ALPHA4_EXT', 'GL_ARB_ES2_compatibility',
+           'GL_SAMPLE_PATTERN_SGIS', 'glVertex2s',
+           'GL_MAX_UNIFORM_BUFFER_BINDINGS', 'glGetMapfv',
+           'GL_BUFFER_UPDATE_BARRIER_BIT',
+           'GL_COMPRESSED_LUMINANCE_LATC1_EXT', 'GL_SIGNALED',
+           'GL_BOOL_VEC4_ARB', 'GL_OFFSET_TEXTURE_2D_NV',
+           'GL_FRAMEBUFFER', 'GL_SPECULAR', 'glEvalMesh1',
+           'GL_ALLOW_DRAW_WIN_HINT_PGI', 'GL_NV_texgen_reflection',
+           'GL_COLOR_TABLE_FORMAT_SGI', 'GL_MAX_PROGRAM_ATTRIBS_ARB',
+           'GL_HALF_FLOAT_ARB', 'GL_INT_SAMPLER_CUBE_MAP_ARRAY_ARB',
+           'GL_SAMPLER_BUFFER_AMD', 'GL_POINT_SIZE_MIN_ARB',
+           'GL_GENERATE_MIPMAP', 'GL_BUFFER_MAPPED',
+           'GL_FOG_COORDINATE_ARRAY_LIST_STRIDE_IBM',
+           'GL_EXT_texture_rectangle',
+           'GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB',
+           'GL_EVAL_VERTEX_ATTRIB10_NV', 'GL_ARB_shader_bit_encoding',
+           'GL_SECONDARY_INTERPOLATOR_ATI', 'GL_STENCIL_BACK_FAIL',
+           'GL_POLYGON_OFFSET_FACTOR', 'glGetTexLevelParameteriv',
+           'GL_COMPRESSED_RGBA_S3TC_DXT3_EXT', 'GL_Y_EXT',
+           'GL_GENERATE_MIPMAP_SGIS', 'GL_SYNC_FLUSH_COMMANDS_BIT',
+           'glNormal3dv', 'GL_QUERY_WAIT_NV', 'glRects',
+           'GL_DRAW_BUFFER14_ATI', 'GL_SIGNED_INTENSITY8_NV',
+           'GL_EXT_x11_sync_object',
+           'GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS', 'glTexCoord1dv',
+           'glReadPixels', 'GL_SHADER_IMAGE_ACCESS_BARRIER_BIT',
+           'glLoadName', 'GL_EDGE_FLAG',
+           'GL_POST_CONVOLUTION_ALPHA_BIAS', 'GL_PACK_LSB_FIRST',
+           'GL_MULTISAMPLE_3DFX', 'GL_BINORMAL_ARRAY_TYPE_EXT',
+           'GL_RGBA16I_EXT', 'glMapGrid1f',
+           'GL_ATOMIC_COUNTER_BUFFER_SIZE', 'GL_DRAW_BUFFER2_ATI',
+           'GL_TEXTURE_BIT', 'GL_CLIP_VOLUME_CLIPPING_HINT_EXT',
+           'GL_TEXTURE_BUFFER_FORMAT_EXT',
+           'GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS',
+           'GL_MAX_DEPTH_TEXTURE_SAMPLES',
+           'GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_NV',
+           'GL_RASTERIZER_DISCARD_EXT', 'GL_SGIX_vertex_preclip_hint',
+           'GL_QUERY_BY_REGION_WAIT', 'GL_TEXTURE_RESIDENT',
+           'GL_TESS_GEN_VERTEX_ORDER', 'GL_EXT_abgr', 'GL_OP_MOV_EXT',
+           'GL_QUERY_RESULT_AVAILABLE_ARB', 'GL_FOG',
+           'GL_CONVOLUTION_1D', 'GL_DEPTH_BUFFER_FLOAT_MODE_NV',
+           'GL_PACK_CMYK_HINT_EXT',
+           'GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV', 'GLfloat',
+           'GL_FOG_COORD', 'GL_FIELD_UPPER_NV', 'GL_POSITION',
+           'GL_DECODE_EXT', 'GL_FONT_HEIGHT_BIT_NV',
+           'GL_VIDEO_BUFFER_INTERNAL_FORMAT_NV',
+           'GL_INVALID_OPERATION', 'GL_UNSIGNED_BYTE_3_3_2',
+           'GL_PATH_FILL_COVER_MODE_NV', 'GL_MAX_COLOR_ATTACHMENTS',
+           'GL_INT_IMAGE_3D_EXT', 'glRasterPos3dv',
+           'GL_OFFSET_TEXTURE_2D_SCALE_NV', 'GL_RG',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT',
+           'GL_PROXY_TEXTURE_CUBE_MAP_ARB',
+           'GL_VERTEX_ATTRIB_ARRAY1_NV', 'glLoadMatrixf',
+           'GL_LINE_STIPPLE_PATTERN', 'GL_VERTEX_ARRAY_RANGE_NV',
+           'GL_COMPATIBLE_SUBROUTINES', 'GL_VARIANT_ARRAY_EXT',
+           'GL_COLOR_TABLE_GREEN_SIZE',
+           'GL_LAST_VERTEX_CONVENTION_EXT', 'GL_STENCIL_INDEX4_EXT',
+           'GL_MODULATE_SUBTRACT_ATIX',
+           'GL_ONE_MINUS_CONSTANT_ALPHA_EXT', 'glColor4ubv',
+           'GL_TRANSPOSE_MODELVIEW_MATRIX_ARB', 'glGetPointerv',
+           'GL_UNSIGNED_SHORT', 'GL_MAX_GEOMETRY_ATOMIC_COUNTERS',
+           'GL_ARB_shadow', 'GL_ARB_texture_mirrored_repeat',
+           'GL_OBJECT_POINT_SGIS', 'glGetTexParameteriv', 'glRectiv',
+           'GL_DEBUG_TYPE_PERFORMANCE_ARB', 'GL_COLOR_INDEX8_EXT',
+           'GL_ENABLE_BIT', 'GL_RENDERBUFFER_BINDING', 'GL_RGB8_EXT',
+           'GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ARB', 'GL_AFFINE_3D_NV',
+           'GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS',
+           'GL_SWIZZLE_STQ_DQ_ATI', 'GL_MAP_COLOR',
+           'GL_OUTPUT_TEXTURE_COORD8_EXT', 'GL_MAX_VERTEX_ATTRIBS',
+           'GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS',
+           'GL_QUARTER_BIT_ATI', 'glEvalCoord2f',
+           'GL_PACK_IMAGE_HEIGHT_EXT', 'GL_LINE_WIDTH_RANGE',
+           'GL_XOR', 'GL_BLUE_BIT_ATI', 'GL_VERTEX_ATTRIB_ARRAY15_NV',
+           'GL_NV_texture_shader2', 'GL_PATH_DASH_OFFSET_RESET_NV',
+           'glVertex4dv', 'GL_VERTEX_ATTRIB_ARRAY3_NV',
+           'GL_EXT_draw_instanced', 'GL_NV_copy_depth_to_color',
+           'GL_LESS', 'GL_VERTEX_ATTRIB_ARRAY13_NV',
+           'GL_MAX_OPTIMIZED_VERTEX_SHADER_INSTRUCTIONS_EXT',
+           'GL_VERSION_3_2', 'GL_FRAMEBUFFER_UNDEFINED',
+           'GL_TEXTURE_STENCIL_SIZE', 'GL_SOURCE0_ALPHA_ARB',
+           'GL_SGIX_async', 'GL_FONT_X_MIN_BOUNDS_BIT_NV',
+           'GL_EXT_depth_bounds_test',
+           'GL_UNSIGNED_INT_IMAGE_BUFFER_EXT', 'GL_SGIX_fog_texture',
+           'GL_EMISSION', 'GL_UNSIGNED_INT16_VEC4_NV',
+           'GL_SAMPLER_3D', 'GL_COMPRESSED_LUMINANCE_ALPHA',
+           'GL_MAX_PROGRAM_INSTRUCTIONS_ARB', 'GL_INT_SAMPLER_1D',
+           'GL_EDGE_FLAG_ARRAY_LIST_STRIDE_IBM',
+           'GL_OP_CROSS_PRODUCT_EXT', 'glDeleteLists', 'glTexGendv',
+           'GL_TEXTURE_GREEN_TYPE', 'GL_REGISTER_COMBINERS_NV',
+           'GL_PHONG_WIN', 'GL_COMBINE4_NV',
+           'GL_NV_transform_feedback2',
+           'GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT_EXT', 'GLsync',
+           'GL_MAX_DRAW_BUFFERS_ARB', 'GL_ADD_SIGNED_EXT',
+           'GL_APPLE_aux_depth_stencil', 'glTexCoord2d',
+           'GL_PN_TRIANGLES_POINT_MODE_CUBIC_ATI',
+           'GL_COLOR_MATERIAL', 'GL_MAX_VERTEX_SHADER_LOCALS_EXT',
+           'GL_COLOR_TABLE_BLUE_SIZE_SGI',
+           'GL_DEBUG_SEVERITY_LOW_ARB', 'GL_STENCIL_INDEX16_EXT',
+           'glTexCoord2f', 'GL_ENV_COPY_EXT', 'GL_REPEAT',
+           'GL_IBM_rasterpos_clip', 'GL_BLUE_MAX_CLAMP_INGR',
+           'GL_T2F_C4F_N3F_V3F', 'GL_TEXTURE_INTENSITY_TYPE',
+           'GL_OBJECT_DELETE_STATUS_ARB', 'GL_UNSIGNED_INT_IMAGE_3D',
+           'GL_RGB32I_EXT', 'GL_WEIGHT_ARRAY_SIZE_ARB',
+           'GL_DEBUG_SOURCE_OTHER_ARB', 'GL_MAP1_VERTEX_ATTRIB8_4_NV',
+           'GL_STENCIL_INDEX16', 'GL_CLIENT_ALL_ATTRIB_BITS',
+           'GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER',
+           'GL_VALIDATE_STATUS', 'GL_RG16', 'GL_EXT_Cg_shader',
+           'GL_OP_ROUND_EXT', 'GL_SCISSOR_TEST',
+           'GL_UNPACK_SKIP_IMAGES', 'GLEW_ERROR_GLX_VERSION_11_ONLY',
+           'GL_RGB_SCALE_ARB',
+           'GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB',
+           'GL_SAMPLER_1D_ARRAY_SHADOW',
+           'GL_UNSIGNED_INT_SAMPLER_1D_EXT', 'glTexCoord2i',
+           'GL_DRAW_BUFFER12_ARB', 'GL_OUTPUT_TEXTURE_COORD21_EXT',
+           'glRasterPos4d', 'GL_RGB16UI_EXT',
+           'GL_COLOR_TABLE_BLUE_SIZE_EXT', 'glNormal3i',
+           'GL_BLEND_EQUATION_ALPHA', 'GL_COLOR_ATTACHMENT5_EXT',
+           'GL_MATRIX0_ARB', 'GL_POST_CONVOLUTION_COLOR_TABLE_SGI',
+           'GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS',
+           'GL_ONE_MINUS_CONSTANT_COLOR_EXT', 'glCopyTexImage1D',
+           'GL_NV_geometry_program4',
+           'GL_PN_TRIANGLES_TESSELATION_LEVEL_ATI',
+           'GL_EXT_framebuffer_multisample_blit_scaled',
+           'GL_RELATIVE_SMOOTH_QUADRATIC_CURVE_TO_NV',
+           'GL_NORMAL_ARRAY_POINTER_EXT',
+           'GL_POST_CONVOLUTION_RED_SCALE',
+           'GL_LUMINANCE_ALPHA_FLOAT32_ATI', 'glColorMask',
+           'GL_ARB_fragment_coord_conventions',
+           'GL_DOT_PRODUCT_TEXTURE_2D_NV', 'GL_IMAGE_CUBE_EXT',
+           'GL_READ_FRAMEBUFFER_BINDING_EXT', 'GL_LOCAL_EXT',
+           'GL_FLOAT_MAT2_ARB', 'GL_POST_CONVOLUTION_GREEN_BIAS_EXT',
+           'GL_UNSIGNED_INT_SAMPLER_3D_EXT', 'GL_MATRIX6_NV',
+           'GL_QUERY_BY_REGION_NO_WAIT',
+           'GL_MAP1_VERTEX_ATTRIB12_4_NV',
+           'GL_SAMPLE_COVERAGE_INVERT', 'GL_LINES', 'GL_TEXTURE18',
+           'GL_TEXTURE19', 'GL_TEXTURE16', 'GL_TEXTURE17',
+           'GL_TEXTURE14', 'GL_NORMAL_ARRAY_ADDRESS_NV',
+           'GL_TEXTURE12', 'GL_TEXTURE13',
+           'GL_OUTPUT_TEXTURE_COORD28_EXT', 'GL_TEXTURE11',
+           'GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB',
+           'GL_GLOBAL_ALPHA_FACTOR_SUN', 'GL_NEGATIVE_W_EXT',
+           'GL_IMAGE_2D_EXT', 'GL_PATH_INITIAL_DASH_CAP_NV',
+           'GL_TEXTURE_MAX_LOD_SGIS', 'GL_SURFACE_MAPPED_NV',
+           'GL_RGB', 'GL_MAP2_VERTEX_ATTRIB7_4_NV',
+           'GL_TEXTURE_BASE_LEVEL_SGIS', 'GL_TEXTURE_DS_SIZE_NV',
+           'GL_POST_CONVOLUTION_ALPHA_BIAS_EXT',
+           'GL_ARB_framebuffer_sRGB', 'GL_OUTPUT_COLOR0_EXT',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_START',
+           'GL_MAX_PROGRAM_TEXEL_OFFSET', 'GL_STACK_OVERFLOW',
+           'GL_COMPARE_R_TO_TEXTURE_ARB',
+           'GL_RECLAIM_MEMORY_HINT_PGI', 'GL_FLOAT_RGBA_NV',
+           'GL_TANGENT_ARRAY_POINTER_EXT', 'GL_SAMPLE_MASK_VALUE_EXT',
+           'GL_CLAMP_TO_BORDER_SGIS', 'GL_RGBA32F', 'GL_RGBA32I',
+           'GL_NV_vertex_buffer_unified_memory',
+           'GL_VERTEX_ATTRIB_ARRAY_TYPE', 'glEnableClientState',
+           'GL_NORMAL_ARRAY_LENGTH_NV', 'GL_COLOR_TABLE_BLUE_SIZE',
+           'GL_STENCIL_WRITEMASK', 'GL_RG8',
+           'GL_TEXTURE_BINDING_BUFFER_EXT', 'GL_PERFMON_RESULT_AMD',
+           'GL_STENCIL_INDEX8_EXT', 'GL_MODULATE_ADD_ATI',
+           'GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB',
+           'GL_TESS_EVALUATION_PROGRAM_NV',
+           'GL_UNSIGNED_INT_IMAGE_2D_ARRAY',
+           'GL_PN_TRIANGLES_POINT_MODE_ATI', 'GL_RGB10_EXT',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE',
+           'GL_MAP_UNSYNCHRONIZED_BIT', 'GL_EXT_vertex_weighting',
+           'GL_MODELVIEW0_ARB', 'GL_PRIMITIVE_RESTART',
+           'GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX',
+           'GL_VERTEX_ATTRIB_ARRAY_INTEGER_NV',
+           'GL_NV_register_combiners', 'GL_STENCIL_BACK_OP_VALUE_AMD',
+           'GL_UNSIGNED_IDENTITY_NV', 'GL_DEBUG_LOGGED_MESSAGES_AMD',
+           'GL_NV_fragment_program',
+           'GL_TEXTURE_BINDING_RENDERBUFFER_NV',
+           'GL_INTERLACE_READ_INGR',
+           'GL_INTENSITY_EXTENDED_RANGE_SGIX', 'GL_EXT_cull_vertex',
+           'GL_OP_MULTIPLY_MATRIX_EXT', 'glColor3usv',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED', 'GL_TEXTURE_3D',
+           'GL_NV_parameter_buffer_object2',
+           'GL_VIDEO_BUFFER_BINDING_NV',
+           'GL_TEXTURE_COORD_ARRAY_PARALLEL_POINTERS_INTEL',
+           'GL_VIDEO_COLOR_CONVERSION_MAX_NV', 'GL_DRAW_BUFFER9_ARB',
+           'GL_INDEX_ARRAY_POINTER', 'GL_DRAW_BUFFER5_ARB',
+           'GL_BLEND_SRC_RGB_EXT', 'GL_MIN_GREEN_SGIS', 'GL_CCW',
+           'GL_COMBINER_SCALE_NV', 'GL_DOUBLE_EXT',
+           'GL_ARB_compressed_texture_pixel_storage', 'GL_DOT4_ATI',
+           'GL_VERTEX_ATTRIB_ARRAY12_NV',
+           'GL_OFFSET_TEXTURE_2D_BIAS_NV', 'GL_MIN_EXT',
+           'GL_TEXTURE_UNSIGNED_REMAP_MODE_NV',
+           'GL_DOT_PRODUCT_TEXTURE_3D_NV',
+           'GL_SECONDARY_COLOR_ARRAY_STRIDE', 'GL_SAMPLE_SHADING',
+           'GL_OUTPUT_TEXTURE_COORD13_EXT',
+           'GL_FIRST_VERTEX_CONVENTION_EXT', 'GL_RG32UI',
+           'glRasterPos2sv', 'GL_NORMALIZE', 'glTexCoord1sv',
+           'GL_MAX_CONVOLUTION_WIDTH_EXT', 'GL_TEXTURE_LO_SIZE_NV',
+           'GL_SAMPLE_BUFFERS_SGIS', 'GL_LINEAR_ATTENUATION',
+           'GL_GREATER', 'GL_BLUE_SCALE', 'GL_MODELVIEW16_ARB',
+           'GL_APPLE_rgb_422', 'GL_TRANSFORM_HINT_APPLE',
+           'GL_RGB_EXTENDED_RANGE_SGIX', 'GL_REG_3_ATI',
+           'GL_DRAW_BUFFER11_ARB', 'GL_TEXTURE_FOG_SGIX',
+           'GL_POST_COLOR_MATRIX_ALPHA_SCALE',
+           'GL_FRAMEBUFFER_COMPLETE',
+           'GL_DEPENDENT_RGB_TEXTURE_CUBE_MAP_NV',
+           'GL_VERTEX_ATTRIB_ARRAY10_NV', 'GL_MODELVIEW19_ARB',
+           'GL_FOG_COORD_ARRAY_POINTER',
+           'GL_POST_COLOR_MATRIX_RED_BIAS_SGI',
+           'GL_FOG_COORDINATE_ARRAY_TYPE_EXT',
+           'GL_ARB_occlusion_query2', 'GL_TEXTURE_MAG_SIZE_NV',
+           'GL_MATRIX11_ARB', 'GL_CURRENT_VERTEX_EXT',
+           'GL_SUBPIXEL_BITS', 'GL_SUN_vertex', 'GL_EMBOSS_MAP_NV',
+           'GL_NORMAL_ARRAY', 'GL_MAX_ELEMENTS_VERTICES_EXT',
+           'GL_TEXTURE_RANGE_LENGTH_APPLE',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE',
+           'GL_MAX_PATCH_VERTICES',
+           'GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_ARB', 'GL_NICEST',
+           'GL_VERTEX_PROGRAM_BINDING_NV', 'GL_PATH_FORMAT_SVG_NV',
+           'GL_UNIFORM_BARRIER_BIT', 'GL_ARB_draw_indirect',
+           'GL_PROXY_TEXTURE_RECTANGLE_NV', 'GL_MAP_READ_BIT',
+           'glRasterPos3i', 'GL_MODELVIEW', 'GL_INT_IMAGE_CUBE',
+           'GL_C4UB_V3F', 'glTexImage2D', 'GL_COLOR4_BIT_PGI',
+           'GL_PACK_SKIP_IMAGES', 'GL_PIXEL_MAP_I_TO_B_SIZE',
+           'GL_DEPTH_ATTACHMENT_EXT',
+           'GL_OBJECT_DISTANCE_TO_POINT_SGIS', 'GL_FLOAT_MAT2x3',
+           'GL_CLAMP_TO_BORDER_ARB',
+           'GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB', 'GL_COMBINE',
+           'GL_FLOAT_MAT2x4', 'GL_Q', 'GL_MAX_ASYNC_HISTOGRAM_SGIX',
+           'GL_SWIZZLE_STR_DR_ATI', 'GL_BIAS_BIT_ATI',
+           'GL_INTERLACE_OML', 'GL_UNSIGNED_INT16_VEC2_NV',
+           'GL_TEXTURE_BINDING_BUFFER_ARB',
+           'GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_SCALE_NV',
+           'GL_PRIMITIVES_GENERATED',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT', 'glColor4usv',
+           'glPolygonStipple', 'GL_BACK_PRIMARY_COLOR_NV',
+           'GL_SYSTEM_FONT_NAME_NV', 'glInterleavedArrays',
+           'GL_RED_SNORM', 'GL_PROGRAM_ERROR_POSITION_ARB',
+           'GL_DOT_PRODUCT_REFLECT_CUBE_MAP_NV', 'GL_INVALID_INDEX',
+           'GL_DOUBLE_MAT3x2_EXT', 'GL_OFFSET_TEXTURE_2D_MATRIX_NV',
+           'GL_CURRENT_RASTER_SECONDARY_COLOR',
+           'GL_ARRAY_OBJECT_OFFSET_ATI',
+           'GL_TRANSFORM_FEEDBACK_VARYINGS_NV', 'GL_LUMINANCE32F_ARB',
+           'GL_SGIS_texture4D', 'GL_ACCUM_RED_BITS', 'glBegin',
+           'GL_STENCIL_OP_VALUE_AMD',
+           'GL_TRANSPOSE_PROJECTION_MATRIX',
+           'GL_TEXTURE_MAX_ANISOTROPY_EXT', 'GL_INTENSITY16UI_EXT',
+           'GL_TRANSLATE_2D_NV', 'GL_TEXTURE_COLOR_SAMPLES_NV',
+           'GL_MOVE_TO_RESETS_NV', 'GL_FRAGMENT_LIGHT7_EXT',
+           'GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH',
+           'GL_ATI_vertex_array_object', 'GL_COMBINER_MAPPING_NV',
+           'GL_UNIFORM_MATRIX_STRIDE', 'GL_TEXTURE_COMPARE_SGIX',
+           'GL_ARB_half_float_pixel', 'GL_ALPHA_BITS',
+           'GL_CLIENT_VERTEX_ARRAY_BIT',
+           'GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD',
+           'GL_TEXTURE_ENV_SHIFT_EXT', 'GL_FLOAT16_VEC4_NV',
+           'GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER',
+           'GL_BGR_EXT', 'GL_VERTEX_ATTRIB_MAP2_COEFF_APPLE',
+           'glGetString', 'GL_INDEX_ARRAY_BUFFER_BINDING',
+           'GL_DEPTH_COMPONENT16_SGIX', 'GL_SLUMINANCE_EXT',
+           'GL_MAX_PROGRAM_TEXEL_OFFSET_NV',
+           'GL_EXT_draw_range_elements', 'GL_SAMPLES',
+           'GL_TEXTURE_LOD_BIAS', 'GL_INDEX_ARRAY_POINTER_EXT',
+           'GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT',
+           'GL_TEXCOORD2_BIT_PGI',
+           'GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER',
+           'GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE',
+           'GL_AMD_multi_draw_indirect',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_START_NV', 'glRectd',
+           'GL_EXT_blend_subtract', 'GL_SINGLE_COLOR_EXT',
+           'GL_SECONDARY_COLOR_ARRAY_LENGTH_NV',
+           'GL_CONTEXT_PROFILE_MASK',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_Y_EXT',
+           'GL_TEXTURE_1D_ARRAY_EXT', 'GL_ARB_conservative_depth',
+           'GL_MAX_GENERAL_COMBINERS_NV', 'GL_RG8UI',
+           'GL_TEXTURE_MAX_LEVEL_SGIS',
+           'GL_MAX_OPTIMIZED_VERTEX_SHADER_INVARIANTS_EXT',
+           'GL_ARB_vertex_buffer_object', 'GL_EMBOSS_CONSTANT_NV',
+           'GL_QUERY_RESULT', 'GL_PROGRAM_NATIVE_TEMPORARIES_ARB',
+           'GL_R16_SNORM', 'GL_TEXTURE_BLUE_SIZE_EXT',
+           'GL_DEBUG_SEVERITY_HIGH_AMD',
+           'GL_MODELVIEW0_STACK_DEPTH_EXT', 'GL_IMAGE_CUBE',
+           'GL_DOUBLE_VEC2_EXT', 'GL_DOT_PRODUCT_TEXTURE_1D_NV',
+           'GL_EXT_shadow_funcs', 'GL_SOURCE2_RGB_ARB',
+           'GL_TEXTURE10_ARB', 'GL_OP_SUB_EXT',
+           'GL_SUBSAMPLE_DISTANCE_AMD', 'GL_AMD_pinned_memory',
+           'GL_COLOR_ATTACHMENT1_EXT', 'GL_R1UI_T2F_V3F_SUN',
+           'GL_IMAGE_2D', 'GL_INT_IMAGE_2D_ARRAY_EXT',
+           'GL_MITER_TRUNCATE_NV', 'GL_NORMAL_ARRAY_EXT',
+           'GL_RGB16_SNORM', 'GL_UNSIGNED_INT_VEC4',
+           'GL_NV_multisample_coverage', 'GL_DRAW_BUFFER15_ARB',
+           'GL_MODELVIEW26_ARB', 'GL_OUTPUT_TEXTURE_COORD30_EXT',
+           'GL_COLOR_TABLE_FORMAT', 'GL_OUTPUT_TEXTURE_COORD1_EXT',
+           'GL_EXT_index_func', 'GL_MAP2_TEXTURE_COORD_3',
+           'GL_ELEMENT_ARRAY_UNIFIED_NV', 'GL_COLOR_ARRAY_ADDRESS_NV',
+           'glGetPixelMapfv', 'GL_EDGE_FLAG_ARRAY_POINTER',
+           'GL_MAP1_VERTEX_ATTRIB5_4_NV', 'GL_ASYNC_DRAW_PIXELS_SGIX',
+           'GL_TEXTURE_MAX_CLAMP_T_SGIX', 'GL_MINMAX_EXT',
+           'GL_TEXTURE_BINDING_CUBE_MAP', 'GL_POINT_SIZE_MIN_EXT',
+           'GL_OUTPUT_TEXTURE_COORD15_EXT', 'GL_ALPHA4',
+           'GL_INT64_VEC3_NV', 'GL_LUMINANCE16_ALPHA16_EXT',
+           'GL_UNPACK_CLIENT_STORAGE_APPLE', 'GL_EXT_color_subtable',
+           'GL_DRAW_BUFFER2_ARB', 'GL_MAX_GEOMETRY_OUTPUT_COMPONENTS',
+           'GL_FOG_DISTANCE_MODE_NV', 'GL_TEXTURE_STENCIL_SIZE_EXT',
+           'GL_CONVOLUTION_2D', 'GL_EVAL_VERTEX_ATTRIB15_NV',
+           'GL_ZOOM_Y', 'GL_ZOOM_X', 'GL_ATTENUATION_EXT',
+           'GL_RENDERBUFFER_SAMPLES', 'GL_DRAW_INDIRECT_ADDRESS_NV',
+           'GL_SECONDARY_COLOR_ARRAY_ADDRESS_NV',
+           'GL_VIDEO_CAPTURE_SURFACE_ORIGIN_NV',
+           'GL_DEBUG_CATEGORY_APPLICATION_AMD',
+           'GL_MAX_PROGRAM_RESULT_COMPONENTS_NV',
+           'GL_MODELVIEW25_ARB', 'glFogiv',
+           'GL_PACK_COMPRESSED_BLOCK_DEPTH',
+           'GL_OUTPUT_TEXTURE_COORD23_EXT', 'GL_DYNAMIC_ATI',
+           'GL_POST_CONVOLUTION_BLUE_SCALE',
+           'GL_POLYGON_OFFSET_BIAS_EXT', 'GL_DOT3_RGB_EXT',
+           'GL_TEXTURE_DEPTH_SIZE', 'GL_FLOAT_MAT3x2',
+           'GL_RESAMPLE_DECIMATE_OML', 'GL_FLOAT_MAT3x4',
+           'GL_TEXTURE_OUTPUT_RGB_ATIX', 'GL_DRAW_BUFFER11_ATI',
+           'GL_HISTOGRAM_FORMAT', 'GL_TEXTURE_UPDATE_BARRIER_BIT_EXT',
+           'GL_OP_FLOOR_EXT', 'GL_ALPHA16F_ARB', 'GL_COMPRESSED_RGBA',
+           'GL_HALF_BIAS_NEGATE_NV', 'GL_REPLACEMENT_CODE_SUN',
+           'glIndexPointer', 'GL_CLIENT_ATTRIB_STACK_DEPTH',
+           'GL_SIGNED_LUMINANCE_ALPHA_NV', 'GL_INTENSITY32F_ARB',
+           'GL_SUCCESS_NV', 'GL_COLOR_ARRAY_COUNT_EXT',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_SIZE_EXT',
+           'GL_UNSIGNED_SHORT_5_5_5_1', 'GL_EXT_paletted_texture',
+           'GL_TEXTURE_COMPONENTS', 'GL_QUERY_NO_WAIT',
+           'GL_ARB_texture_buffer_object', 'GL_VERTEX_STREAM1_ATI',
+           'GL_GEOMETRY_SHADER_EXT', 'GL_LUMINANCE_INTEGER_EXT',
+           'GL_UNPACK_SWAP_BYTES', 'glVertex3i',
+           'GL_COLOR_ARRAY_SIZE_EXT', 'GL_HALF_FLOAT_NV',
+           'glDrawBuffer', 'GL_INVERSE_NV',
+           'GL_EDGE_FLAG_ARRAY_COUNT_EXT', 'GL_TRANSLATE_X_NV',
+           'GL_UNSIGNED_SHORT_5_5_5_1_EXT', 'glCopyTexImage2D',
+           'GL_QUERY_BUFFER_BINDING_AMD', 'glGetIntegerv',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_MODE', 'GL_BITMAP_TOKEN',
+           'GL_REPLACE_VALUE_AMD', 'GL_HALF_BIAS_NORMAL_NV',
+           'GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT',
+           'GL_BEVEL_NV', 'GL_SUBTRACT', 'GL_PROXY_TEXTURE_CUBE_MAP',
+           'GL_LINE_TOKEN', 'GL_PRIMARY_COLOR_EXT',
+           'GL_SGIS_detail_texture', 'GL_CURRENT_FOG_COORDINATE',
+           'GL_ADJACENT_PAIRS_NV', 'GL_IMAGE_BINDING_LEVEL',
+           'GL_CON_5_ATI', 'GL_REND_screen_coordinates',
+           'GL_COLOR_TABLE_FORMAT_EXT',
+           'GL_NUM_LOOPBACK_COMPONENTS_ATI',
+           'GL_TEXTURE_FETCH_BARRIER_BIT_EXT',
+           'GL_HP_image_transform', 'GL_BOUNDING_BOX_NV',
+           'GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS',
+           'GL_RGB_INTEGER', 'glPassThrough', 'GL_MULT',
+           'GL_GLYPH_HORIZONTAL_BEARING_ADVANCE_BIT_NV',
+           'GL_DOT3_RGB_ARB', 'GL_SMALL_CW_ARC_TO_NV', 'GLshort',
+           'GL_SYNC_CL_EVENT_COMPLETE_ARB',
+           'GL_PIXEL_PACK_BUFFER_ARB',
+           'GL_INVALID_FRAMEBUFFER_OPERATION_EXT',
+           'GL_VIBRANCE_SCALE_NV', 'glColor3ubv',
+           'GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT',
+           'GL_NEGATIVE_Z_EXT', 'GL_MODELVIEW24_ARB',
+           'GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_EXT',
+           'GL_SRC2_RGB', 'glColor3iv', 'GL_CLOSE_PATH_NV',
+           'GL_PROGRAM_MATRIX_STACK_DEPTH_EXT',
+           'GL_R1UI_C4UB_V3F_SUN',
+           'GL_ARB_vertex_type_2_10_10_10_rev', 'GL_FRAGMENT_SHADER',
+           'GL_UNSIGNED_INT_2_10_10_10_REV', 'GL_MAX_IMAGE_UNITS_EXT',
+           'GL_SGIX_ycrcb', 'GL_ALPHA8_EXT',
+           'GL_OUTPUT_POINT_SIZE_ATIX', 'GL_STREAM_DRAW_ARB',
+           'GL_MAX_CLIENT_ATTRIB_STACK_DEPTH', 'GL_ROUND_NV',
+           'GL_VIEWPORT', 'GL_MAX_FRAGMENT_INTERPOLATION_OFFSET',
+           'GL_NV_texture_multisample', 'GL_DEPTH_TEXTURE_MODE_ARB',
+           'GL_UNPACK_COMPRESSED_BLOCK_HEIGHT',
+           'GL_MAX_VERTEX_UNITS_ARB', 'GL_RGB8I',
+           'GL_MAX_VERTEX_SHADER_LOCAL_CONSTANTS_EXT',
+           'GL_DRAW_BUFFER7_ARB', 'GL_COLOR_TABLE_LUMINANCE_SIZE',
+           'GL_VERTEX_ARRAY_COUNT_EXT', 'GL_BLEND_SRC',
+           'GL_DS_SCALE_NV', 'GL_UNSIGNED_INT_IMAGE_2D_EXT',
+           'GL_MAX_TEXTURE_BUFFER_SIZE', 'glEvalCoord1d',
+           'GL_TEXTURE_BINDING_RECTANGLE_NV',
+           'GL_MAX_PROGRAM_LOCAL_PARAMETERS_ARB',
+           'GL_FOG_SPECULAR_TEXTURE_WIN', 'glGetTexImage',
+           'GL_PROGRAM_ERROR_POSITION_NV', 'GL_INT_SAMPLER_2D_RECT',
+           'GL_PALETTE8_RGBA4_OES', 'GL_TEXTURE_MATERIAL_FACE_EXT',
+           'GL_NV_conditional_render', 'GL_ONE_EXT',
+           'GL_DEPTH24_STENCIL8',
+           'GL_POST_COLOR_MATRIX_ALPHA_BIAS_SGI',
+           'GL_FONT_X_MAX_BOUNDS_BIT_NV', 'GL_MODELVIEW7_ARB',
+           'GL_INDEX_ARRAY_STRIDE_EXT',
+           'GL_UNSIGNED_INT_SAMPLER_1D_ARRAY_EXT',
+           'GL_MAX_TEXTURE_LOD_BIAS_EXT', 'GL_TEXTURE_COMPRESSED_ARB',
+           'GL_UNSIGNED_INT8_VEC3_NV',
+           'GL_VERTEX_ATTRIB_ARRAY_LENGTH_NV',
+           'GL_GEOMETRY_SHADER_INVOCATIONS',
+           'GL_UNSIGNED_INT_IMAGE_1D_EXT', 'GL_TEXTURE16_ARB',
+           'GL_COLOR_INDEX', 'GL_MAP2_NORMAL', 'glScalef',
+           'GL_COLOR_MATRIX_SGI', 'GL_MAX_EVAL_ORDER',
+           'GL_OFFSET_TEXTURE_BIAS_NV', 'glTexCoord4f',
+           'GL_RESTART_SUN', 'glTexCoord4d',
+           'GL_SAMPLER_2D_RECT_SHADOW_ARB', 'glTexCoord4i',
+           'GL_TEXTURE_COMPARE_MODE', 'GL_WRITE_PIXEL_DATA_RANGE_NV',
+           'GL_OBJECT_ACTIVE_ATTRIBUTES_ARB', 'GL_WRITE_DISCARD_NV',
+           'GL_TEXTURE_COORD_ARRAY_LIST_STRIDE_IBM',
+           'GL_UNPACK_ALIGNMENT', 'GL_FUNC_REVERSE_SUBTRACT_EXT',
+           'GL_COMPRESSED_LUMINANCE_ARB', 'GL_RED_BIT_ATI',
+           'GL_MAX_TEXTURE_IMAGE_UNITS_NV', 'GL_SHADE_MODEL',
+           'GL_GENERATE_MIPMAP_HINT_SGIS', 'GL_ALL_BARRIER_BITS_EXT',
+           'GL_COMPRESSED_SLUMINANCE', 'GL_RGBA_DXT5_S3TC',
+           'GL_AMD_performance_monitor', 'glTexCoord1fv',
+           'GL_EXT_stencil_clear_tag', 'GL_ALL_STATIC_DATA_IBM',
+           'GL_RGBA16F_ARB', 'GL_HISTOGRAM_SINK_EXT',
+           'GL_VERTEX_ATTRIB_ARRAY14_NV',
+           'GL_MAT_AMBIENT_AND_DIFFUSE_BIT_PGI', 'GL_INDEX_SHIFT',
+           'GL_ARB_texture_compression_rgtc',
+           'GL_UNSIGNED_INT_SAMPLER_BUFFER',
+           'GL_MAP1_VERTEX_ATTRIB14_4_NV',
+           'GL_TRIANGLES_ADJACENCY_EXT', 'glTexCoord3fv', 'glIndexfv',
+           'GL_LIST_BIT', 'GL_IMAGE_BINDING_ACCESS',
+           'GL_BGRA_INTEGER_EXT', 'GL_ONE_MINUS_SRC1_COLOR',
+           'GL_TESS_GEN_SPACING', 'GL_LINEAR',
+           'GL_MAX_GEOMETRY_PROGRAM_INVOCATIONS_NV', 'GL_MINMAX_SINK',
+           'GL_INT_IMAGE_2D_RECT_EXT', 'GL_AUX1',
+           'GL_ARB_draw_elements_base_vertex',
+           'GL_STRICT_DEPTHFUNC_HINT_PGI', 'GL_STENCIL_INDEX',
+           'GL_PROGRAM_TEMPORARIES_ARB', 'GL_EMBOSS_LIGHT_NV',
+           'GL_PROGRAM_TEX_INDIRECTIONS_ARB',
+           'GL_ATOMIC_COUNTER_BUFFER_START', 'GL_SEPARATE_ATTRIBS_NV',
+           'GL_VIDEO_CAPTURE_FRAME_WIDTH_NV', 'glDepthRange',
+           'glRasterPos2fv', 'GL_HIGH_FLOAT', 'GL_ATI_element_array',
+           'GL_V2F', 'GL_PATH_GEN_COMPONENTS_NV',
+           'GL_PROXY_HISTOGRAM_EXT',
+           'GL_MAX_GEOMETRY_UNIFORM_COMPONENTS',
+           'GL_VERTEX_ATTRIB_ARRAY_ENABLED',
+           'GL_GREEN_MAX_CLAMP_INGR', 'glRasterPos3fv',
+           'GL_FRAMEBUFFER_SRGB_CAPABLE_EXT',
+           'GL_LUMINANCE_ALPHA32F_ARB',
+           'GL_TESS_EVALUATION_SHADER_BIT', 'GL_FRONT_FACE',
+           'GL_POST_COLOR_MATRIX_COLOR_TABLE_SGI', 'GL_REPLACE',
+           'GL_QUERY_RESULT_ARB', 'GL_VERTEX_ATTRIB_ARRAY_STRIDE',
+           'GL_QUERY_BUFFER_AMD', 'GL_UNSIGNED_INT16_VEC3_NV',
+           'glClearIndex', 'GL_OPERAND0_RGB_ARB',
+           'GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE',
+           'GL_OUTPUT_TEXTURE_COORD6_EXT', 'glFlush',
+           'GL_EDGE_FLAG_ARRAY_LIST_IBM', 'GL_REDUCE_EXT',
+           'GL_MINMAX_SINK_EXT', 'GL_OPERAND2_ALPHA_ARB',
+           'GL_INTENSITY8_EXT', 'GL_NV_fence',
+           'GL_MAT_EMISSION_BIT_PGI', 'GL_TANGENT_ARRAY_TYPE_EXT',
+           'GL_TEXTURE_FILTER_CONTROL', 'GL_ACCUM_CLEAR_VALUE',
+           'GL_RGB_SCALE_EXT', 'GL_AMD_texture_texture4',
+           'GL_SECONDARY_COLOR_ATIX', 'GL_SAMPLER_1D_SHADOW_ARB',
+           'GL_PROXY_COLOR_TABLE_SGI', 'GL_TESS_EVALUATION_SHADER',
+           'glLighti', 'GL_TEXTURE_STACK_DEPTH', 'GL_RGB5_EXT',
+           'GL_QUERY_COUNTER_BITS', 'GL_AVERAGE_EXT',
+           'GL_TRANSFORM_FEEDBACK_RECORD_NV',
+           'GL_TEXTURE_GREEN_SIZE_EXT', 'glMap1f',
+           'GL_REPLACEMENT_CODE_ARRAY_POINTER_SUN',
+           'GL_POST_CONVOLUTION_RED_SCALE_EXT', 'GL_BLEND',
+           'GL_FEEDBACK_BUFFER_TYPE', 'GL_QUERY_RESULT_AVAILABLE_NV',
+           'GL_MAP1_TEXTURE_COORD_3', 'GL_MAP1_TEXTURE_COORD_2',
+           'GL_MAP1_TEXTURE_COORD_1', 'GL_MAX_LUMINANCE_SGIS',
+           'GL_INTENSITY_SNORM', 'GL_POLYGON_OFFSET_EXT',
+           'GL_NV_texture_compression_vtc', 'GL_MAP1_TEXTURE_COORD_4',
+           'glPixelMapfv', 'GL_NV_texture_shader3',
+           'GL_COMPRESSED_SRGB_ALPHA', 'GL_MAT_DIFFUSE_BIT_PGI',
+           'GL_ONE_MINUS_SRC_COLOR', 'GL_OUTPUT_TEXTURE_COORD29_EXT',
+           'GL_APPLE_vertex_program_evaluators',
+           'GL_ARB_multitexture',
+           'GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY_EXT', 'GL_INTENSITY12',
+           'GL_FUNC_SUBTRACT_EXT', 'GL_FRAGMENT_DEPTH_EXT',
+           'GL_C4UB_V2F', 'GL_OCCLUSION_TEST_HP',
+           'GL_MAP2_TANGENT_EXT', 'GL_TEXTURE_HEIGHT',
+           'GL_DRAW_BUFFER1_ATI', 'GL_SAMPLE_MASK_EXT', 'GL_PATCHES',
+           'GL_LIST_MODE', 'GL_MAX_ASYNC_DRAW_PIXELS_SGIX',
+           'GL_TIMESTAMP', 'GL_COORD_REPLACE_NV', 'GL_CONSTANT',
+           'GL_MAX_PROGRAM_CALL_DEPTH_NV', 'GL_TEXTURE4',
+           'GL_ARB_texture_cube_map', 'GL_VERTEX_PROGRAM_POINT_SIZE',
+           'GL_UNSIGNED_SHORT_8_8_REV_APPLE',
+           'GL_UNSIGNED_INT_IMAGE_3D_EXT', 'GL_OPERAND2_RGB',
+           'GL_MAP2_VERTEX_ATTRIB2_4_NV', 'GL_COLOR_ARRAY_SIZE',
+           'glBlendFunc', 'glLineStipple', 'GL_EXT_texture_env_dot3',
+           'GL_SRGB_ALPHA', 'glVertex2f',
+           'GL_ATI_texture_env_combine3', 'GL_NV_depth_clamp',
+           'GL_TEXTURE_SWIZZLE_B_EXT', 'GL_ARB_map_buffer_alignment',
+           'GL_SLICE_ACCUM_SUN', 'GL_PACK_SKIP_ROWS',
+           'GL_MAX_DRAW_BUFFERS_ATI', 'GL_MAX_TEXTURE_UNITS',
+           'GL_SLUMINANCE8', 'GL_RGBA_FLOAT16_ATI', 'GL_LOGIC_OP',
+           'GL_DRAW_BUFFER6_ARB', 'GL_MAP1_COLOR_4',
+           'GL_GEOMETRY_SHADER', 'GL_RGBA16F', 'GL_COMBINER3_NV',
+           'GL_LUMINANCE8_EXT', 'GL_SYNC_CL_EVENT_ARB',
+           'GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS',
+           'GL_TEXTURE_RECTANGLE_ARB', 'GL_VERTEX_ARRAY_LIST_IBM',
+           'GL_BLEND_COLOR', 'GL_NORMALIZED_RANGE_EXT',
+           'GL_TEXTURE_COORD_ARRAY_STRIDE_EXT', 'GL_LINE_STIPPLE',
+           'GL_VERTEX_PROGRAM_TWO_SIDE_NV',
+           'GL_ONE_MINUS_CONSTANT_ALPHA', 'GL_NEAREST_MIPMAP_LINEAR',
+           'glRasterPos4f', 'GL_SRC2_ALPHA', 'GL_TRANSLATE_3D_NV',
+           'GL_MULTISAMPLE_BIT_EXT', 'GL_MODELVIEW14_ARB',
+           'GL_FRACTIONAL_EVEN', 'GL_ALPHA_MAX_CLAMP_INGR',
+           'GL_NV_texture_expand_normal', 'GL_DRAW_BUFFER14',
+           'glTexCoordPointer', 'GL_ALWAYS_SOFT_HINT_PGI',
+           'GL_BLEND_SRC_ALPHA_EXT', 'GL_TEXTURE3_ARB',
+           'GL_SECONDARY_COLOR_ARRAY_SIZE_EXT',
+           'GL_SAMPLE_ALPHA_TO_COVERAGE', 'GL_SIGNED_HILO_NV',
+           'GL_TESS_CONTROL_PROGRAM_NV',
+           'GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE_SGI',
+           'GL_NV_bindless_texture', 'GL_HISTOGRAM_WIDTH_EXT',
+           'GL_SOURCE0_RGB_ARB',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_START_EXT',
+           'GL_MODELVIEW10_ARB', 'GL_MAP1_VERTEX_ATTRIB7_4_NV',
+           'GL_NORMAL_ARRAY_LIST_STRIDE_IBM',
+           'GL_EXT_geometry_shader4', 'GL_ARB_compatibility',
+           'GL_FOG_COORDINATE_ARRAY_TYPE', 'GL_CULL_FRAGMENT_NV',
+           'GL_ALPHA_MIN_SGIX', 'GL_SAMPLES_PASSED',
+           'GL_PROVOKING_VERTEX', 'GL_TEXTURE_BINDING_RECTANGLE_ARB',
+           'GL_STENCIL_TEST_TWO_SIDE_EXT',
+           'GL_TEXTURE_FIXED_SAMPLE_LOCATIONS',
+           'GL_COMPRESSED_SLUMINANCE_ALPHA', 'GL_DEPTH_COMPONENT24',
+           'GLvdpauSurfaceNV',
+           'GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB',
+           'GL_COLOR_TABLE_INTENSITY_SIZE_SGI', 'GL_SEPARATE_ATTRIBS',
+           'GL_CURRENT_FOG_COORD', 'GL_DEPTH_BOUNDS_TEST_EXT',
+           'GL_LUMINANCE16_SIGNED_SGIX',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB', 'GL_IMAGE_3D',
+           'glGetMapdv', 'GL_MAP2_VERTEX_ATTRIB0_4_NV',
+           'GL_TEXTURE_COLOR_TABLE_SGI', 'GL_EVAL_VERTEX_ATTRIB5_NV',
+           'GL_SGIX_reference_plane', 'GL_OES_single_precision',
+           'GL_CONVOLUTION_FORMAT', 'glPrioritizeTextures',
+           'GL_MAP1_VERTEX_ATTRIB1_4_NV',
+           'GL_PROXY_TEXTURE_2D_STACK_MESAX',
+           'GL_PRIMITIVE_RESTART_NV',
+           'GL_DRAW_INDIRECT_BUFFER_BINDING',
+           'GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS',
+           'GL_DOUBLE_MAT2x3', 'GL_DEPTH_COMPONENT16_ARB',
+           'GL_CULL_VERTEX_EXT', 'GL_TEXTURE_COORD_ARRAY_SIZE_EXT',
+           'GL_RGBA16I', 'GL_UNSIGNED_INT_IMAGE_CUBE',
+           'GL_COMBINER_COMPONENT_USAGE_NV',
+           'GL_POST_CONVOLUTION_RED_BIAS', 'GL_SAMPLER_1D',
+           'GL_MAX_VERTEX_STREAMS_ATI',
+           'GL_MAX_VERTEX_VARYING_COMPONENTS_ARB',
+           'GL_ARB_vertex_shader', 'GL_RGBA_FLOAT_MODE_ARB',
+           'GL_OFFSET_TEXTURE_SCALE_NV', 'GL_INCR_WRAP_EXT',
+           'GL_COLOR_TABLE_LUMINANCE_SIZE_SGI', 'GL_RED',
+           'GL_MAX_RED_SGIS', 'GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY',
+           'GL_RGB16_EXT', 'GL_DEPTH_STENCIL_EXT',
+           'GL_POLYGON_OFFSET_LINE', 'GL_FUNC_REVERSE_SUBTRACT',
+           'GL_PIXEL_TRANSFORM_2D_STACK_DEPTH_EXT', 'GL_PRESERVE_ATI',
+           'GL_CURRENT_RASTER_INDEX', 'glVertex4fv',
+           'GL_DSDT_MAG_VIB_NV', 'GL_NEGATIVE_Y_EXT',
+           'GL_COLOR_TABLE_ALPHA_SIZE_EXT',
+           'GL_MAX_PROGRAM_GENERIC_ATTRIBS_NV',
+           'GL_COMPRESSED_RGBA_S3TC_DXT1_EXT', 'GL_GREEN',
+           'GL_MAGNITUDE_SCALE_NV',
+           'GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM',
+           'GL_COLOR_TABLE_WIDTH_SGI',
+           'GL_STENCIL_BACK_PASS_DEPTH_PASS', 'GL_OPERAND1_ALPHA_EXT',
+           'GL_MAX_DEBUG_MESSAGE_LENGTH_AMD',
+           'GL_MAP2_TEXTURE_COORD_2', 'GL_SRGB_EXT',
+           'GL_MAP2_TEXTURE_COORD_4', 'GL_VERTEX_DATA_HINT_PGI',
+           'GL_EXT_scene_marker', 'GL_LUMINANCE_FLOAT32_APPLE',
+           'GL_MAX_MODELVIEW_STACK_DEPTH',
+           'GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS',
+           'GL_TEXTURE_LUMINANCE_SIZE_EXT',
+           'GL_TRANSPOSE_AFFINE_2D_NV',
+           'GL_RGBA16_EXTENDED_RANGE_SGIX', 'GL_MAX_SAMPLES',
+           'GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE',
+           'GL_VERTEX_ATTRIB_ARRAY_ADDRESS_NV',
+           'GL_UNSIGNED_INT_ATOMIC_COUNTER',
+           'GL_TEXTURE_2D_MULTISAMPLE', 'GL_VERTEX_SOURCE_ATI',
+           'GL_SGIS_generate_mipmap', 'GL_RG32I', 'GL_MATRIX29_ARB',
+           'GL_COUNT_UP_NV', 'GL_UNSIGNED_INT_8_8_8_8_REV',
+           'GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT',
+           'GL_OBJECT_SHADER_SOURCE_LENGTH_ARB',
+           'GL_VERTEX_STREAM4_ATI',
+           'GL_RENDERBUFFER_COLOR_SAMPLES_NV',
+           'GL_IMAGE_BINDING_FORMAT', 'GL_UNPACK_IMAGE_HEIGHT',
+           'GL_MESA_pack_invert', 'GL_MAX_COMBINED_UNIFORM_BLOCKS',
+           'GL_TEXTURE_ENV_MODE', 'GL_ARB_base_instance',
+           'GL_INT16_VEC4_NV', 'glTexCoord2fv',
+           'GL_TEXTURE_BUFFER_DATA_STORE_BINDING_ARB',
+           'GL_TEXTURE_LEQUAL_R_SGIX', 'GL_COLOR_CLEAR_VALUE',
+           'GL_DST_COLOR', 'GL_DOT3_ATI', 'GL_MAX_SAMPLES_EXT',
+           'GL_REG_4_ATI', 'GL_RGBA8UI', 'GL_STENCIL_BITS',
+           'GL_UNSIGNED_INT', 'GL_SAMPLE_MASK_VALUE',
+           'GL_DEPTH_BOUNDS_EXT',
+           'GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS',
+           'GL_PATH_JOIN_STYLE_NV', 'GL_MESA_resize_buffers',
+           'GL_TRANSPOSE_CURRENT_MATRIX_ARB', 'GL_V3F',
+           'GL_DOUBLE_MAT3_EXT', 'GL_S3_s3tc', 'GL_DOT3_RGB',
+           'GL_TEXTURE14_ARB', 'GL_INT_SAMPLER_2D_RECT_EXT',
+           'glTexCoord4sv', 'GL_LUMINANCE16',
+           'GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI',
+           'GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES',
+           'GL_POST_CONVOLUTION_ALPHA_SCALE', 'GL_LUMINANCE12',
+           'GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT', 'GL_RG16_SNORM',
+           'GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER',
+           'GL_POINT_DISTANCE_ATTENUATION_ARB', 'GL_CLAMP_READ_COLOR',
+           'GL_COLOR_ARRAY_TYPE',
+           'GL_SHADER_IMAGE_ACCESS_BARRIER_BIT_EXT', 'GL_RED_INTEGER',
+           'GL_MODULATE', 'GL_RG_INTEGER',
+           'GL_MAX_VERTEX_ATOMIC_COUNTERS',
+           'GL_IMAGE_FORMAT_COMPATIBILITY_TYPE',
+           'GL_SOURCE0_ALPHA_EXT',
+           'GL_FOG_COORD_ARRAY_BUFFER_BINDING', 'glPixelZoom',
+           'GL_PATH_FOG_GEN_MODE_NV', 'glTexCoord3iv', 'glVertex2dv',
+           'GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS',
+           'GL_RENDERBUFFER_HEIGHT', 'GL_RGB4_S3TC',
+           'GL_INTERLEAVED_ATTRIBS', 'GL_TEXTURE_ALPHA_TYPE',
+           'glClearDepth', 'GL_EXT_texture_mirror_clamp',
+           'GL_SGIX_pixel_texture', 'GL_NV_occlusion_query',
+           'GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB',
+           'GL_MAP2_TEXTURE_COORD_1', 'GL_INDEX_ARRAY',
+           'GL_RGBA4_EXT', 'GL_LUMINANCE16_SNORM',
+           'GL_COLOR_ATTACHMENT7', 'GL_HORIZONTAL_LINE_TO_NV',
+           'GLsizeiptr',
+           'GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS',
+           'GL_ATOMIC_COUNTER_BARRIER_BIT', 'GL_SOURCE3_RGB_NV',
+           'GL_TEXTURE_MATERIAL_PARAMETER_EXT',
+           'GL_MAX_DEBUG_LOGGED_MESSAGES_AMD',
+           'GL_ARB_sample_shading', 'GL_C4F_N3F_V3F',
+           'GL_INDEX_ARRAY_LIST_IBM', 'GL_SGIX_async_pixel',
+           'GL_T4F_V4F', 'GL_STREAM_COPY', 'GL_INT64_VEC2_NV',
+           'GL_FLOAT_RG16_NV', 'GL_TEXTURE_FETCH_BARRIER_BIT',
+           'GL_SOURCE0_RGB', 'GL_STREAM_COPY_ARB', 'GL_FUNC_ADD',
+           'GL_SAMPLER_1D_ARB', 'GL_SIGNED_ALPHA8_NV', 'GL_EYE_PLANE',
+           'GL_EXT_index_array_formats', 'GL_MAX_TEXTURE_COORDS_NV',
+           'GL_MATRIX18_ARB', 'GL_SAMPLER_BUFFER_EXT',
+           'GL_SIGNED_RGB8_UNSIGNED_ALPHA8_NV',
+           'GL_ARB_texture_storage', 'GL_DRAW_FRAMEBUFFER_EXT',
+           'GL_POINT_SMOOTH_HINT', 'GL_EXT_histogram', 'glClearColor',
+           'GL_RGB8UI_EXT', 'GL_COMPRESSED_RGBA_BPTC_UNORM_ARB',
+           'GL_REG_0_ATI', 'GL_TEXTURE_COMPRESSED_IMAGE_SIZE_ARB',
+           'GL_ORDER', 'GL_SAMPLER_CUBE_SHADOW_EXT',
+           'GL_VIBRANCE_BIAS_NV',
+           'GL_VERTEX_ATTRIB_MAP1_DOMAIN_APPLE', 'GL_INT8_VEC4_NV',
+           'GL_IMAGE_FORMAT_COMPATIBILITY_BY_CLASS',
+           'GL_ATTRIB_ARRAY_TYPE_NV', 'GL_REFLECTION_MAP_ARB',
+           'glPushClientAttrib', 'GL_STORAGE_SHARED_APPLE',
+           'glCopyTexSubImage1D', 'GL_SOURCE1_RGB_ARB',
+           'GL_NUM_FRAGMENT_REGISTERS_ATI', 'GL_MATRIX4_NV',
+           'GL_VERTEX23_BIT_PGI', 'GL_INT_SAMPLER_2D_ARRAY_EXT',
+           'GL_MAP1_VERTEX_ATTRIB15_4_NV',
+           'GL_OBJECT_COMPILE_STATUS_ARB',
+           'GL_LAYER_PROVOKING_VERTEX', 'GL_TEXTURE11_ARB',
+           'GL_FASTEST', 'GL_EXT_vertex_shader', 'GL_CON_1_ATI',
+           'GL_TEXTURE_RED_TYPE', 'GL_ATI_shader_texture_lod',
+           'glInitNames', 'GL_BUFFER_ACCESS_ARB', 'glColor3dv',
+           'GL_EXT_texture_env', 'GL_OFFSET_TEXTURE_RECTANGLE_NV',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB', 'GL_ALPHA16_SNORM',
+           'glTexEnviv', 'GL_INDEX_BIT_PGI', 'GL_DRAW_BUFFER8_ATI',
+           'GL_ARB_transpose_matrix', 'GL_SAMPLE_MASK_VALUE_SGIS',
+           'GL_CLIENT_PIXEL_STORE_BIT',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_Y',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_X',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_Z', 'GL_SGIS_pixel_texture',
+           'GL_POLYGON_BIT', 'GL_LERP_ATI', 'GL_EXT_fog_coord',
+           'GL_VERTEX_ARRAY_OBJECT_AMD',
+           'GL_MAX_SUBROUTINE_UNIFORM_LOCATIONS',
+           'GL_VERTEX_ARRAY_BINDING', 'GL_PRIMITIVES_GENERATED_NV',
+           'GL_QUAD_STRIP', 'GL_ACCUM_BLUE_BITS',
+           'GL_SAMPLER_CUBE_ARB',
+           'GL_POST_CONVOLUTION_ALPHA_SCALE_EXT', 'GL_RIGHT',
+           'GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB',
+           'GL_INT_SAMPLER_RENDERBUFFER_NV', 'glPolygonMode',
+           'GL_FLOAT_R16_NV', 'GL_COMPRESSED_SIGNED_RED_RGTC1',
+           'GL_TEXTURE_CUBE_MAP_ARRAY', 'glTexSubImage2D',
+           'GL_MAX_SHADER_BUFFER_ADDRESS_NV', 'GL_TIMEOUT_EXPIRED',
+           'GL_TEXTURE5_ARB', 'GL_SRC0_ALPHA', 'glPixelTransferf',
+           'GL_VERTEX_SHADER_LOCALS_EXT', 'GL_ADD',
+           'GL_PRESENT_TIME_NV', 'GL_LUMINANCE_FLOAT16_ATI',
+           'GL_SUN_global_alpha', 'GL_MATRIX_INDEX_ARRAY_TYPE_ARB',
+           'GL_STANDARD_FONT_NAME_NV',
+           'GL_RELATIVE_SMALL_CCW_ARC_TO_NV', 'GL_UNIFORM_SIZE',
+           'GL_FONT_Y_MAX_BOUNDS_BIT_NV', 'GL_READ_ONLY_ARB',
+           'GL_QUERY_RESULT_NO_WAIT_AMD', 'GL_INTEL_parallel_arrays',
+           'GL_OFFSET_TEXTURE_MATRIX_NV', 'GL_FLOAT_MAT4x2',
+           'GL_SHADER_SOURCE_LENGTH', 'GL_DOT3_RGBA',
+           'GL_DRAW_BUFFER4_ARB', 'glTexCoord2iv',
+           'GL_SAMPLE_BUFFERS_ARB', 'GL_TEXTURE2_ARB',
+           'GL_COMPRESSED_RG',
+           'GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_ARB',
+           'GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE',
+           'GL_FRAGMENT_PROGRAM_BINDING_NV', 'GL_TEXTURE_NORMAL_EXT',
+           'GL_GLYPH_HAS_KERNING_BIT_NV', 'GL_POLYGON_OFFSET_UNITS',
+           'GL_MAX_COLOR_TEXTURE_SAMPLES', '__GLsync',
+           'GL_TEXTURE_BINDING_RECTANGLE_EXT',
+           'GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS',
+           'GL_SAMPLE_MASK_INVERT_EXT', 'GL_OUT_OF_MEMORY',
+           'GL_EXT_texture_env_add',
+           'GL_TEXTURE_COORD_ARRAY_LIST_IBM',
+           'GL_COMPRESSED_INTENSITY_ARB', 'glIndexi',
+           'GL_NV_multisample_filter_hint', 'GL_NORMAL_ARRAY_STRIDE',
+           'GL_FRAGMENT_PROGRAM_INTERPOLATION_OFFSET_BITS_NV',
+           'GL_COMPRESSED_LUMINANCE_ALPHA_ARB',
+           'GL_BUFFER_MAP_LENGTH', 'glDrawElements',
+           'GL_VERTEX_SHADER_INSTRUCTIONS_EXT', 'GL_PHONG_HINT_WIN',
+           'GL_CURRENT_TIME_NV', 'GL_LUMINANCE12_ALPHA12_EXT',
+           'GL_INT64_VEC4_NV', 'GL_GEOMETRY_OUTPUT_TYPE',
+           'GL_RASTERIZER_DISCARD', 'GL_TEXTURE_RESIDENT_EXT',
+           'GL_MAP2_VERTEX_ATTRIB11_4_NV', 'GL_COLOR_INDEX1_EXT',
+           'GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING',
+           'GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS',
+           'GL_RENDERBUFFER_SAMPLES_EXT',
+           'GL_TEXTURE_BINDING_CUBE_MAP_EXT', 'GL_MODELVIEW12_ARB',
+           'GL_LINES_ADJACENCY_EXT',
+           'GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB',
+           'GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER',
+           'GL_SAMPLER_2D_RECT_ARB', 'GL_PRIMARY_COLOR_NV',
+           'GL_TEXTURE_CUBE_MAP_EXT',
+           'GL_TEXTURE_COORD_ARRAY_POINTER_EXT',
+           'GL_MAP2_VERTEX_ATTRIB12_4_NV',
+           'GL_TRANSFORM_FEEDBACK_VARYINGS_EXT', 'GL_NV_half_float',
+           'GL_FACTOR_MAX_AMD', 'GL_INT_SAMPLER_2D_MULTISAMPLE',
+           'GL_RETURN', 'GL_PALETTE4_R5_G6_B5_OES',
+           'GL_ALPHA32UI_EXT', 'GL_WEIGHT_ARRAY_TYPE_ARB',
+           'GL_SGIX_shadow', 'GL_MAX_CUBE_MAP_TEXTURE_SIZE_EXT',
+           'glCopyPixels', 'GL_UNSIGNED_INT8_VEC2_NV',
+           'GL_UNSIGNED_INT64_NV', 'GL_PROGRAM_RESULT_COMPONENTS_NV',
+           'GL_W_EXT', 'GL_LUMINANCE16I_EXT',
+           'GL_PATH_TERMINAL_DASH_CAP_NV', 'GL_PROXY_TEXTURE_1D',
+           'GL_UNIFORM_BUFFER_EXT', 'GL_ARB_transform_feedback3',
+           'GL_PATH_FILL_MASK_NV', 'GL_DSDT_MAG_NV',
+           'GL_TRANSFORM_FEEDBACK_BARRIER_BIT_EXT',
+           'GL_DEPTH_STENCIL_TO_RGBA_NV',
+           'GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB',
+           'GL_RGBA_SIGNED_SGIX', 'GL_MODELVIEW3_ARB',
+           'GL_TABLE_TOO_LARGE', 'GL_PACK_ROW_BYTES_APPLE',
+           'GL_NORMAL_BIT_PGI', 'GL_TEXTURE_MAX_CLAMP_R_SGIX',
+           'GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS',
+           'GL_LO_SCALE_NV', 'GL_MATRIX30_ARB',
+           'GL_DEBUG_SOURCE_SHADER_COMPILER_ARB',
+           'GL_SAMPLE_ALPHA_TO_MASK_EXT', 'GL_HINT_BIT',
+           'GL_BUFFER_ACCESS_FLAGS', 'GL_ARB_draw_buffers_blend',
+           'GL_PREVIOUS_EXT', 'GL_EXT_packed_pixels', 'GL_INT',
+           'GL_FENCE_APPLE', 'GL_FRAME_NV', 'GL_CONVOLUTION_WIDTH',
+           'glDisableClientState', 'GL_RED_BITS', 'GL_TEXTURE17_ARB',
+           'GL_ATOMIC_COUNTER_BUFFER', 'GL_MAP2_VERTEX_ATTRIB5_4_NV',
+           'GL_SGIS_texture_border_clamp', 'GL_TEXTURE_BUFFER_FORMAT',
+           'GL_UNSIGNED_SHORT_4_4_4_4_EXT',
+           'GL_ATOMIC_COUNTER_BUFFER_BINDING',
+           'GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS',
+           'GL_MAX_SUBROUTINES',
+           'GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT',
+           'GL_ARB_multisample', 'GL_MAGNITUDE_BIAS_NV',
+           'GL_TEXTURE_RED_SIZE',
+           'GL_COMPARE_REF_DEPTH_TO_TEXTURE_EXT', 'GL_DOT3_RGBA_EXT',
+           'GL_VERTEX_ARRAY_TYPE_EXT', 'GL_TRANSLATE_Y_NV',
+           'GL_VARIANT_DATATYPE_EXT', 'GL_BGRA',
+           'GL_ACTIVE_UNIFORM_BLOCKS', 'GL_ALPHA16_SIGNED_SGIX',
+           'GL_GEOMETRY_SHADER_ARB', 'GL_SHADER_OBJECT_ARB',
+           'GL_POINT_SPRITE_R_MODE_NV',
+           'GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB',
+           'GL_VERTEX_ATTRIB_ARRAY8_NV', 'GL_RGB16I',
+           'GL_DRAW_BUFFER5_ATI', 'GL_CURRENT_MATRIX_INDEX_ARB',
+           'GL_GPU_MEMORY_INFO_EVICTED_MEMORY_NVX', 'glEvalCoord2fv',
+           'GL_PALETTE4_RGB8_OES',
+           'GL_UNSIGNED_INT_IMAGE_2D_RECT_EXT', 'GL_MODELVIEW31_ARB',
+           'GL_IMAGE_BINDING_LAYER',
+           'GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV',
+           'GL_TEXTURE_MULTI_BUFFER_HINT_SGIX',
+           'GL_DEBUG_SEVERITY_LOW_AMD', 'GL_FOG_BIT',
+           'GL_OPERAND0_ALPHA', 'GL_TRANSPOSE_TEXTURE_MATRIX',
+           'GL_COLOR_ATTACHMENT4_EXT', 'GL_UNIFORM_BLOCK_NAME_LENGTH',
+           'GL_SAMPLE_MASK', 'GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB',
+           'GL_FOG_COORDINATE_ARRAY_STRIDE_EXT',
+           'GL_INTEL_texture_scissor', 'GL_ALL_ATTRIB_BITS',
+           'GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER',
+           'GL_POST_TEXTURE_FILTER_SCALE_SGIX', 'GL_MATRIX8_ARB',
+           'GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW_ARB', 'GL_MAX_EXT',
+           'GL_POST_COLOR_MATRIX_RED_BIAS', 'GL_CONDITION_SATISFIED',
+           'GL_SUB_ATI', 'GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT',
+           'GL_UNSIGNED_NORMALIZED_ARB', 'GL_GENERIC_ATTRIB_NV',
+           'GL_SAMPLES_ARB', 'glRasterPos3iv',
+           'GL_SECONDARY_COLOR_ARRAY_POINTER', 'GL_BGR_INTEGER_EXT',
+           'GL_TEXTURE_COMPARE_MODE_ARB',
+           'GL_NO_RESET_NOTIFICATION_ARB', 'GL_VIDEO_BUFFER_NV',
+           'GL_CLIP_NEAR_HINT_PGI', 'GL_INTERLACE_READ_OML',
+           'GL_OUTPUT_TEXTURE_COORD18_EXT', 'GL_RGB565',
+           'GL_TEXTURE_1D_ARRAY', 'GL_CURRENT_VERTEX_ATTRIB_ARB',
+           'GL_FRAGMENT_COLOR_MATERIAL_FACE_EXT', 'GL_MATRIX12_ARB',
+           'GL_READ_FRAMEBUFFER_BINDING', 'GL_VERTEX_SHADER_ARB',
+           'GL_INT8_VEC3_NV', 'GL_PIXEL_PACK_BUFFER_EXT',
+           'GL_PATH_STROKE_WIDTH_NV', 'glColor3sv',
+           'GL_COORD_REPLACE', 'GL_SAMPLE_BUFFERS_3DFX',
+           'GL_USE_MISSING_GLYPH_NV', 'GL_UNIFORM_ARRAY_STRIDE',
+           'GL_SURFACE_STATE_NV', 'GL_IMAGE_2D_MULTISAMPLE_ARRAY_EXT',
+           'GL_RGBA2', 'glClipPlane', 'GL_POINT', 'GL_RGBA4',
+           'GL_POINT_SPRITE_COORD_ORIGIN',
+           'GL_MAX_VERTEX_ATTRIBS_ARB', 'GL_ARB_occlusion_query',
+           'GL_LUMINANCE_ALPHA16I_EXT', 'GL_COMBINER_AB_OUTPUT_NV',
+           'GL_BUMP_ROT_MATRIX_SIZE_ATI', 'GL_INFO_LOG_LENGTH',
+           'GL_ACCUM_ADJACENT_PAIRS_NV', 'GL_TEXTURE_SRGB_DECODE_EXT',
+           'glColor4iv', 'GL_DRAW_BUFFER10_ATI',
+           'GL_RESET_NOTIFICATION_STRATEGY_ARB',
+           'GL_ARB_shader_subroutine',
+           'GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT',
+           'GL_REFLECTION_MAP_EXT', 'GL_COMBINE_RGB_ARB',
+           'GL_LUMINANCE_ALPHA_FLOAT16_ATI', 'glNormalPointer',
+           'GL_FAILURE_NV', 'GL_RENDERBUFFER_STENCIL_SIZE',
+           'GL_CONST_EYE_NV', 'GL_SRGB_ALPHA_EXT',
+           'GL_SGIX_texture_scale_bias', 'GL_RESCALE_NORMAL',
+           'GL_DEBUG_SOURCE_APPLICATION_ARB', 'GL_FIELDS_NV',
+           'GL_INT_SAMPLER_BUFFER_AMD', 'GL_POINT_SIZE_GRANULARITY',
+           'GL_LOCAL_CONSTANT_EXT', 'GL_ARB_depth_texture',
+           'GL_VERSION_2_0', 'GL_VERSION_2_1',
+           'GL_GEOMETRY_SHADER_BIT', 'GL_GREEN_BIAS',
+           'GL_COMPRESSED_RGBA_FXT1_3DFX', 'GL_QUERY_OBJECT_AMD',
+           'GL_SPOT_DIRECTION', 'GL_COMBINER6_NV',
+           'GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV',
+           'GL_MAX_COMBINED_IMAGE_UNIFORMS', 'glFinish',
+           'GL_VERTEX_ARRAY_LIST_STRIDE_IBM',
+           'GL_VERTEX_ARRAY_ADDRESS_NV', 'GL_PALETTE4_RGBA8_OES',
+           'GL_STRICT_LIGHTING_HINT_PGI', 'GL_LINE_BIT',
+           'GL_TEXTURE20_ARB', 'GL_ARB_texture_query_lod',
+           'GL_OP_NEGATE_EXT', 'GL_DEBUG_TYPE_OTHER_ARB', 'glIndexd',
+           'GL_T2F_N3F_V3F', 'GL_COMBINER4_NV', 'GL_TRANSFORM_BIT',
+           'GL_SAMPLER_2D_MULTISAMPLE_ARRAY', 'GL_LIGHTING',
+           'GL_INTENSITY16I_EXT', 'GL_MAP1_VERTEX_ATTRIB3_4_NV',
+           'GL_MODELVIEW9_ARB', 'GL_TEXTURE_RED_SIZE_EXT',
+           'GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT',
+           'GL_EXT_gpu_shader4', 'GL_UNSIGNED_INT_8_8_8_8',
+           'GL_TEXTURE_GEN_T', 'GL_STENCIL_PASS_DEPTH_PASS',
+           'GL_TEXTURE_GEN_R', 'GL_TEXTURE_GEN_Q',
+           'GL_SAMPLE_SHADING_ARB', 'GL_LINE_TO_NV', 'GL_ALPHA12',
+           'GL_DRAW_FRAMEBUFFER_BINDING_EXT', 'GL_ALPHA16',
+           'glColor3ub', 'GL_DEPTH_CLAMP_NV', 'GL_FOG_OFFSET_SGIX',
+           'glReadBuffer', 'GL_POINT_FADE_THRESHOLD_SIZE_ARB',
+           'GL_PROGRAM_FORMAT_ASCII_ARB',
+           'GL_FRAMEBUFFER_UNSUPPORTED_EXT', 'glGetPolygonStipple',
+           'GL_POINT_SIZE_MIN', 'GL_EXT_index_material',
+           'GL_LOSE_CONTEXT_ON_RESET_ARB', 'GL_WIN_phong_shading',
+           'GL_GENERATE_MIPMAP_HINT', 'GL_PATH_INITIAL_END_CAP_NV',
+           'GL_ARB_texture_buffer_object_rgb32', 'GL_RGBA16',
+           'glDepthFunc', 'GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT',
+           'GL_MAP1_NORMAL', 'GL_SECONDARY_COLOR_ARRAY_LIST_IBM',
+           'GL_CLAMP', 'GL_CONVOLUTION_WIDTH_EXT',
+           'GL_DOT_PRODUCT_TEXTURE_RECTANGLE_NV',
+           'GL_POST_COLOR_MATRIX_COLOR_TABLE',
+           'GL_COMPRESSED_RGB_FXT1_3DFX', 'GL_HALF_BIT_ATI',
+           'GL_NV_float_buffer', 'GL_RELATIVE_LARGE_CCW_ARC_TO_NV',
+           'glColor4sv', 'GL_LUMINANCE32I_EXT', 'glPopClientAttrib',
+           'GL_RGB5_A1', 'GL_DEPTH_ATTACHMENT',
+           'GL_UNPACK_SKIP_PIXELS', 'GL_SECONDARY_COLOR_NV',
+           'GL_MATRIX_MODE', 'GL_SOURCE1_ALPHA_EXT',
+           'GL_EVAL_VERTEX_ATTRIB0_NV', 'GL_CIRCULAR_CW_ARC_TO_NV',
+           'GL_EXT_separate_specular_color', 'GL_EXT_texture_swizzle',
+           'GL_AMD_depth_clamp_separate',
+           'GL_FONT_HAS_KERNING_BIT_NV', 'GL_FRAGMENT_DEPTH',
+           'GL_OUTPUT_TEXTURE_COORD22_EXT',
+           'GL_OFFSET_HILO_PROJECTIVE_TEXTURE_RECTANGLE_NV',
+           'GL_SURFACE_REGISTERED_NV',
+           'GL_MAX_FRAGMENT_INTERPOLATION_OFFSET_NV',
+           'GL_ATTACHED_SHADERS', 'GL_FRAMEBUFFER_COMPLETE_EXT',
+           'GL_UNSIGNED_INT64_AMD', 'GL_VERTEX4_BIT_PGI',
+           'GL_VERTEX_ATTRIB_MAP2_ORDER_APPLE', 'GLdouble',
+           'GL_DEPENDENT_GB_TEXTURE_2D_NV',
+           'GL_DEBUG_CALLBACK_FUNCTION_ARB', 'GL_RGB10_A2',
+           'GL_ACTIVE_SUBROUTINE_MAX_LENGTH', 'glIndexdv',
+           'GL_SGIX_shadow_ambient', 'GL_IMAGE_1D_ARRAY',
+           'GL_VERTEX_ARRAY_RANGE_POINTER_NV', 'glEvalCoord2dv',
+           'GL_MAX_VERTEX_IMAGE_UNIFORMS', 'glGetLightiv',
+           'GL_READ_FRAMEBUFFER_EXT', 'GL_ARB_vertex_array_bgra',
+           'GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS',
+           'GL_RESAMPLE_REPLICATE_OML',
+           'GL_MAP1_VERTEX_ATTRIB13_4_NV', 'GL_FOG_COORD_ARRAY_TYPE',
+           'GL_RASTER_POSITION_UNCLIPPED_IBM',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT',
+           'GL_MAX_VERTEX_STREAMS', 'GL_SAMPLE_ALPHA_TO_ONE_ARB',
+           'GL_NV_depth_range_unclamped',
+           'GL_FONT_UNDERLINE_POSITION_BIT_NV',
+           'GL_EXT_framebuffer_sRGB',
+           'GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB',
+           'GL_PIXEL_MAP_I_TO_A_SIZE', 'glPixelTransferi',
+           'GL_UNSIGNED_NORMALIZED',
+           'GL_SMOOTH_POINT_SIZE_GRANULARITY',
+           'GL_CLAMP_VERTEX_COLOR', 'GL_DEPTH_COMPONENT32_ARB',
+           'GL_INVARIANT_DATATYPE_EXT',
+           'GL_TRANSPOSE_COLOR_MATRIX_ARB', 'GL_MAP2_INDEX',
+           'GL_VIEWPORT_INDEX_PROVOKING_VERTEX',
+           'GL_PIXEL_UNPACK_BUFFER_BINDING_EXT', 'GL_LO_BIAS_NV',
+           'GL_EDGE_FLAG_ARRAY_LENGTH_NV', 'GL_GREEN_INTEGER',
+           'GL_IMAGE_BINDING_LAYER_EXT', 'GL_SOURCE2_ALPHA_ARB',
+           'GL_TEXTURE_COORD_ARRAY', 'GL_TEXTURE_SWIZZLE_RGBA_EXT',
+           'GL_ARB_fragment_program_shadow',
+           'GL_COLOR_TABLE_GREEN_SIZE_SGI',
+           'GL_VIDEO_COLOR_CONVERSION_MATRIX_NV',
+           'GL_FLOAT_32_UNSIGNED_INT_24_8_REV',
+           'GL_COMPRESSED_ALPHA_ARB', 'GL_MAP2_GRID_DOMAIN',
+           'GL_INVERTED_SCREEN_W_REND', 'GL_DATA_BUFFER_AMD',
+           'GL_DRAW_PIXEL_TOKEN', 'GL_SEPARATE_SPECULAR_COLOR_EXT',
+           'GL_UNPACK_SKIP_IMAGES_EXT',
+           'GL_VIDEO_CAPTURE_TO_422_SUPPORTED_NV',
+           'GL_ARB_draw_instanced', 'GL_OBJECT_LINEAR',
+           'GL_OUTPUT_TEXTURE_COORD3_EXT', 'GL_MODELVIEW11_ARB',
+           'GL_SIGNED_IDENTITY_NV', 'GL_PATH_FILL_MODE_NV',
+           'GL_AMD_vertex_shader_layer', 'GL_RELEASED_APPLE',
+           'GL_GPU_MEMORY_INFO_EVICTION_COUNT_NVX',
+           'GL_COLOR_ATTACHMENT14_EXT', 'GL_CURRENT_QUERY_ARB',
+           'GL_APPLE_client_storage', 'GL_NORMAL_ARRAY_TYPE_EXT',
+           'GL_RGBA12_EXT', 'GL_NV_path_rendering',
+           'GL_VERTEX_ATTRIB_MAP1_APPLE',
+           'GL_OFFSET_PROJECTIVE_TEXTURE_2D_SCALE_NV', 'GL_TEXTURE15',
+           'GL_TEXTURE_FLOAT_COMPONENTS_NV',
+           'GL_POST_CONVOLUTION_BLUE_BIAS',
+           'GL_CONVOLUTION_BORDER_COLOR', 'GL_FRAGMENT_SHADER_ARB',
+           'glEvalPoint2', 'GL_PATH_STROKE_MASK_NV',
+           'GL_SATURATE_BIT_ATI', 'GL_OBJECT_DISTANCE_TO_LINE_SGIS',
+           'GL_TEXTURE_COMPRESSION_HINT_ARB',
+           'GL_TEXTURE_SHARED_SIZE', 'GL_COLOR', 'GL_TEXTURE10',
+           'glewGetString', 'GL_ARB_seamless_cube_map',
+           'GL_LUMINANCE8_ALPHA8', 'GL_RENDERBUFFER_DEPTH_SIZE',
+           'GL_MAX_FRAGMENT_UNIFORM_BLOCKS',
+           'GL_PACK_COMPRESSED_BLOCK_SIZE', 'GL_SLUMINANCE_ALPHA',
+           'GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS', 'GL_DOUBLE_VEC4_EXT',
+           'GL_TESS_CONTROL_PROGRAM_PARAMETER_BUFFER_NV',
+           'GL_SPOT_EXPONENT', 'GL_Z4Y12Z4CB12Z4Y12Z4CR12_422_NV',
+           'GL_SHORT', 'GL_BLUE', 'GL_CURRENT_RASTER_COLOR',
+           'GL_CURRENT_SECONDARY_COLOR_EXT',
+           'GL_PERFMON_RESULT_AVAILABLE_AMD',
+           'GL_TEXTURE_LUMINANCE_TYPE_ARB',
+           'GL_STENCIL_BACK_FUNC_ATI', 'GL_STATIC_READ_ARB',
+           'GL_UNSIGNED_INT64_VEC2_NV', 'GL_IMAGE_1D',
+           'glTexParameteri', 'GL_VERTEX_ARRAY_EXT',
+           'GL_SGIS_texture_lod', 'GL_DEPTH_TEXTURE_MODE',
+           'GL_ARB_shader_objects', 'GL_TEXTURE_ENV0_EXT',
+           'GL_COMBINER_CD_OUTPUT_NV', 'GL_ARB_shader_precision',
+           'GL_TEXTURE_BINDING_CUBE_MAP_ARRAY_ARB',
+           'GL_UNSIGNED_INT_10F_11F_11F_REV', 'GL_OP_INDEX_EXT',
+           'GL_KTX_STENCIL_REGION', 'GL_TEXTURE_SHADER_NV',
+           'GL_STATIC_DRAW', 'GL_ARB_sync', 'GL_RENDERBUFFER',
+           'GL_VERTEX_ATTRIB_ARRAY_UNIFIED_NV', 'GL_INT_IMAGE_2D_EXT',
+           'GL_TEXTURE_BORDER_VALUES_NV',
+           'GL_VERTEX_STATE_PROGRAM_NV', 'glNewList',
+           'GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE', 'glLoadMatrixd',
+           'GL_SHADER_COMPILER', 'glTexParameterfv',
+           'GL_INTENSITY16_EXT', 'GL_VBO_FREE_MEMORY_ATI',
+           'GL_INDEX_ARRAY_TYPE_EXT',
+           'GL_VERTEX_SHADER_LOCAL_CONSTANTS_EXT',
+           'GL_PER_STAGE_CONSTANTS_NV',
+           'GL_OUTPUT_TEXTURE_COORD0_EXT',
+           'GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB',
+           'GL_TEXTURE4_ARB', 'GL_DOT3_RGBA_ARB',
+           'GL_YCBAYCR8A_4224_NV',
+           'GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET', 'GL_OR_INVERTED',
+           'GL_TEXTURE_GREEN_SIZE',
+           'GL_COLOR_TABLE_INTENSITY_SIZE_EXT',
+           'GL_PIXEL_MAG_FILTER_EXT', 'GL_HISTOGRAM_GREEN_SIZE_EXT',
+           'GL_BUFFER_USAGE_ARB', 'glSelectBuffer',
+           'GL_CURRENT_RASTER_NORMAL_EXT', 'GLbyte',
+           'GL_MAX_ASYNC_TEX_IMAGE_SGIX', 'GL_FULL_STIPPLE_HINT_PGI',
+           'GL_CW', 'GL_INTENSITY4', 'GL_COLOR_ATTACHMENT7_EXT',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT', 'GL_INTENSITY8',
+           'GL_DEPTH_STENCIL_TO_BGRA_NV',
+           'GL_TEXTURE_COORD_ARRAY_ADDRESS_NV',
+           'GL_BINORMAL_ARRAY_STRIDE_EXT', 'GL_REFLECTION_MAP_NV',
+           'GL_SIGNED_LUMINANCE8_ALPHA8_NV',
+           'GL_VERTEX_ATTRIB_ARRAY_DIVISOR',
+           'GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS', 'GL_INTENSITY_EXT',
+           'GL_FOG_COORD_SRC', 'GL_RGB8_SNORM',
+           'GL_PIXEL_MAP_I_TO_I_SIZE', 'GL_TEXTURE_2D',
+           'GL_UNSIGNED_SHORT_8_8_APPLE', 'GL_SAMPLE_COVERAGE_ARB',
+           'GL_DECAL', 'GL_INTENSITY16', 'GL_TEXTURE_2D_ARRAY',
+           'GL_UNDEFINED_VERTEX', 'GL_INT_IMAGE_BUFFER_EXT',
+           'GL_COLOR_TABLE_RED_SIZE_EXT',
+           'GL_MAX_MULTISAMPLE_COVERAGE_MODES_NV', 'GL_IMAGE_2D_RECT',
+           'GL_CURRENT_BINORMAL_EXT', 'GL_ARB_point_parameters',
+           'GL_SIGNED_NORMALIZED',
+           'GL_EXTERNAL_VIRTUAL_MEMORY_BUFFER_AMD',
+           'GL_FRAMEBUFFER_BINDING_EXT', 'GL_APPLE_element_array',
+           'glLightModeliv', 'GL_PIXEL_BUFFER_BARRIER_BIT_EXT',
+           'GL_VERTEX_PROGRAM_POINT_SIZE_ARB',
+           'GL_MAX_FRAGMENT_LIGHTS_EXT', 'GL_UTF8_NV',
+           'GL_UNSIGNED_INT_VEC3', 'GL_INTENSITY_FLOAT32_APPLE',
+           'GL_UNSIGNED_SHORT_5_6_5', 'GL_ANY_SAMPLES_PASSED',
+           'GL_COLOR_ARRAY_EXT', 'GL_RGBA16UI_EXT',
+           'GL_ALREADY_SIGNALED', 'GL_BUFFER_SERIALIZED_MODIFY_APPLE',
+           'GL_IBM_texture_mirrored_repeat',
+           'GL_MAX_VARYING_COMPONENTS_EXT', 'GL_APPLE_transform_hint',
+           'GL_HISTOGRAM_RED_SIZE', 'GL_APPLE_specular_vector',
+           'GL_R32UI', 'GL_RGBA_MODE', 'glRectdv', 'GL_REG_1_ATI',
+           'GL_ARB_vertex_blend', 'GL_ALPHA_SIGNED_SGIX',
+           'GL_ELEMENT_ARRAY_POINTER_ATI', 'GL_CONSTANT_COLOR1_NV',
+           'GL_RGB32UI', 'GL_OBJECT_LINE_SGIS',
+           'GL_PROGRAM_ADDRESS_REGISTERS_ARB', 'GL_R1UI_V3F_SUN',
+           'GL_PROXY_TEXTURE_RECTANGLE',
+           'GL_POST_COLOR_MATRIX_ALPHA_BIAS',
+           'GL_STENCIL_BACK_FAIL_ATI',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_MODE_NV',
+           'GL_BUMP_TEX_UNITS_ATI', 'GL_REG_5_ATI',
+           'GL_ARB_shading_language_packing',
+           'GL_QUERY_BY_REGION_NO_WAIT_NV', 'GL_EXT_texture_cube_map',
+           'GL_POINT_SIZE_RANGE', 'glColor4ui',
+           'GL_PIXEL_COUNTER_BITS_NV',
+           'GL_PN_TRIANGLES_POINT_MODE_LINEAR_ATI', 'glNormal3sv',
+           'glLineWidth', 'GL_TEXTURE8', 'GL_TEXTURE9',
+           'GL_DEBUG_CALLBACK_USER_PARAM_ARB',
+           'GL_ACTIVE_VARYINGS_NV', 'GL_TEXTURE5', 'GL_TEXTURE6',
+           'GL_VERTEX_PRECLIP_HINT_SGIX', 'GL_TEXTURE0',
+           'GL_LINEAR_MIPMAP_LINEAR', 'GL_TEXTURE2', 'GL_TEXTURE3',
+           'GL_FLOAT_VEC2_ARB', 'GL_BOOL_VEC4', 'GL_COMBINER0_NV',
+           'GL_RENDERBUFFER_BINDING_EXT', 'GL_BOOL_VEC3',
+           'GL_BOOL_VEC2', 'glColor4us', 'GL_DEPTH_COMPONENT',
+           'GL_ACTIVE_PROGRAM_EXT', 'GL_OBJECT_VALIDATE_STATUS_ARB',
+           'GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS',
+           'GL_COLOR_MATERIAL_PARAMETER', 'GL_MODULATE_ADD_ATIX',
+           'GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS', 'GL_INT16_VEC3_NV',
+           'GL_MAX_VARYING_VECTORS', 'GL_EXT_multi_draw_arrays',
+           'GL_ONE', 'GL_EXT_misc_attribute',
+           'GL_UNSIGNED_INT_24_8_NV',
+           'GL_TEXTURE_2D_MULTISAMPLE_ARRAY',
+           'GL_NAMED_STRING_TYPE_ARB', 'GL_SRC_ALPHA_SATURATE',
+           'GL_COLOR_ARRAY_POINTER_EXT', 'GL_VECTOR_EXT',
+           'GL_R1UI_C3F_V3F_SUN', 'GL_NV_fog_distance',
+           'GL_LUMINANCE_SNORM', 'GL_COLOR_TABLE_ALPHA_SIZE',
+           'GL_OUTPUT_VERTEX_EXT', 'GL_TRIANGLE_STRIP', 'GL_N3F_V3F',
+           'GL_PROGRAM_BINARY_RETRIEVABLE_HINT', 'glRasterPos2s',
+           'GL_FRONT_LEFT', 'GLulong',
+           'GL_RELATIVE_SMALL_CW_ARC_TO_NV',
+           'GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_EXT',
+           'GL_MAX_IMAGE_SAMPLES', 'GL_PERCENTAGE_AMD',
+           'GL_NUM_SAMPLE_COUNTS', 'GL_SGIX_texture_coordinate_clamp',
+           'GL_RESCALE_NORMAL_EXT', 'GL_OUTPUT_TEXTURE_COORD14_EXT',
+           'GL_INDEX_OFFSET', 'GL_POST_TEXTURE_FILTER_BIAS_SGIX',
+           'GL_INTENSITY', 'GL_EXT_convolution', 'glRasterPos2f',
+           'glRasterPos2d', 'glLoadIdentity', 'GL_STENCIL',
+           'GL_LUMINANCE_ALPHA_SNORM', 'GL_TEXCOORD4_BIT_PGI',
+           'GL_NATIVE_GRAPHICS_END_HINT_PGI',
+           'GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY',
+           'GL_COMBINER_AB_DOT_PRODUCT_NV', 'GL_CLIP_FAR_HINT_PGI',
+           'GL_SUN_triangle_list',
+           'GL_VERTEX_ARRAY_BUFFER_BINDING_ARB', 'GL_STENCIL_FUNC',
+           'GL_MIN', 'GL_TRANSFORM_FEEDBACK_BUFFER_MODE_EXT',
+           'GL_TEXTURE_ENV', 'GL_DRAW_BUFFER8_ARB', 'GL_INVERT',
+           'GL_BACK', 'GL_PRIMITIVE_RESTART_INDEX_NV',
+           'GL_VIEWPORT_BIT', 'GL_PROXY_TEXTURE_CUBE_MAP_EXT',
+           'GL_COLOR_INDEX16_EXT', 'glTexCoord1iv',
+           'GL_TEXTURE_IMMUTABLE_FORMAT', 'GL_MODELVIEW2_ARB',
+           'GL_ENV_MODULATE_EXT', 'GL_ALLOW_DRAW_OBJ_HINT_PGI',
+           'GL_CLIP_DISTANCE1', 'GL_CLIP_DISTANCE0',
+           'GL_CLIP_DISTANCE3', 'GL_CLIP_DISTANCE2',
+           'GL_CLIP_DISTANCE5', 'GL_CLIP_DISTANCE4',
+           'GL_MINOR_VERSION', 'GL_MATRIX_INDEX_ARRAY_POINTER_ARB',
+           'GL_COMPRESSED_RGBA_S3TC_DXT5_EXT', 'GL_AFFINE_2D_NV',
+           'GL_LAST_VIDEO_CAPTURE_STATUS_NV', 'GL_FRONT_AND_BACK',
+           'GL_VIDEO_CAPTURE_FRAME_HEIGHT_NV', 'GL_GREEN_INTEGER_EXT',
+           'GL_COMPRESSED_RG_RGTC2',
+           'GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB', 'GL_TEXTURE25_ARB',
+           'GL_SHADER_OPERATION_NV', 'GL_AMD_draw_buffers_blend',
+           'GL_EXPAND_NEGATE_NV', 'GL_APPLE_texture_range',
+           'GL_SAMPLER_CUBE_MAP_ARRAY_ARB',
+           'GL_POST_COLOR_MATRIX_BLUE_BIAS_SGI',
+           'GL_PROXY_TEXTURE_1D_STACK_MESAX', 'GL_SYNC_FENCE',
+           'GL_SECONDARY_COLOR_ARRAY_TYPE', 'GL_MODELVIEW0_EXT',
+           'GL_SLUMINANCE', 'GL_TEXTURE_SWIZZLE_RGBA',
+           'GL_EXT_texture_array', 'GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT',
+           'GL_NAMED_STRING_LENGTH_ARB', 'GL_FOG_END',
+           'GL_TEXTURE_ALPHA_SIZE', 'GL_PROXY_TEXTURE_3D',
+           'GL_WIN_swap_hint', 'GL_ARB_texture_rg',
+           'GL_SGIS_multisample', 'GL_DOUBLE_VEC4',
+           'GL_UNSIGNED_SHORT_4_4_4_4', 'GL_DOUBLE_VEC2',
+           'GL_DOUBLE_VEC3', 'GL_ARB_fragment_shader',
+           'GL_GREMEDY_frame_terminator',
+           'GL_LUMINANCE_EXTENDED_RANGE_SGIX', 'GL_NO_ERROR',
+           'GL_LINE_STIPPLE_REPEAT', 'GL_EIGHTH_BIT_ATI',
+           'GL_MAP1_VERTEX_ATTRIB10_4_NV',
+           'GL_UNIFORM_BUFFER_BINDING', 'GL_CURRENT_SECONDARY_COLOR',
+           'GL_MAX_TEXTURE_COORDS_ARB', 'GL_ARB_framebuffer_object',
+           'GL_AMD_conservative_depth', 'GL_RGBA16UI',
+           'GL_ARB_texture_non_power_of_two',
+           'GL_TEXTURE_CUBE_MAP_ARB', 'glRasterPos4iv',
+           'GL_INTENSITY12_EXT', 'GL_OUTPUT_TEXTURE_COORD5_EXT',
+           'GL_MAX_OPTIMIZED_VERTEX_SHADER_VARIANTS_EXT',
+           'GL_EXT_secondary_color', 'GL_TEXTURE_BINDING_2D_ARRAY',
+           'GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT',
+           'GL_MAX_DRAW_BUFFERS', 'GL_MODELVIEW21_ARB',
+           'GL_PATH_STENCIL_REF_NV', 'GL_DELETE_STATUS',
+           'GL_RED_SCALE', 'GL_IMAGE_CUBE_MAP_ARRAY',
+           'GL_LIGHT_MODEL_SPECULAR_VECTOR_APPLE',
+           'GL_HISTOGRAM_RED_SIZE_EXT', 'GL_SECONDARY_COLOR_ARRAY',
+           'GL_RGBA8_EXT', 'GL_FLOAT_32_UNSIGNED_INT_24_8_REV_NV',
+           'glPixelMapuiv', 'GL_CURRENT_INDEX',
+           'GL_ARB_texture_rectangle', 'GL_SGI_texture_color_table',
+           'GL_PATCH_DEFAULT_INNER_LEVEL', 'GL_ENV_SUBTRACT_EXT',
+           'GL_MOVE_TO_NV',
+           'GL_TESS_EVALUATION_PROGRAM_PARAMETER_BUFFER_NV',
+           'GL_BLEND_EQUATION_ALPHA_EXT',
+           'GL_POINT_SPRITE_CULL_CENTER_ATIX', 'GL_E_TIMES_F_NV',
+           'GL_RGB16I_EXT', 'GL_COLOR_ATTACHMENT9_EXT',
+           'GL_ALPHA16_EXTENDED_RANGE_SGIX',
+           'GL_TEXT_FRAGMENT_SHADER_ATI',
+           'GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB',
+           'GL_FRAMEBUFFER_BARRIER_BIT', 'GL_MAJOR_VERSION',
+           'GL_INTENSITY16_EXTENDED_RANGE_SGIX', 'GL_REFLECTION_MAP',
+           'GL_ARB_shader_atomic_counters', 'GL_LUMINANCE32UI_EXT',
+           'GL_BGR_INTEGER', 'GL_CONVOLUTION_HEIGHT_EXT',
+           'GL_EVAL_VERTEX_ATTRIB8_NV',
+           'GL_COLOR_MATRIX_STACK_DEPTH_SGI',
+           'GL_PARALLEL_ARRAYS_INTEL', 'GL_INDEX_MODE',
+           'GL_GREMEDY_string_marker', 'GL_UNIFORM_TYPE',
+           'GL_EXT_subtexture', 'GL_EXT_coordinate_frame',
+           'GL_EXT_pixel_transform_color_table',
+           'GL_RENDERBUFFER_COVERAGE_SAMPLES_NV', 'glColorPointer',
+           'GL_COMMAND_BARRIER_BIT_EXT', 'GL_COLOR_ATTACHMENT13_EXT',
+           'GL_LUMINANCE8_ALPHA8_SNORM', 'GL_POINT_BIT',
+           'GL_EXT_gpu_program_parameters', 'GL_COLOR_ARRAY_STRIDE',
+           'GL_SIGNED_LUMINANCE8_NV', 'glEnable',
+           'GL_GLOBAL_ALPHA_SUN', 'GL_LUMINANCE8', 'GL_FRONT_RIGHT',
+           'GL_MAP_INVALIDATE_BUFFER_BIT', 'GL_MODELVIEW4_ARB',
+           'GL_FRACTIONAL_ODD', 'GL_DEPTH_TEST',
+           'GL_OPERAND3_ALPHA_NV', 'GL_TEXTURE19_ARB',
+           'GL_IMAGE_BINDING_LAYERED_EXT', 'GL_SGIX_list_priority',
+           'GL_ARB_draw_buffers', 'GL_COLOR_TABLE_WIDTH',
+           'GL_LUMINANCE4', 'GL_SECONDARY_COLOR_ARRAY_POINTER_EXT',
+           'GL_NV_evaluators', 'GL_CONSTANT_ALPHA_EXT',
+           'GL_FUNC_SUBTRACT', 'GL_CON_3_ATI', 'GLint64',
+           'GL_VERTEX_PROGRAM_TWO_SIDE',
+           'GL_MAX_TEXTURE_BUFFER_SIZE_EXT', 'GL_MAX_TESS_GEN_LEVEL',
+           'GL_SAMPLER_BUFFER', 'glMaterialiv',
+           'GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING',
+           'GL_TEXTURE_COORD_ARRAY_TYPE',
+           'GL_VIDEO_CAPTURE_FIELD_UPPER_HEIGHT_NV',
+           'GL_CLAMP_TO_BORDER', 'GL_COLOR_ATTACHMENT15',
+           'GL_COLOR_ATTACHMENT14', 'GL_DEPTH_RANGE',
+           'GL_COLOR_ATTACHMENT11', 'GL_CLAMP_TO_EDGE',
+           'GL_COLOR_ATTACHMENT13', 'GL_COLOR_ATTACHMENT12',
+           'GL_DSDT_MAG_INTENSITY_NV', 'GL_ARB_debug_output',
+           'GL_AMD_stencil_operation_extended',
+           'GL_COLOR_ARRAY_LIST_IBM', 'glOrtho', 'GL_DT_SCALE_NV',
+           'GL_MAX_RATIONAL_EVAL_ORDER_NV',
+           'GL_RENDERBUFFER_GREEN_SIZE',
+           'GL_MAX_DUAL_SOURCE_DRAW_BUFFERS',
+           'GL_MAX_ELEMENTS_INDICES', 'GL_DEPTH_SCALE',
+           'GL_LUMINANCE16_EXTENDED_RANGE_SGIX', 'GL_RESTART_PATH_NV',
+           'GL_SAMPLES_PASSED_ARB',
+           'GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT',
+           'GL_SWIZZLE_STRQ_ATI', 'GL_SAMPLER_1D_ARRAY_SHADOW_EXT',
+           'glIndexiv', 'GL_IMPLEMENTATION_COLOR_READ_FORMAT_OES',
+           'GL_UNSIGNED_INT_10_10_10_2_EXT', 'GL_RENDERBUFFER_EXT',
+           'GL_DYNAMIC_DRAW_ARB', 'GL_NV_vertex_program1_1',
+           'GL_CONTINUOUS_AMD', 'GL_POINT_SMOOTH', 'glewGetExtension',
+           'GL_DEPTH_CLEAR_VALUE',
+           'GL_UNSIGNED_INT_SAMPLER_BUFFER_EXT',
+           'GL_GEOMETRY_INPUT_TYPE', 'GL_COLOR_ATTACHMENT10',
+           'GL_INT16_VEC2_NV', 'GL_NV_packed_depth_stencil',
+           'GL_SRC_ALPHA', 'GL_UNSIGNED_INT_5_9_9_9_REV',
+           'GL_MAX_PROGRAM_TEXTURE_GATHER_COMPONENTS_ARB',
+           'GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE', 'GL_CURRENT_BIT',
+           'GL_PROXY_TEXTURE_COLOR_TABLE_SGI', 'GL_RGBA32F_ARB',
+           'GL_RGB_SIGNED_SGIX', 'GL_VERTEX_PRECLIP_SGIX',
+           'GL_UNSIGNED_INT_VEC2', 'GL_TEXTURE_COORD_ARRAY_TYPE_EXT',
+           'GL_MAX_VARYING_FLOATS', 'GL_SIGNED_RGBA8_NV',
+           'GL_PRIMITIVE_RESTART_INDEX', 'GL_SCALE_BY_ONE_HALF_NV',
+           'GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_EXT',
+           'GL_RESAMPLE_DECIMATE_SGIX', 'GL_MATRIX2_ARB',
+           'GL_VERTEX_ATTRIB_ARRAY0_NV', 'GL_ONE_MINUS_DST_COLOR',
+           'GL_LUMINANCE_SIGNED_SGIX', 'glGetTexGenfv',
+           'GL_UNDEFINED_APPLE', 'GL_KTX_BACK_REGION',
+           'GL_GLYPH_VERTICAL_BEARING_Y_BIT_NV',
+           'GL_ACCUM_ALPHA_BITS', 'GL_FLOAT', 'glRotated',
+           'GL_NUM_INSTRUCTIONS_TOTAL_ATI', 'GL_POINT_SIZE_MAX_EXT',
+           'GL_COLOR_BUFFER_BIT', 'GL_UNPACK_RESAMPLE_SGIX',
+           'GL_SPOT_CUTOFF', 'GL_IBM_multimode_draw_arrays',
+           'GL_AMD_vertex_shader_viewport_index',
+           'GL_FRAMEBUFFER_SRGB', 'GL_LUMINANCE12_ALPHA4_EXT',
+           'GL_INDEX_ARRAY_BUFFER_BINDING_ARB', 'GL_IMAGE_BUFFER',
+           'glIsTexture', 'GL_EVAL_VERTEX_ATTRIB1_NV',
+           'GL_FONT_UNITS_PER_EM_BIT_NV', 'GL_NEAREST_MIPMAP_NEAREST',
+           'GL_ATI_envmap_bumpmap', 'GL_SLUMINANCE8_EXT',
+           'GL_IMAGE_BINDING_LAYERED',
+           'GL_DUP_LAST_CUBIC_CURVE_TO_NV', 'GL_R8I',
+           'GL_ATI_vertex_attrib_array_object',
+           'GL_ELEMENT_ARRAY_BUFFER_ARB', 'GL_SGIS_sharpen_texture',
+           'GL_CONTEXT_COMPATIBILITY_PROFILE_BIT', 'GL_LINK_STATUS',
+           'GL_RGB_SNORM', 'GL_ARB_vertex_program', 'GL_MATRIX0_NV',
+           'GL_FLOAT_VEC3_ARB', 'GL_FONT_DESCENDER_BIT_NV',
+           'GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY', 'glIndexubv',
+           'GL_ARB_texture_rgb10_a2ui', 'glTexGend',
+           'glGetMaterialiv', 'GL_MAP_FLUSH_EXPLICIT_BIT',
+           'GL_SIGNED_HILO16_NV', 'GL_RGBA8I_EXT',
+           'GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN',
+           'GL_MATRIX3_ARB', 'GL_MAT_SHININESS_BIT_PGI',
+           'GL_INT8_VEC2_NV', 'GL_INTENSITY_FLOAT32_ATI',
+           'glVertex3sv', 'GL_RGB_S3TC',
+           'GL_MAX_BINDABLE_UNIFORM_SIZE_EXT', 'glRenderMode',
+           'GL_AND_INVERTED', 'GL_APPLE_vertex_array_object',
+           'GL_TEXTURE_POINT_SPRITE_ATIX',
+           'GLEW_ERROR_GL_VERSION_10_ONLY', 'GL_DRAW_BUFFER12_ATI',
+           'GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB',
+           'GL_INTENSITY32I_EXT', 'GL_EXT_timer_query',
+           'GL_BUMP_ENVMAP_ATI', 'GL_VERTEX_ID_NV',
+           'GL_POLYGON_OFFSET_POINT', 'GLhandleARB',
+           'GL_LUMINANCE12_EXT', 'GL_MODELVIEW17_ARB',
+           'GL_CURRENT_NORMAL', 'GL_RECT_NV',
+           'GL_OUTPUT_TEXTURE_COORD31_EXT',
+           'GL_UNSIGNED_INT_SAMPLER_2D_ARRAY', 'GL_ALPHA_TEST_FUNC',
+           'glVertex3dv', 'GL_VERTEX_ATTRIB_MAP1_COEFF_APPLE',
+           'GL_ALPHA8UI_EXT', 'GL_DEPTH_COMPONENT16',
+           'GL_EXT_bindable_uniform', 'GL_MAX_SAMPLE_MASK_WORDS',
+           'glFeedbackBuffer', 'GL_UNSIGNALED',
+           'GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT', 'GL_RGB32I',
+           'GL_OUTPUT_TEXTURE_COORD26_EXT', 'GL_MATRIX13_ARB',
+           'GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH',
+           'GL_BGRA_INTEGER', 'GL_ALPHA12_EXT', 'GL_R1UI_N3F_V3F_SUN',
+           'GL_RGB32F', 'GL_COLOR_ARRAY_BUFFER_BINDING_ARB',
+           'GL_DSDT_NV', 'GL_ONE_MINUS_SRC_ALPHA',
+           'GL_MAX_VERTEX_HINT_PGI', 'GL_PROGRAM_BINDING_ARB',
+           'GL_SOURCE2_RGB_EXT', 'GL_UNSIGNED_INT_IMAGE_1D_ARRAY',
+           'GL_TEXTURE_BINDING_CUBE_MAP_ARB',
+           'GL_MAX_GEOMETRY_BINDABLE_UNIFORMS_EXT', 'glPolygonOffset',
+           'GL_MAX_PROGRAM_TEXTURE_GATHER_COMPONENTS',
+           'GL_UNSIGNED_INT8_VEC4_NV', 'GL_MAX_INTENSITY_SGIS',
+           'GL_PIXEL_MAP_I_TO_G_SIZE', 'GL_MAP2_GRID_SEGMENTS',
+           'GL_PROGRAM_POINT_SIZE',
+           'GL_UNPACK_COMPRESSED_BLOCK_DEPTH',
+           'GL_EXT_texture_perturb_normal',
+           'GL_POST_CONVOLUTION_BLUE_SCALE_EXT', 'glClearStencil',
+           'GL_INDEX_ARRAY_ADDRESS_NV', 'GL_NV_fragment_program4',
+           'GL_EXT_point_parameters', 'GL_RGB4_EXT',
+           'GL_AMD_shader_stencil_export',
+           'GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB', 'glVertex2sv',
+           'GL_DISCRETE_AMD', 'GL_DOT_PRODUCT_TEXTURE_CUBE_MAP_NV',
+           'GL_FONT_MAX_ADVANCE_HEIGHT_BIT_NV', 'GL_POINT_SPRITE_ARB',
+           'GL_EYE_RADIAL_NV', 'GL_EYE_LINEAR',
+           'GL_ARB_vertex_attrib_64bit', 'GL_MAP1_GRID_SEGMENTS',
+           'GL_TRANSPOSE_PROGRAM_MATRIX_EXT', 'GL_ATTRIB_STACK_DEPTH',
+           'GL_MAX_PROGRAM_PARAMETER_BUFFER_BINDINGS_NV',
+           'glPixelStorei', 'GL_FLOAT_MAT4_ARB', 'glPixelMapusv',
+           'GL_DOUBLE_VEC3_EXT', 'GL_UNSIGNED_INT_S8_S8_8_8_NV',
+           'GL_MAX_RECTANGLE_TEXTURE_SIZE_NV',
+           'GL_PROGRAM_PIPELINE_BINDING', 'GL_MAP2_BINORMAL_EXT',
+           'GL_TEXTURE_LUMINANCE_SIZE',
+           'GL_MAX_RECTANGLE_TEXTURE_SIZE',
+           'GL_PATH_STENCIL_DEPTH_OFFSET_UNITS_NV',
+           'GL_NEGATIVE_ONE_EXT', 'GL_COLOR_ATTACHMENT0_EXT',
+           'GLint64EXT', 'GL_MAX_FRAGMENT_UNIFORM_COMPONENTS',
+           'GL_SOURCE0_RGB_EXT', 'GL_ARB_shading_language_include',
+           'GL_FRAMEBUFFER_DEFAULT',
+           'GL_NORMAL_ARRAY_PARALLEL_POINTERS_INTEL',
+           'GL_EXT_pixel_buffer_object',
+           'GL_TEXTURE_BINDING_RECTANGLE', 'GL_LINE_SMOOTH_HINT',
+           'GL_COMMAND_BARRIER_BIT', 'GL_FRONT',
+           'GL_UNSIGNED_INT_5_9_9_9_REV_EXT', 'GL_CULL_VERTEX_IBM',
+           'GL_SELECT', 'GL_AMBIENT', 'GL_COMBINE_ALPHA',
+           'GL_TRIANGLE_MESH_SUN', 'GL_MAX_FRAGMENT_UNIFORM_VECTORS',
+           'GL_PATH_GEN_COEFF_NV', 'GL_FIRST_TO_REST_NV',
+           'GL_VERTEX_ATTRIB_ARRAY11_NV',
+           'GL_SAMPLE_COVERAGE_INVERT_ARB', 'GL_ALPHA16_EXT',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED_NV',
+           'GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS',
+           'GL_PURGEABLE_APPLE', 'GL_FRAMEBUFFER_BINDING',
+           'GL_NORMAL_ARRAY_BUFFER_BINDING',
+           'GL_EVAL_VERTEX_ATTRIB4_NV',
+           'GL_MAX_VERTEX_UNIFORM_COMPONENTS',
+           'GL_GLYPH_VERTICAL_BEARING_ADVANCE_BIT_NV',
+           'GL_BUFFER_GPU_ADDRESS_NV',
+           'GL_DOT_PRODUCT_CONST_EYE_REFLECT_CUBE_MAP_NV',
+           'GL_MAX_SAMPLE_MASK_WORDS_NV',
+           'GL_POST_CONVOLUTION_RED_BIAS_EXT',
+           'GL_MAT_AMBIENT_BIT_PGI', 'glMapGrid1d',
+           'GL_UNSIGNED_INT_SAMPLER_1D_ARRAY',
+           'GL_OUTPUT_TEXTURE_COORD7_EXT', 'glBitmap',
+           'GL_POST_TEXTURE_FILTER_BIAS_RANGE_SGIX',
+           'GL_FRAGMENT_LIGHT_MODEL_TWO_SIDE_EXT',
+           'GL_RGB16_EXTENDED_RANGE_SGIX',
+           'GL_MAX_TEXTURE_IMAGE_UNITS', 'GL_PIXEL_TRANSFORM_2D_EXT',
+           'GL_STENCIL_BACK_VALUE_MASK',
+           'GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS',
+           'GL_TEXTURE_WIDTH', 'GL_NUM_FILL_STREAMS_NV',
+           'GL_UNSIGNED_INT_IMAGE_CUBE_EXT', 'GL_MATRIX5_ARB',
+           'GL_ONE_MINUS_SRC1_ALPHA',
+           'GL_AMD_vertex_shader_tessellator',
+           'GL_SAMPLE_ALPHA_TO_COVERAGE_ARB', 'GL_FLOAT16_VEC3_NV',
+           'GL_MODULATE_SIGNED_ADD_ATI', 'GL_FOG_START',
+           'GL_WAIT_FAILED', 'GL_DECR_WRAP_EXT',
+           'GL_READ_PIXEL_DATA_RANGE_POINTER_NV',
+           'GL_OBJECT_BUFFER_USAGE_ATI', 'GL_COLOR_ATTACHMENT12_EXT',
+           'GL_PROGRAM_INSTRUCTIONS_ARB',
+           'GL_ARRAY_ELEMENT_LOCK_FIRST_EXT',
+           'GL_PREFER_DOUBLEBUFFER_HINT_PGI',
+           'GL_LUMINANCE4_ALPHA4_EXT', 'GL_COMPARE_REF_TO_TEXTURE',
+           'GL_PROJECTION_STACK_DEPTH',
+           'GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE', 'GL_TRUE',
+           'GL_TEXTURE_MIN_FILTER', 'GL_SAMPLER_CUBE_SHADOW',
+           'GL_TEXTURE_BINDING_1D_ARRAY_EXT', 'GL_STACK_UNDERFLOW',
+           'GL_SECONDARY_COLOR_ARRAY_TYPE_EXT',
+           'GL_CONVOLUTION_FILTER_BIAS_EXT',
+           'GL_MULTISAMPLE_BIT_3DFX', 'GL_AUX0', 'GL_AUX3', 'GL_AUX2',
+           'GL_VERTEX_ARRAY_RANGE_APPLE', 'GL_SMALL_CCW_ARC_TO_NV',
+           'GL_MAP1_TANGENT_EXT', 'GL_DEBUG_SOURCE_THIRD_PARTY_ARB',
+           'GL_TEXTURE_2D_ARRAY_EXT', 'GL_DEPTH_STENCIL_ATTACHMENT',
+           'GL_PRIMARY_COLOR_ARB', 'GL_OBJECT_SUBTYPE_ARB',
+           'GL_POINT_SPRITE', 'GL_WRAP_BORDER_SUN',
+           'GL_CIRCULAR_TANGENT_ARC_TO_NV',
+           'GL_MODELVIEW_STACK_DEPTH', 'GL_COLOR_TABLE_RED_SIZE_SGI',
+           'GL_TEXTURE_INTERNAL_FORMAT',
+           'GL_CONSERVE_MEMORY_HINT_PGI', 'GL_IDENTITY_NV', 'glMap1d',
+           'GL_ARB_timer_query', 'GL_MIRRORED_REPEAT_ARB',
+           'GL_INTERLEAVED_ATTRIBS_NV',
+           'GL_VERTEX_ATTRIB_ARRAY_POINTER', 'GL_FLOAT_R32_NV',
+           'GL_COMBINER5_NV', 'GL_CND0_ATI',
+           'GL_FONT_ASCENDER_BIT_NV', 'GL_ARB_uniform_buffer_object',
+           'GL_PROXY_POST_CONVOLUTION_COLOR_TABLE',
+           'GL_ARB_texture_swizzle', 'GL_LARGE_CW_ARC_TO_NV',
+           'GL_ARB_vertex_array_object', 'GL_ATTRIB_ARRAY_SIZE_NV',
+           'GL_CURRENT_RASTER_DISTANCE',
+           'GL_NUM_FRAGMENT_CONSTANTS_ATI',
+           'GL_WEIGHT_ARRAY_POINTER_ARB', 'GL_EXT_stencil_wrap',
+           'GL_RGB32F_ARB', 'GL_RG8_SNORM',
+           'GL_FRAGMENT_LIGHT_MODEL_NORMAL_INTERPOLATION_EXT',
+           'GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY_ARB',
+           'GL_LIGHT_MODEL_LOCAL_VIEWER', 'glHint',
+           'GL_POST_CONVOLUTION_GREEN_BIAS',
+           'GL_MAP2_VERTEX_ATTRIB8_4_NV',
+           'GL_UNSIGNED_INT_SAMPLER_RENDERBUFFER_NV',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB',
+           'GL_VERTEX_ARRAY_PARALLEL_POINTERS_INTEL',
+           'GL_POLYGON_STIPPLE', 'GL_VERTEX_PROGRAM_TWO_SIDE_ARB',
+           'GL_DEBUG_TYPE_PORTABILITY_ARB',
+           'GL_MATERIAL_SIDE_HINT_PGI', 'GL_COPY_READ_BUFFER',
+           'GL_OP_DOT3_EXT', 'GL_PROGRAM_BINARY_FORMATS',
+           'GL_LUMINANCE12_ALPHA12', 'GL_LOW_INT',
+           'GL_SCALE_BY_FOUR_NV', 'glDepthMask',
+           'GL_UNSIGNED_SHORT_8_8_MESA', 'GL_DOUBLE_MAT2x4',
+           'GL_BINORMAL_ARRAY_POINTER_EXT', 'GL_MULTISAMPLE',
+           'GL_GEOMETRY_INPUT_TYPE_EXT',
+           'GL_MAX_VERTEX_OUTPUT_COMPONENTS', 'GL_KEEP',
+           'GL_NV_texture_rectangle', 'GL_DECR',
+           'GL_INDEX_ARRAY_STRIDE', 'GL_MAX_PALETTE_MATRICES_ARB',
+           'GL_SIGNED_NEGATE_NV', 'GL_PROXY_TEXTURE_2D',
+           'GL_RESAMPLE_AVERAGE_OML', 'GL_FOG_PATCHY_FACTOR_SGIX',
+           'GL_ENV_BLEND_EXT', 'glTexCoord3f', 'GL_OPERAND1_RGB_EXT',
+           'GL_OPERAND2_RGB_EXT', 'GL_COMPRESSED_RGBA_ARB', 'GL_OR',
+           'GL_VERTEX_ARRAY_TYPE', 'GL_APPLE_fence',
+           'GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER', 'GL_TEXTURE7',
+           'GL_NUM_INSTRUCTIONS_PER_PASS_ATI',
+           'GL_LUMINANCE16_ALPHA16_SIGNED_SGIX',
+           'GL_EYE_PLANE_ABSOLUTE_NV', 'GL_CONVOLUTION_HEIGHT',
+           'GL_PATH_GEN_COLOR_FORMAT_NV',
+           'GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI', 'GL_DS_BIAS_NV',
+           'GL_EXT_vertex_array_bgra', 'GL_ACTIVE_SUBROUTINES',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_NV', 'GL_LINE_LOOP',
+           'GL_PACK_INVERT_MESA', 'GL_DSDT8_MAG8_INTENSITY8_NV',
+           'GL_TEXTURE6_ARB', 'GL_QUERY_BY_REGION_WAIT_NV',
+           'GL_PROGRAM_ALU_INSTRUCTIONS_ARB', 'GL_COLOR_TABLE_SCALE',
+           'GL_COLOR_INDEX2_EXT', 'GL_BACK_RIGHT',
+           'GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY_EXT', 'GL_RGBA',
+           'GL_EXT_blend_equation_separate',
+           'GL_R1UI_T2F_C4F_N3F_V3F_SUN', 'GL_R3_G3_B2',
+           'GL_PATH_END_CAPS_NV', 'GL_CIRCULAR_CCW_ARC_TO_NV',
+           'GL_SLUMINANCE8_ALPHA8',
+           'GL_UNSIGNED_INT_SAMPLER_BUFFER_AMD',
+           'GL_LUMINANCE4_ALPHA4', 'GL_UNIFORM_OFFSET',
+           'GL_PROGRAM_UNDER_NATIVE_LIMITS_ARB', 'GL_TEXTURE1',
+           'GL_VERTEX_SHADER_INVARIANTS_EXT', 'GL_OBJECT_PLANE',
+           'GL_SGIX_convolution_accuracy',
+           'GL_LUMINANCE_FLOAT16_APPLE', 'GL_TEXTURE30_ARB',
+           'GL_UNSIGNED_INT_SAMPLER_CUBE',
+           'GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH_EXT',
+           'GL_HISTOGRAM_BLUE_SIZE', 'glRectfv', 'glEvalMesh2',
+           'GL_RED_INTEGER_EXT', 'GL_CONVEX_HULL_NV',
+           'GL_MAX_ACTIVE_LIGHTS_EXT', 'GL_UPPER_LEFT',
+           'GL_IMAGE_2D_RECT_EXT', 'GL_INT_IMAGE_2D_ARRAY',
+           'GL_BUFFER_ACCESS', 'GL_EYE_POINT_SGIS',
+           'GL_ATI_texture_mirror_once', 'GL_LINES_ADJACENCY',
+           'GL_POLYGON_OFFSET_FACTOR_EXT',
+           'GL_VIEWPORT_SUBPIXEL_BITS', 'GL_MVP_MATRIX_EXT',
+           'GL_NORMAL_ARRAY_COUNT_EXT',
+           'GL_POST_COLOR_MATRIX_RED_SCALE',
+           'GL_PIXEL_UNPACK_BUFFER_EXT', 'GL_VERTEX_ARRAY_STRIDE',
+           'GL_BACK_LEFT', 'glVertex3f', 'GLenum',
+           'GL_DOT_PRODUCT_PASS_THROUGH_NV', 'GL_FLOAT_VEC3',
+           'GL_MAP2_COLOR_4', 'GL_OCCLUSION_TEST_RESULT_HP',
+           'GL_LUMINANCE16_ALPHA16_SNORM',
+           'GL_MAP1_VERTEX_ATTRIB4_4_NV',
+           'GL_UNPACK_COMPRESSED_BLOCK_WIDTH',
+           'GL_UNPACK_CMYK_HINT_EXT', 'GL_ARB_provoking_vertex',
+           'GL_APPLE_float_pixels', 'GL_OUTPUT_TEXTURE_COORD16_EXT',
+           'GL_NUM_EXTENSIONS', 'GL_SELECTION_BUFFER_POINTER',
+           'GL_OPERAND1_RGB_ARB', 'GL_MAP2_VERTEX_ATTRIB15_4_NV',
+           'GL_VOLATILE_APPLE',
+           'GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV', 'GL_ADD_ATI',
+           'GL_LINE_SMOOTH', 'GL_ARB_shading_language_100',
+           'GL_LUMINANCE_FLOAT32_ATI',
+           'GL_NUM_PROGRAM_BINARY_FORMATS',
+           'GL_EXT_packed_depth_stencil', 'GL_TEXTURE7_ARB',
+           'GL_SAMPLES_EXT',
+           'GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX',
+           'GL_DEBUG_CATEGORY_DEPRECATION_AMD',
+           'GL_SKIP_MISSING_GLYPH_NV', 'GL_STENCIL_BACK_FUNC',
+           'GL_POLYGON_SMOOTH_HINT', 'GL_INDEX',
+           'GL_PALETTE8_RGBA8_OES', 'GL_TEXTURE31_ARB',
+           'GL_VERTEX_SHADER_OPTIMIZED_EXT', 'GL_MEDIUM_FLOAT',
+           'glPushName', 'glGetClipPlane', 'glRasterPos4i',
+           'GL_FRAGMENT_FOG_SGIX', 'glPopMatrix',
+           'GL_MAX_PROGRAM_TOTAL_OUTPUT_COMPONENTS_NV',
+           'GL_VARIANT_ARRAY_STRIDE_EXT', 'GL_SEPARABLE_2D',
+           'GL_PROGRAM_MATRIX_EXT',
+           'GL_TEXTURE_COMPARE_OPERATOR_SGIX',
+           'GL_ARB_transform_feedback_instanced',
+           'glewGetErrorString', 'GL_OBJECT_TYPE', 'GL_SRGB8',
+           'GL_RGB10_A2_EXT', 'GL_EXT_blend_func_separate',
+           'GL_DOMAIN', 'GL_TEXTURE_PRIORITY_EXT', 'GL_COMBINER7_NV',
+           'GL_EXT_compiled_vertex_array', 'glVertex3fv',
+           'glRasterPos4s',
+           'GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS',
+           'GL_UNSIGNED_INT_IMAGE_BUFFER', 'GL_MAX_TRACK_MATRICES_NV',
+           'GL_APPLE_flush_buffer_range',
+           'GL_COLOR_TABLE_INTENSITY_SIZE', 'GL_INVERSE_TRANSPOSE_NV',
+           'GL_DRAW_FRAMEBUFFER_BINDING', 'GL_ARB_imaging',
+           'GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_EXT',
+           'GL_EVAL_2D_NV', 'GL_FLOAT_MAT4x3', 'GL_BOOL_ARB',
+           'GL_MATRIX22_ARB', 'GL_DOUBLE_MAT4x2', 'GL_TRIANGLES',
+           'GL_SAMPLER_2D_ARRAY_SHADOW', 'glDrawPixels',
+           'GL_MULTISAMPLE_BIT_ARB', 'GL_IMAGE_BINDING_NAME_EXT',
+           'GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING',
+           'GL_FRAGMENT_COLOR_MATERIAL_PARAMETER_EXT',
+           'GL_ATI_texture_compression_3dc', 'GL_ASYNC_MARKER_SGIX',
+           'GL_READ_PIXEL_DATA_RANGE_NV',
+           'GL_NORMAL_ARRAY_STRIDE_EXT', 'GL_ARB_texture_env_combine',
+           'glMultMatrixf', 'GL_ATI_meminfo',
+           'GL_VERTEX_SHADER_VARIANTS_EXT',
+           'GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT',
+           'GL_UNSIGNED_INT_VEC2_EXT', 'GL_BLEND_COLOR_EXT',
+           'GL_LUMINANCE8UI_EXT',
+           'GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_ARB',
+           'GL_WRITE_ONLY_ARB', 'GL_FRAGMENT_LIGHTING_EXT',
+           'glTexEnvfv', 'GL_SAMPLER_2D_ARRAY',
+           'GL_DRAW_BUFFER13_ATI', 'GL_NV_light_max_exponent',
+           'GL_RENDERER', 'GL_COLOR_TABLE_SGI', 'GL_MIRRORED_REPEAT',
+           'GL_RENDERBUFFER_BLUE_SIZE_EXT', 'GL_SAMPLE_BUFFERS_EXT',
+           'GL_QUERY_NO_WAIT_NV', 'GL_ALLOW_DRAW_MEM_HINT_PGI',
+           'GL_ARB_gpu_shader_fp64', 'GL_PIXEL_MAP_B_TO_B',
+           'GL_MIN_ALPHA_SGIS', 'glGetTexEnvfv',
+           'GL_SIGNED_LUMINANCE_NV', 'GL_VERTEX_STREAM7_ATI',
+           'GL_TEXTURE_BUFFER_EXT', 'GL_EXT_blend_logic_op',
+           'GL_SGIX_texture_range', 'GL_EVAL_VERTEX_ATTRIB9_NV',
+           'GL_IBM_cull_vertex', 'GL_PALETTE8_RGB5_A1_OES',
+           'GL_SECONDARY_COLOR_ARRAY_LIST_STRIDE_IBM',
+           'GL_QUERY_COUNTER_BITS_ARB', 'GL_COLOR_TABLE_RED_SIZE',
+           'GL_REPLACEMENT_CODE_ARRAY_SUN', 'GL_COLOR_LOGIC_OP',
+           'GL_TEXTURE_POINT_ONE_COORD_ATIX', 'GL_PACK_RESAMPLE_OML',
+           'GL_SGIX_depth_texture', 'GL_ARB_internalformat_query',
+           'GL_OPERAND2_ALPHA_EXT',
+           'GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH',
+           'GL_UNIFORM_BLOCK_INDEX', 'GL_AMD_name_gen_delete',
+           'GL_OUTPUT_TEXTURE_COORD27_EXT',
+           'GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY',
+           'GL_EXT_copy_texture', 'GL_EVAL_VERTEX_ATTRIB2_NV',
+           'GL_MAX_OPTIMIZED_VERTEX_SHADER_LOCAL_CONSTANTS_EXT',
+           'GL_Z6Y10Z6CB10Z6Y10Z6CR10_422_NV', 'GL_STENCIL_TEST',
+           'GL_SPHERE_MAP', 'GL_VERTEX_CONSISTENT_HINT_PGI',
+           'GL_INDEX_LOGIC_OP', 'GL_ARRAY_BUFFER_ARB', 'GL_X_EXT',
+           'GL_OPERAND0_ALPHA_EXT', 'GL_RGB_SCALE',
+           'GL_CUBIC_CURVE_TO_NV', 'GL_GEOMETRY_VERTICES_OUT_ARB',
+           'GL_EXT_texture_shared_exponent',
+           'GL_RGBA_INTEGER_MODE_EXT', 'GL_COPY',
+           'GL_COLOR_SUM_CLAMP_NV', 'GL_DOUBLE_MAT4x3', 'GL_MAD_ATI',
+           'GL_MAX_PROGRAM_NATIVE_TEMPORARIES_ARB',
+           'GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT',
+           'GL_RGB_FLOAT16_ATI', 'GL_ACTIVE_VERTEX_UNITS_ARB',
+           'GL_NUM_GENERAL_COMBINERS_NV',
+           'GL_TRANSFORM_FEEDBACK_BINDING',
+           'GL_WEIGHT_ARRAY_BUFFER_BINDING_ARB', 'GL_MOV_ATI',
+           'GL_NV_register_combiners2', 'GL_TEXTURE_DEPTH_SIZE_ARB',
+           'GL_MODELVIEW_PROJECTION_NV', 'GL_COMPRESSED_SRGB',
+           'GL_OFFSET_HILO_TEXTURE_2D_NV', 'GL_TEXTURE_DEPTH_TYPE',
+           'GL_EDGE_FLAG_ARRAY', 'GL_FRAGMENT_PROGRAM_NV',
+           'GL_ACTIVE_TEXTURE_ARB', 'GL_DRAW_INDIRECT_UNIFIED_NV',
+           'GL_COMPRESSED_TEXTURE_FORMATS_ARB',
+           'GL_CONVOLUTION_FORMAT_EXT', 'GL_DRAW_BUFFER15_ATI',
+           'GL_MAX', 'GL_EQUIV',
+           'GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB',
+           'GL_FOG_COORDINATE_ARRAY_LIST_IBM', 'GL_MATRIX25_ARB',
+           'GL_RENDERBUFFER_GREEN_SIZE_EXT',
+           'GL_PROXY_TEXTURE_2D_ARRAY',
+           'GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT',
+           'GL_EVAL_VERTEX_ATTRIB13_NV', 'GL_TEXTURE_HI_SIZE_NV',
+           'GL_TEXTURE23_ARB', 'GL_NEAREST',
+           'GL_UNPACK_CONSTANT_DATA_SUNX', 'GL_INT_IMAGE_1D_EXT',
+           'glNormal3s', 'GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB',
+           'GL_MAX_DEBUG_MESSAGE_LENGTH_ARB',
+           'GL_TEXTURE_2D_STACK_MESAX', 'GL_PIXEL_MAP_R_TO_R_SIZE',
+           'GL_DEPTH_CLAMP_NEAR_AMD',
+           'GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB',
+           'GL_TEXTURE_RENDERBUFFER_NV', 'GL_BUMP_ROT_MATRIX_ATI',
+           'GL_MATRIX28_ARB', 'GL_ACCUM',
+           'GL_FRAGMENT_LIGHT_MODEL_AMBIENT_EXT',
+           'GL_SOURCE1_RGB_EXT', 'GL_PROXY_TEXTURE_1D_ARRAY',
+           'GL_MINMAX_FORMAT_EXT', 'GL_CURRENT_VERTEX_ATTRIB',
+           'GL_KTX_buffer_region', 'GL_TEXTURE_BINDING_2D_ARRAY_EXT',
+           'GL_VERTEX_ARRAY_SIZE', 'GL_TEXTURE_COORD_ARRAY_COUNT_EXT',
+           'GL_MAX_ARRAY_TEXTURE_LAYERS_EXT',
+           'GL_FRAMEBUFFER_ATTACHMENT_LAYERED_ARB',
+           'GL_STENCIL_BACK_PASS_DEPTH_FAIL_ATI',
+           'GL_SAMPLER_2D_RECT_SHADOW', 'GL_SHADER_INCLUDE_ARB',
+           'GL_NUM_COMPATIBLE_SUBROUTINES', 'GL_INT_IMAGE_1D_ARRAY',
+           'GL_POST_CONVOLUTION_GREEN_SCALE_EXT',
+           'GL_STENCIL_BUFFER_BIT', 'GL_ALPHA16I_EXT',
+           'GL_MIRROR_CLAMP_EXT', 'GL_R11F_G11F_B10F',
+           'GL_MODELVIEW5_ARB', 'GL_SEPARATE_ATTRIBS_EXT',
+           'GL_GPU_ADDRESS_NV', 'GL_DEPTH_CLAMP_FAR_AMD',
+           'GL_ARB_copy_buffer', 'glPopName', 'GL_SRC1_RGB',
+           'GL_PROXY_HISTOGRAM', 'glNormal3f', 'GL_SGI_color_table',
+           'GL_QUERY_RESULT_NV', 'GL_STORAGE_CLIENT_APPLE',
+           'GL_VERTEX_ARRAY_RANGE_POINTER_APPLE',
+           'GL_FLOAT_RGBA_MODE_NV', 'GL_VARIANT_ARRAY_POINTER_EXT',
+           'GL_PACK_ALIGNMENT', 'GL_CURRENT_OCCLUSION_QUERY_ID_NV',
+           'GL_OP_ADD_EXT', 'GL_RGB32UI_EXT', 'GL_EDGEFLAG_BIT_PGI',
+           'GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS',
+           'GL_SAMPLER_CUBE_MAP_ARRAY', 'glGenTextures',
+           'GL_PERFORMANCE_MONITOR_AMD', 'GL_VERTEX_ARRAY_POINTER',
+           'GL_MAX_VIEWPORTS', 'glGetTexParameterfv', 'GL_INT_VEC4',
+           'GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY',
+           'GL_MAX_FRAGMENT_INPUT_COMPONENTS',
+           'GL_OUTPUT_TEXTURE_COORD10_EXT',
+           'GL_GLYPH_HORIZONTAL_BEARING_X_BIT_NV',
+           'GL_HP_occlusion_test',
+           'GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_NV',
+           'GL_INTENSITY4_EXT', 'GL_NV_present_video',
+           'GL_POLYGON_STIPPLE_BIT', 'GL_COMBINER_CD_DOT_PRODUCT_NV',
+           'GL_SGIX_texture_multi_buffer', 'GL_RGB8I_EXT',
+           'GL_OFFSET_HILO_PROJECTIVE_TEXTURE_2D_NV',
+           'GL_OPERAND3_RGB_NV', 'GL_DRAW_BUFFER9_ATI',
+           'GL_NV_gpu_program4', 'GL_NV_gpu_program5',
+           'GL_COMPRESSED_RGB_ARB', 'GL_ARC_TO_NV',
+           'GL_SGIS_texture_edge_clamp', 'GL_CONSTANT_ARB',
+           'GL_TEXTURE_1D_STACK_MESAX', 'GL_NV_depth_buffer_float',
+           'GL_INTENSITY8_SNORM', 'GL_EXT_multisample',
+           'GL_VERTEX_ATTRIB_ARRAY_NORMALIZED',
+           'GL_UNSIGNED_INT_IMAGE_1D_ARRAY_EXT', 'GL_OP_POWER_EXT',
+           'GL_DOT_PRODUCT_NV', 'GL_CUBIC_EXT',
+           'GL_FRAMEBUFFER_INCOMPLETE_LAYER_COUNT_EXT',
+           'GL_FOG_COORDINATE', 'GL_VARIABLE_A_NV',
+           'GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_NV',
+           'GL_CONSTANT_COLOR', 'GL_TEXTURE_INDEX_SIZE_EXT',
+           'GL_ARRAY_ELEMENT_LOCK_COUNT_EXT',
+           'GL_COLOR_TABLE_GREEN_SIZE_EXT',
+           'GL_TRIANGLE_STRIP_ADJACENCY_ARB',
+           'GL_MAX_VERTEX_UNIFORM_VECTORS',
+           'GL_VERTEX_SHADER_BINDING_EXT',
+           'GL_POST_CONVOLUTION_GREEN_SCALE', 'GL_CON_7_ATI',
+           'GL_TRANSPOSE_COLOR_MATRIX', 'GL_LUMINANCE8_ALPHA8_EXT',
+           'GL_MAX_COMBINED_ATOMIC_COUNTERS', 'GL_SGIX_sprite',
+           'GL_ARB_get_program_binary', 'GL_VERTEX_ARRAY_POINTER_EXT',
+           'GL_SCREEN_COORDINATES_REND',
+           'GL_FOG_COORDINATE_ARRAY_POINTER',
+           'GL_SHADER_CONSISTENT_NV', 'GL_PROXY_TEXTURE_1D_ARRAY_EXT',
+           'GL_EXT_framebuffer_object', 'GL_FLOAT_VEC4_ARB',
+           'GL_INVALID_VALUE', 'GL_OUTPUT_TEXTURE_COORD12_EXT',
+           'glGenLists', 'GL_TRANSFORM_FEEDBACK_BINDING_NV',
+           'GL_SHADER_TYPE', 'GL_PIXEL_MAP_S_TO_S', 'GL_MATRIX2_NV',
+           'GL_ATIX_point_sprites', 'GL_DRAW_BUFFER7_ATI',
+           'GL_EVAL_VERTEX_ATTRIB6_NV', 'GL_TRIANGLE_FAN',
+           'glEndList', 'GL_GREEN_MIN_CLAMP_INGR',
+           'GL_INNOCENT_CONTEXT_RESET_ARB', 'GL_REPLACE_EXT',
+           'glEdgeFlagv', 'GL_POLYGON_SMOOTH',
+           'GL_MIN_PROGRAM_TEXEL_OFFSET_NV', 'GL_SCALAR_EXT',
+           'GL_VERTICAL_LINE_TO_NV', 'GL_GEOMETRY_VERTICES_OUT',
+           'GL_RGB8', 'GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS',
+           'GL_MAX_RENDERBUFFER_SIZE_EXT', 'glIndexMask',
+           'GL_CLIENT_ACTIVE_TEXTURE_ARB', 'GL_REDUCE',
+           'GL_OP_MIN_EXT', 'GL_TEXTURE_SAMPLES', 'GL_RGB4',
+           'GL_RGB5', 'GL_PIXEL_CUBIC_WEIGHT_EXT',
+           'GL_COMPRESSED_SLUMINANCE_EXT', 'GL_CULL_FACE',
+           'GL_POST_COLOR_MATRIX_GREEN_BIAS',
+           'GL_FOG_OFFSET_VALUE_SGIX', 'glColor3fv',
+           'GL_PATH_COVER_DEPTH_FUNC_NV', 'GL_SAMPLE_COVERAGE_VALUE',
+           'GL_ARB_texture_float', 'GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB',
+           'GL_Z4Y12Z4CB12Z4A12Z4Y12Z4CR12Z4A12_4224_NV',
+           'GL_EYE_LINE_SGIS', 'GL_RENDERBUFFER_RED_SIZE',
+           'GL_OES_read_format', 'GL_COLOR_ARRAY', 'glNormal3d',
+           'GL_OP_MADD_EXT', 'GL_TEXTURE_BINDING_1D_ARRAY',
+           'GL_ARB_texture_gather', 'GL_MAX_ELEMENTS_VERTICES',
+           'GL_COLOR_INDEXES', 'GL_RGBA16_SIGNED_SGIX',
+           'GL_FRAGMENT_LIGHT0_EXT', 'GL_OPERAND1_ALPHA', 'GL_NEVER',
+           'GL_STENCIL_VALUE_MASK', 'GL_BLEND_DST',
+           'GL_NV_vertex_array_range2',
+           'GL_RENDERBUFFER_ALPHA_SIZE_EXT', 'GL_PRESENT_DURATION_NV',
+           'GL_INT16_NV', 'GL_STENCIL_BACK_WRITEMASK',
+           'GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER',
+           'GL_WRITE_PIXEL_DATA_RANGE_LENGTH_NV',
+           'GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS',
+           'GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_ARB',
+           'GL_EXT_texture_lod_bias',
+           'GL_MAX_PROGRAM_PATCH_ATTRIBS_NV', 'GL_LOAD',
+           'GL_ELEMENT_ARRAY_BARRIER_BIT_EXT', 'GL_DRAW_PIXELS_APPLE',
+           'GL_COMBINER2_NV', 'GL_ARRAY_OBJECT_BUFFER_ATI',
+           'GL_NV_vdpau_interop', 'GL_MATRIX_EXT', 'GL_WRAP_BORDER',
+           'GL_MAP2_VERTEX_4', 'glVertex4d', 'GL_DEPTH_COMPONENT32',
+           'GL_INT_SAMPLER_CUBE_EXT', 'GL_READ_FRAMEBUFFER',
+           'glewInit', 'GL_EXT_texture_filter_anisotropic',
+           'GL_TESSELLATION_FACTOR_AMD',
+           'GL_FRAMEBUFFER_BARRIER_BIT_EXT',
+           'GL_MIN_PROGRAM_TEXEL_OFFSET',
+           'GL_TEXTURE_CUBE_MAP_ARRAY_ARB', 'GL_FOG_COORDINATE_EXT',
+           'GL_MIN_FRAGMENT_INTERPOLATION_OFFSET_NV', 'GL_VENDOR',
+           'GL_COMBINER1_NV', 'GL_MODELVIEW1_STACK_DEPTH_EXT',
+           'GL_ACCUM_BUFFER_BIT', 'GL_SWIZZLE_STR_ATI',
+           'GL_TEXTURE_BINDING_2D', 'GL_ISOLINES',
+           'GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_EXT',
+           'GL_ACTIVE_PROGRAM', 'GL_R8UI', 'GL_PACK_RESAMPLE_SGIX',
+           'GL_ATIX_texture_env_route',
+           'GL_COMPRESSED_SRGB_ALPHA_EXT', 'GL_R1UI_C4F_N3F_V3F_SUN',
+           'glNormal3bv', 'GL_MODELVIEW22_ARB',
+           'GL_NORMAL_ARRAY_LIST_IBM', 'int64_t',
+           'GL_VERTEX_ATTRIB_MAP2_DOMAIN_APPLE',
+           'GL_TESS_GEN_POINT_MODE', 'GL_TESS_GEN_MODE',
+           'GL_DRAW_BUFFER1_ARB', 'GL_UNSIGNED_INT64_VEC4_NV',
+           'GL_RELATIVE_LARGE_CW_ARC_TO_NV',
+           'GL_OUTPUT_TEXTURE_COORD9_EXT', 'GL_UNIFORM_BUFFER_SIZE',
+           'glVertex4f', 'glFrustum', 'GL_NV_gpu_program_fp64',
+           'GL_SGIX_ir_instrument1', 'GL_BUFFER_OBJECT_APPLE',
+           'GL_TEXTURE_OUTPUT_ALPHA_ATIX',
+           'GL_DEPTH_COMPONENT24_SGIX',
+           'GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_NV',
+           'GL_MAP_TESSELLATION_NV', 'glGetDoublev',
+           'GL_RENDERBUFFER_RED_SIZE_EXT',
+           'GL_PROXY_TEXTURE_CUBE_MAP_ARRAY',
+           'GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI',
+           'GL_NV_blend_square', 'GL_LINEAR_MIPMAP_NEAREST',
+           'GL_IMAGE_BUFFER_EXT', 'GL_COLOR_TABLE_SCALE_SGI',
+           'GL_SEPARABLE_2D_EXT', 'GL_AMD_blend_minmax_factor',
+           'GL_FULL_RANGE_EXT', 'GL_SAMPLE_MASK_SGIS',
+           'GL_AUTO_NORMAL', 'GL_PATH_MITER_LIMIT_NV', 'glNormal3b',
+           'GL_PATH_STROKE_BOUNDING_BOX_NV', 'GL_ALPHA',
+           'GL_VERTEX_WEIGHTING_EXT', 'GL_SAMPLER_1D_SHADOW',
+           'GL_EXT_texture3D', 'GL_SEPARATE_SPECULAR_COLOR',
+           'GL_SAMPLER_2D_SHADOW', 'GL_SOURCE1_ALPHA_ARB',
+           'GL_TEXTURE_MATRIX', 'GL_GREEN_BIT_ATI',
+           'GL_DEPTH32F_STENCIL8', 'GL_RG16F',
+           'GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL',
+           'GL_LINES_ADJACENCY_ARB', 'glIndexub', 'GL_RG16I',
+           'GL_WRITE_ONLY', 'GL_TEXTURE_COORD_NV', 'GL_OP_DOT4_EXT',
+           'GL_ALPHA32I_EXT',
+           'GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE',
+           'GL_STENCIL_ATTACHMENT',
+           'GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB',
+           'GL_NVX_gpu_memory_info', 'GL_SAMPLER_2D', 'glFrontFace',
+           'GL_ELEMENT_ARRAY_POINTER_APPLE', 'GL_MAP1_BINORMAL_EXT',
+           'GL_GEOMETRY_INPUT_TYPE_ARB', 'GL_RGB12_EXT',
+           'GL_TEXTURE_3D_BINDING_EXT', 'GL_SHININESS',
+           'GL_DRAW_FRAMEBUFFER', 'GL_COLOR_TABLE_WIDTH_EXT',
+           'GL_ARB_shading_language_420pack', 'GL_RGB10_A2UI']
