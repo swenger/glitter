@@ -334,7 +334,34 @@ class GLCLMipmapBuffer(object):
     
     Warning: Works only with float32 data!"""
 
-    _cl_upsample_buffer_source = """
+    # Upsampling variant 1: As many threads as smaller image.
+    _cl_upsample_buffer_source_1x = """
+    __kernel void upsample_buffer(
+                                  __global float4* img1x,
+                                  __global float4* img2x,
+                                  uint wid1x, uint hei1x,
+                                  uint wid2x, uint hei2x) {
+        uint pos_r = get_global_id(0);
+        if (pos_r >= wid1x * hei1x) {
+            return;
+        }
+        uint row = pos_r / wid1x;
+        uint col = pos_r % wid1x;
+        float4 value = img1x[pos_r];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                uint pos_w = (row * 2 + i) * wid2x + (col * 2 + j);
+                if (row * 2 + i < hei2x && col * 2 + j < wid2x && pos_w < wid2x * hei2x) {
+                    img2x[pos_w] = value;
+                }
+            }
+        }
+    }
+    """
+
+    # Upsampling variant 2: As many threads as larger image.
+    # Seems to be slightly faster than variant 1, on a 2K->4K image.
+    _cl_upsample_buffer_source_2x = """
     __kernel void upsample_buffer(
                                   __global float4* img1x,
                                   __global float4* img2x,
@@ -367,7 +394,8 @@ class GLCLMipmapBuffer(object):
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
         # Create CL programs (for upsampling).
         assert self.cl_context is not None, "Need CL context to compile."
-        self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source).build()
+        self._cl_upsample_variant = 2 # 1 = smaller image, 2 = larger image, 3 = cpu only.
+        self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source_1x if 1 == self._cl_upsample_variant else self._cl_upsample_buffer_source_2x).build()
 
     def _upsample_buffer(self, cl_buf_1x, cl_buf_2x, wid_1x, hei_1x, wid_2x, hei_2x):
         """Upsamples given 1x size buffer into 2x size buffer. Since ratio
@@ -382,13 +410,47 @@ class GLCLMipmapBuffer(object):
         cl_gl_data = [cl_buf_1x, cl_buf_2x]
         cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = cl_gl_data + [np.uint32(wid_1x), np.uint32(hei_1x), np.uint32(wid_2x), np.uint32(hei_2x)]; assert 6 == len(cl_args)
-        self._cl_upsample_buffer_program.upsample_buffer(self.cl_queue, (hei_2x * wid_2x,), None, *cl_args)
+        cl_grid = (hei_1x * wid_1x,) if 1 == self._cl_upsample_variant else (hei_2x * wid_2x,)
+        self._cl_upsample_buffer_program.upsample_buffer(self.cl_queue, cl_grid, None, *cl_args)
         cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         # (3) Finish.
         self.cl_queue.flush()
         self.cl_queue.finish()
 
-    def upsample_to_new_cpu(self, new_shape, level):
+    def upsample_to_new(self, new_shape, level):
+        """Upsamples the current buffer to given new shape (should be 2x the
+        current shape, +1 pixel max).
+        
+        Takes around .15 seconds on a 2K->4K frame upsampling."""
+        assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
+        assert 2 == len(new_shape), "Shape should be hei x wid, but is: %s" % (str(new_shape))
+        assert 2 == new_shape[1] / self.shape[1], "New width (%d) should be 2x old width (%d)" % (new_shape[1], self.shape[1])
+        assert 2 == new_shape[0] / self.shape[0], "New height (%d) should be 2x old height (%d)" % (new_shape[0], self.shape[0])
+        # Rather on the CPU? Takes a bit longer, but is more GPU-mem efficient.
+        if 3 == self._cl_upsample_variant:
+            return self._upsample_to_new_cpu(new_shape, level)
+        # Ok, so on the GPU.
+        next_data = np.zeros(new_shape + (4,), dtype=np.float32)
+        next_data1D = np.ascontiguousarray(next_data.reshape(-1, 4))
+        pixel_count = np.multiply(*new_shape[:2])
+        assert (pixel_count, 4) == next_data1D.shape, "Buffer array should be %s, but is: %s" % (str((pixel_count, 4)), str(next_data1D.shape))
+        next_gl_buffer = ArrayBuffer(data=next_data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
+        next_cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, next_gl_buffer._id) # @UndefinedVariable
+        wid_1x, hei_1x = self.shape[::-1]
+        wid_2x, hei_2x = new_shape[::-1]
+        assert wid_2x * hei_2x == np.multiply(*new_shape), "Should be %d pixels, but are: %d" % (wid_2x * hei_2x, np.multiply(new_shape[:2]))
+        self._upsample_buffer(self.cl_buffer, next_cl_buffer, wid_1x, hei_1x, wid_2x, hei_2x)
+        self.cl_buffer.release()
+        self.cl_buffer = next_cl_buffer;
+        self.gl_buffer = next_gl_buffer;
+        self.shape = new_shape
+        self.level = level
+
+    def _upsample_to_new_cpu(self, new_shape, level):
+        """Upsamples the current buffer to given new shape (should be 2x the
+        current shape, +1 pixel max).
+        
+        Takes around .25 seconds on a 2K->4K frame upsampling."""
         assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
         assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
         assert 2 == len(new_shape), "Shape should be hei x wid, but is: %s" % (str(new_shape))
@@ -416,28 +478,6 @@ class GLCLMipmapBuffer(object):
         self.cl_buffer.release()
         self.gl_buffer.set_data(next_data1D)
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
-        self.shape = new_shape
-        self.level = level
-
-    def upsample_to_new(self, new_shape, level):
-        """Upsamples the current buffer to given new shape."""
-        assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
-        assert 2 == len(new_shape), "Shape should be hei x wid, but is: %s" % (str(new_shape))
-        assert 2 == new_shape[1] / self.shape[1], "New width (%d) should be 2x old width (%d)" % (new_shape[1], self.shape[1])
-        assert 2 == new_shape[0] / self.shape[0], "New height (%d) should be 2x old height (%d)" % (new_shape[0], self.shape[0])
-        next_data = np.zeros(new_shape + (4,), dtype=np.float32)
-        next_data1D = np.ascontiguousarray(next_data.reshape(-1, 4))
-        pixel_count = np.multiply(*new_shape[:2])
-        assert (pixel_count, 4) == next_data1D.shape, "Buffer array should be %s, but is: %s" % (str((pixel_count, 4)), str(next_data1D.shape))
-        next_gl_buffer = ArrayBuffer(data=next_data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
-        next_cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, next_gl_buffer._id) # @UndefinedVariable
-        wid_1x, hei_1x = self.shape[::-1]
-        wid_2x, hei_2x = new_shape[::-1]
-        assert wid_2x * hei_2x == np.multiply(*new_shape), "Should be %d pixels, but are: %d" % (wid_2x * hei_2x, np.multiply(new_shape[:2]))
-        self._upsample_buffer(self.cl_buffer, next_cl_buffer, wid_1x, hei_1x, wid_2x, hei_2x)
-        self.cl_buffer.release()
-        self.cl_buffer = next_cl_buffer;
-        self.gl_buffer = next_gl_buffer;
         self.shape = new_shape
         self.level = level
 
