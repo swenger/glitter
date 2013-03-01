@@ -317,6 +317,14 @@ class GLCLMipmapTexture(object):
             raise Exception("No \"%s\" CL texture with previously defined CL access mode \"%s\"." % (rw, self.cl_access))
         return cl_texture
 
+    @property
+    def gl(self):
+        return self.get_gl_texture()
+
+    @property
+    def cl(self):
+        return self.get_cl_texture()
+
     def release(self):
         """Releases all GPU memory."""
         self._clear_cl_textures()
@@ -492,7 +500,7 @@ class GLCLMipmapBuffer(object):
         pixel_count = np.multiply(*new_shape)
         assert (pixel_count, 4) == data1D.shape, "Buffer array should be %s, but is: %s" % (str((pixel_count, 4)), str(data1D.shape))
         self.cl_buffer.release()
-        self.gl_texture.set_data(data1D)
+        self.gl_buffer.set_data(data1D)
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
         self.shape = new_shape
         self.level = level
@@ -529,6 +537,14 @@ class GLCLMipmapBuffer(object):
     def get_cl_buffer(self):
         """Returns the CL buffer."""
         return self.cl_buffer
+
+    @property
+    def gl(self):
+        return self.get_gl_buffer()
+
+    @property
+    def cl(self):
+        return self.get_cl_buffer()
 
     def release(self):
         """Releases all GPU memory."""
