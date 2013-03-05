@@ -10,6 +10,7 @@ import pyopencl as cl
 mf = cl.mem_flags # @UndefinedVariable
 
 from glitter.raw import gl
+from glitter.convenience import grid
 from glitter.arrays.arraybuffer import ArrayBuffer
 from glitter.textures.texture import Texture2D
 
@@ -640,6 +641,14 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
         The level parameter is ignored, possible is only the current level."""
         return self.gl_buffer.get_data().reshape(self.shape + (4,))
 
+    def get_gl_object(self):
+        """Returns the GL buffer."""
+        return self.gl_buffer
+
+    def get_cl_object(self):
+        """Returns the CL buffer."""
+        return self.cl_buffer
+
     def get_pos(self, x, y, out_of_bounds_exception=True):
         """Given an x and y coordinate, returns the position within the 1D
         array buffer."""
@@ -657,13 +666,37 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
             raise Exception("Position %d (equal to coords x:%d, y:%d) exceeds image shape (%dx%d)" % (pos, x, y, self.shape[1], self.shape[0]))
         return (x, y)
 
-    def get_gl_object(self):
-        """Returns the GL buffer."""
-        return self.gl_buffer
+    def get_grid_pixels(self, normalize=False):
+        """Returns a grid of pixel coordinates that fits to the current shape.
+        Every pixel position in the range 0,0..wid,hei exists exactly once
+        in the grid.
+        
+        The returned result has the shape (wid*hei, 2).
+        If normalization is requested, the coords are from 0..1 instead of
+        0..width, same for height.
+        
+        The result is immediately usable in an OpenGL VAO."""
+        hei, wid = self.shape
+        return grid.get_pixel_index_grid(wid, hei, ndim=2, normalize=normalize).reshape(-1, 2)
 
-    def get_cl_object(self):
-        """Returns the CL buffer."""
-        return self.cl_buffer
+    def get_grid_triangle_indices(self):
+        """Returns a grid of triangles that fits to the current shape.
+        Each pixel in the range 0,0..wid,hei exists at least once on a corner
+        point of a triangle.
+        
+        The returned result has the shape (wid*hei, 3).
+        The result is immediately usable in an OpenGL VAO."""
+        hei, wid = self.shape
+        return grid.get_triangle_index_grid(wid, hei).reshape(-1, 3)
+
+    def get_grid_point_indices(self):
+        """Returns a grid of points that fits the current shape.
+        Each pixel in the range 0,0..wid,hei exists exactly once as a point.
+        
+        The returned result has the shape (wid*hei, 1).
+        The result is immediately usable in an OpenGL VAO."""
+        hei, wid = self.shape
+        return np.arange(wid * hei).reshape(-1, 1)
 
     def release(self):
         """Releases all GPU memory."""
@@ -671,3 +704,48 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
         self.cl_buffer = None
         self.gl_buffer = None
 
+
+# -----------------------------------------------------------------------------
+
+class GLCLOnemapBuffer(GLCLAbstractMipmap):
+    """A GL array buffer (aka VBO) with a CL representative, simulating an
+    image pyramid. Usable only for 2D float images with 4 channels.
+    
+    Unlike the GLCLMipmapBuffer, the one-map buffer has only the highest
+    resolution as internal data, and lower resolutions stored at interleaved
+    positions. This requires careful addressing of all clients
+    
+    Like the GLCLMipmapBuffer, the data is 1D with 4 channels.
+    Warning: Works only with float32 data!"""
+
+    def __init__(self, gl_context, cl_context, max_shape, data, level, cl_queue=None):
+        self.gl_context = gl_context
+        self.cl_context = cl_context
+        self.cl_queue = cl_queue # May be none, only needed for upsampling.
+        assert 3 == len(data.shape), "Assumed shape is hei x wid x 4, but was %s" % (str(data.shape))
+        assert data.dtype == np.float32, "Assumed float32 data, but is: %s" % (str(data.dtype))
+        self.level = level # assumed level of that buffer.
+        self.shape = data.shape[:2] # shape is 2D, even if buffer data shape is 1D.
+        self.pixel_count = np.multiply(*self.shape)
+        # Set initial level separately so it can be restored later on.
+        self.initial_level = level
+        self.initial_data = data
+        # Get GL/CL shapes per level.
+        assert 2 == len(max_shape) or 4 == max_shape[2], "Maximum shape should be 2D (hei x wid) or 3D with 4 channels (hei x wid x 4), but is: %s" % (str(max_shape))
+        self.max_shape = max_shape[:2]
+        self.gl_shapes = []
+        lvl_shape = self.max_shape
+        while lvl_shape[0] >= 8:
+            self.gl_shapes.append(lvl_shape)
+            lvl_shape = (lvl_shape[0] / 2, lvl_shape[1] / 2) # is rounded down, just like mipmap.
+        # Create GL and CL data.
+        self.interleave = (max_shape[0] / self.shape[0], max_shape[1] / self.shape[1]) # is rounded down.
+        self.real_data = np.zeros(self.max_shape + (4,), dtype=np.float32)
+        self.real_data[::self.interleave[0], ::self.interleave[1]] = data
+        data1D = np.ascontiguousarray(self.real_data.reshape(-1, 4))
+        self.gl_buffer = ArrayBuffer(data=data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
+        self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
+        # Create CL programs (for upsampling).
+        assert self.cl_context is not None, "Need CL context to compile."
+        # self._cl_upsample_variant = 2 # 1 = smaller image, 2 = larger image, 3 = cpu only.
+        # self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source_1x if 1 == self._cl_upsample_variant else self._cl_upsample_buffer_source_2x).build()
