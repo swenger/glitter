@@ -42,7 +42,7 @@ def get_gl_context(option="g"):
     return gl_context
 
 
-def get_cl_context(gl_context):
+def get_cl_context(gl_context, device_index= -1):
     """Creates a CL context, with or without given GL context."""
     # (1) Get platform and properties.
     if gl_context is not None: # ... with OpenGL interop?
@@ -55,7 +55,7 @@ def get_cl_context(gl_context):
         cl_platform = cl.get_platforms()[0]  # @UndefinedVariable
         cl_properties = [(cl.context_properties.PLATFORM, cl_platform)] # @UndefinedVariable
     # (2) Now get the device and the context.
-    cl_devices = [cl_platform.get_devices()[-1]]  # Only one is allowed!
+    cl_devices = [cl_platform.get_devices()[device_index]]  # Only one is allowed!
     cl_context = cl.Context(properties=cl_properties, devices=cl_devices) # @UndefinedVariable
     return cl_context
 
@@ -168,18 +168,70 @@ def read_cl_buffer(cl_context, cl_buf, x):
 
 # -----------------------------------------------------------------------------
 
-def annotate_texture(gl_texture, mipmap=False):
-    """Annotates a texture with standard information."""
-    from glitter.utils.constants import texture_min_filters, texture_mag_filters, texture_wrapmodes
-    gl_texture.min_filter = texture_min_filters.NEAREST_MIPMAP_NEAREST if mipmap else texture_min_filters.NEAREST # @UndefinedVariable
-    gl_texture.mag_filter = texture_mag_filters.NEAREST # @UndefinedVariable
-    gl_texture.wrap_s = texture_wrapmodes.CLAMP_TO_EDGE # @UndefinedVariable
-    gl_texture.wrap_t = texture_wrapmodes.CLAMP_TO_EDGE # @UndefinedVariable
+class GLCLAbstractMipmap(object):
+    """A mipmapped texture/buffer/something that holds or simulates an
+    image pyramid, with OpenGL and OpenCL accessor objects."""
+
+    def reset(self):
+        """Resets all data to the original status."""
+        raise NotImplementedError("Has not implemented reset().")
+
+    def set_level(self, level, upsample_if_oneup=True):
+        """Sets the active level. Mostly applicable for the CL objects,
+        but may also be pertinent to the GL objects.
+        
+        Upsampling may be called if a level-up occurs."""
+        raise NotImplementedError("Has not implemented set_level().")
+
+    def get_level(self):
+        """Returns the active level."""
+        raise NotImplementedError("Has not implemented get_level().")
+
+    def get_shape(self, level):
+        """Returns the shape at given level, where 0 is the highest,
+        full resolution level."""
+        raise NotImplementedError("Has not implemented get_shape().")
+
+    def set_data(self, data, level=None):
+        """Sets the data with a 2D numpy array (4 channels), optionally at
+        a given level of the image pyramid.
+        The level may be ignored if not applicable."""
+        raise NotImplementedError("Has not implemented set_data().")
+
+    def get_data(self, level=None):
+        """Returns the data as 2D numpy array (4 channels), optionally at
+        a given level of the image pyramid.
+        The level may be ignored if not applicable."""
+        raise NotImplementedError("Has not implemented get_data().")
+
+    def get_gl_object(self):
+        """Returns the GL texture/buffer/object at current level."""
+        raise NotImplementedError("Has not implemented get_gl_object().")
+
+    def get_cl_object(self, rw="rw"):
+        """Returns the CL texture/buffer/object at current level,
+        optionally with read or write access only (applicable e.g. to
+        CL textures)."""
+        raise NotImplementedError("Has not implemented get_cl_object().")
+
+    @property
+    def gl(self):
+        """Returns the GL object at current level."""
+        return self.get_gl_object()
+
+    @property
+    def cl(self):
+        """Returns the CL object at current level."""
+        return self.get_cl_object()
+
+    def release(self):
+        """Releases all GPU memory."""
+        raise NotImplementedError("Has not implemented get_cl_object().")
 
 
 # -----------------------------------------------------------------------------
 
-class GLCLMipmapTexture(object):
+class GLCLMipmapTexture(GLCLAbstractMipmap):
     """A mipmapped GL texture with CL representatives for a given pyramid
     level where 0 is the full resolution.
     
@@ -201,38 +253,68 @@ class GLCLMipmapTexture(object):
     }
     """
 
-    def __init__(self, gl_context, cl_context, data, cl_level=0, cl_access="rw", cl_queue=None):
+    def __init__(self, gl_context, cl_context, data, level=0, cl_access="rw", cl_queue=None):
         self.gl_context = gl_context
         self.cl_context = cl_context
         self.cl_queue = cl_queue # May be none, only needed for upsampling.
-        self.shape = data.shape
+        self.shape = data.shape[:2]
+        self.pixel_count = np.multiply(*self.shape)
+        # Keep original data.
+        self.initial_data = data
+        self.initial_level = level
         # Create GL data.
         self.gl_texture = Texture2D(data, mipmap=True, context=self.gl_context);
-        annotate_texture(self.gl_texture, mipmap=True)
+        self.annotate_texture(self.gl_texture, mipmap=True)
+        self.gl_shapes = []
+        # Get GL/CL shapes per level.
+        for i in range(1000):
+            lvl_shape = self.gl_texture.get_shape(i)[:2]
+            if lvl_shape[0] < 8:
+                break
+            self.gl_shapes.append(lvl_shape)
         # Determine whether CL write/read access is required.
         self.cl_access = cl_access
         self.is_cl_read = "r" in cl_access
         self.is_cl_writ = "w" in cl_access
         # Create CL data.
-        self.cl_level = self.cl_prev_level = cl_level
-        self.cl_texture_read = None
-        self.cl_texture_writ = None
-        self.set_cl_level(cl_level)
+        self.level = self.cl_prev_level = level
+        self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+        self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_writ else None # @UndefinedVariable
         # Create CL programs (for upsampling).
         assert self.cl_context is not None, "Need CL context to compile upsampler."
         self._cl_upsample_mipmap_program = cl.Program(self.cl_context, self._cl_upsample_mipmap_source).build()
 
-    def set_cl_level(self, cl_level, upsample_if_oneup=True):
+    def reset(self):
+        """Resets all data to the original status.
+        For textures, data is not deleted."""
+        self.level = self.cl_prev_level = self.initial_level
+        self._clear_cl_textures()
+        self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, self.level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+        self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, self.level, self.gl_texture._id, 2) if self.is_cl_writ else None # @UndefinedVariable
+
+    def annotate_texture(self, gl_texture, mipmap=False):
+        """Annotates a texture with standard information."""
+        from glitter.utils.constants import texture_min_filters, texture_mag_filters, texture_wrapmodes
+        gl_texture.min_filter = texture_min_filters.NEAREST_MIPMAP_NEAREST if mipmap else texture_min_filters.NEAREST # @UndefinedVariable
+        gl_texture.mag_filter = texture_mag_filters.NEAREST # @UndefinedVariable
+        gl_texture.wrap_s = texture_wrapmodes.CLAMP_TO_EDGE # @UndefinedVariable
+        gl_texture.wrap_t = texture_wrapmodes.CLAMP_TO_EDGE # @UndefinedVariable
+
+    def set_level(self, level, upsample_if_oneup=True):
         """Sets an OpenCL access level. If it is a classic upsample ("one up!"),
         then the content of the previous layers is upsampled too."""
-        prev_level = self.cl_level
-        next_level = self.cl_level = cl_level
+        if level == self.level:
+            return
+        prev_level = self.level
+        next_level = self.level = level
         next_shape = self.cl_shape = self.gl_texture.get_shape(next_level)[:2]
+        upsampling_required = next_level == prev_level - 1 and upsample_if_oneup
         # (1) Create new buffers.
-        next_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, next_level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
-        next_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, next_level, self.gl_texture._id, 2) if self.is_cl_writ else None # @UndefinedVariable
+        if upsampling_required:
+            next_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, next_level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+            next_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, next_level, self.gl_texture._id, 2) if self.is_cl_writ else None # @UndefinedVariable
         # (2) Upsample if necessary.
-        if next_level == prev_level - 1 and upsample_if_oneup:
+        if upsampling_required:
             prev_texture_read = self.cl_texture_read
             prev_texture_miss = prev_texture_read is None
             next_texture_miss = next_texture_writ is None
@@ -251,8 +333,20 @@ class GLCLMipmapTexture(object):
         # (3) Clear old stuff.
         self._clear_cl_textures()
         # (4) Set new stuff.
+        if not upsampling_required: # (otherwise, this has been done above)
+            next_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, next_level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+            next_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, next_level, self.gl_texture._id, 2) if self.is_cl_writ else None # @UndefinedVariable
         self.cl_texture_read = next_texture_read
         self.cl_texture_writ = next_texture_writ
+
+    def get_level(self):
+        """Indicates the current level that the CL textures are on."""
+        return self.level
+
+    def get_shape(self, level):
+        """Returns the shape at given level, where 0 is the highest,
+        full resolution level."""
+        return self.gl_shapes[level]
 
     def _clear_cl_textures(self):
         """Removes all CL references on the textures."""
@@ -282,33 +376,32 @@ class GLCLMipmapTexture(object):
         self.cl_queue.flush()
         self.cl_queue.finish()
 
-    def set_data(self, data, cl_level=None):
+    def set_data(self, data, level=None):
         """Sets a new image as texture data. All CL textures will be deleted
         and recreated. The GL texture stays the same.
         
         The new CL access level is either the given on or the last used one,
         when None is given."""
-        if cl_level is None:
-            cl_level = self.cl_level
+        if level is None:
+            level = self.level
         self._clear_cl_textures()
-        self.gl_texture.set_data(data, mipmap=True); annotate_texture(self.gl_texture, mipmap=True)
-        self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, cl_level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
-        self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, cl_level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
-        self.shape = data.shape
+        self.gl_texture.set_data(data, mipmap=True); self.annotate_texture(self.gl_texture, mipmap=True)
+        self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+        self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+        self.shape = data.shape[:2]
+        self.pixel_count = np.multiply(*self.shape)
 
-    def get_data(self, level=0):
-        """Returns the data at given level."""
+    def get_data(self, level=None):
+        """Returns the data at active or at given level."""
+        if level is None:
+            level = self.level
         return self.gl_texture.get_data(level)
 
-    def get_cl_level(self):
-        """Indicates the current level that the CL textures are on."""
-        return self.cl_level
-
-    def get_gl_texture(self):
+    def get_gl_object(self):
         """Returns the GL texture, all mipmap levels in one."""
         return self.gl_texture
 
-    def get_cl_texture(self, rw="r"):
+    def get_cl_object(self, rw="r"):
         """Returns the CL texture (either "r" or "w") of the current level."""
         if not rw in ["r", "w"]:
             raise Exception("Only r/w options for CL texture access, you requested '%s'" % (rw))
@@ -316,14 +409,6 @@ class GLCLMipmapTexture(object):
         if cl_texture is None:
             raise Exception("No \"%s\" CL texture with previously defined CL access mode \"%s\"." % (rw, self.cl_access))
         return cl_texture
-
-    @property
-    def gl(self):
-        return self.get_gl_texture()
-
-    @property
-    def cl(self):
-        return self.get_cl_texture()
 
     def release(self):
         """Releases all GPU memory."""
@@ -333,7 +418,7 @@ class GLCLMipmapTexture(object):
 
 # -----------------------------------------------------------------------------
 
-class GLCLMipmapBuffer(object):
+class GLCLMipmapBuffer(GLCLAbstractMipmap):
     """A GL array buffer (aka VBO) with a CL representative, simulating an
     image pyramid. Usable only for 2D float images with 4 channels.
     
@@ -386,7 +471,7 @@ class GLCLMipmapBuffer(object):
     }
     """
 
-    def __init__(self, gl_context, cl_context, data, level, cl_queue=None):
+    def __init__(self, gl_context, cl_context, max_shape, data, level, cl_queue=None):
         self.gl_context = gl_context
         self.cl_context = cl_context
         self.cl_queue = cl_queue # May be none, only needed for upsampling.
@@ -394,16 +479,32 @@ class GLCLMipmapBuffer(object):
         assert data.dtype == np.float32, "Assumed float32 data, but is: %s" % (str(data.dtype))
         self.level = level # assumed level of that buffer.
         self.shape = data.shape[:2] # shape is 2D, even if buffer data shape is 1D.
+        self.pixel_count = np.multiply(*self.shape)
+        # Set initial level separately so it can be restored later on.
+        self.initial_level = level
+        self.initial_data = data
+        # Get GL/CL shapes per level.
+        assert 2 == len(max_shape) or 4 == max_shape[2], "Maximum shape should be 2D (hei x wid) or 3D with 4 channels (hei x wid x 4), but is: %s" % (str(max_shape))
+        self.max_shape = max_shape[:2]
+        self.gl_shapes = []
+        lvl_shape = self.max_shape
+        while lvl_shape[0] >= 8:
+            self.gl_shapes.append(lvl_shape)
+            lvl_shape = (lvl_shape[0] / 2, lvl_shape[1] / 2) # is rounded down, just like mipmap.
         # Create GL and CL data.
         data1D = np.ascontiguousarray(data.reshape(-1, 4))
-        pixel_count = np.multiply(*self.shape)
-        assert (pixel_count, 4) == data1D.shape, "Buffer array should be %s, but is: %s" % (str((pixel_count, 4)), str(data1D.shape))
+        assert (self.pixel_count, 4) == data1D.shape, "Buffer array should be %s, but is: %s" % (str((self.pixel_count, 4)), str(data1D.shape))
         self.gl_buffer = ArrayBuffer(data=data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
         # Create CL programs (for upsampling).
         assert self.cl_context is not None, "Need CL context to compile."
         self._cl_upsample_variant = 2 # 1 = smaller image, 2 = larger image, 3 = cpu only.
         self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source_1x if 1 == self._cl_upsample_variant else self._cl_upsample_buffer_source_2x).build()
+
+    def reset(self):
+        """Resets all data to the original status."""
+        self.level = -1
+        self.set_level(self.initial_level, upsample_if_oneup=False)
 
     def _upsample_buffer(self, cl_buf_1x, cl_buf_2x, wid_1x, hei_1x, wid_2x, hei_2x):
         """Upsamples given 1x size buffer into 2x size buffer. Since ratio
@@ -451,15 +552,15 @@ class GLCLMipmapBuffer(object):
         self.cl_buffer.release()
         self.cl_buffer = next_cl_buffer;
         self.gl_buffer = next_gl_buffer;
-        self.shape = new_shape
         self.level = level
+        self.shape = new_shape
+        self.pixel_count = np.multiply(*self.shape)
 
     def _upsample_to_new_cpu(self, new_shape, level):
         """Upsamples the current buffer to given new shape (should be 2x the
         current shape, +1 pixel max).
         
         Takes around .25 seconds on a 2K->4K frame upsampling."""
-        assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
         assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
         assert 2 == len(new_shape), "Shape should be hei x wid, but is: %s" % (str(new_shape))
         assert 2 == new_shape[1] / self.shape[1], "New width (%d) should be 2x old width (%d)" % (new_shape[1], self.shape[1])
@@ -486,14 +587,42 @@ class GLCLMipmapBuffer(object):
         self.cl_buffer.release()
         self.gl_buffer.set_data(next_data1D)
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
-        self.shape = new_shape
         self.level = level
+        self.shape = new_shape
+        self.pixel_count = np.multiply(*self.shape)
 
-    def set_data(self, data, level=0):
+    def set_level(self, level, upsample_if_oneup=True):
+        """Sets the active level. Mostly applicable for the CL objects,
+        but may also be pertinent to the GL objects.
+        
+        Upsampling may be called if a level-up occurs."""
+        if level == self.level:
+            return
+        new_shape = self.gl_shapes[level]
+        if level == self.level - 1 and upsample_if_oneup:
+            self.upsample_to_new(new_shape, level)
+        elif level == self.initial_level:
+            self.set_data(self.initial_data, level) # set_data() expects 2D data.
+        else:
+            self.set_data(np.zeros(new_shape + (4,), dtype=np.float32), level) # set_data() expects 2D data.
+        # Remembering the next level is done in upsample() or set_data().
+
+    def get_level(self):
+        """Indicates the current level that the CL textures are on."""
+        return self.level
+
+    def get_shape(self, level):
+        """Returns the shape at given level, where 0 is the highest,
+        full resolution level."""
+        return self.gl_shapes[level]
+
+    def set_data(self, data, level=None):
         """Sets a new image as buffer data. All CL buffers will be deleted
         and recreated. The GL buffer stays the same.
         
         Data shape is assumed to be a 2D image with 4 channels."""
+        if level is None:
+            level = self.level
         new_shape = data.shape[:2]
         assert 2 == len(new_shape), "Assumed shape is hei x wid, but was %s" % (str(new_shape))
         data1D = np.ascontiguousarray(data.reshape(-1, 4))
@@ -502,11 +631,13 @@ class GLCLMipmapBuffer(object):
         self.cl_buffer.release()
         self.gl_buffer.set_data(data1D)
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
-        self.shape = new_shape
         self.level = level
+        self.shape = new_shape
+        self.pixel_count = np.multiply(*self.shape)
 
-    def get_data(self):
-        """Returns the data in image format, i.e. hei x wid x 4."""
+    def get_data(self, level=None):
+        """Returns the data in image format, i.e. hei x wid x 4.
+        The level parameter is ignored, possible is only the current level."""
         return self.gl_buffer.get_data().reshape(self.shape + (4,))
 
     def get_pos(self, x, y, out_of_bounds_exception=True):
@@ -526,25 +657,13 @@ class GLCLMipmapBuffer(object):
             raise Exception("Position %d (equal to coords x:%d, y:%d) exceeds image shape (%dx%d)" % (pos, x, y, self.shape[1], self.shape[0]))
         return (x, y)
 
-    def get_level(self):
-        """Indicates the current level that the CL textures are on."""
-        return self.level
-
-    def get_gl_buffer(self):
+    def get_gl_object(self):
         """Returns the GL buffer."""
         return self.gl_buffer
 
-    def get_cl_buffer(self):
+    def get_cl_object(self):
         """Returns the CL buffer."""
         return self.cl_buffer
-
-    @property
-    def gl(self):
-        return self.get_gl_buffer()
-
-    @property
-    def cl(self):
-        return self.get_cl_buffer()
 
     def release(self):
         """Releases all GPU memory."""
