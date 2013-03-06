@@ -188,7 +188,7 @@ class GLCLAbstractMipmap(object):
         """Returns the active level."""
         raise NotImplementedError("Has not implemented get_level().")
 
-    def get_shape(self, level):
+    def get_shape(self, level=None):
         """Returns the shape at given level, where 0 is the highest,
         full resolution level."""
         raise NotImplementedError("Has not implemented get_shape().")
@@ -344,9 +344,11 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
         """Indicates the current level that the CL textures are on."""
         return self.level
 
-    def get_shape(self, level):
+    def get_shape(self, level=None):
         """Returns the shape at given level, where 0 is the highest,
         full resolution level."""
+        if level is None:
+            level = self.level
         return self.gl_shapes[level]
 
     def _clear_cl_textures(self):
@@ -371,7 +373,8 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
         cl_gl_data = [cl_img_r_1x, cl_img_w_2x]
         cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = cl_gl_data + [np.uint32(wid), np.uint32(hei)]; assert 4 == len(cl_args)
-        self._cl_upsample_mipmap_program.upsample_mipmap(self.cl_queue, (hei, wid), None, *cl_args)
+        cl_grid = (hei, wid)
+        self._cl_upsample_mipmap_program.upsample_mipmap(self.cl_queue, cl_grid, None, *cl_args)
         cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         # (3) Finish.
         self.cl_queue.flush()
@@ -385,6 +388,7 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
         when None is given."""
         if level is None:
             level = self.level
+        assert 3 == len(data.shape), "Expected 2D, 4-channel image, but is: %s" % (str(data.shape))
         self._clear_cl_textures()
         self.gl_texture.set_data(data, mipmap=True); self.annotate_texture(self.gl_texture, mipmap=True)
         self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
@@ -612,9 +616,11 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
         """Indicates the current level that the CL textures are on."""
         return self.level
 
-    def get_shape(self, level):
+    def get_shape(self, level=None):
         """Returns the shape at given level, where 0 is the highest,
         full resolution level."""
+        if level is None:
+            level = self.level
         return self.gl_shapes[level]
 
     def set_data(self, data, level=None):
@@ -624,8 +630,9 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
         Data shape is assumed to be a 2D image with 4 channels."""
         if level is None:
             level = self.level
+        assert 3 == len(data.shape), "Expected 2D, 4-channel image, but is: %s" % (str(data.shape))
         new_shape = data.shape[:2]
-        assert 2 == len(new_shape), "Assumed shape is hei x wid, but was %s" % (str(new_shape))
+        assert new_shape == self.gl_shapes[level], "Level %d should be %s, but given data is: %s" % (level, str(self.gl_shapes[level]), str(new_shape))
         data1D = np.ascontiguousarray(data.reshape(-1, 4))
         pixel_count = np.multiply(*new_shape)
         assert (pixel_count, 4) == data1D.shape, "Buffer array should be %s, but is: %s" % (str((pixel_count, 4)), str(data1D.shape))
@@ -718,6 +725,48 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
     Like the GLCLMipmapBuffer, the data is 1D with 4 channels.
     Warning: Works only with float32 data!"""
 
+    _cl_upsample_buffer_source = """
+    __kernel void upsample_buffer(
+                                  __global float4* img,
+                                  uint wid1x, uint hei1x,
+                                  uint wid2x, uint hei2x,
+                                  uint fwid, uint fhei) {
+        uint row = get_global_id(0);
+        uint col = get_global_id(1);
+        uint lea_r = fwid / wid1x; // rounded down.
+        uint pos_r = row * lea_r * fwid_r + col * lea_r;
+        if (row * col >= wid1x * hei1x) {
+            return;
+        }
+        float4 value = img[pos_r];
+        uint col_w, row_w, pos_w;
+
+        // Write +1,+0.
+        col_w = col + 1;
+        row_w = row;
+        if (col_w * lea_r < fwid && row_w * lea_r < fhei) {
+            pos_w = row_w * lea_r * fwid + col_w * lea_r;
+            img[pos_w] = value;
+        }
+
+        // Write +0,+1.
+        col_w = col;
+        row_w = row + 1;
+        if (col_w * lea_r < fwid && row_w * lea_r < fhei) {
+            pos_w = row_w * lea_r * fwid + col_w * lea_r;
+            img[pos_w] = value;
+        }
+
+        // Write +1,+1.
+        col_w = col + 1;
+        row_w = row + 1;
+        if (col_w * lea_r < fwid && row_w * lea_r < fhei) {
+            pos_w = row_w * lea_r * fwid + col_w * lea_r;
+            img[pos_w] = value;
+        }
+    }
+    """
+
     def __init__(self, gl_context, cl_context, max_shape, data, level, cl_queue=None):
         self.gl_context = gl_context
         self.cl_context = cl_context
@@ -747,5 +796,185 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
         # Create CL programs (for upsampling).
         assert self.cl_context is not None, "Need CL context to compile."
-        # self._cl_upsample_variant = 2 # 1 = smaller image, 2 = larger image, 3 = cpu only.
-        # self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source_1x if 1 == self._cl_upsample_variant else self._cl_upsample_buffer_source_2x).build()
+        self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source).build()
+
+    def reset(self):
+        """Resets all data to the original status."""
+        self.level = -1
+        self.set_level(self.initial_level, upsample_if_oneup=False)
+
+    def _upsample_buffer(self, cl_buf, wid_1x, hei_1x, wid_2x, hei_2x, wid_max, hei_max):
+        """Upsamples given 1x content into 2x content, using the same buffer
+        (where the data is stored interleaved).
+        Since ratio might not be exactly 2x, old and new sizes must be given."""
+        assert cl_buf is not None, "Must have buffer to upsample."
+        # (1) Get a queue to start program.
+        if self.cl_queue is None:
+            self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
+        assert self.cl_queue is not None, "Must have CL queue to call upsampling."
+        # (2) Lock and fire.
+        cl_gl_data = [cl_buf]
+        cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        cl_args = cl_gl_data + [np.uint32(wid_1x), np.uint32(hei_1x), np.uint32(wid_2x), np.uint32(hei_2x), np.uint32(wid_max), np.uint32(hei_max)]; assert 7 == len(cl_args)
+        cl_grid = (hei_1x, wid_1x)
+        self._cl_upsample_buffer_program.upsample_buffer(self.cl_queue, cl_grid, None, *cl_args)
+        cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        # (3) Finish.
+        self.cl_queue.flush()
+        self.cl_queue.finish()
+
+    def upsample_to_new(self, new_shape, level):
+        """Upsamples the current buffer to given new shape (should be 2x the
+        current shape, +1 pixel max).
+        
+        Takes around .15 seconds on a 2K->4K frame upsampling."""
+        assert level == self.level - 1, "Level should be 1 less than current level (%d), but is: %d" % (self.level, level)
+        assert 2 == len(new_shape), "Shape should be hei x wid, but is: %s" % (str(new_shape))
+        assert 2 == new_shape[1] / self.shape[1], "New width (%d) should be 2x old width (%d)" % (new_shape[1], self.shape[1])
+        assert 2 == new_shape[0] / self.shape[0], "New height (%d) should be 2x old height (%d)" % (new_shape[0], self.shape[0])
+        wid_1x, hei_1x = self.shape[::-1]
+        wid_2x, hei_2x = new_shape[::-1]
+        wid_max, hei_max = self.max_shape[::-1]
+        self._upsample_buffer(self.cl_buffer, wid_1x, hei_1x, wid_2x, hei_2x, wid_max, hei_max)
+        self.level = level
+        self.shape = new_shape
+        self.pixel_count = np.multiply(*self.shape)
+        self.interleave = self.max_shape[1] / new_shape[1] # rounded down.
+
+    def set_level(self, level, upsample_if_oneup=True):
+        """Sets the active level. Mostly applicable for the CL objects,
+        but may also be pertinent to the GL objects.
+        
+        Upsampling may be called if a level-up occurs."""
+        if level == self.level:
+            return
+        new_shape = self.gl_shapes[level]
+        if level == self.level - 1 and upsample_if_oneup:
+            self.upsample_to_new(new_shape, level)
+        elif level == self.initial_level:
+            self.set_data(self.initial_data, level) # set_data() expects 2D data.
+        else:
+            self.set_data(np.zeros(new_shape + (4,), dtype=np.float32), level) # set_data() expects 2D data.
+        # Remembering the next level is done in upsample() or set_data().
+
+    def get_level(self):
+        """Indicates the current level that the CL textures are on."""
+        return self.level
+
+    def get_shape(self, level=None):
+        """Returns the shape at given level, where 0 is the highest,
+        full resolution level."""
+        if level is None:
+            level = self.level
+        return self.gl_shapes[level]
+
+    def set_data(self, data, level=None):
+        """Sets a new image as buffer data. All CL buffers will be deleted
+        and recreated. The GL buffer stays the same.
+        
+        Data shape is assumed to be a 2D image with 4 channels."""
+        if level is None:
+            level = self.level
+        assert 3 == len(data.shape), "Expected 2D, 4-channel image, but is: %s" % (str(data.shape))
+        new_shape = data.shape[:2]
+        assert new_shape == self.gl_shapes[level], "Level %d should be %s, but given data is: %s" % (level, str(self.gl_shapes[level]), str(new_shape))
+        lea = self.max_shape[1] / new_shape[1] # rounded down.
+        # Create zeros in full shape and fill with data.
+        max_data = np.zeros(self.max_shape + (4,), dtype=np.float32)
+        max_data[:new_shape[0] * lea:lea, :new_shape[1]:lea, :] = data
+        data1D = np.ascontiguousarray(max_data.reshape(-1, 4))
+        self.cl_buffer.release()
+        self.gl_buffer.set_data(data1D)
+        self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
+        self.level = level
+        self.shape = new_shape
+        self.pixel_count = np.multiply(*self.shape)
+        self.interleave = lea
+
+    def get_data(self, level=None):
+        """Returns the data in image format, i.e. hei x wid x 4."""
+        if level is None:
+            level = self.level
+        max_data = self.gl_buffer.get_data().reshape(self.max_shape + (4,))
+        shape = self.gl_shapes[level]
+        data = max_data[::self.interleave, ::self.interleave, :][:shape[0], :shape[1], :]
+        assert shape == data.shape[:2], "GLCL buffer data on level %d should be %s, but is %s" % (self.level, str(self.shape), str(data.shape[:2]))
+        return data
+
+    def get_gl_object(self):
+        """Returns the GL buffer."""
+        return self.gl_buffer
+
+    def get_cl_object(self):
+        """Returns the CL buffer."""
+        return self.cl_buffer
+
+    def get_pos(self, x, y, out_of_bounds_exception=True):
+        """Given an x and y coordinate, returns the position within the 1D
+        array buffer."""
+        wid, lea = self.max_shape[1], self.interleave
+        pos = (y * lea) * wid + (x * lea);
+        if out_of_bounds_exception and pos >= np.multiply(*self.max_shape):
+            raise Exception("Position %d (from coords x:%d, y:%d) exceeds image shape (%dx%d)" % (pos, x, y, self.shape[1], self.shape[0]))
+        return pos
+
+    def get_coord(self, pos, out_of_bounds_exception=True):
+        """Given a 1D position returns the (x, y) coordinate."""
+        wid, lea = self.max_shape[1], self.interleave
+        x, y = (pos % (wid * lea)) / lea, (pos / (wid * lea)) / lea
+        if out_of_bounds_exception and not (0 <= x < self.shape[1] and 0 <= y < self.shape[0]):
+            raise Exception("Position %d (equal to coords x:%d, y:%d) exceeds image shape (%dx%d)" % (pos, x, y, self.shape[1], self.shape[0]))
+        return (x, y)
+
+    def get_data_pos(self, x, y, level=None):
+        """Given an x and y coordinate, returns the internal 2D position within
+        the array buffer data.
+        
+        If you call get_data(), and want its content at some level, call
+        this one. Switch of x/y to row/col order is made by this method."""
+        if level is None:
+            level = self.level
+        lea = self.max_shape[1] / self.gl_shapes[level]
+        return y * lea, x * lea
+
+    def get_grid_pixels(self, normalize=False):
+        """Returns a grid of pixel coordinates that fits to the maximum shape.
+        Every pixel position in the range 0,0..wid,hei exists exactly once
+        in the grid.
+        
+        The returned result has the shape (max_wid*max_hei, 2).
+        If normalization is requested, the coords are from 0..1 instead of
+        0..width, same for height.
+        
+        The result is immediately usable in an OpenGL VAO.
+        Elements/indices are responsible for omitting pixels not available
+        in the current resolution."""
+        hei, wid = self.max_shape
+        return grid.get_pixel_index_grid(wid, hei, ndim=2, normalize=normalize).reshape(-1, 2)
+
+    # __GET INDICES HALF
+    def get_grid_triangle_indices(self):
+        """Returns a grid of triangles that fits to the current shape.
+        Each pixel in the range 0,0..wid,hei exists at least once on a corner
+        point of a triangle.
+        
+        The returned result has the shape (wid*hei, 3).
+        The result is immediately usable in an OpenGL VAO."""
+        hei, wid = self.shape
+        return grid.get_triangle_index_grid(wid, hei).reshape(-1, 3)
+
+    # __GET INDICES HALF
+    def get_grid_point_indices(self):
+        """Returns a grid of points that fits the current shape.
+        Each pixel in the range 0,0..wid,hei exists exactly once as a point.
+        
+        The returned result has the shape (wid*hei, 1).
+        The result is immediately usable in an OpenGL VAO."""
+        hei, wid = self.shape
+        return np.arange(wid * hei).reshape(-1, 1)
+
+    def release(self):
+        """Releases all GPU memory."""
+        self.cl_buffer.release();
+        self.cl_buffer = None
+        self.gl_buffer = None
