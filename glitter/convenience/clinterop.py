@@ -247,7 +247,7 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
                                   uint wid, uint hei) {
         unsigned int row = get_global_id(0);
         unsigned int col = get_global_id(1);
-        int2 coord_r = (int2) (col / 2, row / 2);
+        int2 coord_r = (int2) (min(col / 2, wid / 2 - 1), min(row / 2, hei / 2 -1 ));
         int2 coord_w = (int2) (col, row);
         float4 value = read_imagef(img1x, T_RAW_SAMPLER, coord_r);
         write_imagef(img2x, coord_w, value);
@@ -266,8 +266,8 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
         # Create GL data.
         self.gl_texture = Texture2D(data, mipmap=True, context=self.gl_context);
         self.annotate_texture(self.gl_texture, mipmap=True)
-        self.gl_shapes = []
         # Get GL/CL shapes per level.
+        self.gl_shapes = []
         for i in range(1000):
             lvl_shape = self.gl_texture.get_shape(i)[:2]
             if lvl_shape[0] < 8:
@@ -381,20 +381,34 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
         self.cl_queue.finish()
 
     def set_data(self, data, level=None):
-        """Sets a new image as texture data. All CL textures will be deleted
-        and recreated. The GL texture stays the same.
+        """Sets a new image as texture data. The GL level is always 0,
+        and the given level denotes the CL level.
+        
+        All CL textures will be deleted and recreated. The GL texture stays
+        the same.
         
         The new CL access level is either the given on or the last used one,
         when None is given."""
         if level is None:
-            level = self.level
+            level = self.level # only for CL, GL level is always 0.
         assert 3 == len(data.shape), "Expected 2D, 4-channel image, but is: %s" % (str(data.shape))
         self._clear_cl_textures()
         self.gl_texture.set_data(data, mipmap=True); self.annotate_texture(self.gl_texture, mipmap=True)
         self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
         self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+        # Reset data and levels.
+        self.initial_data = data
+        self.initial_level = level
+        self.level = self.cl_prev_level = level
         self.shape = data.shape[:2]
         self.pixel_count = np.multiply(*self.shape)
+        # Get GL/CL shapes per level.
+        self.gl_shapes = []
+        for i in range(1000):
+            lvl_shape = self.gl_texture.get_shape(i)[:2]
+            if lvl_shape[0] < 8:
+                break
+            self.gl_shapes.append(lvl_shape)
 
     def get_data(self, level=None):
         """Returns the data at active or at given level."""
@@ -446,8 +460,14 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
         uint row = pos_r / wid1x;
         uint col = pos_r % wid1x;
         float4 value = img1x[pos_r];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < 3; i++) { // rows
+            if (i == 2 && (row * 2 + i) != hei2x - 1) { // only at extended border.
+                continue;
+            }
+            for (int j = 0; j < 3; j++) { // cols
+                if (j == 2 && (col * 2 + j) != wid2x - 1) { // only at extended border.
+                    continue;
+                }
                 uint pos_w = (row * 2 + i) * wid2x + (col * 2 + j);
                 if (row * 2 + i < hei2x && col * 2 + j < wid2x && pos_w < wid2x * hei2x) {
                     img2x[pos_w] = value;
@@ -466,9 +486,9 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
                                   uint wid1x, uint hei1x,
                                   uint wid2x, uint hei2x) {
         uint pos_w = get_global_id(0);
-        uint row = pos_w / wid2x;
-        uint col = pos_w % wid2x;
-        uint pos_r = (row / 2) * wid1x + (col / 2);
+        uint row_w = pos_w / wid2x;
+        uint col_w = pos_w % wid2x;
+        uint pos_r = min(row_w / 2, hei1x - 1) * wid1x + min(col_w / 2, wid1x - 1);
         if (pos_r < wid1x * hei1x && pos_w < wid2x * hei2x) {
             float4 value = img1x[pos_r];
             img2x[pos_w] = value;
@@ -646,6 +666,8 @@ class GLCLMipmapBuffer(GLCLAbstractMipmap):
     def get_data(self, level=None):
         """Returns the data in image format, i.e. hei x wid x 4.
         The level parameter is ignored, possible is only the current level."""
+        if level is not None and level != self.level:
+            raise Exception("Can only get data from current level %d, but you wanted level %d") % (self.level, level)
         return self.gl_buffer.get_data().reshape(self.shape + (4,))
 
     def get_gl_object(self):
@@ -733,36 +755,28 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
                                   uint fwid, uint fhei) {
         uint row = get_global_id(0);
         uint col = get_global_id(1);
-        uint lea_r = fwid / wid1x; // rounded down.
-        uint pos_r = row * lea_r * fwid_r + col * lea_r;
         if (row * col >= wid1x * hei1x) {
             return;
         }
+        uint lea_r = fwid / wid1x; // rounded down.
+        uint lea_w = fwid / wid2x; // rounded down.
+        uint pos_r = (row * lea_r) * fwid + (col * lea_r);
         float4 value = img[pos_r];
-        uint col_w, row_w, pos_w;
-
-        // Write +1,+0.
-        col_w = col + 1;
-        row_w = row;
-        if (col_w * lea_r < fwid && row_w * lea_r < fhei) {
-            pos_w = row_w * lea_r * fwid + col_w * lea_r;
-            img[pos_w] = value;
-        }
-
-        // Write +0,+1.
-        col_w = col;
-        row_w = row + 1;
-        if (col_w * lea_r < fwid && row_w * lea_r < fhei) {
-            pos_w = row_w * lea_r * fwid + col_w * lea_r;
-            img[pos_w] = value;
-        }
-
-        // Write +1,+1.
-        col_w = col + 1;
-        row_w = row + 1;
-        if (col_w * lea_r < fwid && row_w * lea_r < fhei) {
-            pos_w = row_w * lea_r * fwid + col_w * lea_r;
-            img[pos_w] = value;
+        for (int i = 0; i < 3; i++) { // rows
+            uint row_w = (row * 2 + i);
+            if (i == 2 && row_w != hei2x - 1) { // only at extended border.
+                continue;
+            }
+            for (int j = 0; j < 3; j++) { // cols
+                uint col_w = (col * 2 + j);
+                if (j == 2 && col_w != wid2x - 1) { // only at extended border.
+                    continue;
+                }
+                uint pos_w = row_w * lea_w * fwid + col_w * lea_w;
+                if (pos_w < fwid * fhei) {
+                    img[pos_w] = value;
+                }
+            }
         }
     }
     """
@@ -788,9 +802,9 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
             self.gl_shapes.append(lvl_shape)
             lvl_shape = (lvl_shape[0] / 2, lvl_shape[1] / 2) # is rounded down, just like mipmap.
         # Create GL and CL data.
-        self.interleave = (max_shape[0] / self.shape[0], max_shape[1] / self.shape[1]) # is rounded down.
+        self.interleave = lea = max_shape[1] / self.shape[1] # is rounded down.
         self.real_data = np.zeros(self.max_shape + (4,), dtype=np.float32)
-        self.real_data[::self.interleave[0], ::self.interleave[1]] = data
+        self.real_data[:self.shape[0] * lea:lea, :self.shape[1] * lea:lea, :] = data
         data1D = np.ascontiguousarray(self.real_data.reshape(-1, 4))
         self.gl_buffer = ArrayBuffer(data=data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
         self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
@@ -855,7 +869,7 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
             self.set_data(self.initial_data, level) # set_data() expects 2D data.
         else:
             self.set_data(np.zeros(new_shape + (4,), dtype=np.float32), level) # set_data() expects 2D data.
-        # Remembering the next level is done in upsample() or set_data().
+        # Remembering the level is done in upsample() or set_data().
 
     def get_level(self):
         """Indicates the current level that the CL textures are on."""
@@ -880,8 +894,8 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         assert new_shape == self.gl_shapes[level], "Level %d should be %s, but given data is: %s" % (level, str(self.gl_shapes[level]), str(new_shape))
         lea = self.max_shape[1] / new_shape[1] # rounded down.
         # Create zeros in full shape and fill with data.
-        max_data = np.zeros(self.max_shape + (4,), dtype=np.float32)
-        max_data[:new_shape[0] * lea:lea, :new_shape[1]:lea, :] = data
+        max_data = self.gl_buffer.get_data().reshape(self.max_shape + (4,))
+        max_data[:new_shape[0] * lea:lea, :new_shape[1] * lea:lea, :] = data
         data1D = np.ascontiguousarray(max_data.reshape(-1, 4))
         self.cl_buffer.release()
         self.gl_buffer.set_data(data1D)
@@ -897,7 +911,8 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
             level = self.level
         max_data = self.gl_buffer.get_data().reshape(self.max_shape + (4,))
         shape = self.gl_shapes[level]
-        data = max_data[::self.interleave, ::self.interleave, :][:shape[0], :shape[1], :]
+        lea = self.max_shape[1] / shape[1]
+        data = max_data[::lea, ::lea, :][:shape[0], :shape[1], :]
         assert shape == data.shape[:2], "GLCL buffer data on level %d should be %s, but is %s" % (self.level, str(self.shape), str(data.shape[:2]))
         return data
 
@@ -911,7 +926,7 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
 
     def get_pos(self, x, y, out_of_bounds_exception=True):
         """Given an x and y coordinate, returns the position within the 1D
-        array buffer."""
+        array buffer (at the current level)."""
         wid, lea = self.max_shape[1], self.interleave
         pos = (y * lea) * wid + (x * lea);
         if out_of_bounds_exception and pos >= np.multiply(*self.max_shape):
@@ -919,7 +934,8 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         return pos
 
     def get_coord(self, pos, out_of_bounds_exception=True):
-        """Given a 1D position returns the (x, y) coordinate."""
+        """Given a 1D position returns the (x, y) coordinate
+         (at the current level)."""
         wid, lea = self.max_shape[1], self.interleave
         x, y = (pos % (wid * lea)) / lea, (pos / (wid * lea)) / lea
         if out_of_bounds_exception and not (0 <= x < self.shape[1] and 0 <= y < self.shape[0]):
@@ -930,11 +946,12 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         """Given an x and y coordinate, returns the internal 2D position within
         the array buffer data.
         
-        If you call get_data(), and want its content at some level, call
-        this one. Switch of x/y to row/col order is made by this method."""
+        If you call get_data(0) instead of the currnt level, and want its
+        content at some arbitrary level, call this method.
+        Switch of x/y to row/col order is also here."""
         if level is None:
             level = self.level
-        lea = self.max_shape[1] / self.gl_shapes[level]
+        lea = self.max_shape[1] / self.gl_shapes[level][1]
         return y * lea, x * lea
 
     def get_grid_pixels(self, normalize=False):
