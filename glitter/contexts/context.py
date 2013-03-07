@@ -163,8 +163,6 @@ class Context(InstanceDescriptorMixin, StateMixin):
     cull_face_mode = EnumProxy(cull_face_modes, _gl.GL_CULL_FACE_MODE, _gl.glCullFace)
     front_face = EnumProxy(front_face_modes, _gl.GL_FRONT_FACE, _gl.glFrontFace)
     polygon_mode = EnumProxy(polygon_modes, _gl.GL_POLYGON_MODE, _gl.glPolygonMode, [_gl.GL_FRONT_AND_BACK])
-    polygon_mode_front = EnumProxy(polygon_modes, _gl.GL_POLYGON_MODE, _gl.glPolygonMode, [_gl.GL_FRONT])
-    polygon_mode_back = EnumProxy(polygon_modes, _gl.GL_POLYGON_MODE, _gl.glPolygonMode, [_gl.GL_BACK])
 
     #{ Hints
     fragment_shader_derivative_hint = HintProxy(_gl.GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
