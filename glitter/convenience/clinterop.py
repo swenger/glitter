@@ -969,7 +969,6 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         hei, wid = self.max_shape
         return grid.get_pixel_index_grid(wid, hei, ndim=2, normalize=normalize).reshape(-1, 2)
 
-    # __GET INDICES HALF
     def get_grid_triangle_indices(self):
         """Returns a grid of triangles that fits to the current shape.
         Each pixel in the range 0,0..wid,hei exists at least once on a corner
@@ -977,18 +976,28 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         
         The returned result has the shape (wid*hei, 3).
         The result is immediately usable in an OpenGL VAO."""
-        hei, wid = self.shape
-        return grid.get_triangle_index_grid(wid, hei).reshape(-1, 3)
+        fhei, fwid = self.max_shape
+        mhei, mwid = self.shape
+        lea = fwid / mwid # rounded down, same as self.interleave
+        max_points2d = np.arange(fwid * fhei).reshape(fhei, fwid)
+        lvl_points2d = max_points2d[:mhei * lea:lea, :mwid * lea:lea]
+        xy = lvl_points2d[:-1, :-1] # omit -1 so we can do +1 below.
+        I = np.dstack((xy, xy + lea, xy + (fwid * lea), xy + lea, xy + (fwid * lea) + lea, xy + (fwid * lea)))
+        I = I.reshape(mhei - 1, (mwid - 1) * 2, 3) # triangles
+        return I.reshape(-1, 3)
 
-    # __GET INDICES HALF
     def get_grid_point_indices(self):
         """Returns a grid of points that fits the current shape.
         Each pixel in the range 0,0..wid,hei exists exactly once as a point.
         
         The returned result has the shape (wid*hei, 1).
         The result is immediately usable in an OpenGL VAO."""
-        hei, wid = self.shape
-        return np.arange(wid * hei).reshape(-1, 1)
+        fhei, fwid = self.max_shape
+        mhei, mwid = self.shape
+        lea = fwid / mwid # rounded down, same as self.interleave
+        max_points2d = np.arange(fwid * fhei).reshape(fhei, fwid)
+        lvl_points2d = max_points2d[:mhei * lea:lea, :mwid * lea:lea]
+        return lvl_points2d.reshape(-1, 1)
 
     def release(self):
         """Releases all GPU memory."""

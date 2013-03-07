@@ -23,7 +23,7 @@ def get_triangle_index_grid(wid, hei):
     """Given width and height, and assuming a meshgrid containing each pixel
     position, returns a triangle index configuration suitable for a mesh
     surface visualizing the points."""
-    xy = np.arange(wid * hei).reshape(hei, wid)[:-1, :-1]
+    xy = np.arange(wid * hei).reshape(hei, wid)[:-1, :-1] # omit -1 element.
     I = np.dstack((xy, xy + 1, xy + wid, xy + 1, xy + wid + 1, xy + wid))
     I = I.reshape(hei - 1, (wid - 1) * 2, 3) # triangles
     return I
