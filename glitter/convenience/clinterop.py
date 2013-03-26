@@ -63,7 +63,7 @@ def get_cl_context(gl_context, device_index= -1):
 
 # -----------------------------------------------------------------------------
 
-def write_cl_texture(cl_context, cl_img, x, y, value):
+def write_cl_texture(cl_context, cl_img, x, y, value, use_gl=None):
     """Takes an OpenCL texture and writes given value at given x/y coordinates.
     Assumes float texture and value.
     
@@ -78,19 +78,26 @@ def write_cl_texture(cl_context, cl_img, x, y, value):
         write_imagef(img, coord, value);
     }
     """
+    # Determine whether OpenGL sharing has been used.
+    if use_gl is None:
+        from pyopencl.tools import get_gl_sharing_context_properties
+        use_gl = get_gl_sharing_context_properties()[0] in cl_context.properties
+    # Make queue and program.
     cl_queue = cl.CommandQueue(cl_context) # @UndefinedVariable
     cl_program = cl.Program(cl_context, cl_source).build()
     if True: # usable in loop
         cl_gl_data = [cl_img]
-        cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = [cl_img, np.uint32(x), np.uint32(y), np.float32(value)]; assert 4 == len(cl_args)
         cl_program.write(cl_queue, (1, 1), None, *cl_args)
-        cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_queue.flush()
     cl_queue.finish()
 
 
-def read_cl_texture(cl_context, cl_img, x, y):
+def read_cl_texture(cl_context, cl_img, x, y, use_gl=None):
     """Takes an OpenCL texture and reads a value at given x/y coordinates.
     Assumes float texture and value.
     
@@ -105,23 +112,30 @@ def read_cl_texture(cl_context, cl_img, x, y):
         buf[0] = value;
     }
     """
+    # Determine whether OpenGL sharing has been used.
+    if use_gl is None:
+        from pyopencl.tools import get_gl_sharing_context_properties
+        use_gl = get_gl_sharing_context_properties()[0] in cl_context.properties
+    # Make queue and program.
     tmp = np.zeros((1, 4), dtype=np.float32)
     cl_queue = cl.CommandQueue(cl_context) # @UndefinedVariable
     cl_program = cl.Program(cl_context, cl_source).build()
     cl_tmp = cl.Buffer(cl_context, cl.mem_flags.READ_WRITE | cl.mem_flags.COPY_HOST_PTR, hostbuf=tmp)  # @UndefinedVariable
     if True: # usable in loop
         cl_gl_data = [cl_img]
-        cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = [cl_img, np.uint32(x), np.uint32(y), cl_tmp]; assert 4 == len(cl_args)
         cl_program.read(cl_queue, (1, 1), None, *cl_args)
-        cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_queue.flush()
     cl.enqueue_read_buffer(cl_queue, cl_tmp, tmp).wait()
     cl_queue.finish()
     return tmp[0, 0]
 
 
-def write_cl_buffer(cl_context, cl_buf, x, value):
+def write_cl_buffer(cl_context, cl_buf, x, value, use_gl=None):
     """Takes an OpenCL buffer and writes given value at given x coordinate.
     Assumes float buffer and value."""
     cl_source = """
@@ -130,19 +144,26 @@ def write_cl_buffer(cl_context, cl_buf, x, value):
         buf[x] = value;
     }
     """
+    # Determine whether OpenGL sharing has been used.
+    if use_gl is None:
+        from pyopencl.tools import get_gl_sharing_context_properties
+        use_gl = get_gl_sharing_context_properties()[0] in cl_context.properties
+    # Make queue and program.
     cl_queue = cl.CommandQueue(cl_context) # @UndefinedVariable
     cl_program = cl.Program(cl_context, cl_source).build()
     if True: # usable in loop
         cl_gl_data = [cl_buf]
-        cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = [cl_buf, np.uint32(x), np.float32(value)]; assert 3 == len(cl_args)
         cl_program.write(cl_queue, (1, 1), None, *cl_args)
-        cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_queue.flush()
     cl_queue.finish()
 
 
-def read_cl_buffer(cl_context, cl_buf, x):
+def read_cl_buffer(cl_context, cl_buf, x, use_gl=None):
     """Takes an OpenCL buffer and reads a value at given x coordinate.
     Assumes float buffer and value."""
     cl_source = """
@@ -151,16 +172,23 @@ def read_cl_buffer(cl_context, cl_buf, x):
         tmp[0] = value;
     }
     """
+    # Determine whether OpenGL sharing has been used.
+    if use_gl is None:
+        from pyopencl.tools import get_gl_sharing_context_properties
+        use_gl = get_gl_sharing_context_properties()[0] in cl_context.properties
+    # Make queue and program.
     tmp = np.zeros((1, 4), dtype=np.float32)
     cl_queue = cl.CommandQueue(cl_context) # @UndefinedVariable
     cl_program = cl.Program(cl_context, cl_source).build()
     cl_tmp = cl.Buffer(cl_context, cl.mem_flags.READ_WRITE | cl.mem_flags.COPY_HOST_PTR, hostbuf=tmp)  # @UndefinedVariable
     if True: # usable in loop
         cl_gl_data = [cl_buf]
-        cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_acquire_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = [cl_buf, np.uint32(x), cl_tmp]; assert 3 == len(cl_args)
         cl_program.read(cl_queue, (1, 1), None, *cl_args)
-        cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
+        if use_gl:
+            cl.enqueue_release_gl_objects(cl_queue, cl_gl_data) # @UndefinedVariable
         cl_queue.flush()
     cl.enqueue_read_buffer(cl_queue, cl_tmp, tmp).wait()
     cl_queue.finish()
@@ -785,6 +813,7 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         self.gl_context = gl_context
         self.cl_context = cl_context
         self.cl_queue = cl_queue # May be none, only needed for upsampling.
+        self.use_gl = self.gl_context is not None
         assert 3 == len(data.shape), "Assumed shape is hei x wid x 4, but was %s" % (str(data.shape))
         assert data.dtype == np.float32, "Assumed float32 data, but is: %s" % (str(data.dtype))
         self.level = level # assumed level of that buffer.
@@ -806,8 +835,12 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         self.real_data = np.zeros(self.max_shape + (4,), dtype=np.float32)
         self.real_data[:self.shape[0] * lea:lea, :self.shape[1] * lea:lea, :] = data
         data1D = np.ascontiguousarray(self.real_data.reshape(-1, 4))
-        self.gl_buffer = ArrayBuffer(data=data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
-        self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
+        if self.use_gl:
+            self.gl_buffer = ArrayBuffer(data=data1D, usage="DYNAMIC_DRAW", context=self.gl_context);
+            self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
+        else:
+            self.gl_buffer = None
+            self.cl_buffer = cl.Buffer(self.cl_context, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=data1D) # @UndefinedVariable
         # Create CL programs (for upsampling).
         assert self.cl_context is not None, "Need CL context to compile."
         self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source).build()
@@ -828,11 +861,13 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         assert self.cl_queue is not None, "Must have CL queue to call upsampling."
         # (2) Lock and fire.
         cl_gl_data = [cl_buf]
-        cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        if self.use_gl:
+            cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         cl_args = cl_gl_data + [np.uint32(wid_1x), np.uint32(hei_1x), np.uint32(wid_2x), np.uint32(hei_2x), np.uint32(wid_max), np.uint32(hei_max)]; assert 7 == len(cl_args)
         cl_grid = (hei_1x, wid_1x)
         self._cl_upsample_buffer_program.upsample_buffer(self.cl_queue, cl_grid, None, *cl_args)
-        cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        if self.use_gl:
+            cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         # (3) Finish.
         self.cl_queue.flush()
         self.cl_queue.finish()
@@ -882,6 +917,39 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
             level = self.level
         return self.gl_shapes[level]
 
+    def _set_max_data(self, max_data):
+        """Internal. Sets the entire data array."""
+        data1D = np.ascontiguousarray(max_data.reshape(-1, 4))
+        if self.use_gl:
+            # self.cl_buffer.release()
+            # self.gl_buffer.set_data(data1D)
+            # self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
+            cl_gl_data = [self.cl_buffer]
+            if self.use_gl:
+                cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+            cl.enqueue_copy(self.cl_queue, self.cl_buffer, data1D)
+            if self.use_gl:
+                cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        else:
+            if self.cl_queue is None:
+                self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
+            cl.enqueue_copy(self.cl_queue, self.cl_buffer, data1D)
+            self.cl_queue.flush()
+            self.cl_queue.finish()
+
+    def _get_max_data(self):
+        """Internal. Returns the entire data array, already reshaped to 2D."""
+        if self.use_gl:
+            max_data = self.gl_buffer.get_data()
+        else:
+            if self.cl_queue is None:
+                self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
+            max_data = np.zeros_like(self.real_data.reshape(-1, 4))
+            cl.enqueue_copy(self.cl_queue, max_data, self.cl_buffer)
+            self.cl_queue.flush()
+            self.cl_queue.finish()
+        return max_data.reshape(self.max_shape + (4,))
+
     def set_data(self, data, level=None):
         """Sets a new image as buffer data. All CL buffers will be deleted
         and recreated. The GL buffer stays the same.
@@ -894,12 +962,9 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         assert new_shape == self.gl_shapes[level], "Level %d should be %s, but given data is: %s" % (level, str(self.gl_shapes[level]), str(new_shape))
         lea = self.max_shape[1] / new_shape[1] # rounded down.
         # Create zeros in full shape and fill with data.
-        max_data = self.gl_buffer.get_data().reshape(self.max_shape + (4,))
+        max_data = self._get_max_data()
         max_data[:new_shape[0] * lea:lea, :new_shape[1] * lea:lea, :] = data
-        data1D = np.ascontiguousarray(max_data.reshape(-1, 4))
-        self.cl_buffer.release()
-        self.gl_buffer.set_data(data1D)
-        self.cl_buffer = cl.GLBuffer(self.cl_context, mf.READ_WRITE, self.gl_buffer._id) # @UndefinedVariable
+        self._set_max_data(max_data)
         self.level = level
         self.shape = new_shape
         self.pixel_count = np.multiply(*self.shape)
@@ -909,7 +974,8 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         """Returns the data in image format, i.e. hei x wid x 4."""
         if level is None:
             level = self.level
-        max_data = self.gl_buffer.get_data().reshape(self.max_shape + (4,))
+        max_data = self._get_max_data()
+        assert 3 == max_data.ndim, "Should be 2D, 4-channel shape, but is: %s" % (str(max_data.shape))
         shape = self.gl_shapes[level]
         lea = self.max_shape[1] / shape[1]
         data = max_data[::lea, ::lea, :][:shape[0], :shape[1], :]
