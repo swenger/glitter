@@ -43,8 +43,11 @@ def get_gl_context(option="g"):
     return gl_context
 
 
-def get_cl_context(gl_context, device_index= -1):
-    """Creates a CL context, with or without given GL context."""
+def get_cl_context(gl_context, device_index=None):
+    """Creates a CL context, with or without given GL context
+    
+    A device index can be specified, otherwise all available GPUs share
+    the same context."""
     # (1) Get platform and properties.
     if gl_context is not None: # ... with OpenGL interop?
         with gl_context:
@@ -56,7 +59,8 @@ def get_cl_context(gl_context, device_index= -1):
         cl_platform = cl.get_platforms()[0]  # @UndefinedVariable
         cl_properties = [(cl.context_properties.PLATFORM, cl_platform)] # @UndefinedVariable
     # (2) Now get the device and the context.
-    cl_devices = [cl_platform.get_devices()[device_index]]  # Only one is allowed!
+    use_all_devices = device_index is None and gl_context is None # 2 devices does not work with OpenGl.
+    cl_devices = cl_platform.get_devices() if use_all_devices else [cl_platform.get_devices()[0 if device_index is None else device_index]]
     cl_context = cl.Context(properties=cl_properties, devices=cl_devices) # @UndefinedVariable
     return cl_context
 
