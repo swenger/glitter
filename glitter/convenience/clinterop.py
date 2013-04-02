@@ -924,6 +924,8 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
     def _set_max_data(self, max_data):
         """Internal. Sets the entire data array."""
         data1D = np.ascontiguousarray(max_data.reshape(-1, 4))
+        if self.cl_queue is None:
+            self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
         if self.use_gl:
             # self.cl_buffer.release()
             # self.gl_buffer.set_data(data1D)
@@ -935,8 +937,6 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
             if self.use_gl:
                 cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
         else:
-            if self.cl_queue is None:
-                self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
             cl.enqueue_copy(self.cl_queue, self.cl_buffer, data1D)
             self.cl_queue.flush()
             self.cl_queue.finish()
