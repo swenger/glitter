@@ -869,17 +869,14 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         cl_grid = (self.shape[1] * self.shape[0],)
         if self.cl_queue is None:
             self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
+        cl_gl_data = [self.cl_buffer]
         if self.use_gl:
-            cl_gl_data = [self.cl_buffer]
-            if self.use_gl:
-                cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
-            self._cl_reset_to_zero_program.reset_to_zero(self.cl_queue, cl_grid, None, *cl_gl_data)
-            if self.use_gl:
-                cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
-        else:
-            self._cl_reset_to_zero_program.reset_to_zero(self.cl_queue, cl_grid, None, *cl_gl_data)
-            self.cl_queue.flush()
-            self.cl_queue.finish()
+            cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        self._cl_reset_to_zero_program.reset_to_zero(self.cl_queue, cl_grid, None, *cl_gl_data)
+        if self.use_gl:
+            cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        self.cl_queue.flush()
+        self.cl_queue.finish()
 
     def _upsample_buffer(self, cl_buf, wid_1x, hei_1x, wid_2x, hei_2x, wid_max, hei_max):
         """Upsamples given 1x content into 2x content, using the same buffer
