@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Tests the advanced OpenGL/CL interoperability constructs.
 
 @author: Kai Ruhl
@@ -145,6 +146,8 @@ def test_glcl_constructs():
         val1T = clio.read_cl_buffer(cl_context, mbuf.cl, 1)
         assert 1. != val1T, "Onebuf value should be random, but is %.2f" % (val1T)
         mbuf.set_data(np.float32(2. * np.ones(img_shape)), level=0) # must be one of image pyramid.
+        mbuf.reset_to_zero()
+        assert (0. == mbuf.get_data(level=0)).all(), "Buffer data was supposed to be reset to zero, but was not."
         mbuf.reset()
         mbuf.release()
 

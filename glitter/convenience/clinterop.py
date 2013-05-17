@@ -813,6 +813,13 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
     }
     """
 
+    _cl_reset_to_zero_source = """
+        __kernel void reset_to_zero(__global float4* img) {
+            int idx = get_global_id(0);
+            img[idx] = (float4)(0,0,0,0);
+        }
+    """
+
     def __init__(self, gl_context, cl_context, max_shape, data, level, cl_queue=None):
         self.gl_context = gl_context
         self.cl_context = cl_context
@@ -848,11 +855,31 @@ class GLCLOnemapBuffer(GLCLAbstractMipmap):
         # Create CL programs (for upsampling).
         assert self.cl_context is not None, "Need CL context to compile."
         self._cl_upsample_buffer_program = cl.Program(self.cl_context, self._cl_upsample_buffer_source).build()
+        self._cl_reset_to_zero_program = cl.Program(self.cl_context, self._cl_reset_to_zero_source).build()
+
 
     def reset(self):
         """Resets all data to the original status."""
         self.level = -1
         self.set_level(self.initial_level, upsample_if_oneup=False)
+
+    def reset_to_zero(self):
+        """Resets all values in the entire buffer to zero, without changing
+        the actual level."""
+        cl_grid = (self.shape[1] * self.shape[0],)
+        if self.cl_queue is None:
+            self.cl_queue = cl.CommandQueue(self.cl_context) # @UndefinedVariable
+        if self.use_gl:
+            cl_gl_data = [self.cl_buffer]
+            if self.use_gl:
+                cl.enqueue_acquire_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+            self._cl_reset_to_zero_program.reset_to_zero(self.cl_queue, cl_grid, None, *cl_gl_data)
+            if self.use_gl:
+                cl.enqueue_release_gl_objects(self.cl_queue, cl_gl_data) # @UndefinedVariable
+        else:
+            self._cl_reset_to_zero_program.reset_to_zero(self.cl_queue, cl_grid, None, *cl_gl_data)
+            self.cl_queue.flush()
+            self.cl_queue.finish()
 
     def _upsample_buffer(self, cl_buf, wid_1x, hei_1x, wid_2x, hei_2x, wid_max, hei_max):
         """Upsamples given 1x content into 2x content, using the same buffer
