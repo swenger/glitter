@@ -427,7 +427,7 @@ class GLCLMipmapTexture(GLCLAbstractMipmap):
         self._clear_cl_textures()
         self.gl_texture.set_data(data, mipmap=True); self.annotate_texture(self.gl_texture, mipmap=True)
         self.cl_texture_read = cl.GLTexture(self.cl_context, mf.READ_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
-        self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_read else None # @UndefinedVariable
+        self.cl_texture_writ = cl.GLTexture(self.cl_context, mf.WRITE_ONLY, gl.GL_TEXTURE_2D, level, self.gl_texture._id, 2) if self.is_cl_writ else None # @UndefinedVariable
         # Reset data and levels.
         self.initial_data = data
         self.initial_level = level
