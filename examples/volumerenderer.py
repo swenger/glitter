@@ -251,6 +251,6 @@ if __name__ == "__main__":
     # convenient; on the other hand, it means that if you create a context
     # manually (e.g., because you need a visible window), you have to
     # initialize it before any other objects. Otherwise, these objects may end
-    # up in the wrong context, and sharing data across context is a problem of
+    # up in the wrong context, and sharing data across contexts is a problem of
     # its own.
 
