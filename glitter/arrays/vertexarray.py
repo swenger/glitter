@@ -33,10 +33,7 @@ class VertexArray(ManagedObject, BindableObject):
         super(VertexArray, self).__init__(context=kwargs.pop("context", None))
         self._attributes = {}
 
-        if isinstance(attributes, dict):
-            attributes = dict(attributes)
-        else:
-            attributes = dict(enumerate(attributes))
+        attributes = dict(enumerate(attributes))
         for i in range(self._context.max_vertex_attribs):
             self[i] = attributes.pop(i, None)
         if attributes:

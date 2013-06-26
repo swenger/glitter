@@ -56,8 +56,14 @@ class BaseBuffer(ManagedObject, BindableObject):
         with self:
             _gl.glBufferData(self._target, _nbytes, _data, usage._value)
 
+    def _verify_size(self):
+        """Verifies that the data set size has stayed the same also within
+        the OpenGL registers."""
+        assert _np.prod(self._shape) * self._dtype.nbytes == self._size, "Expected shape %s with %d bytes, but OpenGL says %d bytes allocated." % (self.shape, _np.prod(self._shape) * self._dtype.nbytes, self._size)
+
     def get_data(self):
         _data = _np.empty(self.shape, dtype=self.dtype.as_numpy())
+        assert _data.nbytes == self._size, "Expected shape %s with %d bytes, but OpenGL says %d bytes allocated." % (self.shape, _data.nbytes, self._size)
         with self:
             _gl.glGetBufferSubData(self._target, 0, _data.nbytes, _data.ctypes)
         return _data
