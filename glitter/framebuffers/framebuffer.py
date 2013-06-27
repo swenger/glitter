@@ -15,7 +15,7 @@ from glitter.utils import ManagedObject, BindableObject, framebuffer_status
 
 class Framebuffer(ManagedObject, BindableObject):
     _generate_id = _gl.glGenFramebuffers
-    _delete_id = _gl.glDeleteBuffers
+    _delete_id = _gl.glDeleteFramebuffers
     _db = "framebuffers"
     _binding = "draw_framebuffer_binding"
     _target = _gl.GL_DRAW_FRAMEBUFFER
@@ -40,7 +40,7 @@ class Framebuffer(ManagedObject, BindableObject):
 
         super(Framebuffer, self).__init__(context=kwargs.pop("context", None))
         self._attachments = {}
-        
+
         if isinstance(attachments, dict):
             attachments = dict(attachments)
         else:
@@ -78,7 +78,9 @@ class Framebuffer(ManagedObject, BindableObject):
             self._context.draw_buffers = [i if self[i] is not None else None for i in range(self._context.max_color_attachments)]
 
             self._stack.append(self._context.viewport)
-            if self.shape is not None:
+            if self.viewport is not None:
+                self._context.viewport = self.viewport
+            elif self.shape is not None:
                 self._context.viewport = (0, 0, self.shape[1], self.shape[0])
 
     def _on_release(self):
@@ -190,6 +192,20 @@ class Framebuffer(ManagedObject, BindableObject):
 
         self._attach(_gl.GL_STENCIL_ATTACHMENT, texture, layer, level)
         self._stencil = texture
+
+    @property
+    def viewport(self):
+        if not hasattr(self, "_viewport"):
+            return None
+        return self._viewport
+
+    @viewport.setter
+    def viewport(self, viewport):
+        self._viewport = viewport
+
+    @viewport.deleter
+    def viewport(self):
+        self._viewport = None
 
     @property
     def status(self):
