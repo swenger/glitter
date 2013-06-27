@@ -15,7 +15,7 @@ from glitter.utils import ManagedObject, BindableObject, framebuffer_status
 
 class Framebuffer(ManagedObject, BindableObject):
     _generate_id = _gl.glGenFramebuffers
-    _delete_id = _gl.glDeleteBuffers
+    _delete_id = _gl.glDeleteFramebuffers
     _db = "framebuffers"
     _binding = "draw_framebuffer_binding"
     _target = _gl.GL_DRAW_FRAMEBUFFER

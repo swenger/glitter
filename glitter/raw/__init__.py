@@ -37,3 +37,5 @@ from glitter.raw.constant import *
 wrap_constants(d=globals()) # pass d explicitly to avoid infinite import loop
 set_error_check(d=globals()) # pass d explicitly to avoid infinite import loop
 
+if __debug__:
+    add_logger("gl", d=globals())
