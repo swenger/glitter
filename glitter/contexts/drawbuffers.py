@@ -48,7 +48,7 @@ class DrawBufferList(object):
             _gl.glGetIntegerv(_gl.GL_DRAW_BUFFER0 + index, _buffer)
         attachment = draw_buffers[_buffer.value]
         if attachment.name.startswith("COLOR_ATTACHMENT"):
-            return int(attachment.lstrip("COLOR_ATTACHMENT", 1))
+            return attachment._value - _gl.GL_COLOR_ATTACHMENT0
         else:
             return attachment
 
