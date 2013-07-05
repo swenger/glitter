@@ -10,6 +10,7 @@ C{glDepthRangeArray} and C{glDepthRangeIndexed}).
 @date: 2012-02-29
 """
 
+import numpy as _np
 import glitter.raw as _gl
 from glitter.utils import ManagedObject, BindableObject, framebuffer_status
 
@@ -245,12 +246,39 @@ class Framebuffer(ManagedObject, BindableObject):
 
         If no parameters are given, color, depth and stencil are cleared with
         the current clear values.
-
-        @todo: Use C{glClearBuffer} to clear selected attachments only.
         """
 
         with self:
             self._context._perform_gl_clear(color, depth, stencil)
+
+    def clear_attachments(self, index, color=(0, 0, 0, 0)):
+        """Clear individual buffers of the currently bound draw framebuffer.
+        
+        @param index: Index of color attachment.
+        @type index: C{int}
+        @param color: Color as scalar or length 4 RGBA array.
+        @type color: C{int}, C{float} or iterable.
+        """
+
+        with self:
+            try:
+                if len(color) != 4:
+                    raise ValueError("color must be scalar or of length 4")
+            except TypeError: # if the object has no len(), make a list
+                color = [color] * 4
+            if self[index] is None:
+                raise ValueError("framebuffer has no color attachment %s" % index)
+            dtype = self[index].dtype
+            drawbuffer = list(self._context.draw_buffers).index(int(index))
+            if dtype.is_float():
+                _value = (_gl.GLfloat * 4)(*color)
+                _gl.glClearBufferfv(_gl.GL_COLOR, drawbuffer, _value)
+            elif dtype.is_signed():
+                _value = (_gl.GLint * 4)(*color)
+                _gl.glClearBufferiv(_gl.GL_COLOR, drawbuffer, _value)
+            else:
+                _value = (_gl.GLuint * 4)(*color)
+                _gl.glClearBufferuiv(_gl.GL_COLOR, drawbuffer, _value)
 
 __all__ = ["Framebuffer"]
 
