@@ -22,7 +22,7 @@ class QtContextWrapper(Context):
     def _bind(self):
         self._qt_context.makeCurrent()
 
-class QtWidget(QtOpenGL.QGLWidget, Context):
+class QtWidget(Context, QtOpenGL.QGLWidget):
     def __init__(self, *args, **kwargs):
         QtOpenGL.QGLWidget.__init__(self, *args, **kwargs)
         with self:
