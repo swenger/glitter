@@ -101,6 +101,12 @@ class MeshViewer(object):
                 vertices = f["vertices"]
                 colors = f.get("colors", None)
                 elements = f.get("indices", None)
+                if vertices is not None:
+                    vertices = vertices.value
+                if colors is not None:
+                    colors = colors.value
+                if elements is not None:
+                    elements = elements.value
 
         # If no colors were specified, we generate random ones so we can
         # distinguish the triangles without fancy shading.
