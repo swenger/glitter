@@ -163,7 +163,7 @@ setup(
     download_url = "http://pypi.python.org/pypi/glitter",
     url = "http://packages.python.org/glitter",
     setup_requires = ["ctypeslib", "nose"],
-    install_requires = ["numpy"],
+    install_requires = ["ctypeslib", "numpy"],
     extras_require = {
         "Qt": ["PySide"],
         "HDF5": ["h5py"],
