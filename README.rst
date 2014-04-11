@@ -142,6 +142,7 @@ The following versions introduced noteworthy features, bug fixes, or API changes
 
 version 0.1.7
 -----------
+- Fix ``install_requires`` in setup script.
 - Fix GLUT modifier key functions.
 - Add rudimentary support for ``glReadPixels`` on ``Context`` objects.
 - Fix glActiveTexture call when calling bind() on already bound ``Texture``.
